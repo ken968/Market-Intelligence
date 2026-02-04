@@ -94,7 +94,7 @@ class AssetPredictor:
     
     def recursive_forecast(self, steps):
         """
-        Generate multi-step forecast using recursive prediction
+        Generate multi-step forecast using recursive prediction with feature drift
         
         Args:
             steps (int): Number of steps to predict
@@ -108,8 +108,13 @@ class AssetPredictor:
         if self.data is None:
             self.load_data()
         
+        # Calculate historical averages for features (to use as drift targets)
+        # We use the loaded data to find the "normal" state of market indicators
+        feature_means = np.mean(self.data, axis=0)
+        
         # Normalize data
         scaled_data = self.scaler.transform(self.data)
+        scaled_means = self.scaler.transform(feature_means.reshape(1, -1))[0]
         
         # Get initial sequence
         seq_len = self.config['sequence_length']
@@ -118,19 +123,43 @@ class AssetPredictor:
         predictions = []
         temp_data = current_batch.copy()
         
-        for _ in range(steps):
+        for i in range(steps):
             # Predict next step
             pred_scaled = self.predict_next_step(temp_data)
             
-            # Create new frame (assume other features stay constant)
+            # 1. Price Clamping: Prevent negative prices after inverse transform
+            # We can't easily clamp scaled values, so we'll do a soft-clamp here
+            # or wait for the inverse transform. For now, let's use the last batch
+            # to guide the next frame.
+            
+            # 2. Build the next frame
             last_frame = temp_data[0, -1, :].copy()
             last_frame[0] = pred_scaled  # Update only price (first feature)
+            
+            # 3. Feature Drift (Mean Reversion)
+            # As we go further into the future, macro indicators (DXY, VIX, etc.) 
+            # should slowly drift back to their historical averages.
+            # Drift rate: ~2% per day towards the mean
+            drift_rate = 0.02
+            for f_idx in range(1, len(last_frame)):
+                target = scaled_means[f_idx]
+                last_frame[f_idx] = last_frame[f_idx] + (target - last_frame[f_idx]) * drift_rate
+            
+            # 4. Recursive Damping
+            # Dampen extreme price movements in long-term recursive loops (i > 10 steps)
+            if i > 5:
+                # Slowly pull the predicted price change towards zero to prevent runaway trends
+                prev_price = temp_data[0, -1, 0]
+                delta = pred_scaled - prev_price
+                # Dampen by 5% cumulative
+                damping_factor = 0.95
+                last_frame[0] = prev_price + (delta * damping_factor)
             
             # Shift window and add new prediction
             new_batch = np.append(temp_data[:, 1:, :], [[last_frame]], axis=1)
             temp_data = new_batch
             
-            predictions.append(pred_scaled)
+            predictions.append(last_frame[0])
         
         # Inverse transform predictions
         n_features = len(self.config['features'])
@@ -138,6 +167,9 @@ class AssetPredictor:
         dummy[:, 0] = predictions
         
         predictions_original = self.scaler.inverse_transform(dummy)[:, 0]
+        
+        # Final safety check: no price below 0
+        predictions_original = np.maximum(predictions_original, 0.01)
         
         return predictions_original.tolist()
     
