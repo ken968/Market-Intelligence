@@ -65,10 +65,10 @@ def run_command(command, description):
             process.wait()
             
             if process.returncode == 0:
-                status.update(label=f"{description} - Complete ", state="complete")
+                status.update(label=f"{description} - Complete", state="complete")
                 return True
             else:
-                status.update(label=f"{description} - Failed ❌", state="error")
+                status.update(label=f"{description} - Failed", state="error")
                 return False
     
     except Exception as e:
@@ -156,7 +156,7 @@ with col1:
     if st.button("🔄 Sync All Assets (Market Data)", use_container_width=True):
         python_exe = sys.executable
         success = run_command(
-            [python_exe, "data_fetcher_v2.py"],
+            [python_exe, "scripts/data_fetcher_v2.py"],
             "Fetching market data for all assets..."
         )
         if success:
@@ -166,7 +166,7 @@ with col1:
     if st.button("📰 Sync Sentiment (All Assets)", use_container_width=True):
         python_exe = sys.executable
         success = run_command(
-            [python_exe, "sentiment_fetcher_v2.py", "all"],
+            [python_exe, "scripts/sentiment_fetcher_v2.py", "all"],
             "Analyzing news sentiment for all assets..."
         )
         if success:
@@ -176,9 +176,10 @@ with col1:
 with col2:
     st.markdown("#### Individual Asset Sync")
     
+    all_stocks = get_all_stock_tickers()
     asset_choice = st.selectbox(
         "Select asset to sync",
-        ["Gold", "Bitcoin", "Stocks", "SPY", "AAPL", "NVDA", "TSLA"]
+        ["Gold", "Bitcoin", "Stocks"] + all_stocks
     )
     
     asset_map = {
@@ -195,18 +196,18 @@ with col2:
         # Data fetch
         if asset_choice in ["Gold", "Bitcoin", "Stocks"]:
             success1 = run_command(
-                [python_exe, "data_fetcher_v2.py", asset_key],
+                [python_exe, "scripts/data_fetcher_v2.py", asset_key],
                 f"Fetching {asset_choice} market data..."
             )
         else:
             success1 = run_command(
-                [python_exe, "data_fetcher_v2.py", asset_choice.upper()],
+                [python_exe, "scripts/data_fetcher_v2.py", asset_choice.upper()],
                 f"Fetching {asset_choice} market data..."
             )
         
         # Sentiment fetch
         success2 = run_command(
-            [python_exe, "sentiment_fetcher_v2.py", asset_key],
+            [python_exe, "scripts/sentiment_fetcher_v2.py", asset_key],
             f"Analyzing {asset_choice} sentiment..."
         )
         
@@ -240,13 +241,13 @@ with tab1:
         python_exe = sys.executable
         
         # Gold
-        run_command([python_exe, "train_ultimate.py"], "Training Gold model...")
+        run_command([python_exe, "scripts/train_ultimate.py"], "Training Gold model...")
         
         # Bitcoin
-        run_command([python_exe, "train_btc.py"], "Training Bitcoin model...")
+        run_command([python_exe, "scripts/train_btc.py"], "Training Bitcoin model...")
         
         # SPY
-        run_command([python_exe, "train_stocks.py", "SPY"], "Training SPY model...")
+        run_command([python_exe, "scripts/train_stocks.py", "SPY"], "Training SPY model...")
         
         show_success_message("Core assets trained successfully!")
         st.rerun()
@@ -263,7 +264,7 @@ with tab2:
             else:
                 python_exe = sys.executable
                 success = run_command(
-                    [python_exe, "train_ultimate.py"],
+                    [python_exe, "scripts/train_ultimate.py"],
                     "Training Gold AI model..."
                 )
                 if success:
@@ -277,7 +278,7 @@ with tab2:
             else:
                 python_exe = sys.executable
                 success = run_command(
-                    [python_exe, "train_btc.py"],
+                    [python_exe, "scripts/train_btc.py"],
                     "Training Bitcoin AI model..."
                 )
                 if success:
@@ -296,7 +297,7 @@ with tab2:
         else:
             python_exe = sys.executable
             success = run_command(
-                [python_exe, "train_stocks.py", selected_stock],
+                [python_exe, "scripts/train_stocks.py", selected_stock],
                 f"Training {selected_stock} AI model..."
             )
             if success:
@@ -319,7 +320,7 @@ with tab3:
         else:
             python_exe = sys.executable
             success = run_command(
-                [python_exe, "train_stocks.py", "ALL"],
+                [python_exe, "scripts/train_stocks.py", "ALL"],
                 "Batch training all stock models (this will take a while)..."
             )
             

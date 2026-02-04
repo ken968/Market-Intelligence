@@ -17,7 +17,7 @@ from utils.predictor import AssetPredictor
 # ==================== PAGE CONFIG ====================
 
 st.set_page_config(
-    page_title="Gold Analysis | XAUUSD Terminal",
+    page_title="Gold Analysis | Market Intelligence",
     page_icon="",
     layout="wide"
 )

@@ -6,6 +6,9 @@ import sys
 from textblob import TextBlob
 from datetime import datetime
 
+# Add project root to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # Configuration
 API_KEY = 'cb548b26fc6542c0a6bb871ef3786eba'
 TRUSTED_DOMAINS = (
@@ -20,17 +23,17 @@ ASSET_QUERIES = {
     'stocks': '("Stock Market" OR "S&P 500" OR "Nasdaq" OR "Fed Rate" OR "Wall Street")',
     
     # Individual stocks (optional: can customize per stock)
-    'AAPL': '(Apple OR AAPL OR iPhone OR "Tim Cook")',
-    'NVDA': '(Nvidia OR NVDA OR "AI Chips" OR "GPU Market")',
-    'TSLA': '(Tesla OR TSLA OR "Elon Musk" OR "Electric Vehicle")',
-    'MSFT': '(Microsoft OR MSFT OR "Cloud Computing" OR Azure)',
-    'GOOGL': '(Google OR Alphabet OR GOOGL OR "Search Engine")',
-    'AMZN': '(Amazon OR AMZN OR AWS OR "E-commerce")',
-    'META': '(Meta OR Facebook OR META OR Instagram)',
-    'TSM': '(TSMC OR TSM OR "Semiconductor" OR "Chip Manufacturing")',
-    'SPY': '("S&P 500" OR SPY OR "Market Index")',
-    'QQQ': '(Nasdaq OR QQQ OR "Tech Stocks")',
-    'DIA': '("Dow Jones" OR DIA OR "Blue Chip")'
+    'aapl': '(Apple OR AAPL OR iPhone OR "Tim Cook")',
+    'nvda': '(Nvidia OR NVDA OR "AI Chips" OR "GPU Market")',
+    'tsla': '(Tesla OR TSLA OR "Elon Musk" OR "Electric Vehicle")',
+    'msft': '(Microsoft OR MSFT OR "Cloud Computing" OR Azure)',
+    'googl': '(Google OR Alphabet OR GOOGL OR "Search Engine")',
+    'amzn': '(Amazon OR AMZN OR AWS OR "E-commerce")',
+    'meta': '(Meta OR Facebook OR META OR Instagram)',
+    'tsm': '(TSMC OR TSM OR "Semiconductor" OR "Chip Manufacturing")',
+    'spy': '("S&P 500" OR "SP500" OR "Stock Market Index" OR "S&P Index")',
+    'qqq': '(Nasdaq OR QQQ OR "Tech Stocks" OR "Invesco QQQ")',
+    'dia': '("Dow Jones" OR DIA OR "Blue Chip Stocks" OR "Industrial Average")'
 }
 
 # Blacklist for non-financial noise
@@ -60,7 +63,7 @@ def fetch_news_sentiment(asset='gold', max_articles=15):
     """
     
     asset_lower = asset.lower()
-    query = ASSET_QUERIES.get(asset_lower, ASSET_QUERIES.get(asset.upper(), ASSET_QUERIES['stocks']))
+    query = ASSET_QUERIES.get(asset_lower, ASSET_QUERIES['stocks'])
     
     url = (
         f'https://newsapi.org/v2/everything?'
@@ -125,15 +128,15 @@ def fetch_news_sentiment(asset='gold', max_articles=15):
                 'sentiment': score
             })
     
-    if not news_data:
-        print(f"System: No relevant news found for {asset} after filtering.")
-        return pd.DataFrame()
-    
-    # Save news for dashboard
-    news_file = f'latest_news_{asset_lower}.json'
+    # Save news for dashboard (even if empty to signal sync happened)
+    news_file = f'data/latest_news_{asset_lower}.json'
     with open(news_file, 'w') as f:
         json.dump(display_news, f, indent=4)
     print(f"System: {len(display_news)} articles saved to '{news_file}'")
+    
+    if not news_data:
+        print(f"System: No relevant news found for {asset} after filtering.")
+        return pd.DataFrame()
     
     df_news = pd.DataFrame(news_data)
     print(f"System: Processed {len(df_news)} {asset} articles.")
@@ -156,16 +159,16 @@ def integrate_sentiment(asset='gold'):
     
     # Determine file names based on asset type
     if asset_lower == 'gold':
-        macro_file = 'gold_macro_data.csv'
-        output_file = 'gold_global_insights.csv'
+        macro_file = 'data/gold_macro_data.csv'
+        output_file = 'data/gold_global_insights.csv'
     elif asset_lower in ['btc', 'bitcoin']:
-        macro_file = 'btc_macro_data.csv'
-        output_file = 'btc_global_insights.csv'
+        macro_file = 'data/btc_macro_data.csv'
+        output_file = 'data/btc_global_insights.csv'
     else:
         # Stock ticker
         ticker = asset.upper()
-        macro_file = f'{ticker}_macro_data.csv'
-        output_file = f'{ticker}_global_insights.csv'
+        macro_file = f'data/{ticker}_macro_data.csv'
+        output_file = f'data/{ticker}_global_insights.csv'
     
     # Check if macro data exists
     if not os.path.exists(macro_file):
@@ -213,10 +216,10 @@ def process_all_assets():
         print(f"\n--- Processing {asset.upper()} ---")
         try:
             success = integrate_sentiment(asset)
-            results[asset] = "" if success else "❌"
+            results[asset] = "SUCCESS" if success else "FAILED"
         except Exception as e:
             print(f"Error processing {asset}: {e}")
-            results[asset] = "❌"
+            results[asset] = "FAILED"
     
     print("\n" + "="*60)
     print("SENTIMENT SYNC SUMMARY")
@@ -224,18 +227,36 @@ def process_all_assets():
     for asset, status in results.items():
         print(f"{asset.upper():6s}: {status}")
     print("="*60)
+    
+    return all(s == "SUCCESS" for s in results.values())
 
 
 if __name__ == "__main__":
+    from utils.config import STOCK_TICKERS
+    
     if len(sys.argv) > 1:
         asset = sys.argv[1]
         
         if asset.lower() == 'all':
-            process_all_assets()
+            success = process_all_assets()
+            if not success:
+                sys.exit(1)
+        elif asset.lower() == 'stocks':
+            print("\n--- Processing ALL STOCKS ---")
+            all_success = True
+            for ticker in STOCK_TICKERS.keys():
+                if not integrate_sentiment(ticker):
+                    all_success = False
+            if not all_success:
+                sys.exit(1)
         else:
-            integrate_sentiment(asset)
+            success = integrate_sentiment(asset)
+            if not success:
+                sys.exit(1)
     else:
         # Default: Gold only (backward compatibility)
-        print("Usage: python sentiment_fetcher_v2.py [gold|btc|AAPL|...|all]")
+        print("Usage: python sentiment_fetcher_v2.py [gold|btc|stocks|AAPL|...|all]")
         print("\nRunning default: Gold sentiment analysis...")
-        integrate_sentiment('gold')
+        success = integrate_sentiment('gold')
+        if not success:
+            sys.exit(1)

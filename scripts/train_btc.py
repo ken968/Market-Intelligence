@@ -7,6 +7,9 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping
 
+# Add project root to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 def train_btc_model():
     """
     Train Bitcoin prediction model with longer sequence window.
@@ -18,12 +21,12 @@ def train_btc_model():
     print("="*60)
     
     # 1. Load Data
-    if not os.path.exists('btc_global_insights.csv'):
-        print("Error: 'btc_global_insights.csv' not found.")
-        print("Run: python sentiment_fetcher_v2.py btc")
+    if not os.path.exists('data/btc_global_insights.csv'):
+        print("Error: 'data/btc_global_insights.csv' not found.")
+        print("Run: python scripts/sentiment_fetcher_v2.py btc")
         return False
     
-    df = pd.read_csv('btc_global_insights.csv')
+    df = pd.read_csv('data/btc_global_insights.csv')
     
     # Features: BTC price + macro + sentiment + halving cycle
     features = ['BTC', 'DXY', 'VIX', 'Yield_10Y', 'Sentiment', 'Halving_Cycle']
@@ -47,9 +50,9 @@ def train_btc_model():
     scaled_data = scaler.fit_transform(data)
     
     # Save scaler
-    with open('btc_scaler.pkl', 'wb') as f:
+    with open('models/btc_scaler.pkl', 'wb') as f:
         pickle.dump(scaler, f)
-    print("System: Scaler saved as 'btc_scaler.pkl'")
+    print("System: Scaler saved as 'models/btc_scaler.pkl'")
     
     # 3. Data Preparation
     # BTC uses 90-day window (vs 60 for Gold) to capture longer cycles
@@ -97,7 +100,7 @@ def train_btc_model():
     )
     
     # 6. Save Model
-    model.save('btc_ultimate_model.h5')
+    model.save('models/btc_ultimate_model.h5')
     print("\n" + "="*60)
     print(" Bitcoin model saved as 'btc_ultimate_model.h5'")
     print(f" Final Loss: {history.history['loss'][-1]:.6f}")
@@ -129,4 +132,4 @@ if __name__ == "__main__":
     if success:
         print("\n Bitcoin AI is ready for predictions!")
     else:
-        print("\n❌ Training failed. Check error messages above.")
+        print("\n[!] Training failed. Check error messages above.")

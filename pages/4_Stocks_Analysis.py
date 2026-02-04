@@ -13,12 +13,12 @@ from utils.ui_components import (
     render_news_section, create_price_chart,
     show_loading_message, show_error_message, render_prediction_table
 )
-from utils.predictor import AssetPredictor, batch_predict_tomorrow
+from utils.predictor import AssetPredictor, batch_predict_tomorrow, batch_multi_range_forecast
 
 # ==================== PAGE CONFIG ====================
 
 st.set_page_config(
-    page_title="US Stocks Analysis | XAUUSD Terminal",
+    page_title="Stocks Analysis | Market Intelligence",
     page_icon="",
     layout="wide"
 )
@@ -53,11 +53,11 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     st.markdown("####  Market Indices")
-    selected_indices = st.multiselect("Select indices", indices, default=indices[:1] if indices else [])
+    selected_indices = st.multiselect("Select indices", indices, default=indices)
 
 with col2:
     st.markdown("####  Magnificent 7")
-    selected_mag7 = st.multiselect("Select Mag7", mag7, default=mag7[:2] if len(mag7) >= 2 else mag7)
+    selected_mag7 = st.multiselect("Select Mag7", mag7, default=mag7)
 
 with col3:
     st.markdown("#### 💻 Semiconductors")
@@ -224,27 +224,28 @@ if not stocks_with_models:
 else:
     st.markdown(f"**Models available for:** {', '.join(stocks_with_models)}")
     
-    if st.button(" Predict Tomorrow (All Selected)", use_container_width=True):
-        with show_loading_message("Generating predictions for all stocks..."):
+    if st.button(" Generate Multi-Range Forecast (All Selected)", use_container_width=True):
+        with show_loading_message("Generating all forecasts..."):
             try:
-                predictions = batch_predict_tomorrow([s.lower() for s in stocks_with_models])
+                all_forecasts = batch_multi_range_forecast([s.lower() for s in stocks_with_models])
                 
                 # Create results dataframe
                 results = []
                 for ticker in stocks_with_models:
-                    pred = predictions[ticker.lower()]
-                    if 'error' not in pred:
-                        results.append({
+                    forecast = all_forecasts[ticker.lower()]
+                    if 'error' not in forecast:
+                        row = {
                             'Stock': ticker,
-                            'Company': STOCK_TICKERS[ticker]['name'],
-                            'Current': f"${pred['current']:,.2f}",
-                            'Tomorrow': f"${pred['predicted']:,.2f}",
-                            'Change': f"${pred['change']:+,.2f}",
-                            'Change %': f"{pred['pct_change']:+.2f}%",
-                            'Signal': ' Bullish' if pred['direction'] == 'up' else ' Bearish'
-                        })
+                            'Current': f"${forecast['Current']:,.2f}",
+                        }
+                        # Add each range from FORECAST_RANGES
+                        for range_name in forecast.keys():
+                            if range_name != 'Current':
+                                row[range_name] = f"${forecast[range_name]:,.2f}"
+                        
+                        results.append(row)
                 
-                st.markdown("####  Tomorrow's Predictions")
+                st.markdown("####  Multi-Range Forecast Summary")
                 st.dataframe(pd.DataFrame(results), use_container_width=True, hide_index=True)
                 
             except Exception as e:
@@ -315,11 +316,9 @@ for i, (sector, stocks) in enumerate(sector_performance.items()):
 st.markdown("---")
 st.markdown("### 📰 Latest Market News")
 
-# Show news for selected stock if available
-if selected_focus and os.path.exists(ASSETS[selected_focus.lower()]['news_file']):
+# Show news for selected stock (ui_components handles file check and empty state)
+if selected_focus:
     render_news_section(selected_focus.lower(), max_items=6)
-else:
-    st.info(" News sentiment available after running sync from Settings page.")
 
 # ==================== DISCLAIMER ====================
 

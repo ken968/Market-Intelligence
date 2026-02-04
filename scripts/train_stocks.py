@@ -8,6 +8,9 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping
 
+# Add project root to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # List of supported stocks
 SUPPORTED_STOCKS = [
     'SPY', 'QQQ', 'DIA',  # Indices
@@ -31,10 +34,10 @@ def train_stock_model(ticker):
     print("="*60)
     
     # 1. Load Data
-    data_file = f'{ticker}_global_insights.csv'
+    data_file = f'data/{ticker}_global_insights.csv'
     if not os.path.exists(data_file):
         print(f"Error: '{data_file}' not found.")
-        print(f"Run: python sentiment_fetcher_v2.py {ticker.lower()}")
+        print(f"Run: python scripts/sentiment_fetcher_v2.py {ticker.lower()}")
         return False
     
     df = pd.read_csv(data_file)
@@ -57,7 +60,7 @@ def train_stock_model(ticker):
     scaled_data = scaler.fit_transform(data)
     
     # Save scaler
-    scaler_file = f'{ticker}_scaler.pkl'
+    scaler_file = f'models/{ticker}_scaler.pkl'
     with open(scaler_file, 'wb') as f:
         pickle.dump(scaler, f)
     print(f"System: Scaler saved as '{scaler_file}'")
@@ -104,7 +107,7 @@ def train_stock_model(ticker):
     )
     
     # 6. Save Model
-    model_file = f'{ticker}_ultimate_model.h5'
+    model_file = f'models/{ticker}_ultimate_model.h5'
     model.save(model_file)
     
     print("\n" + "="*60)
@@ -129,10 +132,10 @@ def train_all_stocks():
         print(f"\n[{i}/{len(SUPPORTED_STOCKS)}] Training {ticker}...")
         try:
             success = train_stock_model(ticker)
-            results[ticker] = " Success" if success else "❌ Failed"
+            results[ticker] = " Success" if success else " Failed"
         except Exception as e:
             print(f"Error training {ticker}: {e}")
-            results[ticker] = f"❌ Error: {str(e)[:50]}"
+            results[ticker] = f" Error: {str(e)[:50]}"
     
     # Summary
     print("\n" + "="*60)
@@ -159,7 +162,7 @@ if __name__ == "__main__":
             if success:
                 print(f"\n {arg} AI is ready for predictions!")
             else:
-                print(f"\n❌ Training failed for {arg}")
+                print(f"\n[!] Training failed for {arg}")
         else:
             print(f"Unknown stock: {arg}")
             print(f"Supported: {', '.join(SUPPORTED_STOCKS)}")

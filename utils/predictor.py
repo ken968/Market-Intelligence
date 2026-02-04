@@ -211,6 +211,30 @@ def batch_predict_tomorrow(asset_keys):
     return results
 
 
+def batch_multi_range_forecast(asset_keys):
+    """
+    Generate multi-range forecasts for multiple assets
+    
+    Args:
+        asset_keys (list): List of asset keys
+    
+    Returns:
+        dict: {asset_key: multi_range_dict}
+    """
+    results = {}
+    
+    for key in asset_keys:
+        try:
+            predictor = AssetPredictor(key)
+            results[key] = predictor.get_multi_range_forecast()
+            # Add current price for reference
+            results[key]['Current'] = predictor.get_latest_price()
+        except Exception as e:
+            results[key] = {'error': str(e)}
+    
+    return results
+
+
 def get_forecast_dataframe(asset_key):
     """
     Generate forecast as a formatted DataFrame for display

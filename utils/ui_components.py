@@ -199,6 +199,10 @@ def render_news_section(asset_key, max_items=6):
     with open(news_file, 'r') as f:
         news = json.load(f)
     
+    if not news:
+        st.info(f"No recent news articles found for {config['name']} in the last 30 days.")
+        return
+    
     for art in news[:max_items]:
         score = art.get('sentiment', 0)
         s_class = "up" if score > 0.1 else ("down" if score < -0.1 else "text-sec")

@@ -17,7 +17,7 @@ from utils.predictor import batch_predict_tomorrow
 # ==================== PAGE CONFIG ====================
 
 st.set_page_config(
-    page_title="Dashboard | XAUUSD Terminal",
+    page_title="Dashboard | Market Intelligence",
     page_icon="",
     layout="wide"
 )
@@ -50,7 +50,7 @@ col1, col2 = st.columns([3, 1])
 with col1:
     # Group selection
     asset_groups = {
-        'Core Assets': ['gold', 'btc', 'spy'],
+        'Core Assets': ['gold', 'btc', 'spy', 'qqq'],
         'Market Indices': ['spy', 'qqq', 'dia'],
         'Magnificent 7': ['aapl', 'msft', 'googl', 'amzn', 'nvda', 'meta', 'tsla'],
         'All Stocks': ['spy', 'qqq', 'dia', 'aapl', 'msft', 'googl', 'amzn', 'nvda', 'meta', 'tsla', 'tsm']

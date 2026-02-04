@@ -18,7 +18,7 @@ from utils.predictor import AssetPredictor
 # ==================== PAGE CONFIG ====================
 
 st.set_page_config(
-    page_title="Bitcoin Analysis | XAUUSD Terminal",
+    page_title="Bitcoin Analysis | Market Intelligence",
     page_icon="",
     layout="wide"
 )
@@ -133,11 +133,22 @@ with col1:
             price_at_halving = df.loc[closest_idx, 'BTC']
             
             fig.add_vline(
-                x=halving_date,
+                x=halving_date.to_pydatetime(),
                 line_dash="dash",
-                line_color="yellow",
-                annotation_text=event,
-                annotation_position="top"
+                line_color="yellow"
+            )
+            
+            # Manually add annotation to avoid internal mean calculation error
+            fig.add_annotation(
+                x=halving_date.strftime('%Y-%m-%d'),
+                y=1,
+                yref="paper",
+                text=event,
+                showarrow=False,
+                font=dict(color="yellow"),
+                textangle=-90,
+                xanchor="right",
+                yanchor="top"
             )
     
     fig.update_layout(

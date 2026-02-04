@@ -5,13 +5,17 @@ import os
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
+import sys
+
+# Add project root to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # 1. Load Data
-if not os.path.exists('gold_global_insights.csv'):
-    print("Error: 'gold_global_insights.csv' not found. Fetch data first.")
+if not os.path.exists('data/gold_global_insights.csv'):
+    print("Error: 'data/gold_global_insights.csv' not found. Fetch data first.")
     exit()
 
-df = pd.read_csv('gold_global_insights.csv')
+df = pd.read_csv('data/gold_global_insights.csv')
 features = ['Gold', 'DXY', 'VIX', 'Yield_10Y', 'Sentiment']
 data = df[features].values
 
@@ -20,9 +24,9 @@ scaler = MinMaxScaler(feature_range=(0, 1))
 scaled_data = scaler.fit_transform(data)
 
 # Save Scaler for consistent inference in app.py
-with open('scaler.pkl', 'wb') as f:
+with open('models/scaler.pkl', 'wb') as f:
     pickle.dump(scaler, f)
-print("System: Scaler saved as 'scaler.pkl'")
+print("System: Scaler saved as 'models/scaler.pkl'")
 
 # 3. Data Preparation
 prediction_days = 60
@@ -52,5 +56,5 @@ print(f"System: Starting training on {len(x_train)} samples...")
 model.fit(x_train, y_train, epochs=30, batch_size=32, verbose=2)
 
 # 6. Save Model
-model.save('gold_ultimate_model.h5')
-print("System: Model saved as 'gold_ultimate_model.h5'")
+model.save('models/gold_ultimate_model.h5')
+print("System: Model saved as 'models/gold_ultimate_model.h5'")

@@ -20,14 +20,14 @@ class MultiAssetFetcher:
         self.btc_config = {
             'ticker': 'BTC-USD',
             'start_date': '2009-01-01',  # Genesis block era
-            'filename': 'btc_macro_data.csv'
+            'filename': 'data/btc_macro_data.csv'
         }
         
         # Gold: 10 years (existing)
         self.gold_config = {
             'ticker': 'GC=F',
             'period': '10y',
-            'filename': 'gold_macro_data.csv'
+            'filename': 'data/gold_macro_data.csv'
         }
         
         # US Stocks: 10 years
@@ -52,7 +52,7 @@ class MultiAssetFetcher:
         
         self.stock_config = {
             'period': '10y',
-            'filename_template': '{ticker}_macro_data.csv'  # Per-stock files
+            'filename_template': 'data/{ticker}_macro_data.csv'  # Per-stock files
         }
     
     def fetch_macro_indicators(self):
@@ -75,7 +75,7 @@ class MultiAssetFetcher:
             df.columns = ['DXY', 'VIX', 'Yield_10Y']
             df = df.dropna()
             
-            df.to_csv('macro_indicators.csv')
+            df.to_csv('data/macro_indicators.csv')
             print(f"System: {len(df)} macro records saved.")
             return df
             
@@ -100,11 +100,20 @@ class MultiAssetFetcher:
                 print("Error: No Gold data retrieved.")
                 return False
             
-            df = data['Close'].to_frame(name='Gold').ffill().dropna()
+            # Robust way to handle both single and MultiIndex from yfinance
+            if 'Close' in data.columns and isinstance(data.columns, pd.MultiIndex):
+                df = data['Close'].iloc[:, 0].to_frame(name='Gold')
+            elif 'Close' in data.columns:
+                df = data[['Close']].rename(columns={'Close': 'Gold'})
+            else:
+                # Fallback if structure is unexpected
+                df = data.iloc[:, 0].to_frame(name='Gold')
+                
+            df = df.ffill().dropna()
             
             # Merge with macro indicators
-            if os.path.exists('macro_indicators.csv'):
-                macro = pd.read_csv('macro_indicators.csv', index_col=0, parse_dates=True)
+            if os.path.exists('data/macro_indicators.csv'):
+                macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
                 df = df.join(macro, how='inner')
             
             df.to_csv(self.gold_config['filename'])
@@ -134,14 +143,22 @@ class MultiAssetFetcher:
                 print("Error: No Bitcoin data retrieved.")
                 return False
             
-            df = data['Close'].to_frame(name='BTC').ffill().dropna()
+            # Robust way to handle both single and MultiIndex from yfinance
+            if 'Close' in data.columns and isinstance(data.columns, pd.MultiIndex):
+                df = data['Close'].iloc[:, 0].to_frame(name='BTC')
+            elif 'Close' in data.columns:
+                df = data[['Close']].rename(columns={'Close': 'BTC'})
+            else:
+                df = data.iloc[:, 0].to_frame(name='BTC')
+                
+            df = df.ffill().dropna()
             
             # Add BTC-specific features
             df['Halving_Cycle'] = self._calculate_halving_cycle(df.index)
             
             # Merge with macro indicators (only where dates overlap)
-            if os.path.exists('macro_indicators.csv'):
-                macro = pd.read_csv('macro_indicators.csv', index_col=0, parse_dates=True)
+            if os.path.exists('data/macro_indicators.csv'):
+                macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
                 df = df.join(macro, how='left')
                 # Fill NaN for early dates where macro data doesn't exist
                 df['DXY'].fillna(method='bfill', inplace=True)
@@ -181,16 +198,24 @@ class MultiAssetFetcher:
                     print(f"Warning: No data for {tick}")
                     continue
                 
-                df = data['Close'].to_frame(name=tick).ffill().dropna()
+                # Robust way to handle both single and MultiIndex from yfinance
+                if 'Close' in data.columns and isinstance(data.columns, pd.MultiIndex):
+                    df = data['Close'].iloc[:, 0].to_frame(name=tick)
+                elif 'Close' in data.columns:
+                    df = data[['Close']].rename(columns={'Close': tick})
+                else:
+                    df = data.iloc[:, 0].to_frame(name=tick)
+                    
+                df = df.ffill().dropna()
                 
                 # Merge with macro indicators
-                if os.path.exists('macro_indicators.csv'):
-                    macro = pd.read_csv('macro_indicators.csv', index_col=0, parse_dates=True)
+                if os.path.exists('data/macro_indicators.csv'):
+                    macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
                     df = df.join(macro, how='inner')
                 
                 filename = self.stock_config['filename_template'].format(ticker=tick)
                 df.to_csv(filename)
-                print(f"  → {len(df)} records saved to '{filename}'")
+                print(f"  -> {len(df)} records saved to '{filename}'")
                 success_count += 1
                 
             except Exception as e:
@@ -245,7 +270,8 @@ class MultiAssetFetcher:
         print("SYNC SUMMARY")
         print("="*50)
         for asset, status in results.items():
-            print(f"{asset}: {' Success' if status else '❌ Failed'}")
+            status_text = 'Success' if status else 'Failed'
+            print(f"{asset}: {status_text}")
         print("="*50)
         
         return all(results.values())
@@ -272,19 +298,29 @@ if __name__ == "__main__":
         
         if asset == 'gold':
             fetcher.fetch_macro_indicators()
-            fetcher.fetch_gold_data()
+            success = fetcher.fetch_gold_data()
+            if not success:
+                sys.exit(1)
         elif asset == 'btc' or asset == 'bitcoin':
             fetcher.fetch_macro_indicators()
-            fetcher.fetch_bitcoin_data()
+            success = fetcher.fetch_bitcoin_data()
+            if not success:
+                sys.exit(1)
         elif asset == 'stocks':
             fetcher.fetch_macro_indicators()
-            fetcher.fetch_stock_data()
+            success = fetcher.fetch_stock_data()
+            if not success:
+                sys.exit(1)
         elif asset in fetcher.stock_tickers:
             fetcher.fetch_macro_indicators()
-            fetcher.fetch_stock_data(asset.upper())
+            success = fetcher.fetch_stock_data(asset.upper())
+            if not success:
+                sys.exit(1)
         else:
             print(f"Unknown asset: {asset}")
             print("Usage: python data_fetcher_v2.py [gold|btc|stocks|AAPL|NVDA|...]")
-    else:
+            sys.exit(1)
         # Default: Fetch all
-        fetcher.fetch_all()
+        success = fetcher.fetch_all()
+        if not success:
+            sys.exit(1)

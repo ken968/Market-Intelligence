@@ -16,7 +16,7 @@ from utils.predictor import batch_predict_tomorrow
 # ==================== PAGE CONFIG ====================
 
 st.set_page_config(
-    page_title="XAUUSD Multi-Asset Terminal",
+    page_title="Market Intelligence Terminal",
     page_icon="",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -27,7 +27,7 @@ inject_custom_css()
 # ==================== SIDEBAR ====================
 
 with st.sidebar:
-    st.image("https://via.placeholder.com/200x80/0B101B/C5A059?text=XAUUSD+TERMINAL", use_container_width=True)
+    st.image("https://via.placeholder.com/200x80/0B101B/C5A059?text=MARKET+INTELLIGENCE", use_container_width=True)
     
     st.markdown("###  Navigation")
     st.info("""
@@ -56,7 +56,7 @@ with st.sidebar:
         render_status_badge('danger', 'No Models Trained')
     
     st.markdown("---")
-    st.caption("© 2025 XAUUSD Terminal | AI-Powered Market Intelligence")
+    st.caption("© 2025 Market Intelligence | AI-Powered Market Terminal")
 
 # ==================== MAIN CONTENT ====================
 
@@ -234,7 +234,7 @@ with col3:
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; color: #94A3B8; font-size: 0.85rem;">
-    <strong>XAUUSD Multi-Asset Terminal</strong> | Powered by Deep Learning LSTM<br>
+    <strong>Market Intelligence Terminal</strong> | Powered by Deep Learning LSTM<br>
     AI Intelligence • Real-time Data • Sentiment Analysis<br>
      <em>Educational purpose only. Not financial advice.</em>
 </div>
