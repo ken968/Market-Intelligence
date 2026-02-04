@@ -1,7 +1,7 @@
-# XAUUSD Multi-Asset Terminal 
+# Market Intelligence
 
 > **AI-Powered Financial Intelligence Platform**  
-> Deep Learning predictions for Gold, Bitcoin, and US Equities with real-time sentiment analysis
+> Deep learning predictions for Gold, Bitcoin, and US Equities with real-time sentiment analysis.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)
@@ -9,31 +9,31 @@
 
 ---
 
-## 🌟 Features
+## Features
 
 ### Multi-Asset Coverage
-- ** Gold (XAUUSD)**: Precious metal analysis with macro correlations
-- ** Bitcoin**: Full history (2009-present) with halving cycle tracking
-- ** US Stocks**: 11 equities including S&P 500, Mag7, and semiconductors
+- **Gold (XAUUSD)**: Precious metal analysis with macro correlations.
+- **Bitcoin**: Full history (2009-present) with halving cycle tracking.
+- **US Stocks**: 11 equities including S&P 500, Mag7, and semiconductors.
 
 ### AI-Powered Predictions
-- **LSTM Deep Learning**: 3-layer neural networks optimized per asset type
-- **Multi-Range Forecasts**: 1 day to 1 year predictions
-- **Recursive Forecasting**: Advanced prediction chaining
+- **LSTM Deep Learning**: 3-layer neural networks optimized per asset type.
+- **Multi-Range Forecasts**: 1 day to 1 year predictions.
+- **Recursive Forecasting**: Advanced prediction chaining.
 
 ### Comprehensive Analysis
-- **Technical**: Price charts, trend analysis, volatility tracking
-- **Fundamental**: Sentiment analysis from 10+ trusted news sources
-- **Macro Correlation**: DXY, VIX, Treasury Yields integration
+- **Technical**: Price charts, trend analysis, volatility tracking.
+- **Fundamental**: Sentiment analysis from 10+ trusted news sources.
+- **Macro Correlation**: DXY, VIX, Treasury Yields integration.
 
 ### Professional UI
-- **Multi-Page App**: Dedicated pages for each asset class
-- **Real-Time Data**: Yahoo Finance + NewsAPI integration
-- **Interactive Charts**: Plotly visualizations with dark theme
+- **Multi-Page App**: Dedicated pages for each asset class.
+- **Real-Time Data**: Yahoo Finance + NewsAPI integration.
+- **Interactive Charts**: Plotly visualizations with dark theme.
 
 ---
 
-##  Quick Start
+## Quick Start
 
 ### Prerequisites
 ```bash
@@ -61,18 +61,18 @@ pip install -r requirements.txt
 ### First Run Setup
 ```bash
 # 1. Sync market data
-python data_fetcher_v2.py
+python scripts/data_fetcher_v2.py
 
 # 2. Analyze sentiment
-python sentiment_fetcher_v2.py all
+python scripts/sentiment_fetcher_v2.py all
 
 # 3. Train core models (Gold + BTC + SPY)
-python train_ultimate.py        # Gold
-python train_btc.py             # Bitcoin
-python train_stocks.py SPY      # S&P 500
+python scripts/train_ultimate.py        # Gold
+python scripts/train_btc.py             # Bitcoin
+python scripts/train_stocks.py SPY      # S&P 500
 
 # 4. (Optional) Train all 11 stocks
-python train_stocks.py ALL      # Takes 25-35 minutes
+python scripts/train_stocks.py ALL      # Takes 25-35 minutes
 
 # 5. Launch app
 streamlit run app.py
@@ -80,32 +80,35 @@ streamlit run app.py
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Market-Intelligence/
 ├── app.py                      # Main homepage
-├── pages/
-│   ├── 1__Dashboard.py       # Multi-asset overview
-│   ├── 2__Gold_Analysis.py   # Gold deep dive
-│   ├── 3__Bitcoin_Analysis.py # Bitcoin + halving cycles
-│   ├── 4__Stocks_Analysis.py # US equities tracking
-│   └── 5__Settings.py        # Control panel
-├── utils/
-│   ├── config.py               # Global configuration
-│   ├── predictor.py            # Unified prediction engine
-│   └── ui_components.py        # Reusable UI elements
-├── data_fetcher_v2.py          # Multi-asset data downloader
-├── sentiment_fetcher_v2.py     # News sentiment analyzer
-├── train_ultimate.py           # Gold model trainer
-├── train_btc.py                # Bitcoin model trainer
-├── train_stocks.py             # Stock model trainer
-└── requirements.txt            # Python dependencies
+├── pages/                      # Multi-page application views
+│   ├── 1_Dashboard.py
+│   ├── 2_Gold_Analysis.py
+│   ├── 3_Bitcoin_Analysis.py
+│   ├── 4_Stocks_Analysis.py
+│   └── 5_Settings.py
+├── scripts/                    # Core logic and training scripts
+│   ├── data_fetcher_v2.py
+│   ├── sentiment_fetcher_v2.py
+│   ├── train_ultimate.py
+│   ├── train_btc.py
+│   └── train_stocks.py
+├── utils/                      # Helper components and config
+│   ├── config.py
+│   ├── predictor.py
+│   └── ui_components.py
+├── data/                       # Historical and sentiment data
+├── models/                     # Trained LSTM models
+└── requirements.txt            # Project dependencies
 ```
 
 ---
 
-## 🤖 Model Architecture
+## Model Architecture
 
 ### Gold Model
 - **Architecture**: LSTM (100-50-25 units)
@@ -116,9 +119,9 @@ Market-Intelligence/
 
 ### Bitcoin Model
 - **Architecture**: LSTM (128-64-32 units) + higher dropout
-- **Sequence Length**: 90 days (captures longer cycles)
-- **Features**: BTC, DXY, VIX, Yield, Sentiment, **Halving Cycle**
-- **Training Data**: 2009-present (full history)
+- **Sequence Length**: 90 days
+- **Features**: BTC, DXY, VIX, Yield, Sentiment, Halving Cycle
+- **Training Data**: 2009-present
 - **Epochs**: 50
 
 ### Stock Models
@@ -130,7 +133,7 @@ Market-Intelligence/
 
 ---
 
-##  Supported Assets
+## Supported Assets
 
 ### Precious Metals
 - **GC=F** - Gold Futures (XAUUSD)
@@ -157,7 +160,7 @@ Market-Intelligence/
 
 ---
 
-## 🔧 Configuration
+## Configuration
 
 ### API Keys
 Edit `utils/config.py` to update NewsAPI key:
@@ -165,61 +168,12 @@ Edit `utils/config.py` to update NewsAPI key:
 NEWS_API_KEY = 'your_api_key_here'
 ```
 
-Get free API key: [https://newsapi.org/](https://newsapi.org/)
-
 ### Hyperparameters
-Modify training scripts to adjust model parameters:
-- `train_ultimate.py` - Gold
-- `train_btc.py` - Bitcoin
-- `train_stocks.py` - Stocks
+Modify training scripts in `scripts/` to adjust model parameters.
 
 ---
 
-##  Usage Examples
-
-### Sync Data for Specific Asset
-```bash
-# Gold only
-python data_fetcher_v2.py gold
-
-# Bitcoin only
-python data_fetcher_v2.py btc
-
-# Single stock
-python data_fetcher_v2.py NVDA
-
-# All stocks
-python data_fetcher_v2.py stocks
-```
-
-### Train Specific Models
-```bash
-# Train Gold
-python train_ultimate.py
-
-# Train Bitcoin
-python train_btc.py
-
-# Train single stock
-python train_stocks.py AAPL
-
-# Train all 11 stocks (batch)
-python train_stocks.py ALL
-```
-
-### Sentiment Analysis
-```bash
-# All assets
-python sentiment_fetcher_v2.py all
-
-# Specific asset
-python sentiment_fetcher_v2.py btc
-python sentiment_fetcher_v2.py nvda
-```
-
----
-
-## 🎨 UI Navigation
+## UI Navigation
 
 ### Homepage
 - System status overview
@@ -249,122 +203,53 @@ python sentiment_fetcher_v2.py nvda
 - Individual stock deep dives
 - Batch predictions for all stocks
 
-### Settings Page
-- Data synchronization controls
-- Model training interface
-- System maintenance tools
-
 ---
 
-##  Data Sources
-
-### Market Data
-- **Yahoo Finance API** (`yfinance`)
-  - Historical OHLC prices
-  - Macro indicators (DXY, VIX, US10Y)
-
-### News & Sentiment
-- **NewsAPI** 
-  - Trusted sources: Bloomberg, Reuters, WSJ, CNBC, etc.
-  - NLP analysis via TextBlob
-
----
-
-##  Disclaimer
-
-**This software is for educational purposes only.**
-
-- ❌ Not financial advice
-- ❌ Not investment recommendations
-- ❌ Past performance ≠ future results
-
-**High-Risk Assets:**
-- Gold and stocks involve significant volatility
-- Bitcoin is extremely volatile
-- AI predictions are probabilistic, not guaranteed
-
-**Always:**
-- Conduct your own research (DYOR)
-- Consult licensed financial advisors
-- Only invest what you can afford to lose
-
----
-
-## 🛠️ Troubleshooting
+## Troubleshooting
 
 ### Model Training Fails
-```bash
-# Ensure data is synced first
-python data_fetcher_v2.py
-python sentiment_fetcher_v2.py all
-
-# Check if CSV files exist
-ls *_global_insights.csv
-```
+- Ensure data is synced first using scripts in `scripts/`.
+- Check if CSV files exist in `data/`.
 
 ### Prediction Errors
-```bash
-# Clear cache and restart
-rm -rf __pycache__
-streamlit cache clear
-```
-
-### Data Download Issues
-- Check internet connection
-- Verify Yahoo Finance is accessible
-- Try syncing individual assets instead of all at once
+- Clear Streamlit cache and restart.
+- Ensure models are trained and saved in `models/`.
 
 ---
 
-##  Future Enhancements
-
+## Future Enhancements
 - [ ] Options flow analysis
 - [ ] Backtest simulator
 - [ ] Alert system (price/sentiment triggers)
 - [ ] Portfolio optimizer
 - [ ] Additional assets (commodities, forex)
-- [ ] Transformer models (BERT/GPT for sentiment)
 
 ---
 
-## 📝 License
-
+## License
 MIT License - see [LICENSE](LICENSE) file for details
 
 ---
 
-## 🤝 Contributing
-
-Contributions welcome! Please:
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
-
----
-
-## 📧 Contact
-
+## Contact
 **Project Maintainer**: Ken968  
 **GitHub**: [https://github.com/ken968/Market-Intelligence](https://github.com/ken968/Market-Intelligence)
 
 ---
 
-## 🙏 Acknowledgments
-
-- Yahoo Finance for market data API
+## Acknowledgments
+- Yahoo Finance for market data
 - NewsAPI for news aggregation
-- TensorFlow/Keras for deep learning framework
-- Streamlit for rapid UI development
-- Plotly for interactive visualizations
+- TensorFlow/Keras for deep learning
+- Streamlit for the dashboard UI
+- Plotly for interactive charts
 
 ---
 
 <div align="center">
 
-**⭐ Star this repo if you find it useful!**
+**Star this repo if you find it useful!**
 
-Built with ❤️ using Python, TensorFlow, and Streamlit
+Built with Python, TensorFlow, and Streamlit
 
 </div>
