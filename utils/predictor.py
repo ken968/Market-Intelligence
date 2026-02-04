@@ -127,33 +127,32 @@ class AssetPredictor:
             # Predict next step
             pred_scaled = self.predict_next_step(temp_data)
             
-            # 1. Price Clamping: Prevent negative prices after inverse transform
-            # We can't easily clamp scaled values, so we'll do a soft-clamp here
-            # or wait for the inverse transform. For now, let's use the last batch
-            # to guide the next frame.
-            
-            # 2. Build the next frame
+            # 1. Build the next frame
             last_frame = temp_data[0, -1, :].copy()
-            last_frame[0] = pred_scaled  # Update only price (first feature)
             
-            # 3. Feature Drift (Mean Reversion)
-            # As we go further into the future, macro indicators (DXY, VIX, etc.) 
-            # should slowly drift back to their historical averages.
-            # Drift rate: ~2% per day towards the mean
-            drift_rate = 0.02
+            # 2. Adaptive Recursive Damping
+            # For volatile assets like BTC, we need to be more aggressive in damping 
+            # as the steps increase, because small errors compound rapidly.
+            prev_price_scaled = temp_data[0, -1, 0]
+            delta = pred_scaled - prev_price_scaled
+            
+            # Dynamic damping factor: starts at 1.0, gets smaller as we go further
+            # For BTC, we use a more aggressive decay
+            if self.asset_key == 'btc':
+                # BTC is super volatile, pull back to reality faster
+                decay = 0.90 if i < 10 else 0.80
+            else:
+                decay = 0.95 if i < 10 else 0.90
+                
+            # Apply damping to the MOVEMENT, not the price itself
+            last_frame[0] = prev_price_scaled + (delta * decay)
+            
+            # 3. Feature Drift (Mean Reversion) with DXY Correlation Awareness
+            # DXY, VIX, etc. drift back to mean. 
+            drift_rate = 0.03 # Slightly faster drift for stability
             for f_idx in range(1, len(last_frame)):
                 target = scaled_means[f_idx]
                 last_frame[f_idx] = last_frame[f_idx] + (target - last_frame[f_idx]) * drift_rate
-            
-            # 4. Recursive Damping
-            # Dampen extreme price movements in long-term recursive loops (i > 10 steps)
-            if i > 5:
-                # Slowly pull the predicted price change towards zero to prevent runaway trends
-                prev_price = temp_data[0, -1, 0]
-                delta = pred_scaled - prev_price
-                # Dampen by 5% cumulative
-                damping_factor = 0.95
-                last_frame[0] = prev_price + (delta * damping_factor)
             
             # Shift window and add new prediction
             new_batch = np.append(temp_data[:, 1:, :], [[last_frame]], axis=1)
