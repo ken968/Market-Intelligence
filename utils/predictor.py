@@ -130,26 +130,33 @@ class AssetPredictor:
             # 1. Build the next frame
             last_frame = temp_data[0, -1, :].copy()
             
-            # 2. Adaptive Recursive Damping
-            # For volatile assets like BTC, we need to be more aggressive in damping 
-            # as the steps increase, because small errors compound rapidly.
+            # 2. Adaptive Recursive Damping & Price Anchoring
+            # We want short-term (1-5 days) to be pure AI prediction, 
+            # but long-term (1 mo - 1 yr) to revert to historical norms.
+            
             prev_price_scaled = temp_data[0, -1, 0]
-            delta = pred_scaled - prev_price_scaled
+            target_price_scaled = scaled_means[0]  # Historical average price
             
-            # Dynamic damping factor: starts at 1.0, gets smaller as we go further
-            # For BTC, we use a more aggressive decay
-            if self.asset_key == 'btc':
-                # BTC is super volatile, pull back to reality faster
-                decay = 0.90 if i < 10 else 0.80
-            else:
-                decay = 0.95 if i < 10 else 0.90
-                
-            # Apply damping to the MOVEMENT, not the price itself
-            last_frame[0] = prev_price_scaled + (delta * decay)
+            # Calculate the AI's intended delta
+            ai_delta = pred_scaled - prev_price_scaled
             
-            # 3. Feature Drift (Mean Reversion) with DXY Correlation Awareness
-            # DXY, VIX, etc. drift back to mean. 
-            drift_rate = 0.03 # Slightly faster drift for stability
+            # Convergence Factor: How much we trust the AI vs the Historical Mean
+            # As 'i' increases, we trust the Mean more.
+            # At i=0 (tomorrow), trust = 1.0. At i=252 (1 year), trust = 0.2
+            trust_factor = max(0.2, 1.0 - (i / 100.0))
+            
+            # Damping: apply decay to the movement
+            decay = 0.95 if self.asset_key != 'btc' else 0.85
+            
+            # Final price = (AI prediction with damping) + (Pull towards historical mean)
+            # This "Anchoring" prevents the price from ever hitting zero if the mean is healthy.
+            anchored_movement = (ai_delta * decay * trust_factor)
+            mean_reversion_pull = (target_price_scaled - prev_price_scaled) * (1.0 - trust_factor) * 0.05
+            
+            last_frame[0] = prev_price_scaled + anchored_movement + mean_reversion_pull
+            
+            # 3. Feature Drift (Macro indicators also drift to mean)
+            drift_rate = 0.03
             for f_idx in range(1, len(last_frame)):
                 target = scaled_means[f_idx]
                 last_frame[f_idx] = last_frame[f_idx] + (target - last_frame[f_idx]) * drift_rate
