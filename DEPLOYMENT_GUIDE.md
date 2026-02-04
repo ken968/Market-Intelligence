@@ -3,7 +3,7 @@
 ## 📦 Complete File Structure
 
 ```
-XAUUSD-Analyzer/
+Market-Intelligence/
 ├── 📄 Core Application
 │   ├── app.py                      # Main homepage (entry point)
 │   ├── requirements.txt            # Python dependencies
@@ -50,7 +50,7 @@ cd /path/to/your/XAUUSD
 git init
 
 # Add remote (your existing GitHub repo)
-git remote add origin https://github.com/ken968/XAUUSD-Analyzer.git
+git remote add origin https://github.com/ken968/Market-Intelligence.git
 
 # Create new branch for v2
 git checkout -b feature/multi-asset-v2
@@ -341,7 +341,7 @@ CMD ["streamlit", "run", "app.py"]
 
 ### Contact
 - GitHub: @ken968
-- Project: https://github.com/ken968/XAUUSD-Analyzer
+- Project: https://github.com/ken968/Market-Intelligence
 
 ---
 

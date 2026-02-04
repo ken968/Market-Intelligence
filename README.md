@@ -47,8 +47,8 @@ pip install -r requirements.txt
 ### Installation
 ```bash
 # Clone repository
-git clone https://github.com/ken968/XAUUSD-Analyzer.git
-cd XAUUSD-Analyzer
+git clone https://github.com/ken968/Market-Intelligence.git
+cd Market-Intelligence
 
 # Create virtual environment
 python -m venv .venv
@@ -83,7 +83,7 @@ streamlit run app.py
 ## 📁 Project Structure
 
 ```
-XAUUSD-Analyzer/
+Market-Intelligence/
 ├── app.py                      # Main homepage
 ├── pages/
 │   ├── 1__Dashboard.py       # Multi-asset overview
@@ -347,7 +347,7 @@ Contributions welcome! Please:
 ## 📧 Contact
 
 **Project Maintainer**: Ken968  
-**GitHub**: [https://github.com/ken968/XAUUSD-Analyzer](https://github.com/ken968/XAUUSD-Analyzer)
+**GitHub**: [https://github.com/ken968/Market-Intelligence](https://github.com/ken968/Market-Intelligence)
 
 ---
 
