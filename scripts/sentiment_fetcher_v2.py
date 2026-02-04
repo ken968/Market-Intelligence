@@ -65,20 +65,19 @@ def fetch_news_sentiment(asset='gold', max_articles=15):
     asset_lower = asset.lower()
     query = ASSET_QUERIES.get(asset_lower, ASSET_QUERIES['stocks'])
     
-    url = (
-        f'https://newsapi.org/v2/everything?'
-        f'q={query}&'
-        f'domains={TRUSTED_DOMAINS}&'
-        f'language=en&'
-        f'sortBy=publishedAt&'
-        f'pageSize=100&'
-        f'apiKey={API_KEY}'
-    )
-    
     print(f"System: Analyzing {asset.upper()} sentiment from trusted sources...")
     
+    params = {
+        'q': query,
+        'domains': TRUSTED_DOMAINS,
+        'language': 'en',
+        'sortBy': 'publishedAt',
+        'pageSize': 100,
+        'apiKey': API_KEY
+    }
+    
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get('https://newsapi.org/v2/everything', params=params, timeout=10)
         data = response.json()
         
         if data.get('status') != 'ok':
@@ -128,11 +127,14 @@ def fetch_news_sentiment(asset='gold', max_articles=15):
                 'sentiment': score
             })
     
-    # Save news for dashboard (even if empty to signal sync happened)
+    # Save news for dashboard (always save, even if empty, to signal sync happened)
     news_file = f'data/latest_news_{asset_lower}.json'
-    with open(news_file, 'w') as f:
-        json.dump(display_news, f, indent=4)
-    print(f"System: {len(display_news)} articles saved to '{news_file}'")
+    try:
+        with open(news_file, 'w') as f:
+            json.dump(display_news, f, indent=4)
+        print(f"System: {len(display_news)} articles saved to '{news_file}'")
+    except Exception as e:
+        print(f"Error saving news file: {e}")
     
     if not news_data:
         print(f"System: No relevant news found for {asset} after filtering.")
