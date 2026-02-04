@@ -6,7 +6,7 @@ from textblob import TextBlob
 from datetime import datetime
 
 # Configuration
-API_KEY = 'cb548b26fc6542c0a6bb871ef3786eba'
+from config import API_KEY
 TRUSTED_DOMAINS = (
     "bloomberg.com,reuters.com,cnbc.com,wsj.com,finance.yahoo.com,"
     "investing.com,marketwatch.com,economist.com,ft.com"

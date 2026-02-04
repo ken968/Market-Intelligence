@@ -15,6 +15,9 @@ ENV/
 # Streamlit
 .streamlit/
 
+# Secret config
+config.py
+
 # OS
 .DS_Store
 Thumbs.db
