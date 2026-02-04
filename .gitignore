@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+
+# Data & Models (Usually ignored if large, but keeping .csv for small datasets is okay)
+# gold_ultimate_model.h5
+# scaler.pkl
+# *.csv
+
+# Streamlit
+.streamlit/
+
+# OS
+.DS_Store
+Thumbs.db
