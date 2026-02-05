@@ -8,7 +8,10 @@ import subprocess
 import os
 import sys
 import re
-from utils.config import get_asset_status, get_all_stock_tickers, ASSETS
+from utils.config import (
+    get_asset_status, get_all_stock_tickers, ASSETS, 
+    check_data_exists, check_model_exists
+)
 from utils.ui_components import (
     inject_custom_css, render_page_header, render_status_badge,
     show_loading_message, show_success_message, show_error_message
@@ -87,7 +90,25 @@ render_page_header(
 
 st.markdown("###  System Status")
 
-status = get_asset_status()
+# Helper to build status dictionary
+def build_status_dict():
+    status = {}
+    # Gold & BTC
+    for asset in ['gold', 'btc']:
+        status[asset] = {
+            'data': check_data_exists(asset),
+            'model': check_model_exists(asset)
+        }
+    # Stocks
+    for ticker in get_all_stock_tickers():
+        key = ticker.lower()
+        status[key] = {
+            'data': check_data_exists(key),
+            'model': check_model_exists(key)
+        }
+    return status
+
+status = build_status_dict()
 
 col1, col2, col3 = st.columns(3)
 
