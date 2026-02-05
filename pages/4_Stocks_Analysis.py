@@ -320,7 +320,7 @@ st.markdown("###  Latest Market News")
 
 # Show news for selected stock (ui_components handles file check and empty state)
 if selected_focus:
-    render_news_section(selected_focus.lower(), max_items=6)
+    render_news_section(selected_focus.lower(), max_items=20)
 
 # ==================== DISCLAIMER ====================
 

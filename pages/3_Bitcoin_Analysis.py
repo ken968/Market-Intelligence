@@ -328,7 +328,7 @@ st.markdown("---")
 
 st.markdown("###  Crypto News & Market Sentiment")
 
-render_news_section('btc', max_items=8)
+render_news_section('btc', max_items=20)
 
 # ==================== FUNDAMENTAL ANALYSIS ====================
 

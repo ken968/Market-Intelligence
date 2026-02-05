@@ -228,7 +228,7 @@ st.markdown("---")
 
 st.markdown("###  Market News & Sentiment Analysis")
 
-render_news_section('gold', max_items=8)
+render_news_section('gold', max_items=20)
 
 # ==================== FUNDAMENTAL FACTORS ====================
 

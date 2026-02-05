@@ -134,14 +134,37 @@ def check_data_exists(asset_key):
     if not config: return False
     return os.path.exists(config['data_file'])
 
-def get_asset_status(asset_key):
-    """Get sync and training status"""
-    has_model = check_model_exists(asset_key)
-    has_data = check_data_exists(asset_key)
-    
-    if has_model and has_data:
-        return "READY"
-    elif has_data:
-        return "NEEDS TRAINING"
+def get_asset_status(asset_key=None):
+    """
+    Get sync and training status.
+    If asset_key is provided, returns string status for that asset.
+    If asset_key is None, returns dictionary with full system status.
+    """
+    if asset_key:
+        # Single asset check
+        has_model = check_model_exists(asset_key)
+        has_data = check_data_exists(asset_key)
+        
+        if has_model and has_data:
+            return "READY"
+        elif has_data:
+            return "NEEDS TRAINING"
+        else:
+            return "NEEDS SYNC"
     else:
-        return "NEEDS SYNC"
+        # Full system status (for Dashboard/Settings)
+        status = {}
+        # Gold & BTC
+        for asset in ['gold', 'btc']:
+            status[asset] = {
+                'data': check_data_exists(asset),
+                'model': check_model_exists(asset)
+            }
+        # Stocks
+        for ticker in get_all_stock_tickers():
+            key = ticker.lower()
+            status[key] = {
+                'data': check_data_exists(key),
+                'model': check_model_exists(key)
+            }
+        return status
