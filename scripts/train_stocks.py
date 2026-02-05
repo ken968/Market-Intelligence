@@ -5,7 +5,7 @@ import os
 import sys
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, Dropout
+from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
 from tensorflow.keras.callbacks import EarlyStopping
 
 # Add project root to path for imports
@@ -21,10 +21,7 @@ SUPPORTED_STOCKS = [
 def train_stock_model(ticker):
     """
     Train prediction model for a specific US stock.
-    Uses 60-day window like Gold model.
-    
-    Args:
-        ticker (str): Stock ticker symbol (e.g., 'AAPL', 'SPY')
+    Using Keras 3 format.
     """
     
     ticker = ticker.upper()
@@ -42,8 +39,8 @@ def train_stock_model(ticker):
     
     df = pd.read_csv(data_file)
     
-    # Features: Stock price + macro + sentiment
-    features = [ticker, 'DXY', 'VIX', 'Yield_10Y', 'Sentiment']
+    # Features: Stock price + macro + sentiment + EMA 90
+    features = [ticker, 'DXY', 'VIX', 'Yield_10Y', 'Sentiment', 'EMA_90']
     
     # Handle missing sentiment
     if 'Sentiment' not in df.columns:
@@ -69,6 +66,10 @@ def train_stock_model(ticker):
     prediction_days = 60  # Same as Gold
     x_train, y_train = [], []
     
+    if len(scaled_data) <= prediction_days:
+        print("Not enough data to train.")
+        return False
+
     for x in range(prediction_days, len(scaled_data)):
         x_train.append(scaled_data[x-prediction_days:x, :])
         y_train.append(scaled_data[x, 0])  # Predict stock price
@@ -79,9 +80,9 @@ def train_stock_model(ticker):
     print(f"Sequence shape: {x_train.shape}")
     
     # 4. Model Architecture
-    # Standard architecture (similar to Gold)
     model = Sequential([
-        LSTM(units=100, return_sequences=True, input_shape=(x_train.shape[1], x_train.shape[2])),
+        Input(shape=(x_train.shape[1], x_train.shape[2])),
+        LSTM(units=100, return_sequences=True),
         Dropout(0.2),
         LSTM(units=50, return_sequences=False),
         Dropout(0.2),
@@ -107,7 +108,8 @@ def train_stock_model(ticker):
     )
     
     # 6. Save Model
-    model_file = f'models/{ticker}_ultimate_model.h5'
+    # Save as .keras
+    model_file = f'models/{ticker}_ultimate_model.keras'
     model.save(model_file)
     
     print("\n" + "="*60)
@@ -123,8 +125,6 @@ def train_all_stocks():
     print("\n" + "="*60)
     print("BATCH TRAINING: ALL US STOCKS")
     print("="*60)
-    print(f"Training {len(SUPPORTED_STOCKS)} models...")
-    print("This may take 30-60 minutes depending on your hardware.\n")
     
     results = {}
     
@@ -145,7 +145,7 @@ def train_all_stocks():
         print(f"{ticker:6s}: {status}")
     print("="*60)
     
-    success_count = sum(1 for s in results.values() if "" in s)
+    success_count = sum(1 for s in results.values() if "Success" in s)
     print(f"\nCompleted: {success_count}/{len(SUPPORTED_STOCKS)} models trained successfully")
     
     return success_count == len(SUPPORTED_STOCKS)
@@ -165,10 +165,5 @@ if __name__ == "__main__":
                 print(f"\n[!] Training failed for {arg}")
         else:
             print(f"Unknown stock: {arg}")
-            print(f"Supported: {', '.join(SUPPORTED_STOCKS)}")
-            print("Usage: python train_stocks.py [TICKER|ALL]")
     else:
         print("Usage: python train_stocks.py [TICKER|ALL]")
-        print(f"Example: python train_stocks.py AAPL")
-        print(f"         python train_stocks.py ALL")
-        print(f"\nSupported stocks: {', '.join(SUPPORTED_STOCKS)}")

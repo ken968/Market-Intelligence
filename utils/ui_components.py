@@ -181,7 +181,7 @@ def render_metric_card(label, value, delta=None, format_str="${:,.2f}"):
         """, unsafe_allow_html=True)
 
 
-def render_news_section(asset_key, max_items=6):
+def render_news_section(asset_key, max_items=20):
     """
     Render news section for specific asset
     
@@ -231,7 +231,7 @@ def render_status_badge(status, label):
 
 def create_price_chart(df, price_col, title="Price Chart", color="#FFD700"):
     """
-    Create interactive price chart with Plotly
+    Create interactive price chart with Plotly, including EMA 90
     
     Args:
         df (pd.DataFrame): Data with Date and price columns
@@ -244,23 +244,41 @@ def create_price_chart(df, price_col, title="Price Chart", color="#FFD700"):
     """
     fig = go.Figure()
     
+    # 1. Main Price Line
     fig.add_trace(go.Scatter(
         x=df['Date'] if 'Date' in df.columns else df.index,
         y=df[price_col],
-        name=price_col,
-        line=dict(color=color, width=2),
+        name=f"{price_col} Price",
+        line=dict(color=color, width=2.5),
         fill='tonexty',
-        fillcolor=f'rgba({int(color[1:3], 16)}, {int(color[3:5], 16)}, {int(color[5:7], 16)}, 0.1)'
+        fillcolor=f'rgba({int(color[1:3], 16)}, {int(color[3:5], 16)}, {int(color[5:7], 16)}, 0.05)'
     ))
+    
+    # 2. EMA 90 Line (Indicator)
+    if 'EMA_90' in df.columns:
+        fig.add_trace(go.Scatter(
+            x=df['Date'] if 'Date' in df.columns else df.index,
+            y=df['EMA_90'],
+            name="EMA 90 (Trend)",
+            line=dict(color="#FFA500", width=1.5, dash='dash'), # Amber/Orange dash
+            opacity=0.8
+        ))
     
     fig.update_layout(
         template="plotly_dark",
         title=title,
-        height=400,
-        margin=dict(l=20, r=20, t=40, b=20),
+        height=450, # Slightly taller for indicator
+        margin=dict(l=20, r=100, t=40, b=20),
         xaxis_title="Date",
         yaxis_title="Price (USD)",
-        hovermode='x unified'
+        hovermode='x unified',
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        )
     )
     
     return fig
@@ -293,7 +311,7 @@ def create_multi_asset_comparison(data_dict):
         template="plotly_dark",
         title="Multi-Asset Performance Comparison",
         height=500,
-        margin=dict(l=20, r=20, t=40, b=20),
+        margin=dict(l=30, r=100, t=40, b=20),
         xaxis_title="Date",
         yaxis_title="Normalized Price",
         hovermode='x unified'
@@ -340,7 +358,7 @@ def create_forecast_chart(historical_df, forecast_values, price_col, forecast_da
         template="plotly_dark",
         title="Price Forecast",
         height=400,
-        margin=dict(l=20, r=20, t=40, b=20),
+        margin=dict(l=20, r=100, t=40, b=20),
         xaxis_title="Date",
         yaxis_title="Price (USD)",
         hovermode='x unified'
@@ -362,7 +380,12 @@ def render_prediction_table(predictions_dict, asset_name):
         f'{asset_name} Predicted Price': [f"${v:,.2f}" for v in predictions_dict.values()]
     })
     
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    st.dataframe(
+        df, 
+        use_container_width=True, 
+        hide_index=True,
+        height=(len(df) + 1) * 35 + 3  # Dynamic height: (rows + header) * px_per_row + buffer
+    )
 
 
 def show_loading_message(message="Processing..."):

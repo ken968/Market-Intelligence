@@ -121,15 +121,22 @@ with col1:
     import plotly.graph_objects as go
     
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=df['Date'], y=df['Gold'], name='Gold', yaxis='y1', line=dict(color='#FFD700')))
-    fig.add_trace(go.Scatter(x=df['Date'], y=df['DXY'], name='DXY', yaxis='y2', line=dict(color='#4b6bff')))
+    # Gold Price
+    fig.add_trace(go.Scatter(x=df['Date'], y=df['Gold'], name='Gold', yaxis='y1', line=dict(color='#FFD700', width=2)))
+    # EMA 90 (Indicator)
+    if 'EMA_90' in df.columns:
+        fig.add_trace(go.Scatter(x=df['Date'], y=df['EMA_90'], name='EMA 90', yaxis='y1', line=dict(color='#FFA500', width=1, dash='dash'), opacity=0.7))
+    # DXY Index
+    fig.add_trace(go.Scatter(x=df['Date'], y=df['DXY'], name='DXY Index', yaxis='y2', line=dict(color='#4b6bff', width=1.5)))
     
     fig.update_layout(
         template="plotly_dark",
         height=350,
         yaxis=dict(title="Gold Price (USD)"),
         yaxis2=dict(title="DXY Index", overlaying='y', side='right'),
-        hovermode='x unified'
+        margin=dict(l=20, r=100, t=40, b=20),
+        hovermode='x unified',
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -137,15 +144,22 @@ with col2:
     st.markdown("#### Gold vs VIX (Risk Indicator)")
     
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=df['Date'], y=df['Gold'], name='Gold', yaxis='y1', line=dict(color='#FFD700')))
-    fig.add_trace(go.Scatter(x=df['Date'], y=df['VIX'], name='VIX', yaxis='y2', line=dict(color='#FF4D4D')))
+    # Gold Price
+    fig.add_trace(go.Scatter(x=df['Date'], y=df['Gold'], name='Gold', yaxis='y1', line=dict(color='#FFD700', width=2)))
+    # EMA 90 (Indicator)
+    if 'EMA_90' in df.columns:
+        fig.add_trace(go.Scatter(x=df['Date'], y=df['EMA_90'], name='EMA 90', yaxis='y1', line=dict(color='#FFA500', width=1, dash='dash'), opacity=0.7))
+    # VIX Index
+    fig.add_trace(go.Scatter(x=df['Date'], y=df['VIX'], name='VIX (Fear)', yaxis='y2', line=dict(color='#FF4D4D', width=1.5)))
     
     fig.update_layout(
         template="plotly_dark",
         height=350,
         yaxis=dict(title="Gold Price (USD)"),
         yaxis2=dict(title="VIX Index", overlaying='y', side='right'),
-        hovermode='x unified'
+        margin=dict(l=20, r=100, t=40, b=20),
+        hovermode='x unified',
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -204,7 +218,7 @@ else:
         **AI Model Details:**
         - Architecture: LSTM 3-Layer
         - Sequence Length: 60 days
-        - Features: Gold, DXY, VIX, Yield, Sentiment
+        - Features: Gold, DXY, VIX, Yield, Sentiment, EMA_90
         - Training: 10 years historical data
         """)
 
@@ -212,20 +226,20 @@ st.markdown("---")
 
 # ==================== NEWS & SENTIMENT ====================
 
-st.markdown("### 📰 Market News & Sentiment Analysis")
+st.markdown("###  Market News & Sentiment Analysis")
 
 render_news_section('gold', max_items=8)
 
 # ==================== FUNDAMENTAL FACTORS ====================
 
 st.markdown("---")
-st.markdown("### 🌍 Fundamental Analysis Factors")
+st.markdown("###  Fundamental Analysis Factors")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
     st.markdown("""
-    #### 💵 Dollar Strength (DXY)
+    ####  Dollar Strength (DXY)
     **Current:** {:.2f}
     
     Strong dollar typically pressures gold prices due to:
@@ -236,7 +250,7 @@ with col1:
 
 with col2:
     st.markdown("""
-    #### 😨 Market Fear (VIX)
+    ####  Market Fear (VIX)
     **Current:** {:.2f}
     
     Gold as safe-haven asset thrives when:

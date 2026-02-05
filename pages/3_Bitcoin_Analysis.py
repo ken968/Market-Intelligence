@@ -92,7 +92,7 @@ st.markdown("---")
 
 # ==================== HALVING CYCLE ANALYSIS ====================
 
-st.markdown("### ⚡ Bitcoin Halving Cycle")
+st.markdown("###  Bitcoin Halving Cycle")
 
 # Halving dates
 halving_dates = {
@@ -167,10 +167,10 @@ with col2:
     for event, date in halving_dates.items():
         if 'Next' in event:
             st.markdown(f"**{event}**")
-            st.info(f"📅 {date}")
+            st.info(f" {date}")
         else:
             st.markdown(f"**{event}**")
-            st.text(f"📅 {date}")
+            st.text(f" {date}")
     
     st.markdown("---")
     st.info("""
@@ -240,6 +240,7 @@ with col1:
         height=350,
         yaxis=dict(title="BTC Price (USD)"),
         yaxis2=dict(title="DXY Index", overlaying='y', side='right'),
+        margin=dict(l=20, r=100, t=40, b=20),
         hovermode='x unified'
     )
     st.plotly_chart(fig, use_container_width=True)
@@ -256,6 +257,7 @@ with col2:
         height=350,
         yaxis=dict(title="BTC Price (USD)"),
         yaxis2=dict(title="VIX Index", overlaying='y', side='right'),
+        margin=dict(l=20, r=100, t=40, b=20),
         hovermode='x unified'
     )
     st.plotly_chart(fig, use_container_width=True)
@@ -315,7 +317,7 @@ else:
         **BTC AI Model:**
         - Architecture: LSTM (128-64-32)
         - Sequence: 90 days (longer for cycles)
-        - Features: BTC, DXY, VIX, Yield, Sentiment, **Halving Cycle**
+        - Features: BTC, DXY, VIX, Yield, Sentiment, Halving Cycle, **EMA_90**
         - Training Data: 2009 - Present
         - Higher dropout (0.3) for volatility
         """)
@@ -324,20 +326,20 @@ st.markdown("---")
 
 # ==================== NEWS & SENTIMENT ====================
 
-st.markdown("### 📰 Crypto News & Market Sentiment")
+st.markdown("###  Crypto News & Market Sentiment")
 
 render_news_section('btc', max_items=8)
 
 # ==================== FUNDAMENTAL ANALYSIS ====================
 
 st.markdown("---")
-st.markdown("### 🌐 Fundamental Analysis")
+st.markdown("###  Fundamental Analysis")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
     st.markdown("""
-    #### ⚡ Supply Dynamics
+    ####  Supply Dynamics
     - **Max Supply**: 21,000,000 BTC
     - **Current Supply**: ~19.7M BTC
     - **Inflation Rate**: ~1.7% (decreasing)
@@ -348,7 +350,7 @@ with col1:
 
 with col2:
     st.markdown("""
-    #### 🏦 Institutional Adoption
+    ####  Institutional Adoption
     - Spot ETFs approved (2024)
     - Corporate treasury holdings
     - PayPal, Square integration
@@ -359,7 +361,7 @@ with col2:
 
 with col3:
     st.markdown("""
-    #### 🌍 Macro Environment
+    ####  Macro Environment
     - DXY: {:.2f} (Dollar strength)
     - VIX: {:.2f} (Market fear)
     - US 10Y: {:.2f}% (Risk-free rate)

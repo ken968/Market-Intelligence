@@ -2,47 +2,41 @@ import pandas as pd
 import numpy as np
 import pickle
 import os
+import sys
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, Dropout
+from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
 from tensorflow.keras.callbacks import EarlyStopping
 
 # Add project root to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def train_btc_model():
-    """
-    Train Bitcoin prediction model with longer sequence window.
-    Uses 90-day lookback to capture halving cycle patterns.
-    """
-    
     print("="*60)
-    print("BITCOIN AI MODEL TRAINING - DEEP LEARNING LSTM")
+    print(" BITCOIN AI MODEL TRAINING - DEEP LEARNING LSTM")
     print("="*60)
     
     # 1. Load Data
-    if not os.path.exists('data/btc_global_insights.csv'):
-        print("Error: 'data/btc_global_insights.csv' not found.")
-        print("Run: python scripts/sentiment_fetcher_v2.py btc")
+    data_file = 'data/btc_global_insights.csv'
+    if not os.path.exists(data_file):
+        print(f"Error: '{data_file}' not found.")
+        print("Run: python data_fetcher_v2.py btc")
         return False
     
-    df = pd.read_csv('data/btc_global_insights.csv')
+    df = pd.read_csv(data_file)
     
-    # Features: BTC price + macro + sentiment + halving cycle
-    features = ['BTC', 'DXY', 'VIX', 'Yield_10Y', 'Sentiment', 'Halving_Cycle']
+    # Features: BTC price + macro + sentiment + halving + EMA 90
+    features = ['BTC', 'DXY', 'VIX', 'Yield_10Y', 'Sentiment', 'Halving_Cycle', 'EMA_90']
     
-    # Handle missing columns (if sentiment not run yet)
-    if 'Sentiment' not in df.columns:
-        print("Warning: Sentiment data missing. Using 0 as placeholder.")
-        df['Sentiment'] = 0
-    
+    # Calculate Halving Cycle if missing
     if 'Halving_Cycle' not in df.columns:
-        print("Warning: Halving_Cycle missing. Recalculating...")
-        df['Halving_Cycle'] = calculate_halving_cycle(pd.to_datetime(df['Date']))
+        print("Calculating Halving Cycle...")
+        df['Date'] = pd.to_datetime(df['Date'])
+        df['Halving_Cycle'] = calculate_halving_cycle(df['Date'])
     
     data = df[features].values
     
-    print(f"Dataset: {len(df)} records from {df['Date'].iloc[0]} to {df['Date'].iloc[-1]}")
+    print(f"Dataset: {len(df)} records")
     print(f"Features: {features}")
     
     # 2. Normalization
@@ -50,18 +44,18 @@ def train_btc_model():
     scaled_data = scaler.fit_transform(data)
     
     # Save scaler
-    with open('models/btc_scaler.pkl', 'wb') as f:
+    scaler_file = 'models/btc_scaler.pkl'
+    with open(scaler_file, 'wb') as f:
         pickle.dump(scaler, f)
-    print("System: Scaler saved as 'models/btc_scaler.pkl'")
+    print(f"System: Scaler saved as '{scaler_file}'")
     
     # 3. Data Preparation
-    # BTC uses 90-day window (vs 60 for Gold) to capture longer cycles
-    prediction_days = 90
+    prediction_days = 90  # Longer window for BTC
     x_train, y_train = [], []
     
     for x in range(prediction_days, len(scaled_data)):
         x_train.append(scaled_data[x-prediction_days:x, :])
-        y_train.append(scaled_data[x, 0])  # Predict BTC price (index 0)
+        y_train.append(scaled_data[x, 0])  # Predict BTC price
     
     x_train, y_train = np.array(x_train), np.array(y_train)
     
@@ -69,9 +63,9 @@ def train_btc_model():
     print(f"Sequence shape: {x_train.shape}")
     
     # 4. Model Architecture
-    # Slightly deeper than Gold model due to higher volatility
     model = Sequential([
-        LSTM(units=128, return_sequences=True, input_shape=(x_train.shape[1], x_train.shape[2])),
+        Input(shape=(x_train.shape[1], x_train.shape[2])),
+        LSTM(units=128, return_sequences=True),
         Dropout(0.3),  # Higher dropout for BTC volatility
         LSTM(units=64, return_sequences=True),
         Dropout(0.3),
@@ -83,7 +77,7 @@ def train_btc_model():
     
     model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
     
-    # Early stopping to prevent overfitting
+    # Early stopping
     early_stop = EarlyStopping(monitor='loss', patience=5, restore_best_weights=True)
     
     # 5. Training
@@ -100,9 +94,10 @@ def train_btc_model():
     )
     
     # 6. Save Model
-    model.save('models/btc_ultimate_model.h5')
+    # Updated to .keras format
+    model.save('models/btc_ultimate_model.keras')
     print("\n" + "="*60)
-    print(" Bitcoin model saved as 'btc_ultimate_model.h5'")
+    print(" Bitcoin model saved as 'btc_ultimate_model.keras'")
     print(f" Final Loss: {history.history['loss'][-1]:.6f}")
     print("="*60)
     

@@ -72,7 +72,19 @@ class MultiAssetFetcher:
                 return None
             
             df = data['Close'].ffill()
-            df.columns = ['DXY', 'VIX', 'Yield_10Y']
+            
+            # Map columns explicitly by ticker to avoid swapping
+            column_mapping = {
+                self.macro_tickers['USD_Index']: 'DXY',
+                self.macro_tickers['VIX']: 'VIX',
+                self.macro_tickers['US_10Y_Yield']: 'Yield_10Y'
+            }
+            
+            # Rename based on actual ticker names in columns
+            df.columns = [column_mapping.get(col, col) for col in df.columns]
+            
+            # Ensure they are in the expected order
+            df = df[['DXY', 'VIX', 'Yield_10Y']]
             df = df.dropna()
             
             df.to_csv('data/macro_indicators.csv')
@@ -83,6 +95,10 @@ class MultiAssetFetcher:
             print(f"Error fetching macro data: {e}")
             return None
     
+    def _calculate_ema(self, data, window=90):
+        """Calculate Exponential Moving Average"""
+        return data.ewm(span=window, adjust=False).mean()
+
     def fetch_gold_data(self):
         """Fetch Gold data (existing logic)"""
         print("\n=== GOLD DATA ===")
@@ -110,6 +126,9 @@ class MultiAssetFetcher:
                 df = data.iloc[:, 0].to_frame(name='Gold')
                 
             df = df.ffill().dropna()
+            
+            # Add Technical Indicators
+            df['EMA_90'] = self._calculate_ema(df['Gold'], 90)
             
             # Merge with macro indicators
             if os.path.exists('data/macro_indicators.csv'):
@@ -153,8 +172,9 @@ class MultiAssetFetcher:
                 
             df = df.ffill().dropna()
             
-            # Add BTC-specific features
+            # Add BTC-specific features & Indicators
             df['Halving_Cycle'] = self._calculate_halving_cycle(df.index)
+            df['EMA_90'] = self._calculate_ema(df['BTC'], 90)
             
             # Merge with macro indicators (only where dates overlap)
             if os.path.exists('data/macro_indicators.csv'):
@@ -207,6 +227,9 @@ class MultiAssetFetcher:
                     df = data.iloc[:, 0].to_frame(name=tick)
                     
                 df = df.ffill().dropna()
+                
+                # Add Technical Indicators
+                df['EMA_90'] = self._calculate_ema(df[tick], 90)
                 
                 # Merge with macro indicators
                 if os.path.exists('data/macro_indicators.csv'):
@@ -299,28 +322,24 @@ if __name__ == "__main__":
         if asset == 'gold':
             fetcher.fetch_macro_indicators()
             success = fetcher.fetch_gold_data()
-            if not success:
-                sys.exit(1)
         elif asset == 'btc' or asset == 'bitcoin':
             fetcher.fetch_macro_indicators()
             success = fetcher.fetch_bitcoin_data()
-            if not success:
-                sys.exit(1)
         elif asset == 'stocks':
             fetcher.fetch_macro_indicators()
             success = fetcher.fetch_stock_data()
-            if not success:
-                sys.exit(1)
-        elif asset in fetcher.stock_tickers:
+        elif asset.upper() in fetcher.stock_tickers:
             fetcher.fetch_macro_indicators()
             success = fetcher.fetch_stock_data(asset.upper())
-            if not success:
-                sys.exit(1)
         else:
             print(f"Unknown asset: {asset}")
             print("Usage: python data_fetcher_v2.py [gold|btc|stocks|AAPL|NVDA|...]")
             sys.exit(1)
-        # Default: Fetch all
+            
+        if not success:
+            sys.exit(1)
+    else:
+        # Default: Fetch all if no args
         success = fetcher.fetch_all()
         if not success:
             sys.exit(1)

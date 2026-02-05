@@ -127,45 +127,68 @@ class AssetPredictor:
             # Predict next step
             pred_scaled = self.predict_next_step(temp_data)
             
-            # 1. Build the next frame
-            last_frame = temp_data[0, -1, :].copy()
+            # 1. Get current state info
+            prev_frame = temp_data[0, -1, :].copy()
+            prev_price_scaled = prev_frame[0]
+            start_price_scaled = current_batch[0, -1, 0]
             
-            # 2. Adaptive Recursive Damping & Price Anchoring
-            # We want short-term (1-5 days) to be pure AI prediction, 
-            # but long-term (1 mo - 1 yr) to revert to historical norms.
+            # 2. Adaptive Recursive Damping
+            # Short-term (1-5 days) = Model-heavy
+            # Long-term (Months) = Stable/Anchor-heavy
             
-            prev_price_scaled = temp_data[0, -1, 0]
-            target_price_scaled = scaled_means[0]  # Historical average price
-            
-            # Calculate the AI's intended delta
             ai_delta = pred_scaled - prev_price_scaled
             
-            # Convergence Factor: How much we trust the AI vs the Historical Mean
-            # As 'i' increases, we trust the Mean more.
-            # At i=0 (tomorrow), trust = 1.0. At i=252 (1 year), trust = 0.2
-            trust_factor = max(0.2, 1.0 - (i / 100.0))
+            # TIGHTER CLIP: max 0.8% per step in scaled space for stability
+            # This prevents the AI from generating high-momentum 'crashes' or 'moons' in isolation
+            ai_delta = np.clip(ai_delta, -0.008, 0.008)
             
-            # Damping: apply decay to the movement
-            decay = 0.95 if self.asset_key != 'btc' else 0.85
+            # Convergence Factor: Decay trust linearly
+            # For 365 steps (1 year), we want trust to be 0.05 at the end (highly anchored)
+            trust_factor = max(0.05, 1.0 - (i / 130.0))
             
-            # Final price = (AI prediction with damping) + (Pull towards historical mean)
-            # This "Anchoring" prevents the price from ever hitting zero if the mean is healthy.
-            anchored_movement = (ai_delta * decay * trust_factor)
-            mean_reversion_pull = (target_price_scaled - prev_price_scaled) * (1.0 - trust_factor) * 0.05
+            # Damping: apply decay to prevent runaway trends
+            # Decay determines how fast the AI 'loses confidence' in the trend
+            # Relaxed for better long-term trend expression
+            decay = 0.99 if self.asset_key != 'btc' else 0.97
             
-            last_frame[0] = prev_price_scaled + anchored_movement + mean_reversion_pull
+            ai_movement = (ai_delta * decay * trust_factor)
             
-            # 3. Feature Drift (Macro indicators also drift to mean)
-            drift_rate = 0.03
+            # STRONGER ANCHOR SPRING (OPTIMIZED):
+            # Pull back reduced to 5% (was 15%) to allow more dynamic movement
+            # while still preventing runaway hallucinations.
+            anchor_pull = (start_price_scaled - prev_price_scaled) * (1.0 - trust_factor) * 0.05
+            
+            new_price_scaled = prev_price_scaled + ai_movement + anchor_pull
+            
+            # 3. Build the next frame
+            last_frame = prev_frame.copy()
+            last_frame[0] = new_price_scaled
+            
+            # 4. Update Dynamic Features (EMA, Halving, etc.)
+            features = self.config['features']
+            
             for f_idx in range(1, len(last_frame)):
-                target = scaled_means[f_idx]
-                last_frame[f_idx] = last_frame[f_idx] + (target - last_frame[f_idx]) * drift_rate
+                f_name = features[f_idx]
+                
+                if f_name == 'EMA_90':
+                    alpha = 2.0 / (90.0 + 1.0)
+                    last_frame[f_idx] = (new_price_scaled * alpha) + (prev_frame[f_idx] * (1.0 - alpha))
+                
+                elif f_name == 'Halving_Cycle':
+                    # Decrement days by 1 (adjusted for scaler scale_)
+                    last_frame[f_idx] = max(0, prev_frame[f_idx] - self.scaler.scale_[f_idx])
+                
+                elif f_name in ['Sentiment', 'DXY', 'VIX', 'Yield_10Y']:
+                    # Macro indicators drift to their historical means
+                    drift_rate = 0.01
+                    target = scaled_means[f_idx]
+                    last_frame[f_idx] = last_frame[f_idx] + (target - last_frame[f_idx]) * drift_rate
             
-            # Shift window and add new prediction
+            # Shift window and add new step
             new_batch = np.append(temp_data[:, 1:, :], [[last_frame]], axis=1)
             temp_data = new_batch
             
-            predictions.append(last_frame[0])
+            predictions.append(new_price_scaled)
         
         # Inverse transform predictions
         n_features = len(self.config['features'])
@@ -174,8 +197,9 @@ class AssetPredictor:
         
         predictions_original = self.scaler.inverse_transform(dummy)[:, 0]
         
-        # Final safety check: no price below 0
-        predictions_original = np.maximum(predictions_original, 0.01)
+        # Final safety check: no price below floor (20% of start price)
+        start_price = self.scaler.inverse_transform(current_batch[0, -1, :].reshape(1, -1))[0, 0]
+        predictions_original = np.maximum(predictions_original, start_price * 0.2) 
         
         return predictions_original.tolist()
     

@@ -13,7 +13,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 API_KEY = 'cb548b26fc6542c0a6bb871ef3786eba'
 TRUSTED_DOMAINS = (
     "bloomberg.com,reuters.com,cnbc.com,wsj.com,finance.yahoo.com,"
-    "investing.com,marketwatch.com,economist.com,ft.com,coindesk.com,cointelegraph.com"
+    "investing.com,marketwatch.com,economist.com,ft.com,coindesk.com,cointelegraph.com,"
+    "businessinsider.com,forbes.com"
 )
 
 # Asset-specific search queries
@@ -118,14 +119,14 @@ def fetch_news_sentiment(asset='gold', max_articles=15):
         })
         
         # Save for dashboard
-        if len(display_news) < max_articles:
-            display_news.append({
-                'date': date,
-                'title': title,
-                'description': desc,
-                'url': art.get('url', '#'),
-                'sentiment': score
-            })
+        # Consolidate all articles that passed filter
+        display_news.append({
+            'date': date,
+            'title': title,
+            'description': desc,
+            'url': art.get('url', '#'),
+            'sentiment': score
+        })
     
     # Save news for dashboard (always save, even if empty, to signal sync happened)
     news_file = f'data/latest_news_{asset_lower}.json'

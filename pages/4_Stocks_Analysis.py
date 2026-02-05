@@ -60,7 +60,7 @@ with col2:
     selected_mag7 = st.multiselect("Select Mag7", mag7, default=mag7)
 
 with col3:
-    st.markdown("#### 💻 Semiconductors")
+    st.markdown("####  Semiconductors")
     selected_semi = st.multiselect("Select semis", semi, default=semi)
 
 selected_stocks = selected_indices + selected_mag7 + selected_semi
@@ -167,13 +167,15 @@ fig.update_layout(
     height=500,
     yaxis_title="Normalized Price (Base 100)",
     xaxis_title="Date",
+    margin=dict(l=40, r=100, t=40, b=20),
     hovermode='x unified',
     legend=dict(
         orientation="h",
         yanchor="bottom",
         y=1.02,
         xanchor="right",
-        x=1
+        x=1,
+        bgcolor="rgba(0,0,0,0)"
     )
 )
 
@@ -183,7 +185,7 @@ st.markdown("---")
 
 # ==================== INDIVIDUAL STOCK ANALYSIS ====================
 
-st.markdown("### 🔍 Individual Stock Deep Dive")
+st.markdown("###  Individual Stock Deep Dive")
 
 selected_focus = st.selectbox("Select stock for detailed analysis", selected_stocks)
 
@@ -281,7 +283,7 @@ st.markdown("---")
 
 # ==================== SECTOR ANALYSIS ====================
 
-st.markdown("### 🏭 Sector Performance")
+st.markdown("###  Sector Performance")
 
 # Group by sector
 sector_performance = {}
@@ -314,7 +316,7 @@ for i, (sector, stocks) in enumerate(sector_performance.items()):
 # ==================== NEWS (Optional) ====================
 
 st.markdown("---")
-st.markdown("### 📰 Latest Market News")
+st.markdown("###  Latest Market News")
 
 # Show news for selected stock (ui_components handles file check and empty state)
 if selected_focus:

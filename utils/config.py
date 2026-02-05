@@ -13,11 +13,11 @@ ASSETS = {
         'ticker': 'GC=F',
         'icon': '🏆',
         'color': '#FFD700',
-        'model_file': 'models/gold_ultimate_model.h5',
+        'model_file': 'models/gold_ultimate_model.keras',
         'scaler_file': 'models/scaler.pkl',
         'data_file': 'data/gold_global_insights.csv',
         'news_file': 'data/latest_news_gold.json',
-        'features': ['Gold', 'DXY', 'VIX', 'Yield_10Y', 'Sentiment'],
+        'features': ['Gold', 'DXY', 'VIX', 'Yield_10Y', 'Sentiment', 'EMA_90'],
         'sequence_length': 60,
         'description': 'Precious Metal & Safe Haven Asset'
     },
@@ -26,11 +26,11 @@ ASSETS = {
         'ticker': 'BTC-USD',
         'icon': '₿',
         'color': '#F7931A',
-        'model_file': 'models/btc_ultimate_model.h5',
+        'model_file': 'models/btc_ultimate_model.keras',
         'scaler_file': 'models/btc_scaler.pkl',
         'data_file': 'data/btc_global_insights.csv',
         'news_file': 'data/latest_news_btc.json',
-        'features': ['BTC', 'DXY', 'VIX', 'Yield_10Y', 'Sentiment', 'Halving_Cycle'],
+        'features': ['BTC', 'DXY', 'VIX', 'Yield_10Y', 'Sentiment', 'Halving_Cycle', 'EMA_90'],
         'sequence_length': 90,
         'description': 'Digital Gold & Cryptocurrency Leader'
     }
@@ -63,112 +63,27 @@ for ticker, info in STOCK_TICKERS.items():
         'ticker': ticker,
         'icon': '📈',
         'color': info['color'],
-        'sector': info['sector'],
-        'model_file': f'models/{ticker}_ultimate_model.h5',
+        'model_file': f'models/{ticker}_ultimate_model.keras',
         'scaler_file': f'models/{ticker}_scaler.pkl',
         'data_file': f'data/{ticker}_global_insights.csv',
         'news_file': f'data/latest_news_{ticker.lower()}.json',
-        'features': [ticker, 'DXY', 'VIX', 'Yield_10Y', 'Sentiment'],
+        'features': [ticker, 'DXY', 'VIX', 'Yield_10Y', 'Sentiment', 'EMA_90'],
         'sequence_length': 60,
-        'description': f'{info["sector"]} - {info["name"]}'
+        'description': f"{info['sector']} - {info['name']}"
     }
 
-# ==================== UI THEME ====================
-
-THEME = {
-    'bg_deep': '#0B101B',
-    'bg_surface': '#151B28',
-    'accent': '#C5A059',
-    'accent_muted': 'rgba(197, 160, 89, 0.2)',
-    'border': '#232D3F',
-    'text_primary': '#E2E8F0',
-    'text_secondary': '#94A3B8',
-    'success': '#00C076',
-    'danger': '#FF4D4D',
-    'warning': '#FFB020'
-}
-
-# ==================== PREDICTION RANGES ====================
+# ==================== FORECAST SETTINGS ====================
 
 FORECAST_RANGES = {
-    "1 Day": 1,
-    "1 Week": 5,
-    "2 Weeks": 10,
-    "1 Month": 21,
-    "3 Months": 63,
-    "6 Months": 126,
-    "1 Year": 252
+    '1 Day': 1,
+    '1 Week': 7,
+    '2 Weeks': 14,
+    '1 Month': 30,
+    '3 Months': 90,
+    '6 Months': 180,
+    '1 Year': 365
 }
-
-# ==================== TRAINING CONFIG ====================
-
-TRAINING_PARAMS = {
-    'gold': {
-        'epochs': 30,
-        'batch_size': 32,
-        'lstm_units': [100, 50, 25],
-        'dropout': 0.2
-    },
-    'btc': {
-        'epochs': 50,
-        'batch_size': 32,
-        'lstm_units': [128, 64, 32],
-        'dropout': 0.3
-    },
-    'stocks': {
-        'epochs': 30,
-        'batch_size': 32,
-        'lstm_units': [100, 50, 25],
-        'dropout': 0.2
-    }
-}
-
-# ==================== HELPER FUNCTIONS ====================
 
 def get_asset_config(asset_key):
-    """Get configuration for specific asset"""
-    return ASSETS.get(asset_key.lower(), None)
-
-def get_all_stock_tickers():
-    """Get list of all stock ticker symbols"""
-    return list(STOCK_TICKERS.keys())
-
-def check_model_exists(asset_key):
-    """Check if trained model exists for asset"""
-    config = get_asset_config(asset_key)
-    if not config:
-        return False
-    return os.path.exists(config['model_file']) and os.path.exists(config['scaler_file'])
-
-def check_data_exists(asset_key):
-    """Check if data file exists for asset"""
-    config = get_asset_config(asset_key)
-    if not config:
-        return False
-    return os.path.exists(config['data_file'])
-
-def get_asset_status():
-    """Get status of all assets (data & model availability)"""
-    status = {}
-    for key in ['gold', 'btc'] + [t.lower() for t in STOCK_TICKERS.keys()]:
-        status[key] = {
-            'data': check_data_exists(key),
-            'model': check_model_exists(key)
-        }
-    return status
-
-# ==================== NEWS API CONFIG ====================
-
-NEWS_API_KEY = 'cb548b26fc6542c0a6bb871ef3786eba'
-TRUSTED_DOMAINS = (
-    "bloomberg.com,reuters.com,cnbc.com,wsj.com,finance.yahoo.com,"
-    "investing.com,marketwatch.com,economist.com,ft.com,coindesk.com,cointelegraph.com"
-)
-
-# ==================== MACRO INDICATORS ====================
-
-MACRO_INDICATORS = {
-    'DXY': {'name': 'US Dollar Index', 'ticker': 'DX-Y.NYB'},
-    'VIX': {'name': 'Volatility Index', 'ticker': '^VIX'},
-    'Yield_10Y': {'name': 'US 10Y Treasury', 'ticker': '^TNX'}
-}
+    """Retrieve config for a specific asset"""
+    return ASSETS.get(asset_key.lower())

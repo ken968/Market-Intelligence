@@ -139,7 +139,7 @@ st.markdown("---")
 
 # ==================== DATA SYNC SECTION ====================
 
-st.markdown("### 📥 Data Synchronization")
+st.markdown("###  Data Synchronization")
 
 st.info("""
 **Data Sources:**
@@ -153,7 +153,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.markdown("#### Quick Sync")
     
-    if st.button("🔄 Sync All Assets (Market Data)", use_container_width=True):
+    if st.button(" Sync All Assets (Market Data)", use_container_width=True):
         python_exe = sys.executable
         success = run_command(
             [python_exe, "scripts/data_fetcher_v2.py"],
@@ -163,7 +163,7 @@ with col1:
             show_success_message("All market data synchronized!")
             st.rerun()
     
-    if st.button("📰 Sync Sentiment (All Assets)", use_container_width=True):
+    if st.button(" Sync Sentiment (All Assets)", use_container_width=True):
         python_exe = sys.executable
         success = run_command(
             [python_exe, "scripts/sentiment_fetcher_v2.py", "all"],
@@ -219,7 +219,7 @@ st.markdown("---")
 
 # ==================== MODEL TRAINING SECTION ====================
 
-st.markdown("### 🤖 AI Model Training")
+st.markdown("###  AI Model Training")
 
 st.warning("""
  **Training Notes:**
@@ -332,13 +332,13 @@ st.markdown("---")
 
 # ==================== MAINTENANCE SECTION ====================
 
-st.markdown("### 🛠️ Maintenance")
+st.markdown("###  Maintenance")
 
 col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("#### Clear Cache")
-    if st.button("🗑️ Clear Streamlit Cache", use_container_width=True):
+    if st.button(" Clear Streamlit Cache", use_container_width=True):
         st.cache_data.clear()
         st.cache_resource.clear()
         show_success_message("Cache cleared!")
