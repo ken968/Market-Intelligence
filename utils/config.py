@@ -5,6 +5,20 @@ Centralized config for all assets, models, and UI settings
 
 import os
 
+# ==================== UI THEME CONFIGURATION ====================
+
+THEME = {
+    'primary': '#00A8E8',
+    'secondary': '#CCCCCC',
+    'background': '#0E1117',
+    'card_bg': '#262730',
+    'success': '#00CC96',
+    'danger': '#EF553B',
+    'warning': '#FFA15A',
+    'info': '#636EFA',
+    'font': 'Inter, sans-serif'
+}
+
 # ==================== ASSET CONFIGURATION ====================
 
 ASSETS = {
@@ -84,6 +98,36 @@ FORECAST_RANGES = {
     '1 Year': 365
 }
 
+# ==================== HELPER FUNCTIONS ====================
+
 def get_asset_config(asset_key):
     """Retrieve config for a specific asset"""
     return ASSETS.get(asset_key.lower())
+
+def get_all_stock_tickers():
+    """Return list of all supported stock tickers"""
+    return list(STOCK_TICKERS.keys())
+
+def check_model_exists(asset_key):
+    """Check if model exists for asset"""
+    config = get_asset_config(asset_key)
+    if not config: return False
+    return os.path.exists(config['model_file'])
+
+def check_data_exists(asset_key):
+    """Check if data exists for asset"""
+    config = get_asset_config(asset_key)
+    if not config: return False
+    return os.path.exists(config['data_file'])
+
+def get_asset_status(asset_key):
+    """Get sync and training status"""
+    has_model = check_model_exists(asset_key)
+    has_data = check_data_exists(asset_key)
+    
+    if has_model and has_data:
+        return "READY"
+    elif has_data:
+        return "NEEDS TRAINING"
+    else:
+        return "NEEDS SYNC"
