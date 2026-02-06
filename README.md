@@ -246,9 +246,9 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 ---
 
-<div align="center">
 
 **Disclaimer: seringkan/perbanyak sync data & sentiment dan train model untuk awal-awal. stocks forecast saat ini sangat sulit karna paling complex**
+<div align="center">
 
 Built with Python, TensorFlow, and Streamlit
 
