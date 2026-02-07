@@ -375,6 +375,23 @@ def render_prediction_table(predictions_dict, asset_name):
         predictions_dict (dict): {timeframe: price}
         asset_name (str): Asset name for column header
     """
+    import numpy as np
+    
+    # Safety check: Detect NaN values
+    has_nan = any(pd.isna(v) or (isinstance(v, float) and np.isnan(v)) for v in predictions_dict.values())
+    
+    if has_nan:
+        st.error("""
+        ⚠️ **Prediction Error**: Invalid data detected (NaN values).
+        
+        **Possible causes:**
+        - Recent market data not yet available
+        - Missing macro indicators (DXY, VIX, Yield)
+        
+        **Solution**: Try syncing data from the Settings page.
+        """)
+        return
+    
     df = pd.DataFrame({
         'Timeframe': list(predictions_dict.keys()),
         f'{asset_name} Predicted Price': [f"${v:,.2f}" for v in predictions_dict.values()]

@@ -133,7 +133,11 @@ class MultiAssetFetcher:
             # Merge with macro indicators
             if os.path.exists('data/macro_indicators.csv'):
                 macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
-                df = df.join(macro, how='inner')
+                df = df.join(macro, how='left')
+                # Fill NaN using forward fill first (for recent dates), then backward fill (for early dates)
+                df['DXY'] = df['DXY'].ffill().bfill()
+                df['VIX'] = df['VIX'].ffill().bfill()
+                df['Yield_10Y'] = df['Yield_10Y'].ffill().bfill()
             
             df.to_csv(self.gold_config['filename'])
             print(f"System: Success. {len(df)} Gold records saved to '{self.gold_config['filename']}'.")
@@ -150,10 +154,11 @@ class MultiAssetFetcher:
         
         try:
             # Use start date instead of period for full history
+            # UPDATED: Removed 'end' parameter to ensure we get the absolute latest data (including today)
             data = yf.download(
                 self.btc_config['ticker'], 
                 start=self.btc_config['start_date'],
-                end=datetime.now().strftime('%Y-%m-%d'),
+                # end=datetime.now().strftime('%Y-%m-%d'),  <-- REMOVED to fix off-by-one error
                 interval="1d",
                 progress=False
             )
@@ -180,10 +185,11 @@ class MultiAssetFetcher:
             if os.path.exists('data/macro_indicators.csv'):
                 macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
                 df = df.join(macro, how='left')
-                # Fill NaN for early dates where macro data doesn't exist
-                df['DXY'].fillna(method='bfill', inplace=True)
-                df['VIX'].fillna(method='bfill', inplace=True)
-                df['Yield_10Y'].fillna(method='bfill', inplace=True)
+                # Fill NaN using forward fill first (for recent dates), then backward fill (for early dates)
+                # This prevents NaN when macro data is not yet available for the latest trading day
+                df['DXY'] = df['DXY'].ffill().bfill()
+                df['VIX'] = df['VIX'].ffill().bfill()
+                df['Yield_10Y'] = df['Yield_10Y'].ffill().bfill()
             
             df.to_csv(self.btc_config['filename'])
             print(f"System: Success. {len(df)} BTC records saved (from {df.index[0].date()} to {df.index[-1].date()}).")
@@ -234,7 +240,11 @@ class MultiAssetFetcher:
                 # Merge with macro indicators
                 if os.path.exists('data/macro_indicators.csv'):
                     macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
-                    df = df.join(macro, how='inner')
+                    df = df.join(macro, how='left')
+                    # Fill NaN using forward fill first (for recent dates), then backward fill (for early dates)
+                    df['DXY'] = df['DXY'].ffill().bfill()
+                    df['VIX'] = df['VIX'].ffill().bfill()
+                    df['Yield_10Y'] = df['Yield_10Y'].ffill().bfill()
                 
                 filename = self.stock_config['filename_template'].format(ticker=tick)
                 df.to_csv(filename)

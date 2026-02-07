@@ -144,7 +144,8 @@ class AssetPredictor:
             
             # Convergence Factor: Decay trust linearly
             # For 365 steps (1 year), we want trust to be 0.05 at the end (highly anchored)
-            trust_factor = max(0.05, 1.0 - (i / 130.0))
+            # UPDATED: Extended to 365.0 to allow trends to persist for the full year
+            trust_factor = max(0.05, 1.0 - (i / 365.0))
             
             # Damping: apply decay to prevent runaway trends
             # Decay determines how fast the AI 'loses confidence' in the trend
@@ -154,9 +155,9 @@ class AssetPredictor:
             ai_movement = (ai_delta * decay * trust_factor)
             
             # STRONGER ANCHOR SPRING (OPTIMIZED):
-            # Pull back reduced to 5% (was 15%) to allow more dynamic movement
+            # Pull back reduced to 1% (was 5%) to allow more dynamic movement
             # while still preventing runaway hallucinations.
-            anchor_pull = (start_price_scaled - prev_price_scaled) * (1.0 - trust_factor) * 0.05
+            anchor_pull = (start_price_scaled - prev_price_scaled) * (1.0 - trust_factor) * 0.01
             
             new_price_scaled = prev_price_scaled + ai_movement + anchor_pull
             
@@ -180,7 +181,8 @@ class AssetPredictor:
                 
                 elif f_name in ['Sentiment', 'DXY', 'VIX', 'Yield_10Y']:
                     # Macro indicators drift to their historical means
-                    drift_rate = 0.01
+                    # UPDATED: Slower drift (0.002) allows current market "vision"/news to persist longer
+                    drift_rate = 0.002
                     target = scaled_means[f_idx]
                     last_frame[f_idx] = last_frame[f_idx] + (target - last_frame[f_idx]) * drift_rate
             
@@ -208,9 +210,10 @@ class AssetPredictor:
         Generate forecasts for all predefined ranges
         
         Returns:
-            dict: {range_name: predicted_price}
+            dict: {'Current': current_price, range_name: predicted_price, ...}
         """
-        results = {}
+        current_price = self.get_latest_price()
+        results = {'Current': current_price}
         
         for label, steps in FORECAST_RANGES.items():
             forecast = self.recursive_forecast(steps)

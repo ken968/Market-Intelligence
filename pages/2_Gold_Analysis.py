@@ -185,6 +185,29 @@ else:
                     st.markdown("####  Forecast Results")
                     render_prediction_table(forecasts, "Gold")
                     
+                    # NEW: Add automated forecast analysis
+                    from utils.forecast_analyzer import ForecastAnalyzer
+                    
+                    analyzer = ForecastAnalyzer()
+                    insights = analyzer.analyze_forecast(
+                        current_price=forecasts['Current'],
+                        forecast_prices=list(forecasts.values())[1:],
+                        asset_name='Gold'
+                    )
+                    
+                    st.markdown("###  AI Analysis")
+                    st.info(insights['summary'])
+                    
+                    col_i1, col_i2, col_i3 = st.columns(3)
+                    with col_i1:
+                        st.metric("Trend", insights['trend'].title())
+                    with col_i2:
+                        st.metric("Strength", insights['strength'].title())
+                    with col_i3:
+                        st.metric("Risk", insights['risk_level'].title())
+                    
+                    st.success(f" **Recommendation**: {insights['recommendation']}")
+                    
                     # Highlight tomorrow
                     tomorrow = predictor.predict_tomorrow()
                     

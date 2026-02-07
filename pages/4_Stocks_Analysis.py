@@ -231,6 +231,33 @@ else:
             try:
                 all_forecasts = batch_multi_range_forecast([s.lower() for s in stocks_with_models])
                 
+                # NEW: Apply correlation enforcement to prevent impossible divergences
+                from utils.correlation_enforcer import CorrelationEnforcer
+                
+                # Check if we have SPY in forecasts (needed as anchor)
+                if 'spy' in [s.lower() for s in stocks_with_models]:
+                    st.info("🔗 Applying correlation enforcement...")
+                    
+                    enforcer = CorrelationEnforcer(reference_ticker='SPY')
+                    
+                    # Convert forecasts to enforcer format
+                    raw_predictions = {}
+                    for ticker in stocks_with_models:
+                        forecast = all_forecasts[ticker.lower()]
+                        if 'error' not in forecast:
+                            price_list = [forecast[key] for key in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']]
+                            raw_predictions[ticker] = price_list
+                    
+                    # Apply enforcement
+                    adjusted = enforcer.enforce_predictions(raw_predictions, adjustment_strength=0.7)
+                    
+                    # Update forecasts
+                    for ticker in stocks_with_models:
+                        if ticker in adjusted:
+                            range_keys = ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']
+                            for i, key in enumerate(range_keys):
+                                all_forecasts[ticker.lower()][key] = adjusted[ticker][i]
+                
                 # Create results dataframe
                 results = []
                 for ticker in stocks_with_models:
@@ -248,7 +275,74 @@ else:
                         results.append(row)
                 
                 st.markdown("####  Multi-Range Forecast Summary")
-                st.dataframe(pd.DataFrame(results), use_container_width=True, hide_index=True)
+                
+                # Dynamic height calculation to avoid scrolling
+                # Base height + (rows * pixels per row)
+                row_height = 35
+                table_height = (len(results) + 1) * row_height + 3
+                
+                st.dataframe(
+                    pd.DataFrame(results), 
+                    use_container_width=True, 
+                    hide_index=True,
+                    height=table_height
+                )
+                
+                # NEW: Add deep analysis for batch forecasts
+                st.markdown("---")
+                st.markdown("### 📊 AI Deep Analysis - Market Overview")
+                
+                from utils.forecast_analyzer import ForecastAnalyzer
+                
+                analyzer = ForecastAnalyzer()
+                analyses = {}
+                
+                # Analyze each stock
+                for ticker in stocks_with_models:
+                    forecast = all_forecasts[ticker.lower()]
+                    if 'error' not in forecast:
+                        current = forecast['Current']
+                        predictions = [forecast[k] for k in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']]
+                        
+                        insights = analyzer.analyze_forecast(
+                            current_price=current,
+                            forecast_prices=predictions,
+                            asset_name=ticker
+                        )
+                        analyses[ticker] = insights
+                
+                # Show top 3 best/worst
+                sorted_stocks = sorted(analyses.items(), key=lambda x: x[1]['change_pct'], reverse=True)
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.markdown("#### 📈 Best Opportunities")
+                    for ticker, insights in sorted_stocks[:3]:
+                        with st.expander(f"**{ticker}** ({insights['trend'].title()} {insights['change_pct']:+.1f}%)"):
+                            st.info(insights['summary'])
+                            col_a, col_b, col_c = st.columns(3)
+                            with col_a:
+                                st.metric("Trend", insights['trend'].title())
+                            with col_b:
+                                st.metric("Strength", insights['strength'].title())
+                            with col_c:
+                                st.metric("Risk", insights['risk_level'].title())
+                            st.success(f"💡 {insights['recommendation']}")
+                
+                with col2:
+                    st.markdown("#### 📉 Watch List")
+                    for ticker, insights in sorted_stocks[-3:]:
+                        with st.expander(f"**{ticker}** ({insights['trend'].title()} {insights['change_pct']:.1f}%)"):
+                            st.info(insights['summary'])
+                            col_a, col_b, col_c = st.columns(3)
+                            with col_a:
+                                st.metric("Trend", insights['trend'].title())
+                            with col_b:
+                                st.metric("Strength", insights['strength'].title())
+                            with col_c:
+                                st.metric("Risk", insights['risk_level'].title())
+                            st.warning(f"💡 {insights['recommendation']}")
                 
             except Exception as e:
                 show_error_message(f"Prediction error: {e}")
@@ -265,7 +359,63 @@ else:
                 predictor = AssetPredictor(forecast_stock.lower())
                 forecasts = predictor.get_multi_range_forecast()
                 
+                # CRITICAL FIX: Apply correlation enforcement for individual forecasts too!
+                # This ensures QQQ shows same trend individual vs batch mode
+                from utils.correlation_enforcer import CorrelationEnforcer
+                
+                # Check if this stock needs correlation enforcement
+                # (i.e., if it's highly correlated with SPY and not SPY itself)
+                if forecast_stock.upper() != 'SPY':
+                    st.info(f"🔗 Checking correlation with SPY for realistic forecast...")
+                    
+                    enforcer = CorrelationEnforcer(reference_ticker='SPY')
+                    
+                    # Get SPY forecast for comparison
+                    spy_predictor = AssetPredictor('spy')
+                    spy_forecasts = spy_predictor.get_multi_range_forecast()
+                    
+                    # Prepare data for enforcement
+                    raw_predictions = {
+                        'SPY': [spy_forecasts[k] for k in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']],
+                        forecast_stock.upper(): [forecasts[k] for k in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']]
+                    }
+                    
+                    # Apply enforcement (70% strength like batch mode)
+                    adjusted = enforcer.enforce_predictions(raw_predictions, adjustment_strength=0.7)
+                    
+                    # Update forecasts if adjustment was applied
+                    if forecast_stock.upper() in adjusted:
+                        range_keys = ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']
+                        for i, key in enumerate(range_keys):
+                            old_value = forecasts[key]
+                            forecasts[key] = adjusted[forecast_stock.upper()][i]
+                            
+                        st.success("✅ Correlation enforcement applied - forecast aligned with SPY")
+                
                 render_prediction_table(forecasts, forecast_stock)
+                
+                # NEW: Add automated analysis for individual forecast
+                from utils.forecast_analyzer import ForecastAnalyzer
+                
+                analyzer = ForecastAnalyzer()
+                insights = analyzer.analyze_forecast(
+                    current_price=forecasts['Current'],
+                    forecast_prices=[forecasts[k] for k in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']],
+                    asset_name=forecast_stock
+                )
+                
+                st.markdown("### 📋 AI Deep Analysis")
+                st.info(insights['summary'])
+                
+                col_i1, col_i2, col_i3 = st.columns(3)
+                with col_i1:
+                    st.metric("Trend", insights['trend'].title())
+                with col_i2:
+                    st.metric("Strength", insights['strength'].title())
+                with col_i3:
+                    st.metric("Risk", insights['risk_level'].title())
+                
+                st.success(f"💡 **Recommendation**: {insights['recommendation']}")
                 
                 # Show chart
                 forecast_30d = predictor.recursive_forecast(30)

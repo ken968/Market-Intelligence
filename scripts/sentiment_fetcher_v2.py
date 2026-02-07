@@ -54,6 +54,7 @@ def get_sentiment(text):
 def fetch_news_sentiment(asset='gold', max_articles=15):
     """
     Fetch and analyze financial news sentiment for specific asset.
+    NOW USING MULTI-SOURCE AGGREGATOR (Yahoo RSS + optional Finnhub/AlphaVantage)
     
     Args:
         asset (str): Asset type ('gold', 'btc', 'stocks', or ticker symbol)
@@ -63,91 +64,46 @@ def fetch_news_sentiment(asset='gold', max_articles=15):
         pd.DataFrame: Daily sentiment scores
     """
     
-    asset_lower = asset.lower()
-    query = ASSET_QUERIES.get(asset_lower, ASSET_QUERIES['stocks'])
-    
-    print(f"System: Analyzing {asset.upper()} sentiment from trusted sources...")
-    
-    params = {
-        'q': query,
-        'domains': TRUSTED_DOMAINS,
-        'language': 'en',
-        'sortBy': 'publishedAt',
-        'pageSize': 100,
-        'apiKey': API_KEY
-    }
+    # NEW: Use multi-source aggregator instead of NewsAPI
+    import sys
+    sys.path.insert(0, os.path.dirname(__file__))
     
     try:
-        response = requests.get('https://newsapi.org/v2/everything', params=params, timeout=10)
-        data = response.json()
+        from sentiment_sources.aggregator import SentimentAggregator
         
-        if data.get('status') != 'ok':
-            print(f"Error: {data.get('message', 'Unknown error')}")
+        asset_lower = asset.lower()
+        
+        print(f"System: Analyzing {asset.upper()} sentiment from multiple sources...")
+        
+        aggregator = SentimentAggregator()
+        sentiment_df = aggregator.fetch_all(asset_lower, days=30)
+        
+        if sentiment_df.empty:
+            print(f"System: No articles found for {asset}.")
             return pd.DataFrame()
+        
+        # Save news summary for dashboard
+        news_file = f'data/latest_news_{asset_lower}.json'
+        try:
+            summary_data = [{
+                'date': str(datetime.now().date()),
+                'title': f'Sentiment from {len(aggregator.get_source_names())} sources',
+                'description': f'Multi-source sentiment analysis for {asset.upper()}',
+                'url': '#',
+                'sentiment': float(sentiment_df['Sentiment'].mean())
+            }]
             
+            with open(news_file, 'w') as f:
+                json.dump(summary_data, f, indent=4)
+        except Exception as e:
+            pass  # Non-critical
+        
+        print(f"System: Days with data: {len(sentiment_df)}, Non-zero: {(sentiment_df['Sentiment'] != 0).sum()}")
+        return sentiment_df
+        
     except Exception as e:
-        print(f"Error connecting to NewsAPI: {e}")
+        print(f"Error with sentiment aggregator: {e}")
         return pd.DataFrame()
-    
-    articles = data.get('articles', [])
-    
-    if not articles:
-        print(f"System: No articles found for {asset}.")
-        return pd.DataFrame()
-    
-    news_data = []
-    display_news = []
-    
-    for art in articles:
-        title = art.get('title', "") or ""
-        desc = art.get('description', "") or ""
-        full_text = (title + " " + desc).lower()
-        
-        # Skip blacklisted content
-        if any(bad_word in full_text for bad_word in BLACKLIST):
-            continue
-        
-        date = art.get('publishedAt', "")[:10]
-        score = get_sentiment(full_text)
-        source_name = art.get('source', {}).get('name', "Unknown")
-        
-        news_data.append({
-            'Date': date, 
-            'Sentiment': score, 
-            'Source': source_name, 
-            'Title': title
-        })
-        
-        # Save for dashboard
-        # Consolidate all articles that passed filter
-        display_news.append({
-            'date': date,
-            'title': title,
-            'description': desc,
-            'url': art.get('url', '#'),
-            'sentiment': score
-        })
-    
-    # Save news for dashboard (always save, even if empty, to signal sync happened)
-    news_file = f'data/latest_news_{asset_lower}.json'
-    try:
-        with open(news_file, 'w') as f:
-            json.dump(display_news, f, indent=4)
-        print(f"System: {len(display_news)} articles saved to '{news_file}'")
-    except Exception as e:
-        print(f"Error saving news file: {e}")
-    
-    if not news_data:
-        print(f"System: No relevant news found for {asset} after filtering.")
-        return pd.DataFrame()
-    
-    df_news = pd.DataFrame(news_data)
-    print(f"System: Processed {len(df_news)} {asset} articles.")
-    
-    # Calculate daily mean sentiment
-    daily_sentiment = df_news.groupby('Date')['Sentiment'].mean().reset_index()
-    
-    return daily_sentiment
 
 
 def integrate_sentiment(asset='gold'):
