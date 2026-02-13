@@ -7,8 +7,42 @@ import numpy as np
 import pandas as pd
 import pickle
 import os
-from tensorflow.keras.models import load_model
-from utils.config import get_asset_config, FORECAST_RANGES
+import sys
+from utils.config import get_asset_config, FORECAST_RANGES, CONFIDENCE_SCORES
+
+# Handle TensorFlow incompatibility (e.g., Python 3.14)
+try:
+    from tensorflow.keras.models import load_model
+    TF_AVAILABLE = True
+except ImportError:
+    # Fallback for systems where TensorFlow cannot be installed
+    TF_AVAILABLE = False
+    print("Warning: TensorFlow not found. AI predictions will be disabled.")
+
+
+def get_confidence_score(asset_key, timeframe):
+    """
+    Get confidence score for asset and timeframe
+    
+    Args:
+        asset_key (str): Asset identifier (e.g., 'gold', 'btc', 'aapl')
+        timeframe (str): Forecast timeframe (e.g., '1 Week', '1 Month')
+    
+    Returns:
+        dict: {'score': float, 'label': str, 'color': str}
+    """
+    # Determine asset type
+    if asset_key == 'gold':
+        asset_type = 'gold'
+    elif asset_key == 'btc':
+        asset_type = 'btc'
+    else:
+        asset_type = 'stocks'
+    
+    return CONFIDENCE_SCORES.get(asset_type, {}).get(timeframe, {
+        'score': 0.50, 'label': 'Unknown', 'color': 'info'
+    })
+
 
 class AssetPredictor:
     """Universal predictor for all asset types"""
@@ -33,6 +67,9 @@ class AssetPredictor:
     
     def load_model(self):
         """Load trained model and scaler"""
+        if not TF_AVAILABLE:
+            return False
+
         model_path = self.config['model_file']
         scaler_path = self.config['scaler_file']
         
@@ -42,13 +79,17 @@ class AssetPredictor:
         if not os.path.exists(scaler_path):
             raise FileNotFoundError(f"Scaler not found: {scaler_path}")
         
-        self.model = load_model(model_path)
-        
-        with open(scaler_path, 'rb') as f:
-            self.scaler = pickle.load(f)
-        
-        self.is_loaded = True
-        return True
+        try:
+            self.model = load_model(model_path)
+            
+            with open(scaler_path, 'rb') as f:
+                self.scaler = pickle.load(f)
+            
+            self.is_loaded = True
+            return True
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            return False
     
     def load_data(self):
         """Load historical data"""
@@ -86,8 +127,14 @@ class AssetPredictor:
         Returns:
             float: Predicted value (scaled)
         """
+        if not TF_AVAILABLE:
+            # Return last value in sequence as prediction (no change)
+            return sequence[0, -1, 0]
+
         if not self.is_loaded:
-            self.load_model()
+            success = self.load_model()
+            if not success:
+               return sequence[0, -1, 0]
         
         prediction = self.model.predict(sequence, verbose=0)
         return prediction[0, 0]
@@ -102,8 +149,14 @@ class AssetPredictor:
         Returns:
             list: Predicted values (in original scale)
         """
+        if not TF_AVAILABLE:
+             # Return empty list or handle in get_multi_range_forecast
+             return []
+
         if not self.is_loaded:
-            self.load_model()
+            success = self.load_model()
+            if not success:
+                return []
         
         if self.data is None:
             self.load_data()
@@ -207,17 +260,27 @@ class AssetPredictor:
     
     def get_multi_range_forecast(self):
         """
-        Generate forecasts for all predefined ranges
+        Generate forecasts for all predefined ranges with confidence scores
         
         Returns:
-            dict: {'Current': current_price, range_name: predicted_price, ...}
+            dict: {'Current': current_price, range_name: {'price': float, 'confidence': dict}, ...}
         """
         current_price = self.get_latest_price()
         results = {'Current': current_price}
         
         for label, steps in FORECAST_RANGES.items():
             forecast = self.recursive_forecast(steps)
-            results[label] = forecast[-1]  # Take last prediction for this range
+            confidence = get_confidence_score(self.asset_key, label)
+            
+            if forecast:
+                price = forecast[-1]
+            else:
+                price = current_price
+
+            results[label] = {
+                'price': price,
+                'confidence': confidence
+            }
         
         return results
     
@@ -240,7 +303,51 @@ class AssetPredictor:
         """
         current_price = self.get_latest_price()
         forecast = self.recursive_forecast(1)
+        
+        if not forecast:
+            return {
+                'current': current_price,
+                'predicted': current_price,
+                'change': 0.0,
+                'pct_change': 0.0,
+                'direction': 'flat',
+                'error': 'AI Model Unavailable'
+            }
+            
         predicted_price = forecast[0]
+        
+        change = predicted_price - current_price
+        pct_change = (change / current_price) * 100
+        
+        return {
+            'current': current_price,
+            'predicted': predicted_price,
+            'change': change,
+            'pct_change': pct_change,
+            'direction': 'up' if change > 0 else 'down'
+        }
+    
+    def predict_week(self):
+        """
+        Quick prediction for 1 week (7 days) ahead
+        
+        Returns:
+            dict: {'current': float, 'predicted': float, 'change': float, 'pct_change': float}
+        """
+        current_price = self.get_latest_price()
+        forecast = self.recursive_forecast(7)
+        
+        if not forecast:
+            return {
+                'current': current_price,
+                'predicted': current_price,
+                'change': 0.0,
+                'pct_change': 0.0,
+                'direction': 'flat',
+                'error': 'AI Model Unavailable'
+            }
+
+        predicted_price = forecast[-1]  # Take the 7th day prediction
         
         change = predicted_price - current_price
         pct_change = (change / current_price) * 100
@@ -270,6 +377,28 @@ def batch_predict_tomorrow(asset_keys):
         try:
             predictor = AssetPredictor(key)
             results[key] = predictor.predict_tomorrow()
+        except Exception as e:
+            results[key] = {'error': str(e)}
+    
+    return results
+
+
+def batch_predict_week(asset_keys):
+    """
+    Predict 1 week ahead price for multiple assets
+    
+    Args:
+        asset_keys (list): List of asset keys
+    
+    Returns:
+        dict: {asset_key: prediction_dict}
+    """
+    results = {}
+    
+    for key in asset_keys:
+        try:
+            predictor = AssetPredictor(key)
+            results[key] = predictor.predict_week()
         except Exception as e:
             results[key] = {'error': str(e)}
     

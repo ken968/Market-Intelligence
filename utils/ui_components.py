@@ -369,39 +369,85 @@ def create_forecast_chart(historical_df, forecast_values, price_col, forecast_da
 
 def render_prediction_table(predictions_dict, asset_name):
     """
-    Render formatted prediction table
+    Render formatted prediction table with confidence scores
     
     Args:
-        predictions_dict (dict): {timeframe: price}
+        predictions_dict (dict): {'Current': price, timeframe: {'price': float, 'confidence': dict}}
         asset_name (str): Asset name for column header
     """
     import numpy as np
     
-    # Safety check: Detect NaN values
-    has_nan = any(pd.isna(v) or (isinstance(v, float) and np.isnan(v)) for v in predictions_dict.values())
+    # Extract current price
+    current_price = predictions_dict.get('Current', 0)
     
-    if has_nan:
-        st.error("""
-        ⚠️ **Prediction Error**: Invalid data detected (NaN values).
+    # Build table data
+    timeframes = []
+    prices = []
+    changes = []
+    change_pcts = []
+    confidences = []
+    
+    for key, value in predictions_dict.items():
+        if key == 'Current':
+            continue
         
-        **Possible causes:**
-        - Recent market data not yet available
-        - Missing macro indicators (DXY, VIX, Yield)
+        # Handle both old format (float) and new format (dict with price/confidence)
+        if isinstance(value, dict):
+            price = value.get('price', 0)
+            confidence = value.get('confidence', {})
+        else:
+            # Fallback for old format
+            price = value
+            confidence = {'label': 'N/A', 'color': 'info'}
         
-        **Solution**: Try syncing data from the Settings page.
-        """)
-        return
+        # Safety check for NaN
+        if pd.isna(price) or (isinstance(price, float) and np.isnan(price)):
+            st.error("""
+            ⚠️ **Prediction Error**: Invalid data detected (NaN values).
+            
+            **Possible causes:**
+            - Recent market data not yet available
+            - Missing macro indicators (DXY, VIX, Yield)
+            
+            **Solution**: Try syncing data from the Settings page.
+            """)
+            return
+        
+        change = price - current_price
+        change_pct = (change / current_price) * 100
+        
+        timeframes.append(key)
+        prices.append(f"${price:,.2f}")
+        changes.append(f"${change:+,.2f}")
+        change_pcts.append(f"{change_pct:+.2f}%")
+        
+        # Format confidence badge
+        conf_label = confidence.get('label', 'N/A')
+        conf_color = confidence.get('color', 'info')
+        
+        # Map color to emoji
+        color_map = {
+            'success': '🟢',
+            'info': '🔵',
+            'warning': '🟡',
+            'error': '🔴'
+        }
+        emoji = color_map.get(conf_color, '⚪')
+        confidences.append(f"{emoji} {conf_label}")
     
     df = pd.DataFrame({
-        'Timeframe': list(predictions_dict.keys()),
-        f'{asset_name} Predicted Price': [f"${v:,.2f}" for v in predictions_dict.values()]
+        'Timeframe': timeframes,
+        f'{asset_name} Price': prices,
+        'Change': changes,
+        'Change %': change_pcts,
+        'Confidence': confidences
     })
     
     st.dataframe(
         df, 
         use_container_width=True, 
         hide_index=True,
-        height=(len(df) + 1) * 35 + 3  # Dynamic height: (rows + header) * px_per_row + buffer
+        height=(len(df) + 1) * 35 + 3
     )
 
 

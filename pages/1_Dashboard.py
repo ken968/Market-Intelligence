@@ -12,7 +12,7 @@ from utils.ui_components import (
     inject_custom_css, render_page_header, render_metric_card,
     show_error_message
 )
-from utils.predictor import batch_predict_tomorrow
+from utils.predictor import batch_predict_tomorrow, batch_predict_week
 
 # ==================== PAGE CONFIG ====================
 
@@ -222,7 +222,7 @@ st.markdown("---")
 
 # ==================== AI PREDICTIONS ====================
 
-st.markdown("###  Tomorrow's AI Predictions")
+st.markdown("###  1 Week AI Predictions")
 
 # Filter assets with models
 assets_with_models = [a for a in selected_assets if status[a]['model']]
@@ -233,7 +233,7 @@ else:
     if st.button("Generate Predictions for Selected Assets", use_container_width=True):
         with st.spinner("AI analyzing patterns..."):
             try:
-                predictions = batch_predict_tomorrow(assets_with_models)
+                predictions = batch_predict_week(assets_with_models)
                 
                 # Create results table
                 results = []

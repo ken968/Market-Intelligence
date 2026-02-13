@@ -19,7 +19,7 @@ from utils.predictor import AssetPredictor
 
 st.set_page_config(
     page_title="Bitcoin Analysis | Market Intelligence",
-    page_icon="",
+    page_icon="₿",
     layout="wide"
 )
 
@@ -28,7 +28,7 @@ inject_custom_css()
 # ==================== MAIN CONTENT ====================
 
 render_page_header(
-    icon="",
+    icon="₿",
     title="Bitcoin (BTC) Intelligence",
     subtitle="Digital gold analysis with halving cycle insights and on-chain fundamentals"
 )
@@ -268,6 +268,10 @@ st.markdown("---")
 
 st.markdown("###  AI-Powered Predictions")
 
+# Add disclaimer
+from utils.config import FORECAST_DISCLAIMER
+st.info(FORECAST_DISCLAIMER)
+
 if not os.path.exists(config['model_file']):
     st.warning(" Bitcoin model not trained yet. Please train from Settings page.")
 else:
@@ -288,9 +292,18 @@ else:
                     from utils.forecast_analyzer import ForecastAnalyzer
                     
                     analyzer = ForecastAnalyzer()
+                    
+                    # Extract prices from new format
+                    forecast_prices = []
+                    for key, value in list(forecasts.items())[1:]:  # Skip 'Current'
+                        if isinstance(value, dict):
+                            forecast_prices.append(value['price'])
+                        else:
+                            forecast_prices.append(value)
+                    
                     insights = analyzer.analyze_forecast(
                         current_price=forecasts['Current'],
-                        forecast_prices=list(forecasts.values())[1:],  # Skip 'Current'
+                        forecast_prices=forecast_prices,
                         asset_name='BTC'
                     )
                     

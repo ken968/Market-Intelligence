@@ -27,8 +27,6 @@ inject_custom_css()
 # ==================== SIDEBAR ====================
 
 with st.sidebar:
-    st.image("https://via.placeholder.com/200x80/0B101B/C5A059?text=MARKET+INTELLIGENCE", use_container_width=True)
-    
     st.markdown("###  Navigation")
     st.info("""
     Use the pages in the sidebar to navigate:
@@ -68,26 +66,26 @@ render_page_header(
 
 # ==================== ASSET STATUS OVERVIEW ====================
 
-st.markdown("###  Asset Coverage")
+st.markdown("### Asset Coverage")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown("####  Precious Metals")
+    st.markdown("#### Precious Metals")
     if status['gold']['model']:
         render_status_badge('success', 'Gold (XAUUSD) ')
     else:
         render_status_badge('danger', 'Gold (XAUUSD) ')
 
 with col2:
-    st.markdown("####  Cryptocurrency")
+    st.markdown("#### Cryptocurrency")
     if status['btc']['model']:
         render_status_badge('success', 'Bitcoin (BTC) ')
     else:
         render_status_badge('danger', 'Bitcoin (BTC) ')
 
 with col3:
-    st.markdown("####  US Equities")
+    st.markdown("#### US Equities")
     stocks_ready = sum(1 for ticker in STOCK_TICKERS.keys() if status[ticker.lower()]['model'])
     total_stocks = len(STOCK_TICKERS)
     
@@ -127,7 +125,8 @@ else:
                     pred = predictions[asset_key]
                     
                     if 'error' not in pred:
-                        st.markdown(f"#### {config['icon']} {config['name']}")
+                        icon_prefix = f"{config['icon']} " if config['icon'] else ""
+                        st.markdown(f"#### {icon_prefix}{config['name']}")
                         render_metric_card(
                             label="Tomorrow's Prediction",
                             value=pred['predicted'],

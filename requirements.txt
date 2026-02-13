@@ -1,0 +1,13 @@
+streamlit
+pandas
+numpy
+scikit-learn
+yfinance
+requests
+beautifulsoup4
+lxml
+plotly
+pytrends
+praw
+textblob
+requests-html

@@ -164,17 +164,17 @@ for ticker in selected_stocks:
 
 fig.update_layout(
     template="plotly_dark",
-    height=500,
+    height=600,
     yaxis_title="Normalized Price (Base 100)",
     xaxis_title="Date",
     margin=dict(l=40, r=100, t=40, b=20),
     hovermode='x unified',
     legend=dict(
-        orientation="h",
-        yanchor="bottom",
-        y=1.02,
-        xanchor="right",
-        x=1,
+        orientation="v",
+        yanchor="top",
+        y=1,
+        xanchor="left",
+        x=1.02,
         bgcolor="rgba(0,0,0,0)"
     )
 )
@@ -218,6 +218,10 @@ st.markdown("---")
 
 st.markdown("###  AI-Powered Predictions")
 
+# Add disclaimer
+from utils.config import FORECAST_DISCLAIMER
+st.info(FORECAST_DISCLAIMER)
+
 # Check which stocks have trained models
 stocks_with_models = [t for t in selected_stocks if os.path.exists(ASSETS[t.lower()]['model_file'])]
 
@@ -245,7 +249,14 @@ else:
                     for ticker in stocks_with_models:
                         forecast = all_forecasts[ticker.lower()]
                         if 'error' not in forecast:
-                            price_list = [forecast[key] for key in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']]
+                            # Extract prices from new format (handle both dict and float)
+                            price_list = []
+                            for key in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']:
+                                value = forecast.get(key, 0)
+                                if isinstance(value, dict):
+                                    price_list.append(value['price'])
+                                else:
+                                    price_list.append(value)
                             raw_predictions[ticker] = price_list
                     
                     # Apply enforcement
@@ -254,9 +265,13 @@ else:
                     # Update forecasts
                     for ticker in stocks_with_models:
                         if ticker in adjusted:
-                            range_keys = ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']
+                            range_keys = ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']
                             for i, key in enumerate(range_keys):
-                                all_forecasts[ticker.lower()][key] = adjusted[ticker][i]
+                                # Update the price in the dict format
+                                if isinstance(all_forecasts[ticker.lower()][key], dict):
+                                    all_forecasts[ticker.lower()][key]['price'] = adjusted[ticker][i]
+                                else:
+                                    all_forecasts[ticker.lower()][key] = adjusted[ticker][i]
                 
                 # Create results dataframe
                 results = []
@@ -270,7 +285,12 @@ else:
                         # Add each range from FORECAST_RANGES
                         for range_name in forecast.keys():
                             if range_name != 'Current':
-                                row[range_name] = f"${forecast[range_name]:,.2f}"
+                                # Handle both dict and float format
+                                value = forecast[range_name]
+                                if isinstance(value, dict):
+                                    row[range_name] = f"${value['price']:,.2f}"
+                                else:
+                                    row[range_name] = f"${value:,.2f}"
                         
                         results.append(row)
                 
@@ -290,7 +310,7 @@ else:
                 
                 # NEW: Add deep analysis for batch forecasts
                 st.markdown("---")
-                st.markdown("### 📊 AI Deep Analysis - Market Overview")
+                st.markdown("###  AI Deep Analysis - Market Overview")
                 
                 from utils.forecast_analyzer import ForecastAnalyzer
                 
@@ -302,7 +322,15 @@ else:
                     forecast = all_forecasts[ticker.lower()]
                     if 'error' not in forecast:
                         current = forecast['Current']
-                        predictions = [forecast[k] for k in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']]
+                        
+                        # Extract prices from new format
+                        predictions = []
+                        for key in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']:
+                            value = forecast.get(key, 0)
+                            if isinstance(value, dict):
+                                predictions.append(value['price'])
+                            else:
+                                predictions.append(value)
                         
                         insights = analyzer.analyze_forecast(
                             current_price=current,
@@ -317,7 +345,7 @@ else:
                 col1, col2 = st.columns(2)
                 
                 with col1:
-                    st.markdown("#### 📈 Best Opportunities")
+                    st.markdown("####  Best Opportunities")
                     for ticker, insights in sorted_stocks[:3]:
                         with st.expander(f"**{ticker}** ({insights['trend'].title()} {insights['change_pct']:+.1f}%)"):
                             st.info(insights['summary'])
@@ -328,10 +356,10 @@ else:
                                 st.metric("Strength", insights['strength'].title())
                             with col_c:
                                 st.metric("Risk", insights['risk_level'].title())
-                            st.success(f"💡 {insights['recommendation']}")
+                            st.success(f" {insights['recommendation']}")
                 
                 with col2:
-                    st.markdown("#### 📉 Watch List")
+                    st.markdown("####  Watch List")
                     for ticker, insights in sorted_stocks[-3:]:
                         with st.expander(f"**{ticker}** ({insights['trend'].title()} {insights['change_pct']:.1f}%)"):
                             st.info(insights['summary'])
@@ -342,7 +370,7 @@ else:
                                 st.metric("Strength", insights['strength'].title())
                             with col_c:
                                 st.metric("Risk", insights['risk_level'].title())
-                            st.warning(f"💡 {insights['recommendation']}")
+                            st.warning(f" {insights['recommendation']}")
                 
             except Exception as e:
                 show_error_message(f"Prediction error: {e}")
@@ -376,21 +404,39 @@ else:
                     
                     # Prepare data for enforcement
                     raw_predictions = {
-                        'SPY': [spy_forecasts[k] for k in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']],
-                        forecast_stock.upper(): [forecasts[k] for k in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']]
+                        'SPY': [],
+                        forecast_stock.upper(): []
                     }
+                    
+                    # Extract prices from new format
+                    for key in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']:
+                        spy_val = spy_forecasts.get(key, 0)
+                        stock_val = forecasts.get(key, 0)
+                        
+                        if isinstance(spy_val, dict):
+                            raw_predictions['SPY'].append(spy_val['price'])
+                        else:
+                            raw_predictions['SPY'].append(spy_val)
+                        
+                        if isinstance(stock_val, dict):
+                            raw_predictions[forecast_stock.upper()].append(stock_val['price'])
+                        else:
+                            raw_predictions[forecast_stock.upper()].append(stock_val)
                     
                     # Apply enforcement (70% strength like batch mode)
                     adjusted = enforcer.enforce_predictions(raw_predictions, adjustment_strength=0.7)
                     
                     # Update forecasts if adjustment was applied
                     if forecast_stock.upper() in adjusted:
-                        range_keys = ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']
+                        range_keys = ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']
                         for i, key in enumerate(range_keys):
-                            old_value = forecasts[key]
-                            forecasts[key] = adjusted[forecast_stock.upper()][i]
+                            # Update the price in the dict format
+                            if isinstance(forecasts[key], dict):
+                                forecasts[key]['price'] = adjusted[forecast_stock.upper()][i]
+                            else:
+                                forecasts[key] = adjusted[forecast_stock.upper()][i]
                             
-                        st.success("✅ Correlation enforcement applied - forecast aligned with SPY")
+                        st.success(" Correlation enforcement applied - forecast aligned with SPY")
                 
                 render_prediction_table(forecasts, forecast_stock)
                 
@@ -398,9 +444,19 @@ else:
                 from utils.forecast_analyzer import ForecastAnalyzer
                 
                 analyzer = ForecastAnalyzer()
+                
+                # Extract prices from new format
+                forecast_prices = []
+                for key in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']:
+                    value = forecasts.get(key, 0)
+                    if isinstance(value, dict):
+                        forecast_prices.append(value['price'])
+                    else:
+                        forecast_prices.append(value)
+                
                 insights = analyzer.analyze_forecast(
                     current_price=forecasts['Current'],
-                    forecast_prices=[forecasts[k] for k in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months', '6 Months', '1 Year']],
+                    forecast_prices=forecast_prices,
                     asset_name=forecast_stock
                 )
                 
@@ -415,7 +471,7 @@ else:
                 with col_i3:
                     st.metric("Risk", insights['risk_level'].title())
                 
-                st.success(f"💡 **Recommendation**: {insights['recommendation']}")
+                st.success(f" **Recommendation**: {insights['recommendation']}")
                 
                 # Show chart
                 forecast_30d = predictor.recursive_forecast(30)

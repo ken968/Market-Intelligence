@@ -39,7 +39,7 @@ ASSETS = {
     'gold': {
         'name': 'Gold (XAUUSD)',
         'ticker': 'GC=F',
-        'icon': '🏆',
+        'icon': '',
         'color': '#FFD700',
         'model_file': 'models/gold_ultimate_model.keras',
         'scaler_file': 'models/scaler.pkl',
@@ -89,7 +89,7 @@ for ticker, info in STOCK_TICKERS.items():
     ASSETS[ticker.lower()] = {
         'name': info['name'],
         'ticker': ticker,
-        'icon': '📈',
+        'icon': '',
         'color': info['color'],
         'model_file': f'models/{ticker}_ultimate_model.keras',
         'scaler_file': f'models/{ticker}_scaler.pkl',
@@ -107,10 +107,39 @@ FORECAST_RANGES = {
     '1 Week': 7,
     '2 Weeks': 14,
     '1 Month': 30,
-    '3 Months': 90,
-    '6 Months': 180,
-    '1 Year': 365
+    '3 Months': 90
 }
+
+# Confidence scores for forecast reliability
+CONFIDENCE_SCORES = {
+    'gold': {
+        '1 Day': {'score': 0.80, 'label': 'High', 'color': 'success'},
+        '1 Week': {'score': 0.75, 'label': 'High', 'color': 'success'},
+        '2 Weeks': {'score': 0.70, 'label': 'Good', 'color': 'success'},
+        '1 Month': {'score': 0.65, 'label': 'Moderate', 'color': 'info'},
+        '3 Months': {'score': 0.55, 'label': 'Low', 'color': 'warning'}
+    },
+    'btc': {
+        '1 Day': {'score': 0.75, 'label': 'High', 'color': 'success'},
+        '1 Week': {'score': 0.70, 'label': 'Good', 'color': 'success'},
+        '2 Weeks': {'score': 0.60, 'label': 'Moderate', 'color': 'info'},
+        '1 Month': {'score': 0.50, 'label': 'Low', 'color': 'warning'},
+        '3 Months': {'score': 0.40, 'label': 'Very Low', 'color': 'error'}
+    },
+    'stocks': {
+        '1 Day': {'score': 0.70, 'label': 'Good', 'color': 'success'},
+        '1 Week': {'score': 0.65, 'label': 'Moderate', 'color': 'info'},
+        '2 Weeks': {'score': 0.55, 'label': 'Moderate', 'color': 'info'},
+        '1 Month': {'score': 0.50, 'label': 'Low', 'color': 'warning'},
+        '3 Months': {'score': 0.40, 'label': 'Very Low', 'color': 'error'}
+    }
+}
+
+FORECAST_DISCLAIMER = """
+⚠️ **Forecast Limitations**: AI predictions are based on historical patterns and current market conditions. 
+Actual results may vary significantly due to unforeseen events, policy changes, or market shocks. 
+Use forecasts as directional guidance, not precise targets. Always combine with fundamental analysis.
+"""
 
 # ==================== HELPER FUNCTIONS ====================
 
