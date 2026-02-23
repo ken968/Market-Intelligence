@@ -5,7 +5,7 @@ import os
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
-from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
 # 1. Load Data
 if not os.path.exists('data/gold_global_insights.csv'):
@@ -58,17 +58,32 @@ model = Sequential([
 
 model.compile(optimizer='adam', loss='mean_squared_error')
 
-# Early stopping
-early_stop = EarlyStopping(monitor='loss', patience=5, restore_best_weights=True)
+# Early stopping - monitor validation loss with high patience
+early_stop = EarlyStopping(
+    monitor='val_loss', 
+    patience=15, 
+    restore_best_weights=True,
+    verbose=1
+)
+
+# Reduce learning rate when stuck
+reduce_lr = ReduceLROnPlateau(
+    monitor='val_loss', 
+    factor=0.5, 
+    patience=7, 
+    min_lr=1e-6,
+    verbose=1
+)
 
 # 5. Training
 print("\nStarting training...")
 history = model.fit(
     x_train, y_train, 
-    epochs=50, 
+    epochs=75, 
     batch_size=32, 
+    validation_split=0.1,
     verbose=1,
-    callbacks=[early_stop]
+    callbacks=[early_stop, reduce_lr]
 )
 
 # 6. Save Model
