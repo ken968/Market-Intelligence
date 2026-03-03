@@ -7,6 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.regularizers import l2
 
 # Add project root to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -82,11 +83,11 @@ def train_stock_model(ticker):
     # 4. Model Architecture
     model = Sequential([
         Input(shape=(x_train.shape[1], x_train.shape[2])),
-        LSTM(units=100, return_sequences=True),
-        Dropout(0.2),
-        LSTM(units=50, return_sequences=False),
-        Dropout(0.2),
-        Dense(units=25),
+        LSTM(units=100, return_sequences=True, kernel_regularizer=l2(0.001)),
+        Dropout(0.3),
+        LSTM(units=50, return_sequences=False, kernel_regularizer=l2(0.001)),
+        Dropout(0.3),
+        Dense(units=25, kernel_regularizer=l2(0.001)),
         Dense(units=1)
     ])
     
