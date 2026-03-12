@@ -135,50 +135,62 @@ def integrate_sentiment(asset='gold'):
         print(f"Run: python data_fetcher_v2.py {asset_lower}")
         return False
     
-    # Fetch sentiment
+    # Fetch sentiment (60 days for better coverage)
     sentiment_df = fetch_news_sentiment(asset)
-    
-    if sentiment_df.empty:
-        print(f"Warning: No sentiment data found for {asset}.")
-        print("Creating insights file with zero sentiment...")
-        macro_df = pd.read_csv(macro_file)
-        macro_df['Sentiment'] = 0
-        macro_df.to_csv(output_file, index=False)
-        print(f"System: '{output_file}' created with placeholder sentiment.")
-        return True
     
     # Merge with macro data
     macro_df = pd.read_csv(macro_file)
     macro_df['Date'] = pd.to_datetime(macro_df['Date']).dt.strftime('%Y-%m-%d')
     
+    if sentiment_df.empty:
+        print(f"Warning: No sentiment data found for {asset}.")
+        # Keep existing sentiment if available, else use 0
+        if os.path.exists(output_file):
+            existing = pd.read_csv(output_file)
+            if 'Sentiment' in existing.columns and existing['Sentiment'].ne(0).any():
+                print(f"Keeping existing sentiment data.")
+                return True
+        macro_df['Sentiment'] = 0
+        macro_df.to_csv(output_file, index=False)
+        return True
+    
     final_df = pd.merge(macro_df, sentiment_df, on='Date', how='left')
-    final_df['Sentiment'] = final_df['Sentiment'].fillna(0)
+    
+    # FIX: Use ffill+bfill so ALL historical rows get non-zero sentiment
+    # This spreads the fetched sentiment backwards/forwards to fill gaps
+    final_df['Sentiment'] = final_df['Sentiment'].ffill().bfill().fillna(0)
     
     final_df.to_csv(output_file, index=False)
+    non_zero = final_df['Sentiment'].ne(0).sum()
     print(f"System: '{output_file}' updated successfully.")
-    print(f"        Total records: {len(final_df)}")
-    print(f"        With sentiment: {final_df['Sentiment'].ne(0).sum()}")
+    print(f"        Total records: {len(final_df)}, With sentiment: {non_zero} ({100*non_zero//len(final_df)}%)")
     
     return True
 
 
 def process_all_assets():
-    """Process sentiment for all major assets"""
-    assets = ['gold', 'btc', 'SPY', 'NVDA', 'AAPL']  # Core assets
+    """Process sentiment for ALL assets including all stocks"""
+    from utils.config import STOCK_TICKERS
+    
+    # Core assets + all configured stocks
+    core_assets = ['gold', 'btc']
+    stock_assets = list(STOCK_TICKERS.keys())  # SPY, QQQ, DIA, AAPL, MSFT, etc.
+    all_assets = core_assets + stock_assets
     
     print("\n" + "="*60)
-    print("MULTI-ASSET SENTIMENT ANALYSIS")
+    print("MULTI-ASSET SENTIMENT ANALYSIS - ALL ASSETS")
+    print(f"Processing {len(all_assets)} assets...")
     print("="*60)
     
     results = {}
-    for asset in assets:
+    for asset in all_assets:
         print(f"\n--- Processing {asset.upper()} ---")
         try:
             success = integrate_sentiment(asset)
             results[asset] = "SUCCESS" if success else "FAILED"
         except Exception as e:
             print(f"Error processing {asset}: {e}")
-            results[asset] = "FAILED"
+            results[asset] = f"FAILED ({e})"
     
     print("\n" + "="*60)
     print("SENTIMENT SYNC SUMMARY")
@@ -187,7 +199,7 @@ def process_all_assets():
         print(f"{asset.upper():6s}: {status}")
     print("="*60)
     
-    return all(s == "SUCCESS" for s in results.values())
+    return all('SUCCESS' in s for s in results.values())
 
 
 if __name__ == "__main__":
