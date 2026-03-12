@@ -98,6 +98,26 @@ class SentimentAggregator:
     def get_source_names(self) -> List[str]:
         """Get list of active source names"""
         return [source.source_name for source in self.sources]
+    
+    def fetch_articles(self, asset: str, days: int = 30) -> List[Dict]:
+        """
+        Fetch raw articles from all sources for news display.
+        
+        Returns:
+            List of article dicts with: title, url, date, sentiment, source
+        """
+        all_articles = []
+        
+        for source in self.sources:
+            try:
+                articles = source.fetch_news(asset, days)
+                all_articles.extend(articles)
+            except Exception as e:
+                continue
+        
+        # Sort by date descending (newest first)
+        all_articles.sort(key=lambda x: x.get('date', ''), reverse=True)
+        return all_articles
 
 
 # ==================== TESTING ====================

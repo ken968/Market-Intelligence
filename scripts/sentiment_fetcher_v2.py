@@ -82,21 +82,25 @@ def fetch_news_sentiment(asset='gold', max_articles=15):
             print(f"System: No articles found for {asset}.")
             return pd.DataFrame()
         
-        # Save news summary for dashboard
+        # Save REAL articles for news display (not a fake summary)
         news_file = f'data/latest_news_{asset_lower}.json'
         try:
-            summary_data = [{
-                'date': str(datetime.now().date()),
-                'title': f'Sentiment from {len(aggregator.get_source_names())} sources',
-                'description': f'Multi-source sentiment analysis for {asset.upper()}',
-                'url': '#',
-                'sentiment': float(sentiment_df['Sentiment'].mean())
-            }]
-            
+            real_articles = aggregator.fetch_articles(asset_lower, days=30)
+            news_data = []
+            for a in real_articles[:20]:  # Save latest 20 articles
+                news_data.append({
+                    'date': str(a.get('date', datetime.now().date())),
+                    'title': a.get('title', 'No title'),
+                    'description': a.get('description', a.get('title', '')),
+                    'url': a.get('url', '#'),
+                    'sentiment': float(a.get('sentiment', 0)),
+                    'source': a.get('source', 'Unknown')
+                })
             with open(news_file, 'w') as f:
-                json.dump(summary_data, f, indent=4)
+                json.dump(news_data, f, indent=4)
+            print(f"System: Saved {len(news_data)} real articles to '{news_file}'")
         except Exception as e:
-            pass  # Non-critical
+            print(f"Warning: Could not save news articles: {e}")
         
         print(f"System: Days with data: {len(sentiment_df)}, Non-zero: {(sentiment_df['Sentiment'] != 0).sum()}")
         return sentiment_df
