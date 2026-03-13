@@ -88,17 +88,19 @@ class GoogleTrendsFetcher:
         keyword = keyword_map.get(asset_key.lower(), asset_key)
         return self.fetch_trends([keyword], timeframe='today 3-m')
     
-    def save_trends_data(self, asset_key):
+    def save_trends_data(self, asset_key, data=None):
         """
-        Fetch and save trends data to CSV
+        Save trends data to CSV
         
         Args:
             asset_key (str): Asset identifier
+            data (pd.DataFrame): Optional pre-fetched data
         
         Returns:
             str: Path to saved file
         """
-        data = self.fetch_asset_trends(asset_key)
+        if data is None:
+            data = self.fetch_asset_trends(asset_key)
         
         if not data.empty:
             filepath = os.path.join(self.data_dir, f'google_trends_{asset_key}.csv')
@@ -108,12 +110,13 @@ class GoogleTrendsFetcher:
         
         return None
     
-    def get_trend_signal(self, asset_key):
+    def get_trend_signal(self, asset_key, data=None):
         """
         Analyze trend data and generate signal
         
         Args:
             asset_key (str): Asset identifier
+            data (pd.DataFrame): Optional pre-fetched data
         
         Returns:
             dict: {
@@ -123,7 +126,8 @@ class GoogleTrendsFetcher:
                 'signal_strength': float (0-1)
             }
         """
-        data = self.fetch_asset_trends(asset_key)
+        if data is None:
+            data = self.fetch_asset_trends(asset_key)
         
         if data.empty:
             return {
@@ -174,9 +178,25 @@ def batch_fetch_trends(asset_keys):
     
     for key in asset_keys:
         try:
-            signal = fetcher.get_trend_signal(key)
+            print(f"Fetching trends for {key}...")
+            data = fetcher.fetch_asset_trends(key)
+            
+            # Fallback if API returns empty data (e.g. Rate Limit)
+            if data.empty:
+                print(f"API returned empty data for {key}. Attempting fallback...")
+                filepath = os.path.join(fetcher.data_dir, f'google_trends_{key}.csv')
+                if os.path.exists(filepath):
+                    data = pd.read_csv(filepath, index_col=0, parse_dates=True)
+                    print(f"Loaded fallback data for {key} from {filepath}.")
+                else:
+                    print(f"No local fallback available for {key}.")
+
+            signal = fetcher.get_trend_signal(key, data)
             results[key] = signal
-            fetcher.save_trends_data(key)
+            
+            # Only save if data isn't empty and it was actually generated
+            if not data.empty:
+                fetcher.save_trends_data(key, data)
         except Exception as e:
             print(f"Error processing {key}: {e}")
             results[key] = {'error': str(e)}

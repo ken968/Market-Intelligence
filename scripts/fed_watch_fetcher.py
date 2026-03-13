@@ -140,8 +140,19 @@ class FedWatchFetcher:
         
         # Append to existing file or create new
         if os.path.exists(self.filepath):
-            existing = pd.read_csv(self.filepath)
-            df = pd.concat([existing, df], ignore_index=True)
+            try:
+                existing = pd.read_csv(self.filepath)
+                # Convert to datetime to compare dates
+                existing['temp_date'] = pd.to_datetime(existing['timestamp']).dt.date
+                today = datetime.now().date()
+                
+                # Filter out any exact matches for today to avoid duplicates
+                existing = existing[existing['temp_date'] != today]
+                existing = existing.drop(columns=['temp_date'])
+                
+                df = pd.concat([existing, df], ignore_index=True)
+            except Exception as e:
+                print(f"Error processing existing history (overwriting): {e}")
         
         df.to_csv(self.filepath, index=False)
         print(f"Saved Fed Watch data to {self.filepath}")
