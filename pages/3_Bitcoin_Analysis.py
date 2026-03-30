@@ -53,7 +53,7 @@ prev = df.iloc[-2]
 
 st.markdown("###  Current Market Status")
 
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
     render_metric_card(
@@ -80,13 +80,21 @@ with col3:
         )
 
 with col4:
+    render_metric_card(
+        label="Crude Oil",
+        value=latest['Oil_Price'],
+        delta=latest['Oil_Price'] - prev['Oil_Price']
+    )
+
+with col5:
     if 'Sentiment' in latest:
         render_metric_card(
-            label="Market Sentiment",
+            label="AI Sentiment",
             value=latest['Sentiment'],
             delta=latest['Sentiment'] - prev.get('Sentiment', 0),
             format_str="{:.2f}"
         )
+        st.caption("On-Chain + xAI + FinBERT")
 
 st.markdown("---")
 
@@ -264,6 +272,50 @@ with col2:
 
 st.markdown("---")
 
+# ==================== SENTIMENT VISUALIZATION ====================
+
+st.markdown("### 🧠 AI Sentiment vs Price Action")
+
+if 'Sentiment' in df.columns:
+    st.info("💡 **Visualization Anomaly Check:** This chart maps the weighted NLP sentiment against the price. Notice how geopolitical shocks (large red/green spikes) often precede rapid price movements, highlighting the AI's real-world 'News Reaction' capability.")
+    
+    from plotly.subplots import make_subplots
+    
+    # Create figure with secondary y-axis
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    
+    # Add Price Line
+    fig.add_trace(
+        go.Scatter(x=df['Date'], y=df['BTC'], name="BTC Price", line=dict(color=config['color'], width=2)),
+        secondary_y=False,
+    )
+    
+    # Color-code sentiment bars (Green for pure positive > 0.1, Red for negative < -0.1, gray for neutral)
+    colors = ['#FF4D4D' if s < -0.1 else '#00CC96' if s > 0.1 else '#A0A0A0' for s in df['Sentiment']]
+    
+    # Add Sentiment Area/Bar
+    fig.add_trace(
+        go.Bar(x=df['Date'], y=df['Sentiment'], name="AI Sentiment Score", marker_color=colors, opacity=0.6),
+        secondary_y=True,
+    )
+    
+    # Add titles and layout
+    fig.update_layout(
+        template="plotly_dark",
+        height=450,
+        margin=dict(l=20, r=20, t=40, b=20),
+        hovermode='x unified',
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+    
+    # Set y-axes titles
+    fig.update_yaxes(title_text="<b>BTC Price</b> (USD)", secondary_y=False)
+    fig.update_yaxes(title_text="<b>Sentiment Score</b> (-1 to 1)", range=[-1.5, 1.5], secondary_y=True, showgrid=False)
+    
+    st.plotly_chart(fig, use_container_width=True)
+
+st.markdown("---")
+
 # ==================== AI PREDICTIONS ====================
 
 st.markdown("###  AI-Powered Predictions")
@@ -353,7 +405,8 @@ else:
         **BTC AI Model:**
         - Architecture: LSTM (128-64-32)
         - Sequence: 90 days (longer for cycles)
-        - Features: BTC, DXY, VIX, Yield, Sentiment, Halving Cycle, **EMA_90**
+        - Features: BTC, DXY, VIX, Yield, Oil, Sentiment, Halving Cycle, EMA_90
+        - Sentiment Sources: On-chain, xAI, FinBERT NLP
         - Training Data: 2009 - Present
         - Higher dropout (0.3) for volatility
         """)
@@ -397,13 +450,9 @@ with col2:
 
 with col3:
     st.markdown("""
-    ####  Macro Environment
-    - DXY: {:.2f} (Dollar strength)
-    - VIX: {:.2f} (Market fear)
-    - US 10Y: {:.2f}% (Risk-free rate)
-    
-    BTC performs best in weak dollar + low yield environment.
-    """.format(latest['DXY'], latest['VIX'], latest['Yield_10Y']))
+    - BTC performs best in weak dollar + low yield environment.
+    - Crude Oil: ${:,.2f} (Geopolitical factor)
+    """.format(latest['DXY'], latest['VIX'], latest['Yield_10Y'], latest['Oil_Price']))
 
 # ==================== DISCLAIMER ====================
 

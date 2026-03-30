@@ -184,14 +184,34 @@ if returns_data:
 
 st.markdown("---")
 
-# ==================== CURRENT PRICES ====================
+# ==================== CURRENT PRICES & MACRO ====================
 
-st.markdown("###  Current Prices & Changes")
+st.markdown("###  Market Prices & Macro Indicators")
 
-cols = st.columns(min(len(selected_assets), 4))
+# Calculate column layout
+cols_count = min(len(selected_assets) + 1, 4) 
+cols = st.columns(cols_count)
 
+# 1. Show Oil Price as global macro indicator (First card)
+with cols[0]:
+    try:
+        macro_df = pd.read_csv('data/macro_indicators.csv')
+        latest_macro = macro_df.iloc[-1]
+        prev_macro = macro_df.iloc[-2]
+        
+        render_metric_card(
+            label="Crude Oil (WTI)",
+            value=latest_macro['Oil_Price'],
+            delta=latest_macro['Oil_Price'] - prev_macro['Oil_Price']
+        )
+        st.info("🛢️ Global macro indicator")
+    except Exception:
+        st.warning("Oil data unavailable")
+
+# 2. Show selected assets (starting from second col or wrapping)
 for i, asset_key in enumerate(selected_assets):
-    with cols[i % 4]:
+    col_idx = (i + 1) % cols_count
+    with cols[col_idx]:
         try:
             config = ASSETS[asset_key]
             df = pd.read_csv(config['data_file'])

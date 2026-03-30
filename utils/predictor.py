@@ -232,7 +232,7 @@ class AssetPredictor:
                     # Decrement days by 1 (adjusted for scaler scale_)
                     last_frame[f_idx] = max(0, prev_frame[f_idx] - self.scaler.scale_[f_idx])
                 
-                elif f_name in ['Sentiment', 'DXY', 'VIX', 'Yield_10Y']:
+                elif f_name in ['Sentiment', 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price']:
                     # Macro indicators drift to their historical means
                     # UPDATED: Slower drift (0.002) allows current market "vision"/news to persist longer
                     drift_rate = 0.002

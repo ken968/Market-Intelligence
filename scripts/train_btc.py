@@ -27,7 +27,7 @@ def train_btc_model():
     df = pd.read_csv(data_file)
     
     # Features: BTC price + macro + sentiment + halving + EMA 90
-    features = ['BTC', 'DXY', 'VIX', 'Yield_10Y', 'Sentiment', 'Halving_Cycle', 'EMA_90']
+    features = ['BTC', 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price', 'Sentiment', 'Halving_Cycle', 'EMA_90']
     
     # Calculate Halving Cycle if missing
     if 'Halving_Cycle' not in df.columns:

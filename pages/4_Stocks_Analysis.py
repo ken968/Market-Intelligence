@@ -109,6 +109,9 @@ for i, ticker in enumerate(selected_stocks):
             st.success(f" +{data['pct_change']:.2f}%")
         else:
             st.error(f" {data['pct_change']:.2f}%")
+        
+        # Show Oil Price reference for stocks
+        st.caption(f"🛢️ Oil: ${latest['Oil_Price']:.2f}")
 
 st.markdown("---")
 

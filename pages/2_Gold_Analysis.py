@@ -52,7 +52,7 @@ prev = df.iloc[-2]
 
 st.markdown("###  Current Market Status")
 
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
     render_metric_card(
@@ -78,13 +78,21 @@ with col3:
     )
 
 with col4:
+    render_metric_card(
+        label="Crude Oil",
+        value=latest['Oil_Price'],
+        delta=latest['Oil_Price'] - prev['Oil_Price']
+    )
+
+with col5:
     if 'Sentiment' in latest:
         render_metric_card(
-            label="Market Sentiment",
+            label="AI Sentiment",
             value=latest['Sentiment'],
             delta=latest['Sentiment'] - prev.get('Sentiment', 0),
             format_str="{:.2f}"
         )
+        st.caption("FinBERT + xAI Analysis")
 
 st.markdown("---")
 
@@ -161,6 +169,50 @@ with col2:
         hovermode='x unified',
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
+    st.plotly_chart(fig, use_container_width=True)
+
+st.markdown("---")
+
+# ==================== SENTIMENT VISUALIZATION ====================
+
+st.markdown("### 🧠 AI Sentiment vs Price Action")
+
+if 'Sentiment' in df.columns:
+    st.info("💡 **Visualization Anomaly Check:** This chart maps the weighted NLP sentiment against the price. Notice how geopolitical shocks (large red/green spikes) often precede rapid price movements, highlighting the AI's real-world 'News Reaction' capability.")
+    
+    from plotly.subplots import make_subplots
+    
+    # Create figure with secondary y-axis
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    
+    # Add Price Line
+    fig.add_trace(
+        go.Scatter(x=df['Date'], y=df['Gold'], name="Gold Price", line=dict(color=config['color'], width=2)),
+        secondary_y=False,
+    )
+    
+    # Color-code sentiment bars (Green for pure positive > 0.1, Red for negative < -0.1, gray for neutral)
+    colors = ['#FF4D4D' if s < -0.1 else '#00CC96' if s > 0.1 else '#A0A0A0' for s in df['Sentiment']]
+    
+    # Add Sentiment Area/Bar
+    fig.add_trace(
+        go.Bar(x=df['Date'], y=df['Sentiment'], name="AI Sentiment Score", marker_color=colors, opacity=0.6),
+        secondary_y=True,
+    )
+    
+    # Add titles and layout
+    fig.update_layout(
+        template="plotly_dark",
+        height=450,
+        margin=dict(l=20, r=20, t=40, b=20),
+        hovermode='x unified',
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+    
+    # Set y-axes titles
+    fig.update_yaxes(title_text="<b>Gold Price</b> (USD)", secondary_y=False)
+    fig.update_yaxes(title_text="<b>Sentiment Score</b> (-1 to 1)", range=[-1.5, 1.5], secondary_y=True, showgrid=False)
+    
     st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("---")
@@ -254,7 +306,8 @@ else:
         **AI Model Details:**
         - Architecture: LSTM 3-Layer
         - Sequence Length: 60 days
-        - Features: Gold, DXY, VIX, Yield, Sentiment, EMA_90
+        - Features: Gold, DXY, VIX, Yield, Oil, Sentiment, EMA_90
+        - Sentiment Sources: FinBERT, xAI, Geopolitical News
         - Training: 10 years historical data
         """)
 

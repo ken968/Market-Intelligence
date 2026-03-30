@@ -8,11 +8,17 @@ from typing import List, Dict
 from datetime import datetime, timedelta
 import sys
 import os
+import re
 
 # Add parent directories to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sentiment_sources.yahoo_rss import YahooRSSFetcher
+from sentiment_sources.fear_greed_fetcher import FearGreedFetcher
+from sentiment_sources.twitter_fetcher import TwitterSentimentFetcher
+from sentiment_sources.onchain_fetcher import OnChainFetcher
+from sentiment_sources.macro_news_fetcher import MacroNewsFetcher
+from sentiment_sources.geopolitical_fetcher import GeopoliticalFetcher
 
 
 class SentimentAggregator:
@@ -40,6 +46,13 @@ class SentimentAggregator:
             self.sources.append(AlphaVantageFetcher(av_key))
         except Exception as e:
             print(f"Alpha Vantage not available: {e}")
+            
+        # Add New Advanced Sources
+        self.sources.append(FearGreedFetcher())
+        self.sources.append(TwitterSentimentFetcher())
+        self.sources.append(OnChainFetcher())
+        self.sources.append(MacroNewsFetcher())
+        self.sources.append(GeopoliticalFetcher())
         
         print(f"Sentiment Aggregator initialized with {len(self.sources)} source(s)")
     
@@ -62,6 +75,19 @@ class SentimentAggregator:
         for source in self.sources:
             try:
                 articles = source.fetch_news(asset, days)
+                
+                # Apply structural weighting to solve "Sama Rata" Anomaly
+                weight = 1.0
+                if isinstance(source, (GeopoliticalFetcher, MacroNewsFetcher)):
+                    weight = 2.5  # Critical Macro/Geo news gets 2.5x weight
+                elif isinstance(source, OnChainFetcher):
+                    weight = 1.5  # Fundamental data gets 1.5x weight
+                elif isinstance(source, TwitterSentimentFetcher):
+                    weight = 0.8  # Social noise reduced slightly
+                
+                for a in articles:
+                    a['weight'] = weight
+                    
                 all_articles.extend(articles)
             except Exception as e:
                 print(f"  {source.source_name}: Failed - {e}")
@@ -71,6 +97,30 @@ class SentimentAggregator:
             print(f"  No sentiment data found from any source")
             # Return empty DataFrame with expected structure
             return pd.DataFrame(columns=['Date', 'Sentiment'])
+            
+        # ==========================================
+        # FLAW #1 FIX: Title De-duplication (Echo Chamber)
+        # ==========================================
+        print(f"  Pre-deduplication article count: {len(all_articles)}")
+        unique_articles = []
+        seen_titles = set()
+        
+        # Sort by weight descending so we keep the highest weighted source if duplicates exist
+        all_articles.sort(key=lambda x: x.get('weight', 1.0), reverse=True)
+        
+        for article in all_articles:
+            raw_title = article.get('title', '')
+            # Clean title: lowercase, remove special characters and extra spaces
+            clean_title = re.sub(r'[^a-z0-9]', '', raw_title.lower())
+            
+            # Simple hash/set matching for near-exact duplicates
+            if clean_title not in seen_titles:
+                seen_titles.add(clean_title)
+                unique_articles.append(article)
+                
+        print(f"  Post-deduplication article count: {len(unique_articles)}")
+        all_articles = unique_articles
+        # ==========================================
         
         # Convert to DataFrame
         df = pd.DataFrame(all_articles)
@@ -78,18 +128,37 @@ class SentimentAggregator:
         # Ensure date is datetime
         df['date'] = pd.to_datetime(df['date']).dt.date
         
-        # Aggregate sentiment by date (average across all articles)
-        daily_sentiment = df.groupby('date').agg({
-            'sentiment': 'mean',  # Average sentiment per day
-            'title': 'count'      # Number of articles
-        }).reset_index()
+        # Calculate weighted sentiment
+        df['weight'] = df.get('weight', 1.0)
+        df['weighted_sentiment'] = df['sentiment'] * df['weight']
         
-        daily_sentiment.columns = ['Date', 'Sentiment', 'ArticleCount']
+        # Aggregate sentiment by date (weighted average across all articles)
+        daily_sum = df.groupby('date')[['weighted_sentiment', 'weight']].sum().reset_index()
+        daily_sum['Sentiment'] = (daily_sum['weighted_sentiment'] / daily_sum['weight']).clip(-1.0, 1.0)
+        
+        # Also get article count
+        article_counts = df.groupby('date').size().reset_index(name='ArticleCount')
+        
+        # Merge
+        daily_sentiment = pd.merge(daily_sum[['date', 'Sentiment']], article_counts, on='date')
+        
+        # Sort chronologically for decay processing
+        daily_sentiment = daily_sentiment.sort_values('date')
+        
+        # ==========================================
+        # FLAW #3 FIX: Sentiment Decay (Memory)
+        # ==========================================
+        # Apply Exponential Moving Average to give sentiment a "memory tail"
+        # span=3 roughly gives 50% decay over 3 days (simulates lingering fear/greed)
+        daily_sentiment['Sentiment'] = daily_sentiment['Sentiment'].ewm(span=3, adjust=False).mean()
+        # ==========================================
+        
+        daily_sentiment.rename(columns={'date': 'Date'}, inplace=True)
         
         # Convert date back to string for consistency
         daily_sentiment['Date'] = daily_sentiment['Date'].astype(str)
         
-        print(f"  Aggregated: {len(daily_sentiment)} days with sentiment data")
+        print(f"  Aggregated: {len(daily_sentiment)} days with weighted sentiment data")
         print(f"  Non-zero sentiment: {(daily_sentiment['Sentiment'] != 0).sum()} days")
         print(f"  Mean sentiment: {daily_sentiment['Sentiment'].mean():+.4f}")
         

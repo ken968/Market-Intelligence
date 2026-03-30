@@ -1,0 +1,55 @@
+
+==================================================
+ GOLD FORECAST TEST
+==================================================
+Current:   $4,501.10
+Tomorrow:  $4,534.29 (+0.74%)
+1 Week:    $4,701.57 (+4.45%)
+
+Multi-Range Forecast (from $4,501.10):
+  1 Day     : $4,534.29 (+0.7%) [High]
+  1 Week    : $4,701.57 (+4.5%) [High]
+  2 Weeks   : $4,676.23 (+3.9%) [Good]
+  1 Month   : $4,624.95 (+2.8%) [Moderate]
+  3 Months  : $4,430.89 (-1.6%) [Low]
+
+--- Sanity Checks ---
+  [OK] All sanity checks passed!
+
+==================================================
+ BITCOIN FORECAST TEST
+==================================================
+Current:   $70,802.47
+Tomorrow:  $71,769.17 (+1.37%)
+1 Week:    $72,945.63 (+3.03%)
+
+Multi-Range Forecast (from $70,802.47):
+  1 Day     : $71,769.17 (+1.4%) [High]
+  1 Week    : $72,945.63 (+3.0%) [Good]
+  2 Weeks   : $76,219.89 (+7.7%) [Moderate]
+  1 Month   : $87,109.56 (+23.0%) [Low]
+  3 Months  : $103,893.58 (+46.7%) [Very Low]
+
+--- Sanity Checks ---
+  [OK] All sanity checks passed!
+
+==================================================
+ SPY (S&P 500) FORECAST TEST
+==================================================
+Current:   $656.82
+Tomorrow:  $660.96 (+0.63%)
+1 Week:    $659.86 (+0.46%)
+
+Multi-Range Forecast (from $656.82):
+  1 Day     : $660.96 (+0.6%) [Good]
+  1 Week    : $659.86 (+0.5%) [Moderate]
+  2 Weeks   : $644.16 (-1.9%) [Moderate]
+  1 Month   : $620.82 (-5.5%) [Low]
+  3 Months  : $580.27 (-11.7%) [Very Low]
+
+--- Sanity Checks ---
+  [OK] All sanity checks passed!
+
+==================================================
+ AUDIT COMPLETE
+==================================================

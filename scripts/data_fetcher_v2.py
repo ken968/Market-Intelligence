@@ -13,7 +13,8 @@ class MultiAssetFetcher:
         self.macro_tickers = {
             'USD_Index': 'DX-Y.NYB',
             'VIX': '^VIX',
-            'US_10Y_Yield': '^TNX'
+            'US_10Y_Yield': '^TNX',
+            'Crude_Oil': 'CL=F'
         }
         
         # Bitcoin: Full history from 2009
@@ -77,14 +78,15 @@ class MultiAssetFetcher:
             column_mapping = {
                 self.macro_tickers['USD_Index']: 'DXY',
                 self.macro_tickers['VIX']: 'VIX',
-                self.macro_tickers['US_10Y_Yield']: 'Yield_10Y'
+                self.macro_tickers['US_10Y_Yield']: 'Yield_10Y',
+                self.macro_tickers['Crude_Oil']: 'Oil_Price'
             }
             
             # Rename based on actual ticker names in columns
             df.columns = [column_mapping.get(col, col) for col in df.columns]
             
             # Ensure they are in the expected order
-            df = df[['DXY', 'VIX', 'Yield_10Y']]
+            df = df[['DXY', 'VIX', 'Yield_10Y', 'Oil_Price']]
             df = df.dropna()
             
             df.to_csv('data/macro_indicators.csv')
@@ -138,6 +140,7 @@ class MultiAssetFetcher:
                 df['DXY'] = df['DXY'].ffill().bfill()
                 df['VIX'] = df['VIX'].ffill().bfill()
                 df['Yield_10Y'] = df['Yield_10Y'].ffill().bfill()
+                df['Oil_Price'] = df['Oil_Price'].ffill().bfill()
             
             df.to_csv(self.gold_config['filename'])
             print(f"System: Success. {len(df)} Gold records saved to '{self.gold_config['filename']}'.")
@@ -190,6 +193,7 @@ class MultiAssetFetcher:
                 df['DXY'] = df['DXY'].ffill().bfill()
                 df['VIX'] = df['VIX'].ffill().bfill()
                 df['Yield_10Y'] = df['Yield_10Y'].ffill().bfill()
+                df['Oil_Price'] = df['Oil_Price'].ffill().bfill()
             
             df.to_csv(self.btc_config['filename'])
             print(f"System: Success. {len(df)} BTC records saved (from {df.index[0].date()} to {df.index[-1].date()}).")
@@ -245,6 +249,7 @@ class MultiAssetFetcher:
                     df['DXY'] = df['DXY'].ffill().bfill()
                     df['VIX'] = df['VIX'].ffill().bfill()
                     df['Yield_10Y'] = df['Yield_10Y'].ffill().bfill()
+                    df['Oil_Price'] = df['Oil_Price'].ffill().bfill()
                 
                 filename = self.stock_config['filename_template'].format(ticker=tick)
                 df.to_csv(filename)
