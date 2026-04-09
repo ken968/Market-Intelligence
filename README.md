@@ -19,8 +19,8 @@ Market Intelligence 2.0 is more than a price predictor. It is a decision-support
 The command center for your portfolio. It tracks normalized performance and AI predictions in real-time.
 
 <p align="center">
-  <img src="docs/assets/dashboard_1.png" width="49%">
-  <img src="docs/assets/dashboard_2.png" width="49%">
+  <img src="docs/assets/1_dashboardA.png" width="49%">
+  <img src="docs/assets/2_dashboardB.png" width="49%">
 </p>
 
 ---
@@ -29,9 +29,9 @@ The command center for your portfolio. It tracks normalized performance and AI p
 Inject custom macro shocks (Oil jumps, DXY spikes, Fear index) and observe how the LSTM model recalculates its 30-day forecast under stress conditions. We also calculate sensitivity metrics to see how much an asset reacts to your shock.
 
 <p align="center">
-  <img src="docs/assets/simulator_1.png" width="32%">
-  <img src="docs/assets/simulator_2.png" width="32%">
-  <img src="docs/assets/simulator_3.png" width="32%">
+  <img src="docs/assets/3_scenarioA.png" width="32%">
+  <img src="docs/assets/4_scenarioB.jpg" width="32%">
+  <img src="docs/assets/5_scenarioC.jpg" width="32%">
 </p>
 
 - 🔵 Baseline: AI forecast using current live market data
@@ -45,8 +45,8 @@ View price action overlayed with weighted sentiment leads. The core aggregation 
 - **Echo Chamber Fix**: Strips articles with >85% semantic overlap.
 
 <p align="center">
-  <img src="docs/assets/sentiment_1.png" width="49%">
-  <img src="docs/assets/sentiment_2.png" width="49%">
+  <img src="docs/assets/6_sentimenanalisA.png" width="49%">
+  <img src="docs/assets/7_sentimenanalisB.png" width="49%">
 </p>
 
 ---
@@ -55,8 +55,8 @@ View price action overlayed with weighted sentiment leads. The core aggregation 
 Data sources beyond the standard order book to give an edge on underlying institutional flows.
 
 <p align="center">
-  <img src="docs/assets/alternative_data_1.png" width="49%">
-  <img src="docs/assets/alternative_data_2.png" width="49%">
+  <img src="docs/assets/8_alternatifA.png" width="49%">
+  <img src="docs/assets/9_alternatifB.png" width="49%">
 </p>
 
 - **Fed Watch**: Market-implied FOMC rate hike/cut probabilities.
