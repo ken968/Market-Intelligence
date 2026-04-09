@@ -204,7 +204,7 @@ with cols[0]:
             value=latest_macro['Oil_Price'],
             delta=latest_macro['Oil_Price'] - prev_macro['Oil_Price']
         )
-        st.info("🛢️ Global macro indicator")
+        st.info("Global macro indicator")
     except Exception:
         st.warning("Oil data unavailable")
 

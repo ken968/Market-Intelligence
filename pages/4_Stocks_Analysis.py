@@ -111,7 +111,7 @@ for i, ticker in enumerate(selected_stocks):
             st.error(f" {data['pct_change']:.2f}%")
         
         # Show Oil Price reference for stocks
-        st.caption(f"🛢️ Oil: ${latest['Oil_Price']:.2f}")
+        st.caption(f"Oil: ${latest['Oil_Price']:.2f}")
 
 st.markdown("---")
 
@@ -463,7 +463,7 @@ else:
                     asset_name=forecast_stock
                 )
                 
-                st.markdown("### 📋 AI Deep Analysis")
+                st.markdown("### AI Deep Analysis")
                 st.info(insights['summary'])
                 
                 col_i1, col_i2, col_i3 = st.columns(3)

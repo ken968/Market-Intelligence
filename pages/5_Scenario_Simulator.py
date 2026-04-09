@@ -14,7 +14,7 @@ from utils.predictor import AssetPredictor
 # ==================== PAGE CONFIG ====================
 st.set_page_config(
     page_title="Scenario Simulator | Market Intelligence",
-    page_icon="🔮",
+    #page_icon="🔮",
     layout="wide"
 )
 
@@ -22,7 +22,7 @@ inject_custom_css()
 
 # ==================== MAIN CONTENT ====================
 render_page_header(
-    icon="🔮",
+    #icon="🔮",
     title="Scenario Simulator (What-If Analysis)",
     subtitle="Stress-test the AI models by injecting geopolitical and macroeconomic shocks"
 )
@@ -60,7 +60,7 @@ with col1:
     sim_vix = st.slider("VIX (Fear Index)", min_value=10.0, max_value=90.0, value=float(latest.get('VIX', 15.0)), step=1.0)
     sim_sentiment = st.slider("AI Sentiment (-1 Fear to +1 Euphoria)", min_value=-1.0, max_value=1.0, value=float(latest.get('Sentiment', 0.0)), step=0.1)
     
-    run_sim = st.button("🚀 Run AI Simulation", use_container_width=True)
+    run_sim = st.button("Run AI Simulation", use_container_width=True)
 
 with col2:
     st.markdown("### 3. Simulation Results")
@@ -84,15 +84,41 @@ with col2:
                 vix_idx = features.index('VIX') if 'VIX' in features else -1
                 sent_idx = features.index('Sentiment') if 'Sentiment' in features else -1
                 
-                # Inject shocks into the last 3 days of sequence data to ensure the model "feels" the momentum shift
+                # ============================================================
+                # CRITICAL BUG FIX: Inject shocks into SCALED space
+                # Previously injecting raw values (-1 to 1 sentiment, $119 oil)
+                # into unscaled array caused INVERSE behavior from the LSTM.
+                # 
+                # Correct approach: transform a dummy row with injected values
+                # using the model's own scaler, then extract the scaled indices.
+                # ============================================================
+                
+                # Build a dummy row from the last real data row, then overwrite
+                dummy_row = sim_predictor.data[-1:].copy()  # shape (1, n_features)
+                if oil_idx != -1:   dummy_row[0, oil_idx] = sim_oil
+                if dxy_idx != -1:   dummy_row[0, dxy_idx] = sim_dxy
+                if vix_idx != -1:   dummy_row[0, vix_idx] = sim_vix
+                if sent_idx != -1:  dummy_row[0, sent_idx] = sim_sentiment
+                
+                # Scale the entire dummy row properly
+                scaled_dummy = sim_predictor.scaler.transform(dummy_row)
+                
+                # Extract only the injected scaled values we need
                 for step_back in range(1, 4):
                     if len(sim_predictor.data) >= step_back:
-                        if oil_idx != -1: sim_predictor.data[-step_back, oil_idx] = sim_oil
-                        if dxy_idx != -1: sim_predictor.data[-step_back, dxy_idx] = sim_dxy
-                        if vix_idx != -1: sim_predictor.data[-step_back, vix_idx] = sim_vix
-                        if sent_idx != -1: sim_predictor.data[-step_back, sent_idx] = sim_sentiment
+                        # Scale the current row and inject the overridden scaled values
+                        current_row = sim_predictor.data[-(step_back):-(step_back)+1 if step_back > 1 else None].copy()
+                        scaled_row = sim_predictor.scaler.transform(current_row)
+                        
+                        if oil_idx != -1:  scaled_row[0, oil_idx]  = scaled_dummy[0, oil_idx]
+                        if dxy_idx != -1:  scaled_row[0, dxy_idx]  = scaled_dummy[0, dxy_idx]
+                        if vix_idx != -1:  scaled_row[0, vix_idx]  = scaled_dummy[0, vix_idx]
+                        if sent_idx != -1: scaled_row[0, sent_idx] = scaled_dummy[0, sent_idx]
+                        
+                        # Inverse back to raw space so recursive_forecast()'s own scaler step is consistent
+                        sim_predictor.data[-(step_back)] = sim_predictor.scaler.inverse_transform(scaled_row)[0]
                 
-                # Now run forecast with the "poisoned/boosted" dataset
+                # Now run forecast with properly shock-injected dataset
                 scenario_pred = sim_predictor.recursive_forecast(30)
                 
                 # ==================== PLOTTING ====================
@@ -147,7 +173,7 @@ with col2:
                 st.plotly_chart(fig, use_container_width=True)
                 
                 # ==================== SENSITIVITY ANALYSIS (IMAGE POINT #2) ====================
-                st.markdown("### 🔍 Sensitivity Analysis")
+                st.markdown("### Sensitivity Analysis")
                 
                 # Calculate sensitivity: how much does 1% change in input affect the output?
                 # We'll use a simple linear approximation based on the sim result
@@ -167,9 +193,9 @@ with col2:
                 with s_col1:
                     st.markdown(f"**Asset Sensitivity to Oil:** `{sensitivity:.2f}x`")
                     if sensitivity > 1.5:
-                        st.warning(f"⚠️ **High Sensitivity:** A 1% spike in Oil may cause a {sensitivity*1:.1f}% swing in {asset_key.upper()}.")
+                        st.warning(f"🔴 **High Sensitivity:** A 1% spike in Oil may cause a {sensitivity*1:.1f}% swing in {asset_key.upper()}.")
                     else:
-                        st.success(f"✅ **Low Sensitivity:** {asset_key.upper()} is currently resilient to Energy shocks.")
+                        st.success(f"🟢 **Low Sensitivity:** {asset_key.upper()} is currently resilient to Energy shocks.")
                 
                 with s_col2:
                     # Probabilistic Branching Info (IMAGE POINT #3)
@@ -186,6 +212,15 @@ with col2:
                 c1.metric("Baseline Target", f"${baseline_pred[-1]:,.2f}")
                 c2.metric("Scenario Target", f"${scenario_pred[-1]:,.2f}")
                 c3.metric("Shock Divergence", f"{diff_pct:+.2f}%", delta_color="normal" if diff_pct > 0 else "inverse")
+                
+                # ==================== DATA DEBUGGING (VERIFICATION) ====================
+                with st.expander("Simulation Debug (Internal AI Inputs)"):
+                    st.write("Verifikasi apakah AI benar-benar menerima input slider Anda:")
+                    # Get the final day's input sequence and show the raw features
+                    final_input_raw = sim_predictor.data[-1]
+                    debug_df = pd.DataFrame([final_input_raw], columns=features)
+                    st.dataframe(debug_df)
+                    st.caption("Pastikan kolom Oil_Price, DXY, VIX, dan Sentiment di atas sudah sesuai dengan angka slider Anda.")
                 
             except Exception as e:
                 show_error_message(f"Simulation Error: {e}")

@@ -175,10 +175,10 @@ st.markdown("---")
 
 # ==================== SENTIMENT VISUALIZATION ====================
 
-st.markdown("### 🧠 AI Sentiment vs Price Action")
+st.markdown("### AI Sentiment vs Price Action")
 
 if 'Sentiment' in df.columns:
-    st.info("💡 **Visualization Anomaly Check:** This chart maps the weighted NLP sentiment against the price. Notice how geopolitical shocks (large red/green spikes) often precede rapid price movements, highlighting the AI's real-world 'News Reaction' capability.")
+    st.info("**Visualization Anomaly Check:** This chart maps the weighted NLP sentiment against the price. Notice how geopolitical shocks (large red/green spikes) often precede rapid price movements, highlighting the AI's real-world 'News Reaction' capability.")
     
     from plotly.subplots import make_subplots
     
