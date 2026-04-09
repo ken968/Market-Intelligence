@@ -18,7 +18,6 @@ from utils.predictor import AssetPredictor
 
 st.set_page_config(
     page_title="Gold Analysis | Market Intelligence",
-    page_icon="",
     layout="wide"
 )
 

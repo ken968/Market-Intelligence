@@ -15,7 +15,6 @@ from utils.signal_generator import SignalGenerator, batch_generate_signals
 # Page config
 st.set_page_config(
     page_title="Trading Signals | Market Intelligence",
-    page_icon="",
     layout="wide"
 )
 

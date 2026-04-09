@@ -18,7 +18,6 @@ from utils.predictor import batch_predict_tomorrow, batch_predict_week
 
 st.set_page_config(
     page_title="Dashboard | Market Intelligence",
-    page_icon="",
     layout="wide"
 )
 

@@ -18,7 +18,6 @@ from scripts.fed_watch_fetcher import FedWatchFetcher
 # Page config
 st.set_page_config(
     page_title="Alternative Data | Market Intelligence",
-    page_icon="",
     layout="wide"
 )
 
@@ -111,84 +110,85 @@ with tab1:
             except Exception as e:
                 show_error_message(f"Error: {e}")
 
-# Tab 2: Reddit Sentiment
-with tab2:
-    st.markdown("### Reddit Sentiment Analysis")
-    st.info("Sentiment from r/cryptocurrency, r/wallstreetbets, and r/gold. Requires Reddit API credentials for live data.")
-    
-    # Reddit API configuration
-    with st.expander("Reddit API Configuration (Optional)"):
-        st.markdown("""
-        To enable live Reddit sentiment analysis:
-        1. Create a Reddit app at https://www.reddit.com/prefs/apps
-        2. Get your client_id and client_secret
-        3. Enter them below
-        
-        **Note:** Without credentials, mock data will be used.
-        """)
-        
-        client_id = st.text_input("Client ID", type="password")
-        client_secret = st.text_input("Client Secret", type="password")
-    
-    if st.button("Analyze Reddit Sentiment", use_container_width=True):
-        with st.spinner("Analyzing Reddit sentiment..."):
-            try:
-                sentiment_data = batch_analyze_sentiment(
-                    selected_assets,
-                    client_id=client_id if client_id else None,
-                    client_secret=client_secret if client_secret else None
-                )
-                
-                # Display results
-                results = []
-                for asset, signal in sentiment_data.items():
-                    if 'error' not in signal:
-                        results.append({
-                            'Asset': asset.upper(),
-                            'Sentiment Score': f"{signal['sentiment_score']:.3f}",
-                            'Label': signal['sentiment_label'],
-                            'Signal': signal['signal'].title(),
-                            'Confidence': f"{signal['confidence']:.2f}",
-                            'Posts Analyzed': signal['post_count']
-                        })
-                
-                if results:
-                    st.dataframe(pd.DataFrame(results), use_container_width=True, hide_index=True)
-                    
-                    # Sentiment distribution chart
-                    st.markdown("#### Sentiment Distribution")
-                    
-                    fig = go.Figure()
-                    
-                    assets_list = [r['Asset'] for r in results]
-                    scores = [float(r['Sentiment Score']) for r in results]
-                    
-                    colors = ['#00FF00' if s > 0.1 else '#FF0000' if s < -0.1 else '#FFFF00' for s in scores]
-                    
-                    fig.add_trace(go.Bar(
-                        x=assets_list,
-                        y=scores,
-                        marker_color=colors,
-                        text=[f"{s:.2f}" for s in scores],
-                        textposition='outside'
-                    ))
-                    
-                    fig.update_layout(
-                        title="Sentiment Scores by Asset",
-                        template="plotly_dark",
-                        height=400,
-                        yaxis_title="Sentiment Score (-1 to 1)",
-                        xaxis_title="Asset",
-                        margin=dict(l=40, r=40, t=60, b=40)
-                    )
-                    
-                    st.plotly_chart(fig, use_container_width=True)
-                
-                else:
-                    st.warning("No data available")
-            
-            except Exception as e:
-                show_error_message(f"Error: {e}")
+# Tab 2: Reddit Sentiment (DISABLED LOCALLY)
+# with tab2:
+#     st.markdown("### Reddit Sentiment Analysis")
+#     st.info("Sentiment from r/cryptocurrency, r/wallstreetbets, and r/gold. Requires Reddit API credentials for live data.")
+#     
+#     # Reddit API configuration
+#     with st.expander("Reddit API Configuration (Optional)"):
+#         st.markdown("""
+#         To enable live Reddit sentiment analysis:
+#         1. Create a Reddit app at https://www.reddit.com/prefs/apps
+#         2. Get your client_id and client_secret
+#         3. Enter them below
+#         
+#         **Note:** Without credentials, mock data will be used.
+#         """)
+#         
+#         client_id = st.text_input("Client ID", type="password")
+#         client_secret = st.text_input("Client Secret", type="password")
+#     
+#     if st.button("Analyze Reddit Sentiment", use_container_width=True):
+#         with st.spinner("Analyzing Reddit sentiment..."):
+#             try:
+#                 sentiment_data = batch_analyze_sentiment(
+#                     selected_assets,
+#                     client_id=client_id if client_id else None,
+#                     client_secret=client_secret if client_secret else None
+#                 )
+#                 
+#                 # Display results
+#                 results = []
+#                 for asset, signal in sentiment_data.items():
+#                     if 'error' not in signal:
+#                         results.append({
+#                             'Asset': asset.upper(),
+#                             'Sentiment Score': f"{signal['sentiment_score']:.3f}",
+#                             'Label': signal['sentiment_label'],
+#                             'Signal': signal['signal'].title(),
+#                             'Confidence': f"{signal['confidence']:.2f}",
+#                             'Posts Analyzed': signal['post_count']
+#                         })
+#                 
+#                 if results:
+#                     st.dataframe(pd.DataFrame(results), use_container_width=True, hide_index=True)
+#                     
+#                     # Sentiment distribution chart
+#                     st.markdown("#### Sentiment Distribution")
+#                     
+#                     fig = go.Figure()
+#                     
+#                     assets_list = [r['Asset'] for r in results]
+#                     scores = [float(r['Sentiment Score']) for r in results]
+#                     
+#                     colors = ['#00FF00' if s > 0.1 else '#FF0000' if s < -0.1 else '#FFFF00' for s in scores]
+#                     
+#                     fig.add_trace(go.Bar(
+#                         x=assets_list,
+#                         y=scores,
+#                         marker_color=colors,
+#                         text=[f"{s:.2f}" for s in scores],
+#                         textposition='outside'
+#                     ))
+#                     
+#                     fig.update_layout(
+#                         title="Sentiment Scores by Asset",
+#                         template="plotly_dark",
+#                         height=400,
+#                         yaxis_title="Sentiment Score (-1 to 1)",
+#                         xaxis_title="Asset",
+#                         margin=dict(l=40, r=40, t=60, b=40)
+#                     )
+#                     
+#                     st.plotly_chart(fig, use_container_width=True)
+#                 
+#                 else:
+#                     st.warning("No data available")
+#             
+#             except Exception as e:
+#                 show_error_message(f"Error: {e}")
+st.markdown("⚠️ Reddit Sentiment is currently disabled locally.")
 
 # Tab 3: Fed Watch
 with tab3:

@@ -20,8 +20,7 @@ from utils.ui_components import (
 # ==================== PAGE CONFIG ====================
 
 st.set_page_config(
-    page_title="Settings | XAUUSD Terminal",
-    page_icon="",
+    page_title="Settings | Market Intelligence",
     layout="wide"
 )
 

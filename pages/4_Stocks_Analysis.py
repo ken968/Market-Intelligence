@@ -19,7 +19,6 @@ from utils.predictor import AssetPredictor, batch_predict_tomorrow, batch_multi_
 
 st.set_page_config(
     page_title="Stocks Analysis | Market Intelligence",
-    page_icon="",
     layout="wide"
 )
 

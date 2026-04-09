@@ -14,7 +14,6 @@ from utils.predictor import AssetPredictor
 # ==================== PAGE CONFIG ====================
 st.set_page_config(
     page_title="Scenario Simulator | Market Intelligence",
-    #page_icon="🔮",
     layout="wide"
 )
 
@@ -27,7 +26,7 @@ render_page_header(
     subtitle="Stress-test the AI models by injecting geopolitical and macroeconomic shocks"
 )
 
-st.info("💡 **How it works:** This engine overrides current market data with your hypothetical numbers, forcing the LSTM model to recalculate its predictions based on the 'shock'.")
+st.info(" **How it works:** This engine overrides current market data with your hypothetical numbers, forcing the LSTM model to recalculate its predictions based on the 'shock'.")
 
 # ==================== CONTROLS ====================
 # Find available models

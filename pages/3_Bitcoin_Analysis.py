@@ -19,7 +19,6 @@ from utils.predictor import AssetPredictor
 
 st.set_page_config(
     page_title="Bitcoin Analysis | Market Intelligence",
-    page_icon="₿",
     layout="wide"
 )
 

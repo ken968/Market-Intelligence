@@ -1,253 +1,188 @@
-# Market Intelligence
+# Market Intelligence 2.0
 
-> **AI-Powered Financial Intelligence Platform**  
-> Deep learning predictions for Gold, Bitcoin, and US Equities with real-time sentiment analysis.
+> **Macro Stress-Testing & AI Financial Intelligence Engine**  
+> Advanced LSTM forecasts for Gold, Bitcoin, and Equities integrated with a multi-factor sentiment aggregator and macro shock simulator.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)
+![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
 
 ---
 
-## Features
+## Overview
 
-### Multi-Asset Coverage
-- **Gold (XAUUSD)**: Precious metal analysis with macro correlations.
-- **Bitcoin**: Full history (2009-present) with halving cycle tracking.
-- **US Stocks**: 11 equities including S&P 500, Mag7, and semiconductors.
+Market Intelligence 2.0 is more than a price predictor. It is a decision-support system that analyzes how geopolitics, macroeconomics (DXY, VIX, Oil), and sentiment data interact to move asset prices — and lets you run your own stress-tests against that model.
 
-### AI-Powered Predictions
-- **LSTM Deep Learning**: 3-layer neural networks optimized per asset type.
-- **Multi-Range Forecasts**: 1 day to 1 year predictions.
-- **Recursive Forecasting**: Advanced prediction chaining.
+### Dashboard
 
-### Comprehensive Analysis
-- **Technical**: Price charts, trend analysis, volatility tracking.
-- **Fundamental**: Sentiment analysis from 10+ trusted news sources.
-- **Macro Correlation**: DXY, VIX, Treasury Yields integration.
+<table>
+<tr>
+<td><img src="docs/assets/dashboard_1.png" alt="Dashboard - Market Prices and AI Predictions" width="100%"/></td>
+<td><img src="docs/assets/dashboard_2.png" alt="Dashboard - Performance Chart and Correlation Matrix" width="100%"/></td>
+</tr>
+<tr>
+<td align="center">Market Prices, Macro Indicators & 1-Week AI Predictions</td>
+<td align="center">Normalized Performance Chart & Asset Correlation Matrix</td>
+</tr>
+</table>
 
-### Professional UI
-- **Multi-Page App**: Dedicated pages for each asset class.
-- **Real-Time Data**: Yahoo Finance + NewsAPI integration.
-- **Interactive Charts**: Plotly visualizations with dark theme.
+---
+
+## 🔵 Intelligence Engine
+
+The core aggregation layer filters noise from financial markets using three mechanisms:
+
+**Weighted Sentiment**
+Source reliability weighting applied before any signal computation:
+- Geopolitics & Macro News: 2.5x
+- On-chain Data (Crypto): 1.5x
+- Social Media (X/Twitter): 0.8x
+
+**Echo Chamber Fix**
+Title-Hash De-duplicator strips articles with >85% semantic overlap, preventing the model from being misled by repetitive news cycles.
+
+**Sentiment Decay**
+Exponential Weighted Moving Average (EWM) applied to sentiment history, giving recent signals more weight than stale data.
+
+---
+
+## 🔴 Scenario Simulator (What-If Analysis)
+
+Inject custom macro shocks and observe how the LSTM model recalculates its 30-day forecast under stress conditions.
+
+<table>
+<tr>
+<td><img src="docs/assets/simulator_1.png" alt="Scenario Simulator - Controls" width="100%"/></td>
+<td><img src="docs/assets/simulator_2.png" alt="Scenario Simulator - Results and Sensitivity" width="100%"/></td>
+</tr>
+<tr>
+<td align="center">Shock injection controls: Oil, DXY, VIX, Sentiment</td>
+<td align="center">Stress-test results, sensitivity analysis & impact metrics</td>
+</tr>
+</table>
+
+**Baseline vs Stress-Test**
+- 🔵 Baseline: AI forecast using current live market data
+- 🔴 Stress-Test: AI forecast after your macro shock is injected
+- Divergence metric shows exact impact delta on Day 30
+
+**Sensitivity Matrix**
+Automatically calculates how sensitive an asset is to Oil shocks (e.g., "1% Oil spike = 0.6x BTC movement").
+
+---
+
+## 🟡 Alternative Data Intelligence
+
+Data sources beyond the standard order book:
+- **Fed Watch**: Market-implied FOMC rate hike/cut probabilities
+- **Google Trends**: Real-time retail search interest tracking
+- **Geopolitical Pulse**: Aggregated risk index from conflict zones and trade data
+- **On-chain Metrics** (BTC): Exchange inflows, miner activity, SOPR
+
+---
+
+## 🟢 Project Structure
+
+```
+Market-Intelligence/
+├── app.py                          # Main entry point
+├── pages/
+│   ├── 1_Dashboard.py              # Multi-asset overview & correlation
+│   ├── 2_Gold_Analysis.py          # XAUUSD deep-dive + sentiment
+│   ├── 3_Bitcoin_Analysis.py       # Halving cycle + on-chain metrics
+│   ├── 4_Stocks_Analysis.py        # Equity & sector analysis
+│   ├── 5_Scenario_Simulator.py     # Macro stress-testing engine
+│   ├── 5_Alternative_Data.py       # Fed Watch, Trends, Geopolitics
+│   ├── 6_Trading_Signals.py        # Multi-factor entry/exit signals
+│   └── 7_Settings.py               # Data sync & model training
+├── scripts/
+│   ├── aggregator.py               # Weighted sentiment aggregation
+│   ├── data_fetcher_v2.py          # Market & macro data sync
+│   ├── train_ultimate.py           # Gold LSTM training
+│   ├── train_btc.py                # Bitcoin LSTM training
+│   └── train_stocks.py             # Equities LSTM training
+├── utils/
+│   ├── config.py                   # Asset configuration
+│   ├── predictor.py                # LSTM inference & recursive forecast
+│   ├── signal_generator.py         # Multi-factor signal logic
+│   └── ui_components.py            # Shared UI components
+├── models/                         # Trained .keras model files
+└── data/                           # Normalized CSV data warehouse
+```
 
 ---
 
 ## Quick Start
 
-### Prerequisites
 ```bash
-# Python 3.8 or higher
-python --version
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### Installation
-```bash
-# Clone repository
 git clone https://github.com/ken968/Market-Intelligence.git
 cd Market-Intelligence
 
-# Create virtual environment
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+.venv\Scripts\activate
 
-# Install requirements
 pip install -r requirements.txt
-```
 
-### First Run Setup
-```bash
-# 1. Sync market data
+# Sync market data
 python scripts/data_fetcher_v2.py
 
-# 2. Analyze sentiment
-python scripts/sentiment_fetcher_v2.py all
+# Train core models
+python scripts/train_ultimate.py
+python scripts/train_btc.py
+python scripts/train_stocks.py SPY
 
-# 3. Train core models (Gold + BTC + SPY)
-python scripts/train_ultimate.py        # Gold
-python scripts/train_btc.py             # Bitcoin
-python scripts/train_stocks.py SPY      # S&P 500
-
-# 4. (Optional) Train all 11 stocks
-python scripts/train_stocks.py ALL      # Takes 25-35 minutes
-
-# 5. Launch app
+# Launch
 streamlit run app.py
-```
-
----
-
-## Project Structure
-
-```
-Market-Intelligence/
-├── app.py                      # Main homepage
-├── pages/                      # Multi-page application views
-│   ├── 1_Dashboard.py
-│   ├── 2_Gold_Analysis.py
-│   ├── 3_Bitcoin_Analysis.py
-│   ├── 4_Stocks_Analysis.py
-│   └── 5_Settings.py
-├── scripts/                    # Core logic and training scripts
-│   ├── data_fetcher_v2.py
-│   ├── sentiment_fetcher_v2.py
-│   ├── train_ultimate.py
-│   ├── train_btc.py
-│   └── train_stocks.py
-├── utils/                      # Helper components and config
-│   ├── config.py
-│   ├── predictor.py
-│   └── ui_components.py
-├── data/                       # Historical and sentiment data
-├── models/                     # Trained LSTM models
-└── requirements.txt            # Project dependencies
 ```
 
 ---
 
 ## Model Architecture
 
-### Gold Model
-- **Architecture**: LSTM (100-50-25 units)
-- **Sequence Length**: 60 days
-- **Features**: Gold, DXY, VIX, Yield, Sentiment
-- **Training Data**: 10 years
-- **Epochs**: 30
+| Asset | LSTM Units | Sequence | Epochs | Key Features |
+|---|---|---|---|---|
+| Gold | 100-50-25 | 60 days | 30 | Price, DXY, VIX, Yield, Oil, Sentiment |
+| Bitcoin | 128-64-32 | 90 days | 50 | Price, DXY, VIX, Halving Cycle, On-chain, Sentiment |
+| Stocks | 100-50-25 | 60 days | 30 | Price, DXY, VIX, Yield, Sentiment |
 
-### Bitcoin Model
-- **Architecture**: LSTM (128-64-32 units) + higher dropout
-- **Sequence Length**: 90 days
-- **Features**: BTC, DXY, VIX, Yield, Sentiment, Halving Cycle
-- **Training Data**: 2009-present
-- **Epochs**: 50
-
-### Stock Models
-- **Architecture**: LSTM (100-50-25 units)
-- **Sequence Length**: 60 days
-- **Features**: Price, DXY, VIX, Yield, Sentiment
-- **Training Data**: 10 years
-- **Epochs**: 30
+All models use recursive forecasting: each prediction step becomes input for the next, allowing multi-day projections with a single trained model.
 
 ---
 
-## Supported Assets
+## Covered Assets
 
-### Precious Metals
-- **GC=F** - Gold Futures (XAUUSD)
-
-### Cryptocurrency
-- **BTC-USD** - Bitcoin
-
-### Market Indices
-- **SPY** - S&P 500 ETF
-- **QQQ** - Nasdaq 100 ETF
-- **DIA** - Dow Jones ETF
-
-### Magnificent 7
-- **AAPL** - Apple Inc.
-- **MSFT** - Microsoft Corp.
-- **GOOGL** - Alphabet Inc.
-- **AMZN** - Amazon.com Inc.
-- **NVDA** - NVIDIA Corp.
-- **META** - Meta Platforms
-- **TSLA** - Tesla Inc.
-
-### Semiconductors
-- **TSM** - Taiwan Semiconductor
+**Precious Metals**: GC=F (Gold Futures)  
+**Crypto**: BTC-USD (Bitcoin)  
+**Indices**: SPY, QQQ, DIA  
+**Mag 7**: AAPL, MSFT, GOOGL, AMZN, NVDA, META, TSLA  
+**Semiconductors**: TSM
 
 ---
 
-## Configuration
+## Status Indicators
 
-### API Keys
-Edit `utils/config.py` to update NewsAPI key:
-```python
-NEWS_API_KEY = 'your_api_key_here'
-```
-
-### Hyperparameters
-Modify training scripts in `scripts/` to adjust model parameters.
+🟢 System operational / bullish signal  
+🔵 AI prediction active / info  
+🟡 Warning / neutral signal  
+🔴 Error / bearish signal / stress condition
 
 ---
 
-## UI Navigation
+## Notes
 
-### Homepage
-- System status overview
-- Quick predictions for core assets
-- Latest market data
-
-### Dashboard Page
-- Multi-asset performance comparison
-- Portfolio correlation matrix
-- Batch predictions
-
-### Gold Analysis
-- XAUUSD price charts
-- DXY/VIX correlation analysis
-- Multi-range AI forecasts
-- News sentiment
-
-### Bitcoin Analysis
-- Full history visualization (2009+)
-- Halving cycle timeline
-- Macro correlation analysis
-- Crypto news feed
-
-### Stocks Analysis
-- Multi-stock comparison charts
-- Sector performance tracking
-- Individual stock deep dives
-- Batch predictions for all stocks
+- Sync data and sentiment frequently, especially during high-volatility periods
+- Retrain models weekly to incorporate the latest market data
+- Bitcoin model requires full history (2009-present) for cycle-aware predictions
+- Stocks forecast is the most complex — sector context matters
 
 ---
 
-## Troubleshooting
+## Disclaimer
 
-### Model Training Fails
-- Ensure data is synced first using scripts in `scripts/`.
-- Check if CSV files exist in `data/`.
-
-### Prediction Errors
-- Clear Streamlit cache and restart.
-- Ensure models are trained and saved in `models/`.
+This platform is a market intelligence tool, not financial advice. All trading involves risk. AI predictions are probabilistic. Always apply proper risk management.
 
 ---
 
-## Future Enhancements
-- [ ] Options flow analysis
-- [ ] Backtest simulator
-- [ ] Alert system (price/sentiment triggers)
-- [ ] Portfolio optimizer
-- [ ] Additional assets (commodities, forex)
-
----
-
-## License
-MIT License - see [LICENSE](LICENSE) file for details
-
----
-
-## Contact
-**Project Maintainer**: Ken968  
-**GitHub**: [https://github.com/ken968/Market-Intelligence](https://github.com/ken968/Market-Intelligence)
-
----
-
-## Acknowledgments
-- Yahoo Finance for market data
-- NewsAPI for news aggregation
-- TensorFlow/Keras for deep learning
-- Streamlit for the dashboard UI
-- Plotly for interactive charts
-
----
-
-
-**Disclaimer: seringkan/perbanyak sync data & sentiment dan train model untuk awal-awal. stocks forecast saat ini sangat sulit karna paling complex**
 <div align="center">
 
 Built with Python, TensorFlow, and Streamlit
