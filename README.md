@@ -27,11 +27,13 @@ The command center for your portfolio. It tracks normalized performance and AI p
 ## 🔴 Scenario Simulator (What-If Analysis)
 Inject custom macro shocks (Oil jumps, DXY spikes, Fear index) and observe how the LSTM model recalculates its 30-day forecast under stress conditions. We also calculate sensitivity metrics to see how much an asset reacts to your shock.
 
-<img src="docs/assets/3_scenarioA.png" width="100%">
-<br>
-<img src="docs/assets/4_scenarioB.png" width="100%">
-<br>
-<img src="docs/assets/5_scenarioC.png" width="100%">
+<p align="center">
+  <img src="docs/assets/3_scenarioA.png" width="50%">
+  <br><br>
+  <img src="docs/assets/4_scenarioB.png" width="100%">
+  <br><br>
+  <img src="docs/assets/5_scenarioC.png" width="100%">
+</p>
 
 - 🔵 Baseline: AI forecast using current live market data
 - 🔴 Stress-Test: AI forecast after your macro shock is injected
