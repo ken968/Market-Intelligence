@@ -13,71 +13,55 @@
 
 Market Intelligence 2.0 is more than a price predictor. It is a decision-support system that analyzes how geopolitics, macroeconomics (DXY, VIX, Oil), and sentiment data interact to move asset prices — and lets you run your own stress-tests against that model.
 
-### Dashboard
-
-<table>
-<tr>
-<td><img src="docs/assets/dashboard_1.png" alt="Dashboard - Market Prices and AI Predictions" width="100%"/></td>
-<td><img src="docs/assets/dashboard_2.png" alt="Dashboard - Performance Chart and Correlation Matrix" width="100%"/></td>
-</tr>
-<tr>
-<td align="center">Market Prices, Macro Indicators & 1-Week AI Predictions</td>
-<td align="center">Normalized Performance Chart & Asset Correlation Matrix</td>
-</tr>
-</table>
-
 ---
 
-## 🔵 Intelligence Engine
+## 🟢 Dashboard Page
+The command center for your portfolio. It tracks normalized performance and AI predictions in real-time.
 
-The core aggregation layer filters noise from financial markets using three mechanisms:
-
-**Weighted Sentiment**
-Source reliability weighting applied before any signal computation:
-- Geopolitics & Macro News: 2.5x
-- On-chain Data (Crypto): 1.5x
-- Social Media (X/Twitter): 0.8x
-
-**Echo Chamber Fix**
-Title-Hash De-duplicator strips articles with >85% semantic overlap, preventing the model from being misled by repetitive news cycles.
-
-**Sentiment Decay**
-Exponential Weighted Moving Average (EWM) applied to sentiment history, giving recent signals more weight than stale data.
+<p align="center">
+  <img src="docs/assets/dashboard_1.png" width="49%">
+  <img src="docs/assets/dashboard_2.png" width="49%">
+</p>
 
 ---
 
 ## 🔴 Scenario Simulator (What-If Analysis)
+Inject custom macro shocks (Oil jumps, DXY spikes, Fear index) and observe how the LSTM model recalculates its 30-day forecast under stress conditions. We also calculate sensitivity metrics to see how much an asset reacts to your shock.
 
-Inject custom macro shocks and observe how the LSTM model recalculates its 30-day forecast under stress conditions.
+<p align="center">
+  <img src="docs/assets/simulator_1.png" width="32%">
+  <img src="docs/assets/simulator_2.png" width="32%">
+  <img src="docs/assets/simulator_3.png" width="32%">
+</p>
 
-<table>
-<tr>
-<td><img src="docs/assets/simulator_1.png" alt="Scenario Simulator - Controls" width="100%"/></td>
-<td><img src="docs/assets/simulator_2.png" alt="Scenario Simulator - Results and Sensitivity" width="100%"/></td>
-</tr>
-<tr>
-<td align="center">Shock injection controls: Oil, DXY, VIX, Sentiment</td>
-<td align="center">Stress-test results, sensitivity analysis & impact metrics</td>
-</tr>
-</table>
-
-**Baseline vs Stress-Test**
 - 🔵 Baseline: AI forecast using current live market data
 - 🔴 Stress-Test: AI forecast after your macro shock is injected
-- Divergence metric shows exact impact delta on Day 30
 
-**Sensitivity Matrix**
-Automatically calculates how sensitive an asset is to Oil shocks (e.g., "1% Oil spike = 0.6x BTC movement").
+---
+
+## 🔵 Sentiment Analysis & Price Correlation
+View price action overlayed with weighted sentiment leads. The core aggregation layer filters noise from financial markets:
+- **Weighted Sentiment**: Geopolitics (2.5x), On-chain (1.5x), X/Twitter (0.8x).
+- **Echo Chamber Fix**: Strips articles with >85% semantic overlap.
+
+<p align="center">
+  <img src="docs/assets/sentiment_1.png" width="49%">
+  <img src="docs/assets/sentiment_2.png" width="49%">
+</p>
 
 ---
 
 ## 🟡 Alternative Data Intelligence
+Data sources beyond the standard order book to give an edge on underlying institutional flows.
 
-Data sources beyond the standard order book:
-- **Fed Watch**: Market-implied FOMC rate hike/cut probabilities
-- **Google Trends**: Real-time retail search interest tracking
-- **Geopolitical Pulse**: Aggregated risk index from conflict zones and trade data
-- **On-chain Metrics** (BTC): Exchange inflows, miner activity, SOPR
+<p align="center">
+  <img src="docs/assets/alternative_data_1.png" width="49%">
+  <img src="docs/assets/alternative_data_2.png" width="49%">
+</p>
+
+- **Fed Watch**: Market-implied FOMC rate hike/cut probabilities.
+- **Google Trends**: Real-time retail search interest tracking.
+- **Geopolitical Pulse**: Aggregated risk index from conflict zones and trade data.
 
 ---
 
