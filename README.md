@@ -18,21 +18,20 @@ Market Intelligence 2.0 is more than a price predictor. It is a decision-support
 ## 🟢 Dashboard Page
 The command center for your portfolio. It tracks normalized performance and AI predictions in real-time.
 
-<p align="center">
-  <img src="docs/assets/1_dashboardA.png" width="49%">
-  <img src="docs/assets/2_dashboardB.png" width="49%">
-</p>
+<img src="docs/assets/1_dashboardA.png" width="100%">
+<br>
+<img src="docs/assets/2_dashboardB.png" width="100%">
 
 ---
 
 ## 🔴 Scenario Simulator (What-If Analysis)
 Inject custom macro shocks (Oil jumps, DXY spikes, Fear index) and observe how the LSTM model recalculates its 30-day forecast under stress conditions. We also calculate sensitivity metrics to see how much an asset reacts to your shock.
 
-<p align="center">
-  <img src="docs/assets/3_scenarioA.png" width="32%">
-  <img src="docs/assets/4_scenarioB.jpg" width="32%">
-  <img src="docs/assets/5_scenarioC.jpg" width="32%">
-</p>
+<img src="docs/assets/3_scenarioA.png" width="100%">
+<br>
+<img src="docs/assets/4_scenarioB.jpg" width="100%">
+<br>
+<img src="docs/assets/5_scenarioC.jpg" width="100%">
 
 - 🔵 Baseline: AI forecast using current live market data
 - 🔴 Stress-Test: AI forecast after your macro shock is injected
@@ -44,20 +43,18 @@ View price action overlayed with weighted sentiment leads. The core aggregation 
 - **Weighted Sentiment**: Geopolitics (2.5x), On-chain (1.5x), X/Twitter (0.8x).
 - **Echo Chamber Fix**: Strips articles with >85% semantic overlap.
 
-<p align="center">
-  <img src="docs/assets/6_sentimenanalisA.png" width="49%">
-  <img src="docs/assets/7_sentimenanalisB.png" width="49%">
-</p>
+<img src="docs/assets/6_sentimenanalisA.png" width="100%">
+<br>
+<img src="docs/assets/7_sentimenanalisB.png" width="100%">
 
 ---
 
 ## 🟡 Alternative Data Intelligence
 Data sources beyond the standard order book to give an edge on underlying institutional flows.
 
-<p align="center">
-  <img src="docs/assets/8_alternatifA.png" width="49%">
-  <img src="docs/assets/9_alternatifB.png" width="49%">
-</p>
+<img src="docs/assets/8_alternatifA.png" width="100%">
+<br>
+<img src="docs/assets/9_alternatifB.png" width="100%">
 
 - **Fed Watch**: Market-implied FOMC rate hike/cut probabilities.
 - **Google Trends**: Real-time retail search interest tracking.
