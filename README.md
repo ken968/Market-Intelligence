@@ -29,9 +29,9 @@ Inject custom macro shocks (Oil jumps, DXY spikes, Fear index) and observe how t
 
 <img src="docs/assets/3_scenarioA.png" width="100%">
 <br>
-<img src="docs/assets/4_scenarioB.jpg" width="100%">
+<img src="docs/assets/4_scenarioB.png" width="100%">
 <br>
-<img src="docs/assets/5_scenarioC.jpg" width="100%">
+<img src="docs/assets/5_scenarioC.png" width="100%">
 
 - 🔵 Baseline: AI forecast using current live market data
 - 🔴 Stress-Test: AI forecast after your macro shock is injected
