@@ -43,7 +43,7 @@ if not available_assets:
 
 # ==================== ASSET SELECTOR ====================
 
-st.markdown("###  Asset Selection")
+st.markdown("### Asset Selection")
 
 col1, col2 = st.columns([3, 1])
 
@@ -73,14 +73,109 @@ with col2:
     )
 
 if not selected_assets:
-    st.warning(" Please select at least one asset to analyze.")
+    st.warning("Please select at least one asset to analyze.")
     st.stop()
 
 st.markdown("---")
 
-# ==================== PERFORMANCE COMPARISON ====================
+# ==================== CURRENT PRICES & MACRO (MOVED TO TOP) ====================
 
-st.markdown("###  Performance Comparison (Normalized)")
+st.markdown("### Market Prices & Macro Indicators")
+
+# Calculate column layout
+cols_count = min(len(selected_assets) + 1, 4) 
+cols = st.columns(cols_count)
+
+# 1. Show Oil Price as global macro indicator (First card)
+with cols[0]:
+    try:
+        macro_df = pd.read_csv('data/macro_indicators.csv')
+        latest_macro = macro_df.iloc[-1]
+        prev_macro = macro_df.iloc[-2]
+        
+        render_metric_card(
+            label="Crude Oil (WTI)",
+            value=latest_macro['Oil_Price'],
+            delta=latest_macro['Oil_Price'] - prev_macro['Oil_Price']
+        )
+        st.info("Global macro indicator")
+    except Exception:
+        st.warning("Oil data unavailable")
+
+# 2. Show selected assets (starting from second col or wrapping)
+for i, asset_key in enumerate(selected_assets):
+    col_idx = (i + 1) % cols_count
+    with cols[col_idx]:
+        try:
+            config = ASSETS[asset_key]
+            df = pd.read_csv(config['data_file'])
+            
+            latest = df.iloc[-1]
+            prev = df.iloc[-2]
+            
+            price_col = config['features'][0]
+            current = latest[price_col]
+            change = current - prev[price_col]
+            pct_change = (change / prev[price_col]) * 100
+            
+            render_metric_card(
+                label=config['name'],
+                value=current,
+                delta=change
+            )
+            
+            if pct_change > 0:
+                st.success(f"+{pct_change:.2f}%")
+            else:
+                st.error(f"{pct_change:.2f}%")
+        
+        except Exception as e:
+            st.warning(f"{asset_key}: Error")
+
+st.markdown("---")
+
+# ==================== AI PREDICTIONS ====================
+
+st.markdown("### 1 Week AI Predictions")
+
+# Filter assets with models
+assets_with_models = [a for a in selected_assets if status[a]['model']]
+
+if not assets_with_models:
+    st.warning("No trained models for selected assets. Train models from Settings page.")
+else:
+    if st.button("Generate Predictions for Selected Assets", use_container_width=True):
+        with st.spinner("AI analyzing patterns..."):
+            try:
+                predictions = batch_predict_week(assets_with_models)
+                
+                # Create results table
+                results = []
+                for asset_key in assets_with_models:
+                    pred = predictions[asset_key]
+                    config = ASSETS[asset_key]
+                    
+                    if 'error' not in pred:
+                        results.append({
+                            'Asset': config['name'],
+                            'Current': f"${pred['current']:,.2f}",
+                            'Predicted': f"${pred['predicted']:,.2f}",
+                            'Change': f"${pred['change']:+,.2f}",
+                            'Change %': f"{pred['pct_change']:+.2f}%",
+                            'Direction': '🟢 Up' if pred['direction'] == 'up' else '🔴 Down'
+                        })
+                
+                st.markdown("#### Forecast Results")
+                st.dataframe(pd.DataFrame(results), use_container_width=True, hide_index=True)
+                
+            except Exception as e:
+                show_error_message(f"Prediction error: {e}")
+
+st.markdown("---")
+
+# ==================== PERFORMANCE COMPARISON (MOVED BELOW MACRO) ====================
+
+st.markdown("### Performance Comparison (Normalized)")
 
 days_map = {
     "1 Month": 30,
@@ -140,7 +235,7 @@ st.plotly_chart(fig, use_container_width=True)
 # ==================== RETURNS SUMMARY ====================
 
 st.markdown("---")
-st.markdown("###  Period Returns")
+st.markdown("### Period Returns")
 
 returns_data = []
 
@@ -184,104 +279,9 @@ if returns_data:
 
 st.markdown("---")
 
-# ==================== CURRENT PRICES & MACRO ====================
-
-st.markdown("###  Market Prices & Macro Indicators")
-
-# Calculate column layout
-cols_count = min(len(selected_assets) + 1, 4) 
-cols = st.columns(cols_count)
-
-# 1. Show Oil Price as global macro indicator (First card)
-with cols[0]:
-    try:
-        macro_df = pd.read_csv('data/macro_indicators.csv')
-        latest_macro = macro_df.iloc[-1]
-        prev_macro = macro_df.iloc[-2]
-        
-        render_metric_card(
-            label="Crude Oil (WTI)",
-            value=latest_macro['Oil_Price'],
-            delta=latest_macro['Oil_Price'] - prev_macro['Oil_Price']
-        )
-        st.info("Global macro indicator")
-    except Exception:
-        st.warning("Oil data unavailable")
-
-# 2. Show selected assets (starting from second col or wrapping)
-for i, asset_key in enumerate(selected_assets):
-    col_idx = (i + 1) % cols_count
-    with cols[col_idx]:
-        try:
-            config = ASSETS[asset_key]
-            df = pd.read_csv(config['data_file'])
-            
-            latest = df.iloc[-1]
-            prev = df.iloc[-2]
-            
-            price_col = config['features'][0]
-            current = latest[price_col]
-            change = current - prev[price_col]
-            pct_change = (change / prev[price_col]) * 100
-            
-            render_metric_card(
-                label=config['name'],
-                value=current,
-                delta=change
-            )
-            
-            if pct_change > 0:
-                st.success(f" +{pct_change:.2f}%")
-            else:
-                st.error(f" {pct_change:.2f}%")
-        
-        except Exception as e:
-            st.warning(f"{asset_key}: Error")
-
-st.markdown("---")
-
-# ==================== AI PREDICTIONS ====================
-
-st.markdown("###  1 Week AI Predictions")
-
-# Filter assets with models
-assets_with_models = [a for a in selected_assets if status[a]['model']]
-
-if not assets_with_models:
-    st.warning(" No trained models for selected assets. Train models from Settings page.")
-else:
-    if st.button("Generate Predictions for Selected Assets", use_container_width=True):
-        with st.spinner("AI analyzing patterns..."):
-            try:
-                predictions = batch_predict_week(assets_with_models)
-                
-                # Create results table
-                results = []
-                for asset_key in assets_with_models:
-                    pred = predictions[asset_key]
-                    config = ASSETS[asset_key]
-                    
-                    if 'error' not in pred:
-                        results.append({
-                            'Asset': config['name'],
-                            'Current': f"${pred['current']:,.2f}",
-                            'Predicted': f"${pred['predicted']:,.2f}",
-                            'Change': f"${pred['change']:+,.2f}",
-                            'Change %': f"{pred['pct_change']:+.2f}%",
-                            'Direction': '' if pred['direction'] == 'up' else ''
-                        })
-                
-                st.markdown("####  Forecast Results")
-                st.dataframe(pd.DataFrame(results), use_container_width=True, hide_index=True)
-                
-            except Exception as e:
-                show_error_message(f"Prediction error: {e}")
-
-st.markdown("---")
-
 # ==================== CORRELATION MATRIX ====================
 
-st.markdown("###  Asset Correlation Matrix")
+st.markdown("### Asset Correlation Matrix")
 
 if len(selected_assets) >= 2:
     # Build correlation matrix
@@ -337,11 +337,11 @@ if len(selected_assets) >= 2:
         
         st.info("""
         **Correlation Interpretation:**
-        - **1.0**: Perfect positive correlation (move together)
-        - **0.0**: No correlation (independent)
-        - **-1.0**: Perfect negative correlation (move opposite)
+        - 🟢 **1.0**: Perfect positive correlation (move together)
+        - 🟡 **0.0**: No correlation (independent)
+        - 🔴 **-1.0**: Perfect negative correlation (move opposite)
         
-         Diversification tip: Assets with low/negative correlation reduce portfolio risk.
+        Low or negative correlation between assets = better portfolio diversification.
         """)
 else:
     st.info("Select at least 2 assets to show correlation matrix.")
@@ -350,7 +350,7 @@ else:
 
 st.markdown("---")
 st.info("""
- **Dashboard Tips:**
+**Dashboard Tips:**
 - Use "Core Assets" for quick Gold/BTC/SPY comparison
 - Compare Mag7 stocks to identify sector leaders
 - Check correlation matrix for portfolio diversification

@@ -22,7 +22,7 @@ inject_custom_css()
 
 # ==================== MAIN CONTENT ====================
 render_page_header(
-    #icon="🔮",
+    icon="",
     title="Scenario Simulator (What-If Analysis)",
     subtitle="Stress-test the AI models by injecting geopolitical and macroeconomic shocks"
 )
