@@ -164,7 +164,8 @@ st.markdown("###  Data Synchronization")
 st.info("""
 **Data Sources:**
 - Market prices from Yahoo Finance (10 years for Gold/Stocks, full history for Bitcoin)
-- Macro indicators: DXY, VIX, US 10Y Treasury Yield
+- Macro indicators: DXY, VIX, US 10Y Treasury Yield, Crude Oil
+- **Tier 1 FRED**: CPI, PPI, PCE, NFP (Federal Reserve Economic Data)
 - News sentiment from NewsAPI (Bloomberg, Reuters, WSJ, CNBC, etc.)
 """)
 
@@ -183,6 +184,16 @@ with col1:
             show_success_message("All market data synchronized!")
             st.rerun()
     
+    if st.button(" Sync FRED Macro (CPI / PPI / PCE / NFP)", use_container_width=True):
+        python_exe = sys.executable
+        success = run_command(
+            [python_exe, "scripts/fred_fetcher.py"],
+            "Fetching Tier 1 macro indicators from FRED..."
+        )
+        if success:
+            show_success_message("FRED macro data synced! Re-sync market data to merge new columns.")
+            st.rerun()
+
     if st.button(" Sync Sentiment (All Assets)", use_container_width=True):
         python_exe = sys.executable
         success = run_command(

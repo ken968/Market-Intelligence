@@ -14,7 +14,9 @@ if not os.path.exists('data/gold_global_insights.csv'):
     exit(1)
 
 df = pd.read_csv('data/gold_global_insights.csv')
-features = ['Gold', 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price', 'Sentiment', 'EMA_90']
+features = ['Gold', 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
+            'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag',
+            'Sentiment', 'EMA_90']
 missing = [f for f in features if f not in df.columns]
 if missing:
     print(f"Missing features: {missing}")

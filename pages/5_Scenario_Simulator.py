@@ -58,7 +58,13 @@ with col1:
     sim_dxy = st.slider("DXY (Dollar Strength)", min_value=80.0, max_value=120.0, value=float(latest.get('DXY', 104.0)), step=0.1)
     sim_vix = st.slider("VIX (Fear Index)", min_value=10.0, max_value=90.0, value=float(latest.get('VIX', 15.0)), step=1.0)
     sim_sentiment = st.slider("AI Sentiment (-1 Fear to +1 Euphoria)", min_value=-1.0, max_value=1.0, value=float(latest.get('Sentiment', 0.0)), step=0.1)
-    
+
+    st.markdown("**Tier 1 Macro Shocks (FRED)**")
+    sim_cpi = st.slider("CPI MoM (%)", min_value=-1.0, max_value=3.0, value=float(latest.get('CPI_MoM', 0.3)), step=0.05,
+                        help="Consumer Price Index month-over-month change. Above 0.4% = hot inflation.")
+    sim_nfp = st.slider("NFP Change (K jobs)", min_value=-500, max_value=500, value=int(latest.get('NFP_Change', 200)), step=10,
+                        help="Non-Farm Payrolls monthly change. Below 0 = recession signal.")
+
     run_sim = st.button("Run AI Simulation", use_container_width=True)
 
 with col2:
@@ -98,6 +104,11 @@ with col2:
                 if dxy_idx != -1:   dummy_row[0, dxy_idx] = sim_dxy
                 if vix_idx != -1:   dummy_row[0, vix_idx] = sim_vix
                 if sent_idx != -1:  dummy_row[0, sent_idx] = sim_sentiment
+                # Inject FRED shocks if those features exist in the model
+                cpi_idx  = features.index('CPI_MoM')    if 'CPI_MoM'    in features else -1
+                nfp_idx  = features.index('NFP_Change') if 'NFP_Change' in features else -1
+                if cpi_idx != -1:  dummy_row[0, cpi_idx]  = sim_cpi
+                if nfp_idx != -1:  dummy_row[0, nfp_idx]  = sim_nfp
                 
                 # Scale the entire dummy row properly
                 scaled_dummy = sim_predictor.scaler.transform(dummy_row)

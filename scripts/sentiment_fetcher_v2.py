@@ -153,6 +153,19 @@ def integrate_sentiment(asset='gold'):
             existing = pd.read_csv(output_file)
             if 'Sentiment' in existing.columns and existing['Sentiment'].ne(0).any():
                 print(f"Keeping existing sentiment data.")
+                # Still update FRED columns if missing
+                fred_file = 'data/fred_indicators.csv'
+                if os.path.exists(fred_file) and 'CPI_MoM' not in existing.columns:
+                    fred_df = pd.read_csv(fred_file, index_col=0, parse_dates=True)
+                    fred_df.index = fred_df.index.strftime('%Y-%m-%d')
+                    fred_df.index.name = 'Date'
+                    fred_df = fred_df.reset_index()
+                    existing = pd.merge(existing, fred_df, on='Date', how='left')
+                    for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag']:
+                        if col in existing.columns:
+                            existing[col] = existing[col].ffill().fillna(0)
+                    existing.to_csv(output_file, index=False)
+                    print(f"System: FRED indicators patched into existing '{output_file}'.")
                 return True
         macro_df['Sentiment'] = 0
         macro_df.to_csv(output_file, index=False)
@@ -163,6 +176,19 @@ def integrate_sentiment(asset='gold'):
     # FIX: Use ffill+bfill so ALL historical rows get non-zero sentiment
     # This spreads the fetched sentiment backwards/forwards to fill gaps
     final_df['Sentiment'] = final_df['Sentiment'].ffill().bfill().fillna(0)
+    
+    # Merge FRED Tier 1 indicators (CPI, PPI, PCE, NFP) if available
+    fred_file = 'data/fred_indicators.csv'
+    if os.path.exists(fred_file):
+        fred_df = pd.read_csv(fred_file, index_col=0, parse_dates=True)
+        fred_df.index = fred_df.index.strftime('%Y-%m-%d')
+        fred_df.index.name = 'Date'
+        fred_df = fred_df.reset_index()
+        final_df = pd.merge(final_df, fred_df, on='Date', how='left')
+        for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag']:
+            if col in final_df.columns:
+                final_df[col] = final_df[col].ffill().fillna(0)
+        print(f"System: FRED indicators merged into '{output_file}'.")
     
     final_df.to_csv(output_file, index=False)
     non_zero = final_df['Sentiment'].ne(0).sum()

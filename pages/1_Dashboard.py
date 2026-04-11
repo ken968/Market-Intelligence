@@ -6,6 +6,7 @@ Multi-asset performance tracking and portfolio insights
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+import yfinance as yf
 import os
 from utils.config import ASSETS, STOCK_TICKERS, get_asset_status
 from utils.ui_components import (
@@ -77,61 +78,165 @@ if not selected_assets:
 
 st.markdown("---")
 
-# ==================== CURRENT PRICES & MACRO (MOVED TO TOP) ====================
+# ==================== MACRO INDICATORS ====================
 
 st.markdown("### Market Prices & Macro Indicators")
 
-# Calculate column layout
-cols_count = min(len(selected_assets) + 1, 4) 
-cols = st.columns(cols_count)
+# -- Row 1: Tier 2 macro cards (Oil + Yield 10Y + DXY + VIX) --
+try:
+    macro_df = pd.read_csv('data/macro_indicators.csv')
+    latest_macro = macro_df.iloc[-1]
+    prev_macro = macro_df.iloc[-2]
 
-# 1. Show Oil Price as global macro indicator (First card)
-with cols[0]:
-    try:
-        macro_df = pd.read_csv('data/macro_indicators.csv')
-        latest_macro = macro_df.iloc[-1]
-        prev_macro = macro_df.iloc[-2]
-        
+    m1, m2, m3, m4 = st.columns(4)
+    with m1:
         render_metric_card(
             label="Crude Oil (WTI)",
             value=latest_macro['Oil_Price'],
             delta=latest_macro['Oil_Price'] - prev_macro['Oil_Price']
         )
-        st.info("Global macro indicator")
-    except Exception:
-        st.warning("Oil data unavailable")
+        st.caption("Tier 2 Macro")
+    with m2:
+        render_metric_card(
+            label="US 10Y Yield",
+            value=latest_macro['Yield_10Y'],
+            delta=latest_macro['Yield_10Y'] - prev_macro['Yield_10Y']
+        )
+        st.caption("Tier 2 Macro")
+    with m3:
+        render_metric_card(
+            label="DXY (Dollar Index)",
+            value=latest_macro['DXY'],
+            delta=latest_macro['DXY'] - prev_macro['DXY']
+        )
+        st.caption("Tier 2 Macro")
+    with m4:
+        render_metric_card(
+            label="VIX (Fear Index)",
+            value=latest_macro['VIX'],
+            delta=latest_macro['VIX'] - prev_macro['VIX']
+        )
+        st.caption("Tier 2 Macro")
+except Exception:
+    st.warning("Macro indicator data unavailable.")
 
-# 2. Show selected assets (starting from second col or wrapping)
-for i, asset_key in enumerate(selected_assets):
-    col_idx = (i + 1) % cols_count
-    with cols[col_idx]:
-        try:
-            config = ASSETS[asset_key]
-            df = pd.read_csv(config['data_file'])
-            
-            latest = df.iloc[-1]
-            prev = df.iloc[-2]
-            
-            price_col = config['features'][0]
-            current = latest[price_col]
-            change = current - prev[price_col]
-            pct_change = (change / prev[price_col]) * 100
-            
-            render_metric_card(
-                label=config['name'],
-                value=current,
-                delta=change
+# -- Row 2: Tier 1 FRED indicators (CPI / PPI / PCE / NFP) --
+try:
+    fred_df = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+    # Get last two non-zero rows for each column
+    cpi_vals = fred_df['CPI_MoM'][fred_df['CPI_MoM'] != 0].dropna()
+    ppi_vals = fred_df['PPI_MoM'][fred_df['PPI_MoM'] != 0].dropna()
+    pce_vals = fred_df['PCE_MoM'][fred_df['PCE_MoM'] != 0].dropna()
+    nfp_vals = fred_df['NFP_Change'][fred_df['NFP_Change'] != 0].dropna()
+
+    f1, f2, f3, f4 = st.columns(4)
+    with f1:
+        val = cpi_vals.iloc[-1] if len(cpi_vals) >= 1 else 0
+        prev = cpi_vals.iloc[-2] if len(cpi_vals) >= 2 else 0
+        render_metric_card(label="CPI MoM (%)", value=round(val, 3), delta=round(val - prev, 3))
+        st.caption("Tier 1 — Release: monthly")
+    with f2:
+        val = ppi_vals.iloc[-1] if len(ppi_vals) >= 1 else 0
+        prev = ppi_vals.iloc[-2] if len(ppi_vals) >= 2 else 0
+        render_metric_card(label="PPI MoM (%)", value=round(val, 3), delta=round(val - prev, 3))
+        st.caption("Tier 1 — Release: monthly")
+    with f3:
+        val = pce_vals.iloc[-1] if len(pce_vals) >= 1 else 0
+        prev = pce_vals.iloc[-2] if len(pce_vals) >= 2 else 0
+        render_metric_card(label="PCE MoM (%)", value=round(val, 3), delta=round(val - prev, 3))
+        st.caption("Tier 1 — Release: monthly")
+    with f4:
+        val = nfp_vals.iloc[-1] if len(nfp_vals) >= 1 else 0
+        prev = nfp_vals.iloc[-2] if len(nfp_vals) >= 2 else 0
+        render_metric_card(label="NFP Change (K)", value=round(val, 0), delta=round(val - prev, 0))
+        st.caption("Tier 1 — Release: monthly")
+except Exception:
+    st.info("FRED indicators not yet synced. Run FRED sync from Settings.")
+
+# -- Row 3: Buffett Indicator Gauge --
+try:
+    gdp_df  = pd.read_csv('data/gdp_series.csv', index_col=0, parse_dates=True)
+    wilshire = yf.download('^W5000', period='5d', interval='1d', progress=False)
+    if not wilshire.empty:
+        mkt_cap = float(wilshire['Close'].dropna().iloc[-1])
+        gdp_val = float(gdp_df['GDP'].dropna().iloc[-1])
+        buffett_ratio = (mkt_cap / (gdp_val * 1e9)) * 100   # GDP in billions → ratio in %
+
+        gc1, gc2 = st.columns([1, 2])
+        with gc1:
+            fig_gauge = go.Figure(go.Indicator(
+                mode="gauge+number+delta",
+                value=buffett_ratio,
+                number={'suffix': '%', 'font': {'size': 28}},
+                title={'text': "Buffett Indicator<br><sub>Total Mkt Cap / GDP</sub>"},
+                gauge={
+                    'axis': {'range': [0, 250], 'ticksuffix': '%'},
+                    'bar': {'color': '#00A8E8'},
+                    'steps': [
+                        {'range': [0, 100],   'color': 'rgba(0,204,150,0.25)'},
+                        {'range': [100, 150], 'color': 'rgba(255,161,90,0.25)'},
+                        {'range': [150, 250], 'color': 'rgba(239,85,59,0.25)'},
+                    ],
+                    'threshold': {
+                        'line': {'color': 'white', 'width': 2},
+                        'thickness': 0.75,
+                        'value': buffett_ratio
+                    }
+                }
+            ))
+            fig_gauge.update_layout(
+                template='plotly_dark',
+                height=220,
+                margin=dict(l=20, r=20, t=60, b=10)
             )
-            
-            if pct_change > 0:
-                st.success(f"+{pct_change:.2f}%")
+            st.plotly_chart(fig_gauge, use_container_width=True)
+
+        with gc2:
+            if buffett_ratio < 100:
+                level, color = "Undervalued", "success"
+            elif buffett_ratio < 150:
+                level, color = "Fair Value", "warning"
             else:
-                st.error(f"{pct_change:.2f}%")
-        
-        except Exception as e:
-            st.warning(f"{asset_key}: Error")
+                level, color = "Overvalued", "error"
+
+            getattr(st, color)(
+                f"**Market is {level}** at {buffett_ratio:.1f}%\n\n"
+                "- 🟢 < 100%: Historically undervalued vs GDP\n"
+                "- 🟡 100–150%: Fair / moderately elevated\n"
+                "- 🔴 > 150%: Overvalued (Buffett historically cautious)"
+            )
+except ImportError:
+    pass
+except Exception:
+    pass  # Silently skip if yfinance or gdp data unavailable
+
+# -- Row 4: Asset price cards --
+st.markdown("#### Asset Prices")
+cols_count = min(len(selected_assets), 4)
+if cols_count > 0:
+    cols = st.columns(cols_count)
+    for i, asset_key in enumerate(selected_assets):
+        col_idx = i % cols_count
+        with cols[col_idx]:
+            try:
+                config = ASSETS[asset_key]
+                df = pd.read_csv(config['data_file'])
+                latest = df.iloc[-1]
+                prev   = df.iloc[-2]
+                price_col   = config['features'][0]
+                current     = latest[price_col]
+                change      = current - prev[price_col]
+                pct_change  = (change / prev[price_col]) * 100
+                render_metric_card(label=config['name'], value=current, delta=change)
+                if pct_change > 0:
+                    st.success(f"+{pct_change:.2f}%")
+                else:
+                    st.error(f"{pct_change:.2f}%")
+            except Exception:
+                st.warning(f"{asset_key}: Error")
 
 st.markdown("---")
+
 
 # ==================== AI PREDICTIONS ====================
 

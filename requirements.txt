@@ -11,3 +11,5 @@ pytrends
 praw
 textblob
 requests-html
+fredapi
+tensorflow

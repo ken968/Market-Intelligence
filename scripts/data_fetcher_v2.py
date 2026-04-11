@@ -136,11 +136,17 @@ class MultiAssetFetcher:
             if os.path.exists('data/macro_indicators.csv'):
                 macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
                 df = df.join(macro, how='left')
-                # Fill NaN using forward fill first (for recent dates), then backward fill (for early dates)
                 df['DXY'] = df['DXY'].ffill().bfill()
                 df['VIX'] = df['VIX'].ffill().bfill()
                 df['Yield_10Y'] = df['Yield_10Y'].ffill().bfill()
                 df['Oil_Price'] = df['Oil_Price'].ffill().bfill()
+            
+            # Merge FRED indicators (CPI, PPI, PCE, NFP)
+            if os.path.exists('data/fred_indicators.csv'):
+                fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+                df = df.join(fred, how='left')
+                for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag']:
+                    df[col] = df[col].ffill().fillna(0)
             
             df.to_csv(self.gold_config['filename'])
             print(f"System: Success. {len(df)} Gold records saved to '{self.gold_config['filename']}'.")
@@ -188,12 +194,17 @@ class MultiAssetFetcher:
             if os.path.exists('data/macro_indicators.csv'):
                 macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
                 df = df.join(macro, how='left')
-                # Fill NaN using forward fill first (for recent dates), then backward fill (for early dates)
-                # This prevents NaN when macro data is not yet available for the latest trading day
                 df['DXY'] = df['DXY'].ffill().bfill()
                 df['VIX'] = df['VIX'].ffill().bfill()
                 df['Yield_10Y'] = df['Yield_10Y'].ffill().bfill()
                 df['Oil_Price'] = df['Oil_Price'].ffill().bfill()
+            
+            # Merge FRED indicators (CPI, PPI, PCE, NFP)
+            if os.path.exists('data/fred_indicators.csv'):
+                fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+                df = df.join(fred, how='left')
+                for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag']:
+                    df[col] = df[col].ffill().fillna(0)
             
             df.to_csv(self.btc_config['filename'])
             print(f"System: Success. {len(df)} BTC records saved (from {df.index[0].date()} to {df.index[-1].date()}).")
@@ -245,11 +256,17 @@ class MultiAssetFetcher:
                 if os.path.exists('data/macro_indicators.csv'):
                     macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
                     df = df.join(macro, how='left')
-                    # Fill NaN using forward fill first (for recent dates), then backward fill (for early dates)
                     df['DXY'] = df['DXY'].ffill().bfill()
                     df['VIX'] = df['VIX'].ffill().bfill()
                     df['Yield_10Y'] = df['Yield_10Y'].ffill().bfill()
                     df['Oil_Price'] = df['Oil_Price'].ffill().bfill()
+                
+                # Merge FRED indicators (CPI, PPI, PCE, NFP)
+                if os.path.exists('data/fred_indicators.csv'):
+                    fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+                    df = df.join(fred, how='left')
+                    for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag']:
+                        df[col] = df[col].ffill().fillna(0)
                 
                 filename = self.stock_config['filename_template'].format(ticker=tick)
                 df.to_csv(filename)

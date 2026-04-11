@@ -41,7 +41,9 @@ def train_stock_model(ticker):
     df = pd.read_csv(data_file)
     
     # Features: Stock price + macro + sentiment + EMA 90
-    features = [ticker, 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price', 'Sentiment', 'EMA_90']
+    features = [ticker, 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
+                 'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag',
+                 'Sentiment', 'EMA_90']
     
     # Handle missing sentiment
     if 'Sentiment' not in df.columns:
