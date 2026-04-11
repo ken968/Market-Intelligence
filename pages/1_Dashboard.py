@@ -157,8 +157,8 @@ try:
             v = float(yc.iloc[-1]) if len(yc) >= 1 else 0
             p = float(yc.iloc[-2]) if len(yc) >= 2 else 0
             render_metric_card(label="Yield Curve (10Y-2Y)", value=round(v, 3), delta=round(v - p, 3))
-            status = "Normal" if v > 0 else ("Inverted (Recession Signal)" if v < 0 else "Flat")
-            st.caption(f"Tier 2 — {status}")
+            yc_status = "Normal" if v > 0 else ("Inverted (Recession Signal)" if v < 0 else "Flat")
+            st.caption(f"Tier 2 — {yc_status}")
     with g2:
         if 'M2_MoM' in fred_df.columns:
             v, p = _last2(fred_df['M2_MoM'])
@@ -178,9 +178,11 @@ try:
     gdp_df  = pd.read_csv('data/gdp_series.csv', index_col=0, parse_dates=True)
     wilshire = yf.download('^W5000', period='5d', interval='1d', progress=False)
     if not wilshire.empty:
-        mkt_cap = float(wilshire['Close'].dropna().iloc[-1])
-        gdp_val = float(gdp_df['GDP'].dropna().iloc[-1])
-        buffett_ratio = (mkt_cap / (gdp_val * 1e9)) * 100   # GDP in billions → ratio in %
+        # Wilshire 5000 index value closely approximates total US market cap in billions of dollars.
+        # FRED GDP is also reported in billions of dollars.
+        mkt_cap_billions = float(wilshire['Close'].dropna().iloc[-1])
+        gdp_billions = float(gdp_df['GDP'].dropna().iloc[-1])
+        buffett_ratio = (mkt_cap_billions / gdp_billions) * 100   # Ratio in %
 
         gc1, gc2 = st.columns([1, 2])
         with gc1:

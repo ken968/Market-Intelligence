@@ -54,10 +54,16 @@ with col1:
     st.markdown("### 2. Inject Shocks")
     
     # Sliders using current baseline
-    sim_oil = st.slider("Crude Oil ($)", min_value=30.0, max_value=150.0, value=float(latest.get('Oil_Price', 80.0)), step=1.0)
-    sim_dxy = st.slider("DXY (Dollar Strength)", min_value=80.0, max_value=120.0, value=float(latest.get('DXY', 104.0)), step=0.1)
-    sim_vix = st.slider("VIX (Fear Index)", min_value=10.0, max_value=90.0, value=float(latest.get('VIX', 15.0)), step=1.0)
-    sim_sentiment = st.slider("AI Sentiment (-1 Fear to +1 Euphoria)", min_value=-1.0, max_value=1.0, value=float(latest.get('Sentiment', 0.0)), step=0.1)
+    st.info("💡 **Tip**: Adjust the sliders to inject 'What-If' economic shocks into the AI models.")
+    sim_oil = st.slider("Crude Oil ($)", min_value=30.0, max_value=150.0, value=float(latest.get('Oil_Price', 80.0)), step=1.0,
+                        help="Energy costs. High oil usually spikes inflation (CPI) and hurts stocks, but boosts energy sector.")
+    sim_dxy = st.slider("DXY (Dollar Strength)", min_value=80.0, max_value=120.0, value=float(latest.get('DXY', 104.0)), step=0.1,
+                        help="US Dollar Index. 'Strong Dollar' historically pushes Gold & Bitcoin down. Weak dollar acts as a tailwind.")
+    sim_vix = st.slider("VIX (Fear Index)", min_value=10.0, max_value=90.0, value=float(latest.get('VIX', 15.0)), step=1.0,
+                        help="Market volatility. VIX > 30 = Panic/Market Crash territory. High VIX hurts stocks but can act as safe-haven bid for Gold.")
+    sim_sentiment = st.slider("AI Sentiment (-1 Fear to +1 Euphoria)", min_value=-1.0, max_value=1.0, value=float(latest.get('Sentiment', 0.0)), step=0.1,
+                              help="News Sentiment. +1 is extreme market greed/euphoria, -1 is extreme fear/doom news.")
+
 
     st.markdown("**Tier 1 Macro Shocks (FRED)**")
     sim_cpi = st.slider("CPI MoM (%)", min_value=-1.0, max_value=3.0, value=float(latest.get('CPI_MoM', 0.3)), step=0.05,
