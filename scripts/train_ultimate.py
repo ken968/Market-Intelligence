@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import pickle
 import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # Suppress oneDNN info messages
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
@@ -15,7 +16,8 @@ if not os.path.exists('data/gold_global_insights.csv'):
 
 df = pd.read_csv('data/gold_global_insights.csv')
 features = ['Gold', 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
-            'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag',
+            'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
+            'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag',
             'Sentiment', 'EMA_90']
 missing = [f for f in features if f not in df.columns]
 if missing:

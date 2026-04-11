@@ -46,7 +46,8 @@ ASSETS = {
         'data_file': 'data/gold_global_insights.csv',
         'news_file': 'data/latest_news_gold.json',
         'features': ['Gold', 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
-                     'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag',
+                     'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
+                     'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag',
                      'Sentiment', 'EMA_90'],
         'sequence_length': 60,
         'description': 'Precious Metal & Safe Haven Asset'
@@ -61,7 +62,8 @@ ASSETS = {
         'data_file': 'data/btc_global_insights.csv',
         'news_file': 'data/latest_news_btc.json',
         'features': ['BTC', 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
-                     'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag',
+                     'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
+                     'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag',
                      'Sentiment', 'Halving_Cycle', 'EMA_90'],
         'sequence_length': 90,
         'description': 'Digital Gold & Cryptocurrency Leader'
@@ -100,7 +102,8 @@ for ticker, info in STOCK_TICKERS.items():
         'data_file': f'data/{ticker}_global_insights.csv',
         'news_file': f'data/latest_news_{ticker.lower()}.json',
         'features': [ticker, 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
-                     'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag',
+                     'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
+                     'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag',
                      'Sentiment', 'EMA_90'],
         'sequence_length': 60,
         'description': f"{info['sector']} - {info['name']}"

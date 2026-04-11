@@ -3,6 +3,7 @@ import numpy as np
 import pickle
 import os
 import sys
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # Suppress oneDNN info messages
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
@@ -42,7 +43,8 @@ def train_stock_model(ticker):
     
     # Features: Stock price + macro + sentiment + EMA 90
     features = [ticker, 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
-                 'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag',
+                 'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
+                 'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag',
                  'Sentiment', 'EMA_90']
     
     # Handle missing sentiment

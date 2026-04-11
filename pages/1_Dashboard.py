@@ -120,38 +120,58 @@ try:
 except Exception:
     st.warning("Macro indicator data unavailable.")
 
-# -- Row 2: Tier 1 FRED indicators (CPI / PPI / PCE / NFP) --
+# -- Row 2: Tier 1 FRED indicators --
 try:
     fred_df = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
-    # Get last two non-zero rows for each column
-    cpi_vals = fred_df['CPI_MoM'][fred_df['CPI_MoM'] != 0].dropna()
-    ppi_vals = fred_df['PPI_MoM'][fred_df['PPI_MoM'] != 0].dropna()
-    pce_vals = fred_df['PCE_MoM'][fred_df['PCE_MoM'] != 0].dropna()
-    nfp_vals = fred_df['NFP_Change'][fred_df['NFP_Change'] != 0].dropna()
 
+    def _last2(series):
+        s = series[series != 0].dropna()
+        v = s.iloc[-1] if len(s) >= 1 else 0
+        p = s.iloc[-2] if len(s) >= 2 else 0
+        return float(v), float(p)
+
+    # Row 2A: CPI / PPI / PCE / NFP
     f1, f2, f3, f4 = st.columns(4)
     with f1:
-        val = cpi_vals.iloc[-1] if len(cpi_vals) >= 1 else 0
-        prev = cpi_vals.iloc[-2] if len(cpi_vals) >= 2 else 0
-        render_metric_card(label="CPI MoM (%)", value=round(val, 3), delta=round(val - prev, 3))
-        st.caption("Tier 1 — Release: monthly")
+        v, p = _last2(fred_df['CPI_MoM'])
+        render_metric_card(label="CPI MoM (%)", value=round(v, 3), delta=round(v - p, 3))
+        st.caption("Tier 1 — monthly")
     with f2:
-        val = ppi_vals.iloc[-1] if len(ppi_vals) >= 1 else 0
-        prev = ppi_vals.iloc[-2] if len(ppi_vals) >= 2 else 0
-        render_metric_card(label="PPI MoM (%)", value=round(val, 3), delta=round(val - prev, 3))
-        st.caption("Tier 1 — Release: monthly")
+        v, p = _last2(fred_df['PPI_MoM'])
+        render_metric_card(label="PPI MoM (%)", value=round(v, 3), delta=round(v - p, 3))
+        st.caption("Tier 1 — monthly")
     with f3:
-        val = pce_vals.iloc[-1] if len(pce_vals) >= 1 else 0
-        prev = pce_vals.iloc[-2] if len(pce_vals) >= 2 else 0
-        render_metric_card(label="PCE MoM (%)", value=round(val, 3), delta=round(val - prev, 3))
-        st.caption("Tier 1 — Release: monthly")
+        v, p = _last2(fred_df['PCE_MoM'])
+        render_metric_card(label="PCE MoM (%)", value=round(v, 3), delta=round(v - p, 3))
+        st.caption("Tier 1 — monthly")
     with f4:
-        val = nfp_vals.iloc[-1] if len(nfp_vals) >= 1 else 0
-        prev = nfp_vals.iloc[-2] if len(nfp_vals) >= 2 else 0
-        render_metric_card(label="NFP Change (K)", value=round(val, 0), delta=round(val - prev, 0))
-        st.caption("Tier 1 — Release: monthly")
+        v, p = _last2(fred_df['NFP_Change'])
+        render_metric_card(label="NFP Change (K)", value=round(v, 0), delta=round(v - p, 0))
+        st.caption("Tier 1 — monthly")
+
+    # Row 2B: Yield Curve (10Y-2Y) + M2 Money Supply
+    g1, g2, g3, g4 = st.columns(4)
+    with g1:
+        if 'YieldCurve_10Y2Y' in fred_df.columns:
+            yc = fred_df['YieldCurve_10Y2Y'].dropna()
+            v = float(yc.iloc[-1]) if len(yc) >= 1 else 0
+            p = float(yc.iloc[-2]) if len(yc) >= 2 else 0
+            render_metric_card(label="Yield Curve (10Y-2Y)", value=round(v, 3), delta=round(v - p, 3))
+            status = "Normal" if v > 0 else ("Inverted (Recession Signal)" if v < 0 else "Flat")
+            st.caption(f"Tier 2 — {status}")
+    with g2:
+        if 'M2_MoM' in fred_df.columns:
+            v, p = _last2(fred_df['M2_MoM'])
+            render_metric_card(label="M2 Money Supply MoM (%)", value=round(v, 3), delta=round(v - p, 3))
+            st.caption("Tier 2 — monthly")
+    with g3:
+        pass   # reserved for future indicator
+    with g4:
+        pass
+
 except Exception:
     st.info("FRED indicators not yet synced. Run FRED sync from Settings.")
+
 
 # -- Row 3: Buffett Indicator Gauge --
 try:

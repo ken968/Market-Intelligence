@@ -61,9 +61,11 @@ with col1:
 
     st.markdown("**Tier 1 Macro Shocks (FRED)**")
     sim_cpi = st.slider("CPI MoM (%)", min_value=-1.0, max_value=3.0, value=float(latest.get('CPI_MoM', 0.3)), step=0.05,
-                        help="Consumer Price Index month-over-month change. Above 0.4% = hot inflation.")
+                        help="Consumer Price Index month-over-month. Above 0.4% = hot inflation.")
     sim_nfp = st.slider("NFP Change (K jobs)", min_value=-500, max_value=500, value=int(latest.get('NFP_Change', 200)), step=10,
                         help="Non-Farm Payrolls monthly change. Below 0 = recession signal.")
+    sim_yc = st.slider("Yield Curve (10Y-2Y %)", min_value=-2.0, max_value=3.0, value=float(latest.get('YieldCurve_10Y2Y', 0.5)), step=0.05,
+                       help="Negative = inverted curve = recession risk. Key leading indicator.")
 
     run_sim = st.button("Run AI Simulation", use_container_width=True)
 
@@ -105,10 +107,12 @@ with col2:
                 if vix_idx != -1:   dummy_row[0, vix_idx] = sim_vix
                 if sent_idx != -1:  dummy_row[0, sent_idx] = sim_sentiment
                 # Inject FRED shocks if those features exist in the model
-                cpi_idx  = features.index('CPI_MoM')    if 'CPI_MoM'    in features else -1
-                nfp_idx  = features.index('NFP_Change') if 'NFP_Change' in features else -1
+                cpi_idx  = features.index('CPI_MoM')          if 'CPI_MoM'          in features else -1
+                nfp_idx  = features.index('NFP_Change')        if 'NFP_Change'        in features else -1
+                yc_idx   = features.index('YieldCurve_10Y2Y')  if 'YieldCurve_10Y2Y'  in features else -1
                 if cpi_idx != -1:  dummy_row[0, cpi_idx]  = sim_cpi
                 if nfp_idx != -1:  dummy_row[0, nfp_idx]  = sim_nfp
+                if yc_idx  != -1:  dummy_row[0, yc_idx]   = sim_yc
                 
                 # Scale the entire dummy row properly
                 scaled_dummy = sim_predictor.scaler.transform(dummy_row)

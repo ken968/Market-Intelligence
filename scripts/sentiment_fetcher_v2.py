@@ -153,15 +153,27 @@ def integrate_sentiment(asset='gold'):
             existing = pd.read_csv(output_file)
             if 'Sentiment' in existing.columns and existing['Sentiment'].ne(0).any():
                 print(f"Keeping existing sentiment data.")
-                # Still update FRED columns if missing
+                # Still update FRED columns if missing or stale
                 fred_file = 'data/fred_indicators.csv'
-                if os.path.exists(fred_file) and 'CPI_MoM' not in existing.columns:
+                FRED_COLS = ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
+                             'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag']
+                needs_update = os.path.exists(fred_file) and (
+                    'YieldCurve_10Y2Y' not in existing.columns or
+                    'M2_MoM' not in existing.columns or
+                    'CPI_MoM' not in existing.columns
+                )
+                if needs_update:
                     fred_df = pd.read_csv(fred_file, index_col=0, parse_dates=True)
                     fred_df.index = fred_df.index.strftime('%Y-%m-%d')
                     fred_df.index.name = 'Date'
                     fred_df = fred_df.reset_index()
+                    # Drop old/duplicate FRED cols before merging
+                    drop_cols = [c for c in existing.columns
+                                 if any(c.startswith(f) for f in FRED_COLS) or
+                                    c.endswith('_x') or c.endswith('_y')]
+                    existing.drop(columns=drop_cols, inplace=True, errors='ignore')
                     existing = pd.merge(existing, fred_df, on='Date', how='left')
-                    for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag']:
+                    for col in FRED_COLS:
                         if col in existing.columns:
                             existing[col] = existing[col].ffill().fillna(0)
                     existing.to_csv(output_file, index=False)
@@ -177,15 +189,22 @@ def integrate_sentiment(asset='gold'):
     # This spreads the fetched sentiment backwards/forwards to fill gaps
     final_df['Sentiment'] = final_df['Sentiment'].ffill().bfill().fillna(0)
     
-    # Merge FRED Tier 1 indicators (CPI, PPI, PCE, NFP) if available
+    # Merge FRED Tier 1 indicators (CPI, PPI, PCE, NFP, YieldCurve, M2) if available
     fred_file = 'data/fred_indicators.csv'
+    FRED_COLS = ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
+                 'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag']
     if os.path.exists(fred_file):
         fred_df = pd.read_csv(fred_file, index_col=0, parse_dates=True)
         fred_df.index = fred_df.index.strftime('%Y-%m-%d')
         fred_df.index.name = 'Date'
         fred_df = fred_df.reset_index()
+        # Drop any pre-existing FRED cols (including _x/_y suffixes) to prevent duplicates
+        drop_cols = [c for c in final_df.columns
+                     if any(c.startswith(f) for f in FRED_COLS) or
+                        c.endswith('_x') or c.endswith('_y')]
+        final_df.drop(columns=drop_cols, inplace=True, errors='ignore')
         final_df = pd.merge(final_df, fred_df, on='Date', how='left')
-        for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag']:
+        for col in FRED_COLS:
             if col in final_df.columns:
                 final_df[col] = final_df[col].ffill().fillna(0)
         print(f"System: FRED indicators merged into '{output_file}'.")
