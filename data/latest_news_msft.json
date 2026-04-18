@@ -1,0 +1,162 @@
+[
+    {
+        "date": "2026-04-18",
+        "title": "The software rebound is real, but not every big name is back: Chart of the Day",
+        "description": "The software rebound is real, but not every big name is back: Chart of the Day",
+        "url": "https://finance.yahoo.com/news/the-software-rebound-is-real-but-not-every-big-name-is-back-chart-of-the-day-121425237.html?.tsrc=rss",
+        "sentiment": 0.20666666666666664,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "What the Allbirds 'Hail Mary' says about the AI trade right now",
+        "description": "What the Allbirds 'Hail Mary' says about the AI trade right now",
+        "url": "https://finance.yahoo.com/news/what-the-allbirds-hail-mary-says-about-the-ai-trade-right-now-113847747.html?.tsrc=rss",
+        "sentiment": 0.3595238095238095,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "BNP Paribas delivers blunt message on Microsoft stock",
+        "description": "BNP Paribas delivers blunt message on Microsoft stock",
+        "url": "https://www.thestreet.com/investing/stocks/bnp-paribas-delivers-blunt-message-on-microsoft-stock?.tsrc=rss",
+        "sentiment": -0.20833333333333334,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "How will AI matter for labor markets?",
+        "description": "How will AI matter for labor markets?",
+        "url": "https://finance.yahoo.com/economy/articles/ai-matter-labor-markets-095640419.html?.tsrc=rss",
+        "sentiment": 0.006060606060606062,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "OpenAI Calls Amazon.com (AMZN) Partnership as a Key Driver of Enterprise Growth",
+        "description": "OpenAI Calls Amazon.com (AMZN) Partnership as a Key Driver of Enterprise Growth",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/openai-calls-amazon-com-amzn-094216838.html?.tsrc=rss",
+        "sentiment": 0.06818181818181818,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Nvidia's Market Cap Could Reach a Shockingly High Level, According to 1 Metric. But Is This Really Possible?",
+        "description": "Nvidia's Market Cap Could Reach a Shockingly High Level, According to 1 Metric. But Is This Really Possible?",
+        "url": "https://www.fool.com/investing/2026/04/18/according-to-1-metric-nvidias-market-cap-could-rea/?.tsrc=rss",
+        "sentiment": 0.08,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Is Microsoft Corporation (MSFT) One of the Top 10 Reddit Stocks That Will Skyrocket?",
+        "description": "Is Microsoft Corporation (MSFT) One of the Top 10 Reddit Stocks That Will Skyrocket?",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/microsoft-corporation-msft-one-top-023223752.html?.tsrc=rss",
+        "sentiment": 0.10571428571428573,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Despite Rising 14% This Week, This \"Magnificent Seven\" Stock Remains My Least Favorite",
+        "description": "Despite Rising 14% This Week, This \"Magnificent Seven\" Stock Remains My Least Favorite",
+        "url": "https://www.fool.com/investing/2026/04/17/despite-rising-14-this-week-this-magnificent-seven/?.tsrc=rss",
+        "sentiment": 0.24,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "What the Allbirds 'Hail Mary' says about the AI trade right now",
+        "description": "What the Allbirds 'Hail Mary' says about the AI trade right now",
+        "url": "https://finnhub.io/api/news?id=92d939d85e45e9ed1a72da9c966ce281092e5770f5d295ee0ef781e17f4b6f5e",
+        "sentiment": 0.3595238095238095,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "BNP Paribas delivers blunt message on Microsoft stock",
+        "description": "BNP Paribas delivers blunt message on Microsoft stock",
+        "url": "https://finnhub.io/api/news?id=b07cb4fe132ae7037d82ae7c5f0db36c08e4d149da5a8e61c45b22ba17f34b49",
+        "sentiment": -0.20833333333333334,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "How will AI matter for labor markets?",
+        "description": "How will AI matter for labor markets?",
+        "url": "https://finnhub.io/api/news?id=da1bd409d447a95ea059b3543b77c89ae6239141fabeae44df55311ba3815504",
+        "sentiment": 0.006060606060606062,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "OpenAI Calls Amazon.com (AMZN) Partnership as a Key Driver of Enterprise Growth",
+        "description": "OpenAI Calls Amazon.com (AMZN) Partnership as a Key Driver of Enterprise Growth",
+        "url": "https://finnhub.io/api/news?id=631a8c60f77ccedfe3e625738abd56ac628216228b7294101fb6c6fc896eb09c",
+        "sentiment": 0.06818181818181818,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Nvidia's Market Cap Could Reach a Shockingly High Level, According to 1 Metric. But Is This Really Possible?",
+        "description": "Nvidia's Market Cap Could Reach a Shockingly High Level, According to 1 Metric. But Is This Really Possible?",
+        "url": "https://finnhub.io/api/news?id=72fd58508eb24e5ef61edd4316ec5ef899c2e41830f1f24d139cad33e2f7ac5f",
+        "sentiment": 0.08,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Is Microsoft Corporation (MSFT) One of the Top 10 Reddit Stocks That Will Skyrocket?",
+        "description": "Is Microsoft Corporation (MSFT) One of the Top 10 Reddit Stocks That Will Skyrocket?",
+        "url": "https://finnhub.io/api/news?id=87acd86a20a239e51f5ef2a0fec47f821f390428cb512c59b2131c6f6dcd8ee1",
+        "sentiment": 0.10571428571428573,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Despite Rising 14% This Week, This \"Magnificent Seven\" Stock Remains My Least Favorite",
+        "description": "Despite Rising 14% This Week, This \"Magnificent Seven\" Stock Remains My Least Favorite",
+        "url": "https://finnhub.io/api/news?id=47519c57451d10375e3729867e413879fb81466b8a5caf5a8afb885c9d011ea1",
+        "sentiment": 0.24,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "What Stock Will be the Next 1990s Cisco?",
+        "description": "What Stock Will be the Next 1990s Cisco?",
+        "url": "https://finnhub.io/api/news?id=76a7f5c8b6a39ba3d2a78457f438ae7bef6b80145c97561511a123f464e35c0b",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
+        "description": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
+        "url": "https://finnhub.io/api/news?id=566792c6a7d797862e00e6c88388d73f37c3283b255334c9e66598c2a51dd258",
+        "sentiment": 0.15,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Top Analyst Reports for Microsoft, AbbVie & BHP",
+        "description": "Top Analyst Reports for Microsoft, AbbVie & BHP",
+        "url": "https://finnhub.io/api/news?id=8869c45d0452b53b2296545b72d7921ada008f8e06e8c415dd726518064b3709",
+        "sentiment": 0.5,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Asset Advisors Investment Management Expands Stake in iShares iBonds Dec 2029 Treasury ETF",
+        "description": "Asset Advisors Investment Management Expands Stake in iShares iBonds Dec 2029 Treasury ETF",
+        "url": "https://finnhub.io/api/news?id=6a2cb247241d3aad273c0b5259d7daca3bb3da6054def8b89dd179aaf35a0a3a",
+        "sentiment": 0.3,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "The One Metric That Complicates eBay's Rally",
+        "description": "The One Metric That Complicates eBay's Rally",
+        "url": "https://finnhub.io/api/news?id=2f01e0fbd64819010d95ca1217f99a30fac43302238fb2c6555b80597a25f4eb",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    }
+]

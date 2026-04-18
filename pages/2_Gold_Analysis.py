@@ -291,10 +291,17 @@ else:
                     else:
                         st.error(" **Bearish Signal**: Model predicts downward pressure")
                     
-                    # Show forecast chart
-                    st.markdown("####  Forecast Visualization")
-                    forecast_30d = predictor.recursive_forecast(30)
-                    fig = create_forecast_chart(df.tail(90), forecast_30d, 'Gold', 30)
+                    # Show forecast chart (Fan Chart)
+                    st.markdown("####  Probability Cloud (Fan Chart)")
+                    month_data = forecasts.get('1 Month', {})
+                    forecast_30d = month_data.get('series', [])
+                    fan_p10 = month_data.get('fan_p10')
+                    fan_p90 = month_data.get('fan_p90')
+                    
+                    if not forecast_30d:
+                        forecast_30d = predictor.recursive_forecast(30)
+                        
+                    fig = create_forecast_chart(df.tail(90), forecast_30d, 'Gold', len(forecast_30d), fan_p10=fan_p10, fan_p90=fan_p90)
                     st.plotly_chart(fig, use_container_width=True)
                     
                 except Exception as e:

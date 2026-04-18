@@ -352,6 +352,34 @@ class AssetPredictor:
                                                   ceo_bias_vector=ceo_bias_vector,
                                                   ceo_drift_multiplier=ceo_drift_multiplier)
             confidence = get_confidence_score(self.asset_key, label)
+            
+            # Grounded Monte Carlo (Fan Charts) using Historical AI Error
+            fan_p10, fan_p90 = [], []
+            if contextual:
+                try:
+                    # Attempt to load AI's actual historical error from Backtest
+                    import json
+                    with open(f'reports/backtest_{self.asset_key}.json', 'r') as f:
+                        metrics = json.load(f)
+                        rmse = metrics.get('rmse_3layer', metrics.get('rmse', 0))
+                        # Convert absolute RMSE to percentage error approximation
+                        vol = (rmse / current_price) if current_price > 0 else 0.02
+                        # Cap it to realistic extremes (min 0.5%, max 5% daily standard deviation spread)
+                        vol = max(0.005, min(0.05, vol))
+                except Exception:
+                    # Fallback if backtest hasn't been run yet
+                    vol = 0.04 if self.asset_key == 'btc' else (0.012 if self.asset_key == 'gold' else 0.015)
+                    
+                # Random walk drift simulation
+                paths = np.zeros((100, steps))
+                for i in range(100):
+                    noises = np.random.normal(0, vol, steps)
+                    # cumulative noise growth scales by sqrt(t) 
+                    cum_noise = np.exp(np.cumsum(noises) - 0.5 * vol**2 * np.arange(1, steps + 1))
+                    paths[i] = np.array(contextual) * cum_noise
+                
+                fan_p10 = np.percentile(paths, 10, axis=0).tolist()
+                fan_p90 = np.percentile(paths, 90, axis=0).tolist()
 
             results[label] = {
                 'price':            contextual[-1] if contextual else current_price,
@@ -359,6 +387,8 @@ class AssetPredictor:
                 'confidence':       confidence,
                 'series':           contextual,
                 'baseline_series':  baseline,
+                'fan_p10':          fan_p10,
+                'fan_p90':          fan_p90,
             }
 
         return results

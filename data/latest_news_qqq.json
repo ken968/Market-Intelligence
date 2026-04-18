@@ -1,0 +1,162 @@
+[
+    {
+        "date": "2026-04-18",
+        "title": "Weekly Indicators: Oil Retreats, Manufacturing Advances, Consumers Stay The Course",
+        "description": "Weekly Indicators: Oil Retreats, Manufacturing Advances, Consumers Stay The Course",
+        "url": "https://finnhub.io/api/news?id=c078d4b64be05a262a9fbe45b534cf89cefa4dae656d290a0b2cec587f107dc6",
+        "sentiment": 0.18333333333333335,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Macro Insights: The 'Spoils Of The Iran War' Hidden In The Market",
+        "description": "Macro Insights: The 'Spoils Of The Iran War' Hidden In The Market",
+        "url": "https://finnhub.io/api/news?id=504a38fe7e94657ea5cf5fbca01b15ca171991f6409181921d4da35a7a1158a0",
+        "sentiment": 0.11111111111111112,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "How The 'Fake-Death' Of Petrodollar Supremacy Rewrites The S&P 500 Playbook (It's Not What You Think)",
+        "description": "How The 'Fake-Death' Of Petrodollar Supremacy Rewrites The S&P 500 Playbook (It's Not What You Think)",
+        "url": "https://finnhub.io/api/news?id=669c2fcb2f66f232306390bd7efd7be71c0b1ad3488da9cadadd3c9db543470f",
+        "sentiment": 0.029523809523809525,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "The Alfred E. Neuman Market Returns",
+        "description": "The Alfred E. Neuman Market Returns",
+        "url": "https://finnhub.io/api/news?id=a551ab1d9ada671030488e1d36f3646593742b735c9e7b9d4c90b3cb34d4c213",
+        "sentiment": 0.049999999999999996,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "An Important Lesson For Investors",
+        "description": "An Important Lesson For Investors",
+        "url": "https://finnhub.io/api/news?id=bead01bc7a84bc4603220622b8364d59c6bce1dd565fabed71f5b086c6727828",
+        "sentiment": 0.050892857142857156,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "April 2026 Trading Outlook: Fiscal Flows, Oil, Bank Credit, And Fed Interest Rates",
+        "description": "April 2026 Trading Outlook: Fiscal Flows, Oil, Bank Credit, And Fed Interest Rates",
+        "url": "https://finnhub.io/api/news?id=8aa20afe644de319a8b3b7b19e41a58d6e0afa490581650de5a57ca2197494dd",
+        "sentiment": -0.1875,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Markets Weekly Outlook: A Real Peace Process Or A Fantasy?",
+        "description": "Markets Weekly Outlook: A Real Peace Process Or A Fantasy?",
+        "url": "https://finnhub.io/api/news?id=e7bae6d1d6b8a03bb82b34d85accfac8e11b7ab4d3664f73ada49b8f6f268587",
+        "sentiment": 0.1,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
+        "description": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
+        "url": "https://finnhub.io/api/news?id=566792c6a7d797862e00e6c88388d73f37c3283b255334c9e66598c2a51dd258",
+        "sentiment": 0.15,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "$ProShares UltraPro Short QQQ ETF (SQQQ.US)$",
+        "description": "$ProShares UltraPro Short QQQ ETF (SQQQ.US)$",
+        "url": "https://www.moomoo.com/community/feed/proshares-ultrapro-short-qqq-etf-sqqq-us-we-re-going-116423938998678",
+        "sentiment": 0.10854978354978356,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Fear & Greed: 26.0 (Fear)",
+        "description": "Fear & Greed: 26.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.48,
+        "source": "Fear & Greed Index"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Nasdaq scores longest winning streak since 1992 as historic stock-market comeback continues",
+        "description": "Nasdaq scores longest winning streak since 1992 as historic stock-market comeback continues",
+        "url": "https://www.marketwatch.com/story/nasdaq-heads-toward-its-longest-winning-streak-since-1992-as-historic-stock-market-comeback-continues-e84c2c59?.tsrc=rss",
+        "sentiment": 0.2625,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Stocks Rally As Yardeni Flags Earnings-Led Melt Up And Ceasefire Relief",
+        "description": "Stocks Rally As Yardeni Flags Earnings-Led Melt Up And Ceasefire Relief",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/stocks-rally-yardeni-flags-earnings-173748126.html?.tsrc=rss",
+        "sentiment": 0.18645833333333334,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Will Broadcom-Meta Extended AI-Chip Partnership Fuel Tech ETFs?",
+        "description": "Will Broadcom-Meta Extended AI-Chip Partnership Fuel Tech ETFs?",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/broadcom-meta-extended-ai-chip-173500198.html?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Exchange-Traded Funds, US Equities Rise After Midday",
+        "description": "Exchange-Traded Funds, US Equities Rise After Midday",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/exchange-traded-funds-us-equities-170836273.html?.tsrc=rss",
+        "sentiment": 0.10972222222222223,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "QQQ vs. IWO: Big Tech Dominance or Small-Cap Potential?",
+        "description": "QQQ vs. IWO: Big Tech Dominance or Small-Cap Potential?",
+        "url": "https://www.fool.com/coverage/etfs/2026/04/17/qqq-vs-iwo-big-tech-dominance-or-small-cap-potential/?.tsrc=rss",
+        "sentiment": 0.12916666666666668,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "VOO vs. QQQ: Broad Market Stability or Big Tech Gains?",
+        "description": "VOO vs. QQQ: Broad Market Stability or Big Tech Gains?",
+        "url": "https://www.fool.com/coverage/etfs/2026/04/17/voo-vs-qqq-broad-market-stability-or-big-tech-gains/?.tsrc=rss",
+        "sentiment": 0.22083333333333333,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "2 Legendary ETFs, Built for Very Different Investors: SPY vs. QQQ",
+        "description": "2 Legendary ETFs, Built for Very Different Investors: SPY vs. QQQ",
+        "url": "https://www.fool.com/coverage/etfs/2026/04/17/2-legendary-etfs-built-for-very-different-investors-spy-vs-qqq/?.tsrc=rss",
+        "sentiment": 0.390625,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Exchange-Traded Funds, Equity Futures Higher Pre-Bell Friday as Investors Take Positions Amid Corporate Earnings",
+        "description": "Exchange-Traded Funds, Equity Futures Higher Pre-Bell Friday as Investors Take Positions Amid Corporate Earnings",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/exchange-traded-funds-equity-futures-122237305.html?.tsrc=rss",
+        "sentiment": 0.04479166666666667,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "SPX- Three Reasons We Hit New Highs - and What Could Derail the Rally",
+        "description": "SPX- Three Reasons We Hit New Highs - and What Could Derail the Rally",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/spx-three-reasons-hit-highs-050100539.html?.tsrc=rss",
+        "sentiment": 0.5787878787878787,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "The Final Push Toward A Deal And Why I'm Now Fully Invested",
+        "description": "The Final Push Toward A Deal And Why I'm Now Fully Invested",
+        "url": "https://finnhub.io/api/news?id=f8906cd78c2cadea8b6b19c594d281c707f7d7877b06cbce32b5ed37961514f1",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    }
+]

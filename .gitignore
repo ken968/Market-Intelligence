@@ -33,11 +33,16 @@ env/
 *.swo
 *~
 
-# Data Files (Large files - don't commit to GitHub)
-*.csv
-*.h5
-*.pkl
-*.json
+# Data Files
+# (User requested to push models and reports, keeping CSV and temp files ignored)
+# *.csv - Keeping CSV ignored as they are local data warehouses
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
 # Jupyter Notebooks
 .ipynb_checkpoints/
@@ -57,9 +62,11 @@ Thumbs.db
 .env
 .env.local
 
-# Model files (too large for GitHub)
-*_model.h5
-*_scaler.pkl
+# Temporary files
+*.tmp
+*.bak
+temp/
+tmp/
 
 # Temporary files
 *.tmp

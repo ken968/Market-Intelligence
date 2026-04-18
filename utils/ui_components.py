@@ -320,15 +320,17 @@ def create_multi_asset_comparison(data_dict):
     return fig
 
 
-def create_forecast_chart(historical_df, forecast_values, price_col, forecast_days):
+def create_forecast_chart(historical_df, forecast_values, price_col, forecast_days, fan_p10=None, fan_p90=None):
     """
-    Create chart showing historical data + forecast
+    Create chart showing historical data + forecast with optional Probability Cloud (Fan Chart)
     
     Args:
         historical_df (pd.DataFrame): Historical data
-        forecast_values (list): Predicted values
+        forecast_values (list): Predicted median values
         price_col (str): Price column name
         forecast_days (int): Number of forecast days
+        fan_p10 (list): 10th percentile bound
+        fan_p90 (list): 90th percentile bound
     
     Returns:
         go.Figure: Plotly figure
@@ -336,27 +338,60 @@ def create_forecast_chart(historical_df, forecast_values, price_col, forecast_da
     fig = go.Figure()
     
     # Historical data
+    x_hist = historical_df['Date'] if 'Date' in historical_df.columns else historical_df.index
     fig.add_trace(go.Scatter(
-        x=historical_df['Date'] if 'Date' in historical_df.columns else historical_df.index,
+        x=x_hist,
         y=historical_df[price_col],
         name='Historical',
         line=dict(color='#FFD700', width=2)
     ))
     
     # Forecast data
-    last_date = pd.to_datetime(historical_df['Date'].iloc[-1] if 'Date' in historical_df.columns else historical_df.index[-1])
+    last_date = pd.to_datetime(x_hist.iloc[-1])
     forecast_dates = pd.date_range(start=last_date, periods=forecast_days+1, freq='D')[1:]
     
+    # Probability Cloud (Fan Chart)
+    if fan_p10 and fan_p90:
+        # We append to the last historical point to make continuous
+        last_val = historical_df[price_col].iloc[-1]
+        x_fan = [last_date] + list(forecast_dates)
+        y_p10 = [last_val] + list(fan_p10)
+        y_p90 = [last_val] + list(fan_p90)
+        
+        # Add the 90th percentile line first
+        fig.add_trace(go.Scatter(
+            x=x_fan,
+            y=y_p90,
+            name='90% Probable High',
+            line=dict(width=0),
+            showlegend=False
+        ))
+        
+        # Add the 10th percentile and fill up to the 90th percentile
+        fig.add_trace(go.Scatter(
+            x=x_fan,
+            y=y_p10,
+            name='Probability Cloud (10%-90%)',
+            line=dict(width=0),
+            fill='tonexty',
+            fillcolor='rgba(0, 192, 118, 0.2)', # Transparent green
+            showlegend=True
+        ))
+    
+    # Median Forecast line
+    y_median = [last_val] + list(forecast_values) if fan_p10 else forecast_values
+    x_median = [last_date] + list(forecast_dates) if fan_p10 else forecast_dates
+    
     fig.add_trace(go.Scatter(
-        x=forecast_dates,
-        y=forecast_values,
-        name='Forecast',
-        line=dict(color='#00C076', width=2, dash='dash')
+        x=x_median,
+        y=y_median,
+        name='Forecast Baseline',
+        line=dict(color='#00C076', width=2.5, dash='solid')
     ))
     
     fig.update_layout(
         template="plotly_dark",
-        title="Price Forecast",
+        title="Price Forecast (with Probability Cloud)",
         height=400,
         margin=dict(l=20, r=100, t=40, b=20),
         xaxis_title="Date",

@@ -1,0 +1,10 @@
+{
+    "asset": "spy",
+    "hit_ratio_3layer": 42.244897959183675,
+    "hit_ratio_lstm": 42.244897959183675,
+    "rmse_3layer": 7.478143916537717,
+    "rmse_lstm": 73.51427936729543,
+    "test_samples": 491,
+    "start_test_date": "2024-05-02",
+    "end_test_date": "2026-04-17"
+}
