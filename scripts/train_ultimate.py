@@ -15,10 +15,18 @@ if not os.path.exists('data/gold_global_insights.csv'):
     exit(1)
 
 df = pd.read_csv('data/gold_global_insights.csv')
-features = ['Gold', 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
-            'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
-            'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag',
-            'Sentiment', 'EMA_90']
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+try:
+    from utils.config import ASSETS
+    features = ASSETS['gold']['features']
+except ImportError:
+    features = ['Gold', 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
+                'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
+                'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate', 
+                'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'MacroEvent_Flag',
+                'Sentiment', 'EMA_90']
 missing = [f for f in features if f not in df.columns]
 if missing:
     print(f"Missing features: {missing}")

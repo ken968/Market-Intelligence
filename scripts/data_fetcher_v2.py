@@ -145,8 +145,9 @@ class MultiAssetFetcher:
             if os.path.exists('data/fred_indicators.csv'):
                 fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
                 df = df.join(fred, how='left')
-                for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag']:
-                    df[col] = df[col].ffill().fillna(0)
+                for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']:
+                    if col in df.columns:
+                        df[col] = df[col].ffill().fillna(0)
             
             df.to_csv(self.gold_config['filename'])
             print(f"System: Success. {len(df)} Gold records saved to '{self.gold_config['filename']}'.")
@@ -203,8 +204,9 @@ class MultiAssetFetcher:
             if os.path.exists('data/fred_indicators.csv'):
                 fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
                 df = df.join(fred, how='left')
-                for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag']:
-                    df[col] = df[col].ffill().fillna(0)
+                for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']:
+                    if col in df.columns:
+                        df[col] = df[col].ffill().fillna(0)
             
             df.to_csv(self.btc_config['filename'])
             print(f"System: Success. {len(df)} BTC records saved (from {df.index[0].date()} to {df.index[-1].date()}).")
@@ -265,8 +267,9 @@ class MultiAssetFetcher:
                 if os.path.exists('data/fred_indicators.csv'):
                     fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
                     df = df.join(fred, how='left')
-                    for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag']:
-                        df[col] = df[col].ffill().fillna(0)
+                    for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']:
+                        if col in df.columns:
+                            df[col] = df[col].ffill().fillna(0)
                 
                 filename = self.stock_config['filename_template'].format(ticker=tick)
                 df.to_csv(filename)

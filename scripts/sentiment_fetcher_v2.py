@@ -160,12 +160,9 @@ def integrate_sentiment(asset='gold'):
                 # Still update FRED columns if missing or stale
                 fred_file = 'data/fred_indicators.csv'
                 FRED_COLS = ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
-                             'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag']
-                needs_update = os.path.exists(fred_file) and (
-                    'YieldCurve_10Y2Y' not in existing.columns or
-                    'M2_MoM' not in existing.columns or
-                    'CPI_MoM' not in existing.columns
-                )
+                             'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag',
+                             'M2_YoY', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']
+                needs_update = True  # Forced update to include M2_YoY, Yield_10Y_Rate, Breakeven_5Y5Y
                 if needs_update:
                     fred_df = pd.read_csv(fred_file, index_col=0, parse_dates=True)
                     fred_df.index = fred_df.index.strftime('%Y-%m-%d')
@@ -196,7 +193,8 @@ def integrate_sentiment(asset='gold'):
     # Merge FRED Tier 1 indicators (CPI, PPI, PCE, NFP, YieldCurve, M2) if available
     fred_file = 'data/fred_indicators.csv'
     FRED_COLS = ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
-                 'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag']
+                 'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag',
+                 'M2_YoY', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']
     if os.path.exists(fred_file):
         fred_df = pd.read_csv(fred_file, index_col=0, parse_dates=True)
         fred_df.index = fred_df.index.strftime('%Y-%m-%d')
