@@ -15,9 +15,16 @@ try:
     from tensorflow.keras.models import load_model
     TF_AVAILABLE = True
 except ImportError:
-    # Fallback for systems where TensorFlow cannot be installed
     TF_AVAILABLE = False
     print("Warning: TensorFlow not found. AI predictions will be disabled.")
+
+# CEO Layer optional import
+try:
+    from utils.llm_manager import compute_drift_multiplier
+    from utils.macro_processor import build_macro_context
+    LLM_AVAILABLE = True
+except ImportError:
+    LLM_AVAILABLE = False
 
 
 def get_confidence_score(asset_key, timeframe):
@@ -139,13 +146,17 @@ class AssetPredictor:
         prediction = self.model.predict(sequence, verbose=0)
         return prediction[0, 0]
     
-    def recursive_forecast(self, steps):
+    def recursive_forecast(self, steps, ceo_bias_vector=None, ceo_drift_multiplier=1.0):
         """
-        Generate multi-step forecast using recursive prediction with feature drift
-        
+        Generate multi-step forecast using recursive prediction with:
+        - Weighted Multi-Scale Anchor (90-day short-term + full-history long-term)
+        - CEO Layer drift multiplier injection
+
         Args:
-            steps (int): Number of steps to predict
-        
+            steps                : Number of steps to predict
+            ceo_bias_vector      : np.ndarray from llm_manager — CEO contextual bias
+            ceo_drift_multiplier : float from llm_manager — shifts anchor weight
+
         Returns:
             list: Predicted values (in original scale)
         """
@@ -160,10 +171,28 @@ class AssetPredictor:
         
         if self.data is None:
             self.load_data()
-        
-        # Calculate historical averages for features (to use as drift targets)
-        # We use the loaded data to find the "normal" state of market indicators
-        feature_means = np.mean(self.data, axis=0)
+
+        # -----------------------------------------------------------------------
+        # Weighted Multi-Scale Anchor (Level 2 — Manager Layer)
+        # Short-term (90 days): captures current market regime/momentum
+        # Long-term (full history): provides structural pattern recognition
+        # -----------------------------------------------------------------------
+        short_window = min(90, len(self.data))
+        long_window = len(self.data)
+
+        feature_means_short = np.mean(self.data[-short_window:], axis=0)  # 90-day mean
+        feature_means_long = np.mean(self.data, axis=0)                   # Full history mean
+
+        # CEO Layer modulates the balance: higher drift_multiplier = keep current regime longer
+        # Clamp multiplier in [0.85, 1.15] to prevent runaway bias
+        dm = max(0.85, min(1.15, ceo_drift_multiplier))
+
+        # Short-term weight increases when CEO signals strong current regime (dm > 1.0)
+        # and decreases when CEO is neutral/bearish (dm < 1.0)
+        w_short = 0.40 * dm   # 40% base weight on 90-day mean, scaled by CEO
+        w_long = 1.0 - w_short
+
+        feature_means = w_short * feature_means_short + w_long * feature_means_long
         
         # Normalize data
         scaled_data = self.scaler.transform(self.data)
@@ -258,31 +287,82 @@ class AssetPredictor:
         
         return predictions_original.tolist()
     
-    def get_multi_range_forecast(self):
+    def get_multi_range_forecast(self, headlines=None, published_at_list=None):
         """
-        Generate forecasts for all predefined ranges with confidence scores
-        
+        Generate forecasts for all predefined ranges with confidence scores.
+        Automatically invokes the CEO Layer (Gemini) if available.
+
+        Args:
+            headlines       : Optional list of news headlines for CEO Layer
+            published_at_list: Optional list of ISO datetimes for staleness filtering
+
         Returns:
-            dict: {'Current': current_price, range_name: {'price': float, 'confidence': dict}, ...}
+            dict with 'Current', forecast ranges, and 'ceo_context' metadata
         """
         current_price = self.get_latest_price()
         results = {'Current': current_price}
-        
+
+        # -----------------------------------------------------------------------
+        # Level 3 — CEO Layer: Get Gemini contextual bias
+        # -----------------------------------------------------------------------
+        ceo_drift_multiplier = 1.0
+        ceo_bias_vector = None
+        ceo_context = {'is_fallback': True, 'narrative': 'CEO Layer not active.', 'confidence': 0.0}
+
+        if LLM_AVAILABLE and headlines:
+            try:
+                from utils.llm_manager import analyze_news_context
+                from utils.macro_processor import build_macro_context
+
+                macro_ctx = build_macro_context()
+                macro_summary = macro_ctx.get('macro_summary', '')
+
+                analysis = analyze_news_context(
+                    headlines=headlines,
+                    macro_summary=macro_summary,
+                    published_at_list=published_at_list,
+                )
+
+                ceo_bias_vector = analysis['bias_vector']
+                ceo_drift_multiplier = compute_drift_multiplier(
+                    ceo_bias_vector,
+                    asset_type='gold' if self.asset_key == 'gold' else
+                               'btc'  if self.asset_key == 'btc' else 'stocks'
+                )
+                ceo_context = {
+                    'is_fallback':     analysis['is_fallback'],
+                    'narrative':       analysis['narrative'],
+                    'dominant_regime': analysis['dominant_regime'],
+                    'confidence':      analysis['confidence'],
+                    'drift_multiplier': ceo_drift_multiplier,
+                    'headlines_used':  analysis['headlines_used'],
+                    'macro_summary':   macro_summary,
+                }
+            except Exception as e:
+                print(f"Warning: CEO Layer error for {self.asset_key}: {e}. Using baseline.")
+
+        results['ceo_context'] = ceo_context
+
+        # -----------------------------------------------------------------------
+        # Level 1+2 — Run forecasts for all ranges with CEO multiplier injected
+        # -----------------------------------------------------------------------
         for label, steps in FORECAST_RANGES.items():
-            forecast = self.recursive_forecast(steps)
+            baseline = self.recursive_forecast(steps, ceo_drift_multiplier=1.0)
+            contextual = self.recursive_forecast(steps,
+                                                  ceo_bias_vector=ceo_bias_vector,
+                                                  ceo_drift_multiplier=ceo_drift_multiplier)
             confidence = get_confidence_score(self.asset_key, label)
-            
-            if forecast:
-                price = forecast[-1]
-            else:
-                price = current_price
 
             results[label] = {
-                'price': price,
-                'confidence': confidence
+                'price':            contextual[-1] if contextual else current_price,
+                'baseline_price':   baseline[-1]   if baseline   else current_price,
+                'confidence':       confidence,
+                'series':           contextual,
+                'baseline_series':  baseline,
             }
-        
+
         return results
+
     
     def get_latest_price(self):
         """Get the most recent actual price"""

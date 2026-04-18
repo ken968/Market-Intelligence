@@ -165,9 +165,56 @@ try:
             render_metric_card(label="M2 Money Supply MoM (%)", value=round(v, 3), delta=round(v - p, 3))
             st.caption("Tier 2 — monthly")
     with g3:
-        pass   # reserved for future indicator
+        if 'Yield_10Y_Rate' in fred_df.columns:
+            yr = fred_df['Yield_10Y_Rate'].dropna()
+            v = float(yr.iloc[-1]) if len(yr) >= 1 else 0
+            p = float(yr.iloc[-2]) if len(yr) >= 2 else 0
+            render_metric_card(label="10Y Treasury Rate", value=round(v, 3), delta=round(v - p, 3))
+            st.caption("Cost of Capital (daily)")
     with g4:
-        pass
+        if 'Breakeven_5Y5Y' in fred_df.columns:
+            be = fred_df['Breakeven_5Y5Y'].dropna()
+            v = float(be.iloc[-1]) if len(be) >= 1 else 0
+            p = float(be.iloc[-2]) if len(be) >= 2 else 0
+            render_metric_card(label="5Y5Y Breakeven", value=round(v, 3), delta=round(v - p, 3))
+            be_status = "Anchored" if v < 2.3 else ("Rising" if v < 2.8 else "Elevated ⚠️")
+            st.caption(f"Fed Credibility — {be_status}")
+
+    # Row 2C: M2 YoY (Trend) + M2 Liquidity Spike + Macro Compass
+    h1, h2, h3, h4 = st.columns(4)
+    with h1:
+        if 'M2_YoY' in fred_df.columns:
+            v, p = _last2(fred_df['M2_YoY'])
+            render_metric_card(label="M2 YoY (%)", value=round(v, 2), delta=round(v - p, 2))
+            m2_bias = "Risk-On 🟢" if v > 5 else ("Neutral 🟡" if v > 2 else "Risk-Off 🔴")
+            st.caption(f"Liquidity Trend — {m2_bias}")
+    with h2:
+        if 'M2_MoM' in fred_df.columns:
+            v, p = _last2(fred_df['M2_MoM'])
+            render_metric_card(label="M2 MoM (%)", value=round(v, 3), delta=round(v - p, 3))
+            spike = "⚡ Liquidity Spike!" if v > 0.5 else "Normal"
+            st.caption(f"Momentum — {spike}")
+    with h3:
+        # Macro Compass: Recession Risk Score
+        try:
+            from utils.macro_processor import build_macro_context
+            macro_ctx = build_macro_context()
+            risk = macro_ctx.get('recession_risk', 0.5)
+            regime = macro_ctx.get('yield_regime', 'unknown').upper()
+            risk_pct = round(risk * 100, 1)
+            risk_color = "🟢" if risk < 0.3 else ("🟡" if risk < 0.6 else "🔴")
+            st.metric(label="Recession Risk Score", value=f"{risk_color} {risk_pct}%")
+            st.caption(f"Regime: {regime}")
+        except Exception:
+            st.caption("Recession score unavailable")
+    with h4:
+        # M2 Liquidity Spike Flag
+        if 'M2_Liquidity_Spike' in fred_df.columns:
+            spike_flag = int(fred_df['M2_Liquidity_Spike'].iloc[-1])
+            if spike_flag:
+                st.warning("⚡ **M2 Liquidity Spike Detected!**\nPossible Fed intervention or emergency stimulus.")
+            else:
+                st.success("✅ M2 Flow: Normal")
 
 except Exception:
     st.info("FRED indicators not yet synced. Run FRED sync from Settings.")
@@ -296,6 +343,112 @@ else:
                 
             except Exception as e:
                 show_error_message(f"Prediction error: {e}")
+
+st.markdown("---")
+
+# ==================== CEO LAYER — GEMINI NARRATIVE ====================
+
+st.markdown("### 🧠 CEO Layer — Contextual Market Intelligence")
+st.caption("Powered by Gemini AI · Causal Hierarchy: Supply → Geopolitics → Monetary → Risk → Sentiment")
+
+try:
+    from utils.llm_manager import analyze_news_context
+    from utils.macro_processor import build_macro_context
+
+    col_ceo1, col_ceo2 = st.columns([3, 1])
+
+    with col_ceo1:
+        # Show macro context always (hard data, no API needed)
+        macro_ctx = build_macro_context()
+        macro_summary = macro_ctx.get('macro_summary', '')
+        risk_score = macro_ctx.get('recession_risk', 0.5)
+        yield_regime = macro_ctx.get('yield_regime', 'unknown').upper()
+        m2_bias = macro_ctx.get('m2_bias', 'neutral').upper()
+        breakeven_regime = macro_ctx.get('breakeven_regime', 'unknown').upper()
+
+        # Regime color coding
+        regime_color = {"INVERSION": "🔴", "FLATTENING": "🟡", "EXPANSION": "🟢", "STEEPENING": "🟢"}.get(yield_regime, "⚪")
+        m2_color = {"RISK_ON": "🟢", "NEUTRAL": "🟡", "RISK_OFF": "🔴"}.get(m2_bias, "⚪")
+        be_color = {"ANCHORED": "🟢", "RISING": "🟡", "ELEVATED": "🔴"}.get(breakeven_regime, "⚪")
+
+        st.markdown(f"""
+        **📊 Live Macro Regime:**
+        | Signal | Status | Indicator |
+        |--------|--------|-----------|
+        | Yield Curve | {regime_color} **{yield_regime}** | T10Y2Y spread |
+        | M2 Liquidity | {m2_color} **{m2_bias}** | YoY growth |
+        | Inflation Expectations | {be_color} **{breakeven_regime}** | 5Y5Y Breakeven |
+        | Recession Risk Score | {'🔴' if risk_score > 0.6 else '🟡' if risk_score > 0.3 else '🟢'} **{risk_score*100:.1f}%** | Composite |
+        """)
+
+    with col_ceo2:
+        # Counterfactual performance
+        try:
+            from utils.counterfactual_logger import get_performance_summary
+            perf = get_performance_summary()
+            if 'error' not in perf:
+                st.metric("CEO Hit Ratio", f"{perf['contextual_hit_ratio']*100:.1f}%",
+                          delta=f"{perf['ceo_delta']*100:+.1f}% vs baseline")
+                st.caption(f"Based on {perf['total_resolved']} resolved forecasts")
+                st.caption(perf.get('verdict', ''))
+            else:
+                st.info("Building accuracy track record...")
+        except Exception:
+            st.info("Collecting data...")
+
+    # Gemini analysis button (requires news cache)
+    news_headlines = []
+    published_at_list = []
+    if os.path.exists('data/news_cache.json'):
+        import json
+        try:
+            with open('data/news_cache.json', 'r') as _f:
+                news_cache = json.load(_f)
+            news_headlines = [item.get('headline', '') for item in news_cache if item.get('headline')]
+            published_at_list = [item.get('published_at') for item in news_cache]
+        except Exception:
+            pass
+
+    if news_headlines:
+        if st.button("🔄 Run Gemini CEO Analysis", use_container_width=False, key="ceo_analysis_btn"):
+            with st.spinner("Gemini reasoning through Causal Hierarchy..."):
+                result = analyze_news_context(
+                    headlines=news_headlines,
+                    macro_summary=macro_summary,
+                    published_at_list=published_at_list,
+                )
+                if result['is_fallback']:
+                    st.warning("⚠️ Gemini unavailable. System running on Statistical Baseline only.")
+                else:
+                    st.success(f"✅ Analysis complete · {result['headlines_used']} unique headlines processed")
+
+                    narr_col, score_col = st.columns([3, 2])
+                    with narr_col:
+                        st.markdown(f"**Dominant Regime:** `{result['dominant_regime'].upper()}`")
+                        st.markdown(f"**Confidence:** {result['confidence']*100:.0f}%")
+                        st.markdown(f"> 💬 *{result['narrative']}*")
+                        st.caption("⚠️ PROBABILISTIC FORECAST — Not a trading signal. Confidence intervals apply.")
+
+                    with score_col:
+                        scores = result.get('scores', {})
+                        categories = {
+                            'supply_shock_severity':        '📦 Supply Shock',
+                            'geopolitical_stress':          '⚔️ Geopolitical',
+                            'monetary_policy_hawkishness':  '🏦 Monetary',
+                            'risk_appetite':                '📈 Risk Appetite',
+                            'market_sentiment':             '💬 Sentiment',
+                        }
+                        for key, label in categories.items():
+                            val = scores.get(key, 0.5)
+                            bar = "█" * int(val * 10) + "░" * (10 - int(val * 10))
+                            st.markdown(f"`{label}` {bar} **{val:.2f}**")
+    else:
+        with st.expander("📊 Macro Context (CEO Layer waiting for news data)"):
+            st.text(macro_summary)
+        st.caption("Run Sentiment Sync to enable live Gemini CEO analysis.")
+
+except Exception as _e:
+    st.caption(f"CEO Layer: {_e}")
 
 st.markdown("---")
 

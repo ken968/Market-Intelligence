@@ -10,15 +10,21 @@ import numpy as np
 import os
 import time
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # ---------------------------------------------------------------------------
-# API KEY ROTATION: tries keys in order until one succeeds
+# API KEY ROTATION: Load from environment variables
 # ---------------------------------------------------------------------------
 FRED_API_KEYS = [
-    "08429f7112a912c06e4e57e8f56da2c1",
-    "78880e0a8138a8fdc568ddc64a4abbac",
-    "88775e668ea046de41b1e288c7ce6d13",
+    os.getenv("FRED_API_KEY_1"),
+    os.getenv("FRED_API_KEY_2"),
+    os.getenv("FRED_API_KEY_3"),
 ]
+# Filter out None values in case some keys aren't set
+FRED_API_KEYS = [k for k in FRED_API_KEYS if k]
 
 # ---------------------------------------------------------------------------
 # FRED Series to fetch
@@ -30,7 +36,9 @@ FRED_SERIES = {
     'NFP':         'PAYEMS',     # Non-Farm Payrolls (monthly)
     'GDP':         'GDP',        # Nominal GDP (quarterly)
     'YieldCurve':  'T10Y2Y',     # 10Y minus 2Y spread (daily)
+    'Yield_10Y':   'DGS10',      # 10Y Treasury Constant Maturity Rate (daily) — Cost of Capital
     'M2':          'M2SL',       # M2 Money Supply (monthly)
+    'Breakeven5Y5Y': 'T5YIFR',   # 5Y,5Y Forward Inflation Expectation Rate (daily) — Fed Credibility
 }
 
 FRED_BASE = "https://api.stlouisfed.org/fred/series/observations"
@@ -115,8 +123,11 @@ def fetch_fred_data(start_date='2009-01-01'):
 
     if raw['M2'] is not None:
         monthly['M2_MoM'] = raw['M2'].pct_change() * 100
+        # M2 YoY — Trend/Bias indicator (12-month rolling shift)
+        monthly['M2_YoY'] = raw['M2'].pct_change(12) * 100
     else:
         monthly['M2_MoM'] = np.nan
+        monthly['M2_YoY'] = np.nan
 
     monthly.dropna(how='all', inplace=True)
 
@@ -140,6 +151,20 @@ def fetch_fred_data(start_date='2009-01-01'):
     if raw['YieldCurve'] is not None:
         yc_daily = raw['YieldCurve'].reindex(daily_index).ffill()
         daily_df['YieldCurve_10Y2Y'] = yc_daily
+
+    # Add 10Y Treasury Yield — Cost of Capital
+    if raw['Yield_10Y'] is not None:
+        y10_daily = raw['Yield_10Y'].reindex(daily_index).ffill()
+        daily_df['Yield_10Y_Rate'] = y10_daily
+
+    # Add 5Y5Y Forward Inflation Breakeven — Fed Credibility
+    if raw['Breakeven5Y5Y'] is not None:
+        be_daily = raw['Breakeven5Y5Y'].reindex(daily_index).ffill()
+        daily_df['Breakeven_5Y5Y'] = be_daily
+
+    # M2 Liquidity Spike Flag — detects sudden MoM acceleration (>0.5% = potential bailout/stimulus)
+    if 'M2_MoM' in daily_df.columns:
+        daily_df['M2_Liquidity_Spike'] = (daily_df['M2_MoM'] > 0.5).astype(int)
 
     # MacroEvent_Flag
     daily_df['MacroEvent_Flag'] = daily_df.index.isin(all_release_dates).astype(int)

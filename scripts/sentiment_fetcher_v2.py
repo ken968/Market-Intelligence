@@ -5,12 +5,16 @@ import os
 import sys
 from textblob import TextBlob
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Add project root to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Configuration
-API_KEY = 'cb548b26fc6542c0a6bb871ef3786eba'
+API_KEY = os.getenv('NEWSAPI_KEY')
 TRUSTED_DOMAINS = (
     "bloomberg.com,reuters.com,cnbc.com,wsj.com,finance.yahoo.com,"
     "investing.com,marketwatch.com,economist.com,ft.com,coindesk.com,cointelegraph.com,"

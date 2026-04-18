@@ -13,3 +13,5 @@ textblob
 requests-html
 fredapi
 tensorflow
+python-dotenv
+google-generativeai
