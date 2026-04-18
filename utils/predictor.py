@@ -138,6 +138,13 @@ class AssetPredictor:
             if not success:
                return sequence[0, -1, 0]
         
+        # Feature count safety check (migration support)
+        if hasattr(self.scaler, 'n_features_in_'):
+            expected_n = self.scaler.n_features_in_
+            if sequence.shape[2] != expected_n:
+                # Slice to expected number of features
+                sequence = sequence[:, :, :expected_n]
+        
         prediction = self.model.predict(sequence, verbose=0)
         return prediction[0, 0]
     
@@ -189,13 +196,22 @@ class AssetPredictor:
 
         feature_means = w_short * feature_means_short + w_long * feature_means_long
         
-        # Normalize data
-        scaled_data = self.scaler.transform(self.data)
-        scaled_means = self.scaler.transform(feature_means.reshape(1, -1))[0]
+        # Normalize data with feature count safety
+        data_to_scale = self.data
+        means_to_scale = feature_means
+        
+        if hasattr(self.scaler, 'n_features_in_'):
+            expected_n = self.scaler.n_features_in_
+            data_to_scale = data_to_scale[:, :expected_n]
+            means_to_scale = means_to_scale[:expected_n]
+
+        scaled_data = self.scaler.transform(data_to_scale)
+        scaled_means = self.scaler.transform(means_to_scale.reshape(1, -1))[0]
         
         # Get initial sequence
         seq_len = self.config['sequence_length']
-        current_batch = scaled_data[-seq_len:].reshape(1, seq_len, len(self.config['features']))
+        n_scaled_features = scaled_data.shape[1]
+        current_batch = scaled_data[-seq_len:].reshape(1, seq_len, n_scaled_features)
         
         predictions = []
         temp_data = current_batch.copy()
@@ -270,7 +286,7 @@ class AssetPredictor:
             predictions.append(new_price_scaled)
         
         # Inverse transform predictions
-        n_features = len(self.config['features'])
+        n_features = self.scaler.n_features_in_ if hasattr(self.scaler, 'n_features_in_') else len(self.config['features'])
         dummy = np.zeros((len(predictions), n_features))
         dummy[:, 0] = predictions
         
