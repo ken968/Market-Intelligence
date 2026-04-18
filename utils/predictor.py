@@ -112,14 +112,9 @@ class AssetPredictor:
         missing = [f for f in features if f not in df.columns]
         
         if missing:
-            # Try to add missing features with defaults
+            # Try to add missing features with defaults (Zero-fill for training compatibility)
             for feat in missing:
-                if feat == 'Sentiment':
-                    df['Sentiment'] = 0
-                elif feat == 'Halving_Cycle':
-                    df['Halving_Cycle'] = 0
-                else:
-                    raise ValueError(f"Missing required feature: {feat}")
+                df[feat] = 0.0
         
         self.data = df[features].values
         return df
@@ -361,11 +356,14 @@ class AssetPredictor:
                     import json
                     with open(f'reports/backtest_{self.asset_key}.json', 'r') as f:
                         metrics = json.load(f)
-                        rmse = metrics.get('rmse_3layer', metrics.get('rmse', 0))
-                        # Convert absolute RMSE to percentage error approximation
-                        vol = (rmse / current_price) if current_price > 0 else 0.02
-                        # Cap it to realistic extremes (min 0.5%, max 5% daily standard deviation spread)
-                        vol = max(0.005, min(0.05, vol))
+                        if isinstance(metrics, dict):
+                            rmse = metrics.get('rmse_3layer', metrics.get('rmse', 0))
+                            # Convert absolute RMSE to percentage error approximation
+                            vol = (rmse / current_price) if current_price > 0 else 0.02
+                            # Cap it to realistic extremes (min 0.5%, max 5% daily standard deviation spread)
+                            vol = max(0.005, min(0.05, vol))
+                        else:
+                            vol = 0.015
                 except Exception:
                     # Fallback if backtest hasn't been run yet
                     vol = 0.04 if self.asset_key == 'btc' else (0.012 if self.asset_key == 'gold' else 0.015)

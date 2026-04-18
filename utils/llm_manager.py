@@ -359,10 +359,13 @@ def analyze_news_context(
 
     # --- 4. Call Gemini ---
     raw_scores = _call_gemini(full_prompt)
-    is_fallback = raw_scores is None
-
-    if is_fallback:
+    
+    # Type safety check: Gemini should return a dict
+    if raw_scores is None or not isinstance(raw_scores, dict):
+        is_fallback = True
         raw_scores = _zero_vector_fallback()
+    else:
+        is_fallback = False
 
     # --- 5. Orthogonalize + Whiten ---
     bias_vector = scores_to_bias_vector(raw_scores)

@@ -43,23 +43,26 @@ def compute_recession_risk(df: pd.DataFrame) -> float:
     # --- Factor 1: Yield Curve (50%) ---
     yc = latest.get('YieldCurve_10Y2Y', 0.0)
     if yc < -0.5:
-        yc_risk = 1.0       # Deep inversion — strong recession signal
+        yc_risk = 1.0       # Deep inversion
     elif yc < 0.0:
-        yc_risk = 0.6       # Mild inversion
-    elif yc < 0.5:
-        yc_risk = 0.2       # Flattening — caution
+        yc_risk = 0.7       # Mild inversion
+    elif yc < 0.8:
+        yc_risk = 0.3       # Flattening — early warning
     else:
-        yc_risk = 0.0       # Normal/steepening — expansion
+        yc_risk = 0.0       # Steep/Normal
     score += yc_risk * 0.50
 
     # --- Factor 2: 5Y5Y Breakeven (25%) ---
-    be = latest.get('Breakeven_5Y5Y', 2.5)  # historic normal ~2.5%
-    if be > 3.0:
-        be_risk = 1.0       # Fed credibility lost, stagflation risk
-    elif be > 2.8:
+    be = latest.get('Breakeven_5Y5Y', 2.3)
+    if be > 2.8:
+        be_risk = 1.0 
+    elif be > 2.5:
         be_risk = 0.5
+    elif be > 2.2:
+        be_risk = 0.2       # Slight elevation
     else:
-        be_risk = 0.0       # Anchored expectations
+        be_risk = 0.0
+       # Anchored expectations
     score += be_risk * 0.25
 
     # --- Factor 3: M2 YoY contraction (25%) ---

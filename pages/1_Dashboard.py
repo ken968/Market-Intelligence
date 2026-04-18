@@ -231,7 +231,7 @@ try:
         gdp_billions = float(gdp_df['GDP'].dropna().iloc[-1])
         buffett_ratio = (mkt_cap_billions / gdp_billions) * 100   # Ratio in %
 
-        gc1, gc2 = st.columns([1, 2])
+        gc1, gc2 = st.columns([2, 1])
         with gc1:
             fig_gauge = go.Figure(go.Indicator(
                 mode="gauge+number+delta",
@@ -255,7 +255,7 @@ try:
             ))
             fig_gauge.update_layout(
                 template='plotly_dark',
-                height=220,
+                height=300,
                 margin=dict(l=20, r=20, t=60, b=10)
             )
             st.plotly_chart(fig_gauge, use_container_width=True)
@@ -355,7 +355,7 @@ try:
     from utils.llm_manager import analyze_news_context
     from utils.macro_processor import build_macro_context
 
-    col_ceo1, col_ceo2 = st.columns([3, 1])
+    col_ceo1, col_ceo2 = st.columns([4, 1])
 
     with col_ceo1:
         # Show macro context always (hard data, no API needed)

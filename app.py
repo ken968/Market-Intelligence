@@ -174,8 +174,15 @@ if available_data_assets:
                 with cols[i % 4]:
                     try:
                         config = ASSETS[asset_key]
+                        if not os.path.exists(config['data_file']):
+                            st.warning(f"No data for {config['name']}")
+                            continue
+                            
                         df = pd.read_csv(config['data_file'])
-                        
+                        if len(df) < 2:
+                            st.warning(f"Insufficient data for {config['name']}")
+                            continue
+                            
                         latest = df.iloc[-1]
                         prev = df.iloc[-2]
                         
@@ -191,7 +198,7 @@ if available_data_assets:
                         )
                     
                     except Exception as e:
-                        st.warning(f"{config['name']}: Data unavailable")
+                        st.warning(f"{config['name']}: Error loading data")
 else:
     st.warning(" No market data available. Please sync data from the **Settings** page.")
 
