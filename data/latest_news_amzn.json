@@ -1,6 +1,14 @@
 [
     {
         "date": "2026-04-19",
+        "title": "Buy These 3 Growth Stocks Now, Ignore the Noise, and Thank Yourself Later",
+        "description": "Buy These 3 Growth Stocks Now, Ignore the Noise, and Thank Yourself Later",
+        "url": "https://www.fool.com/investing/2026/04/19/buy-3-growth-stocks-ignore-noise-thank-yourself/?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
         "title": "Jim Cramer Shares Why Amazon.com (AMZN) is Better Than Microsoft",
         "description": "Jim Cramer Shares Why Amazon.com (AMZN) is Better Than Microsoft",
         "url": "https://finance.yahoo.com/markets/stocks/articles/jim-cramer-shares-why-amazon-042715529.html?.tsrc=rss",
@@ -14,6 +22,14 @@
         "url": "https://finance.yahoo.com/markets/crypto/articles/fix-money-michael-saylor-shares-010124912.html?.tsrc=rss",
         "sentiment": 0.0,
         "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Buy These 3 Growth Stocks Now, Ignore the Noise, and Thank Yourself Later",
+        "description": "Buy These 3 Growth Stocks Now, Ignore the Noise, and Thank Yourself Later",
+        "url": "https://finnhub.io/api/news?id=a631e46930543800849471a4195c1f7e383179cdf5924af8002fbd0a6affacad",
+        "sentiment": 0.0,
+        "source": "Finnhub"
     },
     {
         "date": "2026-04-19",
@@ -113,50 +129,34 @@
     },
     {
         "date": "2026-04-19",
-        "title": "Cencora Inc stock (US03073E1055): Why Google Discover changes matter more now",
-        "description": "Cencora Inc stock (US03073E1055): Why Google Discover changes matter more now",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/cencora-inc-stock-us03073e1055-why-google-discover-changes-matter-more/69200616",
-        "sentiment": 0.1946969696969697,
-        "source": "Alpha Vantage"
+        "title": "Fear & Greed: 27.0 (Fear)",
+        "description": "Fear & Greed: 27.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.46,
+        "source": "Fear & Greed Index"
     },
     {
-        "date": "2026-04-19",
-        "title": "\u201cWhere is Microsoft (MSFT)?\u201d Wonders Jim Cramer",
-        "description": "\u201cWhere is Microsoft (MSFT)?\u201d Wonders Jim Cramer",
-        "url": "https://www.insidermonkey.com/blog/where-is-microsoft-msft-wonders-jim-cramer-1740639/",
-        "sentiment": 0.11481481481481481,
-        "source": "Alpha Vantage"
+        "date": "2026-04-18",
+        "title": "Did Amazon Just Say Checkmate to Nvidia?",
+        "description": "Did Amazon Just Say Checkmate to Nvidia?",
+        "url": "https://www.fool.com/investing/2026/04/18/did-amazon-just-say-checkmate-to-nvidia/?.tsrc=rss",
+        "sentiment": -0.3,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Jim Cramer Shares Why Amazon.com (AMZN) is Better Than Microsoft",
-        "description": "Jim Cramer Shares Why Amazon.com (AMZN) is Better Than Microsoft",
-        "url": "https://www.insidermonkey.com/blog/jim-cramer-shares-why-amazon-com-amzn-is-better-than-microsoft-1740640/",
-        "sentiment": 0.09404761904761905,
-        "source": "Alpha Vantage"
+        "date": "2026-04-18",
+        "title": "Is It Too Late To Consider Amazon.com (AMZN) After Its Recent Share Price Rally?",
+        "description": "Is It Too Late To Consider Amazon.com (AMZN) After Its Recent Share Price Rally?",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/too-consider-amazon-com-amzn-210714538.html?.tsrc=rss",
+        "sentiment": 0.07083333333333333,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Walmart Inc. stock (US9311421039): Is its everyday low price strategy strong enough for omnichannel growth?",
-        "description": "Walmart Inc. stock (US9311421039): Is its everyday low price strategy strong enough for omnichannel growth?",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/walmart-inc-stock-us9311421039-is-its-everyday-low-price-strategy/69199612",
-        "sentiment": 0.019444444444444445,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Costco Wholesale Corporation stock (US22160K1051): Is its membership model strong enough to unlock n",
-        "description": "Costco Wholesale Corporation stock (US22160K1051): Is its membership model strong enough to unlock n",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/costco-wholesale-corporation-stock-us22160k1051-is-its-membership-model/69198552",
-        "sentiment": 0.1013888888888889,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Alphabet Inc. Class A stock (US02079K3059): Is AI velocity now the real test for sustained growth?",
-        "description": "Alphabet Inc. Class A stock (US02079K3059): Is AI velocity now the real test for sustained growth?",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/alphabet-inc-class-a-stock-us02079k3059-is-ai-velocity-now-the-real/69198053",
-        "sentiment": 0.12545454545454546,
-        "source": "Alpha Vantage"
+        "date": "2026-04-18",
+        "title": "This Is My Favorite \"Magnificent Seven\" Stock Headed Into Earnings",
+        "description": "This Is My Favorite \"Magnificent Seven\" Stock Headed Into Earnings",
+        "url": "https://www.fool.com/investing/2026/04/18/this-is-my-favorite-magnificent-seven-stock-headed/?.tsrc=rss",
+        "sentiment": 0.5,
+        "source": "Yahoo RSS"
     }
 ]

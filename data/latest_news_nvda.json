@@ -1,6 +1,46 @@
 [
     {
         "date": "2026-04-19",
+        "title": "The Market Is Nervous. This Growth Stock Is Your Shot at Doubling Up.",
+        "description": "The Market Is Nervous. This Growth Stock Is Your Shot at Doubling Up.",
+        "url": "https://www.fool.com/investing/2026/04/19/the-market-is-nervous-this-growth-stock-is-your-sh/?.tsrc=rss",
+        "sentiment": -0.125,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Why April 22 Could Be a Huge Day for Tesla Investors",
+        "description": "Why April 22 Could Be a Huge Day for Tesla Investors",
+        "url": "https://www.fool.com/investing/2026/04/19/why-april-22-could-be-huge-day-for-tesla-stock/?.tsrc=rss",
+        "sentiment": 0.39999999999999997,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "1 Smart Stock to Buy Right Now",
+        "description": "1 Smart Stock to Buy Right Now",
+        "url": "https://www.fool.com/investing/2026/04/19/1-smart-stock-to-buy-right-now/?.tsrc=rss",
+        "sentiment": 0.45,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Worried About Your Retirement Tax Bill? Here's an Investment Worth Looking At",
+        "description": "Worried About Your Retirement Tax Bill? Here's an Investment Worth Looking At",
+        "url": "https://www.fool.com/retirement/2026/04/19/worried-about-your-retirement-tax-bill-heres-an-in/?.tsrc=rss",
+        "sentiment": 0.3,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Prediction: The AI Supply Chain Shortage Will Create 2 New Trillion-Dollar Companies by 2030",
+        "description": "Prediction: The AI Supply Chain Shortage Will Create 2 New Trillion-Dollar Companies by 2030",
+        "url": "https://www.fool.com/investing/2026/04/19/prediction-the-ai-supply-chain-shortage-will-creat/?.tsrc=rss",
+        "sentiment": 0.3840909090909091,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
         "title": "Ripple Is Thriving. XRP Holders Aren't. Here's Why.",
         "description": "Ripple Is Thriving. XRP Holders Aren't. Here's Why.",
         "url": "https://www.fool.com/investing/2026/04/19/ripple-vs-xrp-why-token-is-falling/?.tsrc=rss",
@@ -57,6 +97,30 @@
     },
     {
         "date": "2026-04-19",
+        "title": "1 Smart Stock to Buy Right Now",
+        "description": "1 Smart Stock to Buy Right Now",
+        "url": "https://finnhub.io/api/news?id=127b4cdb180bf816ca4a3be8dd0c977674245bf76292c809723e0c49c1126e5a",
+        "sentiment": 0.45,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Worried About Your Retirement Tax Bill? Here's an Investment Worth Looking At",
+        "description": "Worried About Your Retirement Tax Bill? Here's an Investment Worth Looking At",
+        "url": "https://finnhub.io/api/news?id=e97df4a806c425c4e3cc531eb6a94ce709a7f7cbec897957659d4e18b1cc22ee",
+        "sentiment": 0.3,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Prediction: The AI Supply Chain Shortage Will Create 2 New Trillion-Dollar Companies by 2030",
+        "description": "Prediction: The AI Supply Chain Shortage Will Create 2 New Trillion-Dollar Companies by 2030",
+        "url": "https://finnhub.io/api/news?id=9774f4ecb3f7907a4ea74f0ee5566c5f963111d36259dc268f2473ab0ea5c9f1",
+        "sentiment": 0.3840909090909091,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
         "title": "Ripple Is Thriving. XRP Holders Aren't. Here's Why.",
         "description": "Ripple Is Thriving. XRP Holders Aren't. Here's Why.",
         "url": "https://finnhub.io/api/news?id=3aa9557fe71900745d31ca1424fb732fab6cacb485cc0da1bdc27adf8b7dd876",
@@ -93,70 +157,6 @@
         "description": "The Trade Desk Is Down 40% This Year. Here's Why I'm Not Buying (Yet).",
         "url": "https://finnhub.io/api/news?id=6659c9ebe9f7be2bf9bd79bee3793a2fd3741d79697f86065ad5052bb2e55173",
         "sentiment": 0.36111111111111116,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "3 Defense Stocks to Buy in April",
-        "description": "3 Defense Stocks to Buy in April",
-        "url": "https://finnhub.io/api/news?id=4811e752efa21bfe5ae1a951e036f0880954b8382ad517059b71ff32eab38ac0",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Billionaire Bill Ackman Is Planning to Invest $10 Billion in New Stocks This Summer. Here's Why He Thinks It's a Great Time to Buy.",
-        "description": "Billionaire Bill Ackman Is Planning to Invest $10 Billion in New Stocks This Summer. Here's Why He Thinks It's a Great Time to Buy.",
-        "url": "https://finnhub.io/api/news?id=6fa47d2f3143579cc6d4879f97fdeb051307b0031acd9c4cd3fbca35f0e3ab6c",
-        "sentiment": 0.30818181818181817,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Did Amazon Just Say Checkmate to Nvidia?",
-        "description": "Did Amazon Just Say Checkmate to Nvidia?",
-        "url": "https://finnhub.io/api/news?id=6db2ec2c07cd86aa2c0f0c63c6075d878b05d8279f802ea9641179edbe80af31",
-        "sentiment": -0.3,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Everyone's Talking About the SpaceX IPO. Why I Think You Should Avoid It, and What to Buy Instead.",
-        "description": "Everyone's Talking About the SpaceX IPO. Why I Think You Should Avoid It, and What to Buy Instead.",
-        "url": "https://finnhub.io/api/news?id=0775a66c3ad1ffada9296db62592e2d5d94cb48658cb4ba052ac5d7e1fc6350c",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "1 Unstoppable AI Stock That Could Soar 186% to Join the $1 Trillion Club, According to 1 Wall Street Analyst",
-        "description": "1 Unstoppable AI Stock That Could Soar 186% to Join the $1 Trillion Club, According to 1 Wall Street Analyst",
-        "url": "https://finnhub.io/api/news?id=5b328ca4ce118d2b60388898f9d0425c80039be26f698aaad9b4d555a072d9d5",
-        "sentiment": -0.05,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Better Insurance Stock: Lemonade vs. Progressive",
-        "description": "Better Insurance Stock: Lemonade vs. Progressive",
-        "url": "https://finnhub.io/api/news?id=d3ca89317400adf064715423379af0f747da6ebda93be14b5621d8fa3ede7f62",
-        "sentiment": 0.3333333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Jim Cramer on NVIDIA: \u201cWhen It Comes to GPUs and Service, I Want to Go With Jensen\u201d",
-        "description": "Jim Cramer on NVIDIA: \u201cWhen It Comes to GPUs and Service, I Want to Go With Jensen\u201d",
-        "url": "https://finnhub.io/api/news?id=a577c2145b21eaf0746a37b598fb315937a11b5aaa167cdcac95da5646f5d6a4",
-        "sentiment": -0.10499999999999998,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Got $5,000? This Boring Waste Business Might Be a Quiet Multimillionaire Maker by 2036.",
-        "description": "Got $5,000? This Boring Waste Business Might Be a Quiet Multimillionaire Maker by 2036.",
-        "url": "https://finnhub.io/api/news?id=8556530086ef26281abec9374ca462915b95879c0c425b31881c7aca4afcf6ec",
-        "sentiment": -0.3,
         "source": "Finnhub"
     }
 ]

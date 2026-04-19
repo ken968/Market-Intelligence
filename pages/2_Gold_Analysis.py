@@ -297,12 +297,12 @@ else:
                     else:
                         st.error(" **Bearish Signal**: Model predicts downward pressure")
                     
-                    # Show forecast chart (Fan Chart)
+                    # Show forecast chart (Fan Chart) with safety check
                     st.markdown("####  Probability Cloud (Fan Chart)")
-                    month_data = forecasts.get('1 Month', {})
-                    forecast_30d = month_data.get('series', [])
-                    fan_p10 = month_data.get('fan_p10')
-                    fan_p90 = month_data.get('fan_p90')
+                    month_data = forecasts.get('1 Month', {}) if isinstance(forecasts, dict) else {}
+                    forecast_30d = month_data.get('series', []) if isinstance(month_data, dict) else []
+                    fan_p10 = month_data.get('fan_p10') if isinstance(month_data, dict) else None
+                    fan_p90 = month_data.get('fan_p90') if isinstance(month_data, dict) else None
                     
                     if not forecast_30d:
                         forecast_30d = predictor.recursive_forecast(30)

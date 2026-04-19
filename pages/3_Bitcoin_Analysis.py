@@ -347,29 +347,36 @@ else:
                     # Extract prices from new format
                     forecast_prices = []
                     for key, value in list(forecasts.items())[1:]:  # Skip 'Current'
-                        if isinstance(value, dict):
-                            forecast_prices.append(value['price'])
-                        else:
-                            forecast_prices.append(value)
-                    
-                    insights = analyzer.analyze_forecast(
-                        current_price=forecasts['Current'],
-                        forecast_prices=forecast_prices,
-                        asset_name='BTC'
-                    )
-                    
-                    st.markdown("###  AI Analysis")
-                    st.info(insights['summary'])
-                    
-                    col_i1, col_i2, col_i3 = st.columns(3)
-                    with col_i1:
-                        st.metric("Trend", insights['trend'].title())
-                    with col_i2:
-                        st.metric("Strength", insights['strength'].title())
-                    with col_i3:
-                        st.metric("Risk", insights['risk_level'].title())
-                    
-                    st.success(f" **Recommendation**: {insights['recommendation']}")
+                    # Analysis with safety check
+                    if isinstance(forecasts, dict) and 'Current' in forecasts:
+                        forecast_prices = []
+                        for key in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']:
+                            value = forecasts.get(key, 0)
+                            if isinstance(value, dict):
+                                forecast_prices.append(value['price'])
+                            else:
+                                forecast_prices.append(value)
+                        
+                        insights = analyzer.analyze_forecast(
+                            current_price=forecasts['Current'],
+                            forecast_prices=forecast_prices,
+                            asset_name='BTC'
+                        )
+                        
+                        st.markdown("###  AI Analysis")
+                        st.info(insights['summary'])
+                        
+                        col_i1, col_i2, col_i3 = st.columns(3)
+                        with col_i1:
+                            st.metric("Trend", insights['trend'].title())
+                        with col_i2:
+                            st.metric("Strength", insights['strength'].title())
+                        with col_i3:
+                            st.metric("Risk", insights['risk_level'].title())
+                        
+                        st.success(f" **Recommendation**: {insights['recommendation']}")
+                    else:
+                        st.warning(" Detailed AI analysis unavailable due to incomplete forecast data.")
                     
                     # Tomorrow's prediction
                     tomorrow = predictor.predict_tomorrow()
@@ -390,12 +397,12 @@ else:
                     else:
                         st.error(" **Bearish Pressure**: Model predicts downside")
                     
-                    # Forecast chart (Fan Chart)
+                    # Forecast chart (Fan Chart) with safety check
                     st.markdown("####  30-Day Probability Cloud (Fan Chart)")
-                    month_data = forecasts.get('1 Month', {})
-                    forecast_30d = month_data.get('series', [])
-                    fan_p10 = month_data.get('fan_p10')
-                    fan_p90 = month_data.get('fan_p90')
+                    month_data = forecasts.get('1 Month', {}) if isinstance(forecasts, dict) else {}
+                    forecast_30d = month_data.get('series', []) if isinstance(month_data, dict) else []
+                    fan_p10 = month_data.get('fan_p10') if isinstance(month_data, dict) else None
+                    fan_p90 = month_data.get('fan_p90') if isinstance(month_data, dict) else None
                     
                     if not forecast_30d:
                         forecast_30d = predictor.recursive_forecast(30)

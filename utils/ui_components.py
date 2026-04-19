@@ -409,9 +409,11 @@ def render_prediction_table(predictions_dict, asset_name):
     Args:
         predictions_dict (dict): {'Current': price, timeframe: {'price': float, 'confidence': dict}}
         asset_name (str): Asset name for column header
-    """
-    import numpy as np
-    
+    # Final safety guard: If predictions_dict is not a dict (it's a float), fail gracefully
+    if not isinstance(predictions_dict, dict):
+        st.error("AI Model returned incomplete data. Please train the model and sync macro data.")
+        return
+
     # Extract current price
     current_price = predictions_dict.get('Current', 0)
     

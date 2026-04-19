@@ -1,6 +1,14 @@
 [
     {
         "date": "2026-04-19",
+        "title": "Bernstein shares a 5+ year view on how AI might impact the software industry",
+        "description": "Bernstein shares a 5+ year view on how AI might impact the software industry",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/bernstein-shares-5-view-ai-070801923.html?.tsrc=rss",
+        "sentiment": 0.1,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
         "title": "\u201cWhere is Microsoft (MSFT)?\u201d Wonders Jim Cramer",
         "description": "\u201cWhere is Microsoft (MSFT)?\u201d Wonders Jim Cramer",
         "url": "https://finance.yahoo.com/markets/stocks/articles/where-microsoft-msft-wonders-jim-042828637.html?.tsrc=rss",
@@ -22,6 +30,14 @@
         "url": "https://finance.yahoo.com/markets/stocks/articles/microsoft-ai-partnerships-move-deeper-041756057.html?.tsrc=rss",
         "sentiment": 0.04545454545454545,
         "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Bernstein shares a 5+ year view on how AI might impact the software industry",
+        "description": "Bernstein shares a 5+ year view on how AI might impact the software industry",
+        "url": "https://finnhub.io/api/news?id=89bcd05fd04177c02cd911132bc86dd2309e312c965b7b7df721590bec91e157",
+        "sentiment": 0.1,
+        "source": "Finnhub"
     },
     {
         "date": "2026-04-19",
@@ -81,82 +97,66 @@
     },
     {
         "date": "2026-04-19",
-        "title": "NetApp Collaborates with Google Cloud to Power Data Infrastructure for Distributed Cloud",
-        "description": "NetApp Collaborates with Google Cloud to Power Data Infrastructure for Distributed Cloud",
-        "url": "https://www.newswire.co.kr/newsRead.php?no=1032625",
-        "sentiment": 0.1,
-        "source": "Alpha Vantage"
+        "title": "Fear & Greed: 27.0 (Fear)",
+        "description": "Fear & Greed: 27.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.46,
+        "source": "Fear & Greed Index"
     },
     {
-        "date": "2026-04-19",
-        "title": "\u201cWhere is Microsoft (MSFT)?\u201d Wonders Jim Cramer",
-        "description": "\u201cWhere is Microsoft (MSFT)?\u201d Wonders Jim Cramer",
-        "url": "https://www.insidermonkey.com/blog/where-is-microsoft-msft-wonders-jim-cramer-1740639/",
-        "sentiment": 0.11481481481481481,
-        "source": "Alpha Vantage"
+        "date": "2026-04-18",
+        "title": "\"Code Red\": Microsoft CEO Satya Nadella Is Reportedly Leading an Overhaul of Copilot. Should Investors Buy the Stock?",
+        "description": "\"Code Red\": Microsoft CEO Satya Nadella Is Reportedly Leading an Overhaul of Copilot. Should Investors Buy the Stock?",
+        "url": "https://www.fool.com/investing/2026/04/18/code-red-microsoft-ceo-satya-nadella-copilot-buy/?.tsrc=rss",
+        "sentiment": -0.3125,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Jim Cramer Shares Why Amazon.com (AMZN) is Better Than Microsoft",
-        "description": "Jim Cramer Shares Why Amazon.com (AMZN) is Better Than Microsoft",
-        "url": "https://www.insidermonkey.com/blog/jim-cramer-shares-why-amazon-com-amzn-is-better-than-microsoft-1740640/",
-        "sentiment": 0.09404761904761905,
-        "source": "Alpha Vantage"
+        "date": "2026-04-18",
+        "title": "Jim Cramer on Lumen Technologies (LUMN): \u201cI\u2019ve Always Felt That It Was a Decent Spec\u201d",
+        "description": "Jim Cramer on Lumen Technologies (LUMN): \u201cI\u2019ve Always Felt That It Was a Decent Spec\u201d",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/jim-cramer-lumen-technologies-lumn-190621619.html?.tsrc=rss",
+        "sentiment": 0.13333333333333333,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Salesforce Inc stock (US79466L3024): Why Google Discover changes matter more now",
-        "description": "Salesforce Inc stock (US79466L3024): Why Google Discover changes matter more now",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/salesforce-inc-stock-us79466l3024-why-google-discover-changes-matter/69199370",
-        "sentiment": 0.22604166666666667,
-        "source": "Alpha Vantage"
+        "date": "2026-04-18",
+        "title": "Is Microsoft (MSFT) One of the Best Unrivaled Stocks of the Next 5 Years?",
+        "description": "Is Microsoft (MSFT) One of the Best Unrivaled Stocks of the Next 5 Years?",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/microsoft-msft-one-best-unrivaled-184144197.html?.tsrc=rss",
+        "sentiment": 0.13376623376623373,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Arista Networks Inc stock (US0404131064): Why Google Discover changes matter more now",
-        "description": "Arista Networks Inc stock (US0404131064): Why Google Discover changes matter more now",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/arista-networks-inc-stock-us0404131064-why-google-discover-changes/69198919",
-        "sentiment": 0.11333333333333333,
-        "source": "Alpha Vantage"
+        "date": "2026-04-18",
+        "title": "I Asked ChatGPT How the Stock Market Would Look If We Ignored the 7 Biggest Stocks",
+        "description": "I Asked ChatGPT How the Stock Market Would Look If We Ignored the 7 Biggest Stocks",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/asked-chatgpt-stock-market-look-173906448.html?.tsrc=rss",
+        "sentiment": 0.75,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Asset Advisors Investment Management Increases Stake in iShares ETF",
-        "description": "Asset Advisors Investment Management Increases Stake in iShares ETF",
-        "url": "https://www.harianbasis.co/en/asset-advisors-increases-ishares-etf-stake",
-        "sentiment": -0.0625,
-        "source": "Alpha Vantage"
+        "date": "2026-04-18",
+        "title": "How The Microsoft (MSFT) Investment Story Is Shifting With AI Spending And Valuation Rethinks",
+        "description": "How The Microsoft (MSFT) Investment Story Is Shifting With AI Spending And Valuation Rethinks",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/microsoft-msft-investment-story-shifting-150400460.html?.tsrc=rss",
+        "sentiment": 0.2148148148148148,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Salesforce, Inc. stock (US79466L3024): Is AI innovation strong enough to unlock new upside?",
-        "description": "Salesforce, Inc. stock (US79466L3024): Is AI innovation strong enough to unlock new upside?",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/salesforce-inc-stock-us79466l3024-is-ai-innovation-strong-enough-to/69198413",
-        "sentiment": 0.08138528138528138,
-        "source": "Alpha Vantage"
+        "date": "2026-04-18",
+        "title": "The software rebound is real, but not every big name is back: Chart of the Day",
+        "description": "The software rebound is real, but not every big name is back: Chart of the Day",
+        "url": "https://finance.yahoo.com/news/the-software-rebound-is-real-but-not-every-big-name-is-back-chart-of-the-day-121425237.html?.tsrc=rss",
+        "sentiment": 0.20666666666666664,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Deluxe Corp stock (US2480191012): Why Google Discover changes matter more now",
-        "description": "Deluxe Corp stock (US2480191012): Why Google Discover changes matter more now",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/deluxe-corp-stock-us2480191012-why-google-discover-changes-matter-more/69198067",
-        "sentiment": 0.3375,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "QUALCOMM Incorporated stock (US7475251036): Is its AI and 5G edge strong enough to unlock new upside",
-        "description": "QUALCOMM Incorporated stock (US7475251036): Is its AI and 5G edge strong enough to unlock new upside",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/qualcomm-incorporated-stock-us7475251036-is-its-ai-and-5g-edge-strong/69198283",
-        "sentiment": 0.12255892255892256,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "HP Inc stock (US40434L1052): Why mobile-first tech news visibility matters more now? (Evergreen)",
-        "description": "HP Inc stock (US40434L1052): Why mobile-first tech news visibility matters more now? (Evergreen)",
-        "url": "https://www.ad-hoc-news.de/boerse/ueberblick/hp-inc-stock-us40434l1052-why-mobile-first-tech-news-visibility-matters/69197943",
-        "sentiment": 0.2107142857142857,
-        "source": "Alpha Vantage"
+        "date": "2026-04-18",
+        "title": "What the Allbirds 'Hail Mary' says about the AI trade right now",
+        "description": "What the Allbirds 'Hail Mary' says about the AI trade right now",
+        "url": "https://finance.yahoo.com/news/what-the-allbirds-hail-mary-says-about-the-ai-trade-right-now-113847747.html?.tsrc=rss",
+        "sentiment": 0.3595238095238095,
+        "source": "Yahoo RSS"
     }
 ]

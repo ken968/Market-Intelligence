@@ -406,6 +406,10 @@ class AssetPredictor:
                 'fan_p90':          fan_p90,
             }
 
+        # Final type safety guard
+        if not isinstance(results, dict):
+            return {'Current': current_price, 'error': 'Internal forecast error'}
+            
         return results
 
     

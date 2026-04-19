@@ -54,8 +54,14 @@ with col_ctrl:
         "2020 Covid Black Swan": {
             "oil": 20.0, "vix": 65.0, "sentiment": -1.0, "cpi": 0.1, "nfp": -500.0, "yc": 1.5
         },
+        "Dotcom Bubble Burst": {
+            "oil": 30.0, "vix": 40.0, "sentiment": -0.8, "cpi": 0.3, "nfp": -150.0, "yc": 0.5
+        },
         "Geopolitical War": {
             "oil": 130.0, "vix": 35.0, "sentiment": -0.7, "cpi": 0.8, "nfp": 100.0, "yc": 0.1
+        },
+        "High Inflation Shock": {
+            "oil": 110.0, "vix": 25.0, "sentiment": -0.4, "cpi": 1.5, "nfp": 200.0, "yc": -0.3
         },
         "Deflationary Spiral": {
             "oil": 40.0, "vix": 20.0, "sentiment": -0.5, "cpi": -0.8, "nfp": -250.0, "yc": 0.5

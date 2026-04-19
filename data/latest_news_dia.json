@@ -97,14 +97,6 @@
     },
     {
         "date": "2026-04-18",
-        "title": "Precision Trading with Spdr Dow Jones Industrial Average Etf (DIA) Risk Zones",
-        "description": "Precision Trading with Spdr Dow Jones Industrial Average Etf (DIA) Risk Zones",
-        "url": "https://news.stocktradersdaily.com/news_release/22/Precision_Trading_with_Spdr_Dow_Jones_Industrial_Average_Etf_DIA_Risk_Zones_041826094601_1776519961.html",
-        "sentiment": 0.16,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-18",
         "title": "Fear & Greed: 26.0 (Fear)",
         "description": "Fear & Greed: 26.0 (Fear)",
         "url": "https://alternative.me/crypto/fear-and-greed-index/",
@@ -157,6 +149,14 @@
         "description": "S&P 500, Nasdaq 100, Russell 2000 Smash Records As Hormuz Reopens: What's Moving Markets Friday?",
         "url": "https://finnhub.io/api/news?id=e9d424a7213e03ebf7bf6db62be0bc10e34209feda75c05d45fe4b554109c10b",
         "sentiment": 0.21666666666666665,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Crisis In Transit: War's Economic Fallout Is Only Beginning",
+        "description": "Crisis In Transit: War's Economic Fallout Is Only Beginning",
+        "url": "https://finnhub.io/api/news?id=cc443324565475941bdb523562ded129a07fb913aa3f8a96eac4c5fba06c08f7",
+        "sentiment": 0.21666666666666667,
         "source": "Finnhub"
     }
 ]

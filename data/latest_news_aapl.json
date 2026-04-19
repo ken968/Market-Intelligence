@@ -25,46 +25,6 @@
     },
     {
         "date": "2026-04-19",
-        "title": "QUALCOMM Incorporated stock (US7475251036): Is its AI chip edge strong enough to unlock new upside?",
-        "description": "QUALCOMM Incorporated stock (US7475251036): Is its AI chip edge strong enough to unlock new upside?",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/qualcomm-incorporated-stock-us7475251036-is-its-ai-chip-edge-strong/69200343",
-        "sentiment": 0.1741161616161616,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Apple Among 15 Companies To Announce Dividend Increases In The Second Half Of April",
-        "description": "Apple Among 15 Companies To Announce Dividend Increases In The Second Half Of April",
-        "url": "https://seekingalpha.com/article/4891834-apple-among-15-companies-to-announce-dividend-increases-in-the-second-half-of-april",
-        "sentiment": 0.01666666666666667,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "QUALCOMM Incorporated stock (US7475251036): Is its AI and 5G edge strong enough to unlock new upside",
-        "description": "QUALCOMM Incorporated stock (US7475251036): Is its AI and 5G edge strong enough to unlock new upside",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/qualcomm-incorporated-stock-us7475251036-is-its-ai-and-5g-edge-strong/69198283",
-        "sentiment": 0.12255892255892256,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "HP Inc stock (US40434L1052): Why mobile-first tech news visibility matters more now? (Evergreen)",
-        "description": "HP Inc stock (US40434L1052): Why mobile-first tech news visibility matters more now? (Evergreen)",
-        "url": "https://www.ad-hoc-news.de/boerse/ueberblick/hp-inc-stock-us40434l1052-why-mobile-first-tech-news-visibility-matters/69197943",
-        "sentiment": 0.2107142857142857,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "HP Inc stock (US40434L1052): Why mobile-first tech news visibility matters more now? (Evergreen)",
-        "description": "HP Inc stock (US40434L1052): Why mobile-first tech news visibility matters more now? (Evergreen)",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/hp-inc-stock-us40434l1052-why-mobile-first-tech-news-visibility-matters/69197943",
-        "sentiment": 0.3154761904761905,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
         "title": "Fear & Greed: 27.0 (Fear)",
         "description": "Fear & Greed: 27.0 (Fear)",
         "url": "https://alternative.me/crypto/fear-and-greed-index/",
@@ -157,6 +117,46 @@
         "description": "There Is Incredible News for Apple Investors. Will It Be Enough to Send the Stock Higher?",
         "url": "https://finnhub.io/api/news?id=7961eb647bca41d0fb08260c09f154269845bd76d068313b8077a2196d1bc320",
         "sentiment": 0.3833333333333333,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Berkshire May Have Sold $15 Billion of Stocks Run by Former Manager",
+        "description": "Berkshire May Have Sold $15 Billion of Stocks Run by Former Manager",
+        "url": "https://finnhub.io/api/news?id=b9ff488ba4ebefb939073ef8a12836a320bec53b375705572b6aa2ace79a623b",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Now Streaming: Netflix falls after underwhelming Q2 guidance",
+        "description": "Now Streaming: Netflix falls after underwhelming Q2 guidance",
+        "url": "https://finnhub.io/api/news?id=1e34b11ce06819f2f9b6f61ab86e181f9ae2ffeac4d5a00ea3d80c2331aef95f",
+        "sentiment": 0.3546266233766233,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Have village names recently disappeared from Apple Maps in Lebanon?",
+        "description": "Have village names recently disappeared from Apple Maps in Lebanon?",
+        "url": "https://finnhub.io/api/news?id=ce5db0b917e9f62763dac47b56842f4ea1fb3abcb04839699b05e6431bca264f",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Apple's Smart Glasses Could Launch in 2027. Here's Why Apple Could Succeed Where Others Have Failed.",
+        "description": "Apple's Smart Glasses Could Launch in 2027. Here's Why Apple Could Succeed Where Others Have Failed.",
+        "url": "https://finnhub.io/api/news?id=35968414ebaef5557bb455e406c7c6024e1413d8434d44d4245c8f807d444562",
+        "sentiment": 0.28571428571428575,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "What the Allbirds 'Hail Mary' says about the AI trade right now",
+        "description": "What the Allbirds 'Hail Mary' says about the AI trade right now",
+        "url": "https://finnhub.io/api/news?id=92d939d85e45e9ed1a72da9c966ce281092e5770f5d295ee0ef781e17f4b6f5e",
+        "sentiment": 0.3595238095238095,
         "source": "Finnhub"
     }
 ]

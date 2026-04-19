@@ -1,6 +1,30 @@
 [
     {
         "date": "2026-04-19",
+        "title": "Fading \u2019American Dream\u2019: China\u2019s elite talent pivots toward home",
+        "description": "Fading \u2019American Dream\u2019: China\u2019s elite talent pivots toward home",
+        "url": "https://finance.yahoo.com/economy/articles/fading-american-dream-china-elite-075737108.html?.tsrc=rss",
+        "sentiment": 0.2708333333333333,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "1 Smart Stock to Buy Right Now",
+        "description": "1 Smart Stock to Buy Right Now",
+        "url": "https://www.fool.com/investing/2026/04/19/1-smart-stock-to-buy-right-now/?.tsrc=rss",
+        "sentiment": 0.45,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Bernstein shares a 5+ year view on how AI might impact the software industry",
+        "description": "Bernstein shares a 5+ year view on how AI might impact the software industry",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/bernstein-shares-5-view-ai-070801923.html?.tsrc=rss",
+        "sentiment": 0.1,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
         "title": "Jim Cramer Reveals Why Intel\u2019s (INTC) CEO\u2019s a Winner",
         "description": "Jim Cramer Reveals Why Intel\u2019s (INTC) CEO\u2019s a Winner",
         "url": "https://finance.yahoo.com/markets/stocks/articles/jim-cramer-reveals-why-intel-041846090.html?.tsrc=rss",
@@ -14,6 +38,30 @@
         "url": "https://finance.yahoo.com/markets/crypto/articles/fix-money-michael-saylor-shares-010124912.html?.tsrc=rss",
         "sentiment": 0.0,
         "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Fading \u2019American Dream\u2019: China\u2019s elite talent pivots toward home",
+        "description": "Fading \u2019American Dream\u2019: China\u2019s elite talent pivots toward home",
+        "url": "https://finnhub.io/api/news?id=c3408249417d81410c2f1fc21e9a25ddd44c509aeec9bf61b8edd194603273de",
+        "sentiment": 0.2708333333333333,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "1 Smart Stock to Buy Right Now",
+        "description": "1 Smart Stock to Buy Right Now",
+        "url": "https://finnhub.io/api/news?id=127b4cdb180bf816ca4a3be8dd0c977674245bf76292c809723e0c49c1126e5a",
+        "sentiment": 0.45,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Bernstein shares a 5+ year view on how AI might impact the software industry",
+        "description": "Bernstein shares a 5+ year view on how AI might impact the software industry",
+        "url": "https://finnhub.io/api/news?id=89bcd05fd04177c02cd911132bc86dd2309e312c965b7b7df721590bec91e157",
+        "sentiment": 0.1,
+        "source": "Finnhub"
     },
     {
         "date": "2026-04-19",
@@ -110,53 +158,5 @@
         "url": "https://finnhub.io/api/news?id=97bb4cfbec49d76df07a746c2e97adcb18645b2976090aff30c994723022911d",
         "sentiment": 0.75,
         "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Alphabet Inc. Class A stock (US02079K3059): Is AI dominance strong enough to unlock sustained upside",
-        "description": "Alphabet Inc. Class A stock (US02079K3059): Is AI dominance strong enough to unlock sustained upside",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/alphabet-inc-class-a-stock-us02079k3059-is-ai-dominance-strong-enough/69199923",
-        "sentiment": 0.14444444444444446,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Fair Isaac Corp stock (US30303M1027): Why Google Discover changes matter more now",
-        "description": "Fair Isaac Corp stock (US30303M1027): Why Google Discover changes matter more now",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/fair-isaac-corp-stock-us30303m1027-why-google-discover-changes-matter/69200508",
-        "sentiment": 0.26060606060606056,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "NetApp Collaborates with Google Cloud to Power Data Infrastructure for Distributed Cloud",
-        "description": "NetApp Collaborates with Google Cloud to Power Data Infrastructure for Distributed Cloud",
-        "url": "https://www.newswire.co.kr/newsRead.php?no=1032625",
-        "sentiment": 0.1,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Zimmer Biomet Holdings stock (US98956P1021): Why Google Discover changes matter more now",
-        "description": "Zimmer Biomet Holdings stock (US98956P1021): Why Google Discover changes matter more now",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/zimmer-biomet-holdings-stock-us98956p1021-why-google-discover-changes/69200309",
-        "sentiment": 0.18055555555555558,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "United Rentals Inc stock (US9113631090): Why Google Discover changes matter more now",
-        "description": "United Rentals Inc stock (US9113631090): Why Google Discover changes matter more now",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/united-rentals-inc-stock-us9113631090-why-google-discover-changes/69199429",
-        "sentiment": 0.2685185185185185,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Salesforce Inc stock (US79466L3024): Why Google Discover changes matter more now",
-        "description": "Salesforce Inc stock (US79466L3024): Why Google Discover changes matter more now",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/salesforce-inc-stock-us79466l3024-why-google-discover-changes-matter/69199370",
-        "sentiment": 0.22604166666666667,
-        "source": "Alpha Vantage"
     }
 ]

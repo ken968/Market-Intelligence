@@ -9,6 +9,14 @@
     },
     {
         "date": "2026-04-19",
+        "title": "TSMC's Q1 Earnings Beat: Still A Great Buy",
+        "description": "TSMC's Q1 Earnings Beat: Still A Great Buy",
+        "url": "https://finnhub.io/api/news?id=e0781eb9b4fe835081b593245bf9253db9239ddf22699808f80148479499a31b",
+        "sentiment": 0.6166666666666667,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
         "title": "Fear & Greed: 27.0 (Fear)",
         "description": "Fear & Greed: 27.0 (Fear)",
         "url": "https://alternative.me/crypto/fear-and-greed-index/",
@@ -149,14 +157,6 @@
         "description": "Nvidia Is 'Not A Car,' Jensen Huang Says, Defending Its Hard-To-Replace AI Ecosystem",
         "url": "https://finance.yahoo.com/sectors/technology/articles/nvidia-not-car-jensen-huang-180115580.html?.tsrc=rss",
         "sentiment": 0.20714285714285716,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Stock Market Hits Highs On Iran Hopes; Goldman Sachs, Netflix, Taiwan Semiconductor In Focus: Weekly Review",
-        "description": "Stock Market Hits Highs On Iran Hopes; Goldman Sachs, Netflix, Taiwan Semiconductor In Focus: Weekly Review",
-        "url": "https://finance.yahoo.com/m/3f785ef8-8ee7-38c1-9b3b-5b88e57efad9/stock-market-hits-highs-on.html?.tsrc=rss",
-        "sentiment": 0.06818181818181818,
         "source": "Yahoo RSS"
     }
 ]

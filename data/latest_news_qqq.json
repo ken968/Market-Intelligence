@@ -153,10 +153,10 @@
     },
     {
         "date": "2026-04-18",
-        "title": "Invesco Top QQQ ETF's Meta Platforms Inc(META) Holding History",
-        "description": "Invesco Top QQQ ETF's Meta Platforms Inc(META) Holding History",
-        "url": "https://www.gurufocus.com/guru-portfolio/Invesco%20Top%20QQQ%20ETF/META",
-        "sentiment": 0.25,
-        "source": "Alpha Vantage"
+        "title": "Fear & Greed: 26.0 (Fear)",
+        "description": "Fear & Greed: 26.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.48,
+        "source": "Fear & Greed Index"
     }
 ]

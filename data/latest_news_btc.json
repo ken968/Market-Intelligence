@@ -1,14 +1,6 @@
 [
     {
         "date": "2026-04-19",
-        "title": "Can a $1,000 Investment in Bitcoin Turn Into $1 Million By 2045?",
-        "description": "Can a $1,000 Investment in Bitcoin Turn Into $1 Million By 2045?",
-        "url": "https://www.fool.com/investing/2026/04/19/can-a-1000-investment-in-bitcoin-turn-into-1-milli/",
-        "sentiment": 0.009523809523809526,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
         "title": "Fear & Greed: 27.0 (Fear)",
         "description": "Fear & Greed: 27.0 (Fear)",
         "url": "https://alternative.me/crypto/fear-and-greed-index/",
@@ -30,86 +22,6 @@
         "url": "https://247wallst.com/investing/2026/04/18/why-bitmines-tom-lee-sees-ethereum-at-62500-in-2030-and-what-the-numbers-actually-show/?.tsrc=rss",
         "sentiment": 0.0,
         "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "SOL Open Interest Jumps 20% As Traders Eye Rally To $100",
-        "description": "SOL Open Interest Jumps 20% As Traders Eye Rally To $100",
-        "url": "https://cointelegraph.com/markets/solana-futures-open-interest-rose-by-20-this-week-is-100-sol-next",
-        "sentiment": 0.05555555555555555,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Bitcoin Mining Difficulty Falls Slightly in Latest Adjustment",
-        "description": "Bitcoin Mining Difficulty Falls Slightly in Latest Adjustment",
-        "url": "https://cointelegraph.com/news/bitcoin-mining-difficulty-falls-rise-next",
-        "sentiment": 0.11666666666666665,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Better Buy: Bitcoin  ( BTC )  or Bittensor  ( TAO ) ?",
-        "description": "Better Buy: Bitcoin  ( BTC )  or Bittensor  ( TAO ) ?",
-        "url": "https://www.fool.com/investing/2026/04/18/better-buy-bitcoin-or-bittensor/",
-        "sentiment": 0.2333333333333333,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Iran Oil Tanker Fees Still Dominated by USDt, No Signs of BTC Yet: BPI",
-        "description": "Iran Oil Tanker Fees Still Dominated by USDt, No Signs of BTC Yet: BPI",
-        "url": "https://cointelegraph.com/news/iran-btc-strategic-usdt-dominate-oil-tolls",
-        "sentiment": -0.008333333333333331,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "You Do Not Have to Pick the Next Bitcoin to Profit From Crypto. Here Is the Simpler Play.",
-        "description": "You Do Not Have to Pick the Next Bitcoin to Profit From Crypto. Here Is the Simpler Play.",
-        "url": "https://www.fool.com/investing/2026/04/18/you-do-not-have-to-pick-the-next-bitcoin-to-profit/",
-        "sentiment": 0.10272108843537416,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Poland Parliament Fails Again to Override Crypto Bill Veto",
-        "description": "Poland Parliament Fails Again to Override Crypto Bill Veto",
-        "url": "https://cointelegraph.com/news/poland-parliament-fails-again-to-override-presidential-veto-crypto-bill",
-        "sentiment": -0.5,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Bold Prediction: Bitcoin Will Hit $140,000 This Year, According to This Wall Street Investment Bank",
-        "description": "Bold Prediction: Bitcoin Will Hit $140,000 This Year, According to This Wall Street Investment Bank",
-        "url": "https://www.fool.com/investing/2026/04/18/bold-prediction-bitcoin-will-hit-140000-this-year/",
-        "sentiment": 0.16666666666666666,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Spot Bitcoin ETFs Attract $1B in Weekly Inflows as Risk Appetite Returns",
-        "description": "Spot Bitcoin ETFs Attract $1B in Weekly Inflows as Risk Appetite Returns",
-        "url": "https://cointelegraph.com/news/spot-bitcoin-etfs-1b-weekly-inflows-risk-sentiment",
-        "sentiment": 0.1,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "SEC Charges Donald Basile in $16M Crypto Fraud Over \"Insured\" Token",
-        "description": "SEC Charges Donald Basile in $16M Crypto Fraud Over \"Insured\" Token",
-        "url": "https://cointelegraph.com/news/sec-donald-basile-16m-crypto-fraud-insured-token",
-        "sentiment": -0.17500000000000004,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Could Bitcoin Actually Hit $200,000 Before 2028?",
-        "description": "Could Bitcoin Actually Hit $200,000 Before 2028?",
-        "url": "https://www.fool.com/investing/2026/04/18/could-bitcoin-actually-hit-200000-before-2028/",
-        "sentiment": 0.39999999999999997,
-        "source": "Alpha Vantage"
     },
     {
         "date": "2026-04-18",
@@ -157,6 +69,94 @@
         "description": "Should You Chase the 15% Rally in MicroStrategy Stock Today?",
         "url": "https://www.barchart.com/story/news/1374037/should-you-chase-the-15-rally-in-microstrategy-stock-today?.tsrc=rss",
         "sentiment": 0.012499999999999997,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Bitcoin Climbs to Two-Month High Amid Middle East Deal Optimism",
+        "description": "Bitcoin Climbs to Two-Month High Amid Middle East Deal Optimism",
+        "url": "https://finance.yahoo.com/markets/crypto/articles/bitcoin-climbs-two-month-high-185621449.html?.tsrc=rss",
+        "sentiment": 0.08444444444444443,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Ripple (XRP) Leads Weekly Crypto Gains as Altcoins Outperform Bitcoin",
+        "description": "Ripple (XRP) Leads Weekly Crypto Gains as Altcoins Outperform Bitcoin",
+        "url": "https://247wallst.com/investing/2026/04/17/ripple-xrp-leads-weekly-crypto-gains-as-altcoins-outperform-bitcoin/?.tsrc=rss",
+        "sentiment": 0.18303571428571427,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Bitcoin miners are dealing with this triple-threat. \u2018I\u2019m a seven worried,\u2019 says mining CEO",
+        "description": "Bitcoin miners are dealing with this triple-threat. \u2018I\u2019m a seven worried,\u2019 says mining CEO",
+        "url": "https://www.dlnews.com/articles/markets/seven-worried-says-bitcoin-miner-about-ai-quantum-computing/?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Can Bitcoin Reach $80,000 This Weekend as the Strait of Hormuz Opens?",
+        "description": "Can Bitcoin Reach $80,000 This Weekend as the Strait of Hormuz Opens?",
+        "url": "https://beincrypto.com/bitcoin-price-80000-weekly-close-breakout/?.tsrc=rss",
+        "sentiment": 0.1,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Strive Soars 12%, Bitmine Jumps 5% as Bitcoin and Ethereum\u2019s Surge Lifts the Crypto Proxy Trade",
+        "description": "Strive Soars 12%, Bitmine Jumps 5% as Bitcoin and Ethereum\u2019s Surge Lifts the Crypto Proxy Trade",
+        "url": "https://247wallst.com/investing/2026/04/17/strive-soars-12-bitmine-jumps-5-as-bitcoin-and-ethereums-surge-lifts-the-crypto-proxy-trade/?.tsrc=rss",
+        "sentiment": 0.05249999999999999,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Bitcoin vs. gold: Safe-haven debate remains unclear after Iran shock",
+        "description": "Bitcoin vs. gold: Safe-haven debate remains unclear after Iran shock",
+        "url": "https://finance.yahoo.com/markets/crypto/articles/bitcoin-vs-gold-safe-haven-145709024.html?.tsrc=rss",
+        "sentiment": 0.3371212121212121,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Bitcoin, Stocks Surge as Iran Says Strait of Hormuz Is 'Completely Open'",
+        "description": "Bitcoin, Stocks Surge as Iran Says Strait of Hormuz Is 'Completely Open'",
+        "url": "https://decrypt.co/364725/bitcoin-stocks-surge-iran-strait-hormuz-completely-open?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Strategy Climbs 6% as Bitcoin Surges: 762,000 Coins and a Mountain of Debt Keep Investors Divided",
+        "description": "Strategy Climbs 6% as Bitcoin Surges: 762,000 Coins and a Mountain of Debt Keep Investors Divided",
+        "url": "https://247wallst.com/investing/2026/04/17/strategy-climbs-6-as-bitcoin-surges-762000-coins-and-a-mountain-of-debt-keep-investors-divided/?.tsrc=rss",
+        "sentiment": 0.047,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "XRP Price Prediction: XRP Is Up 10% in One Week \u2014 Where Does It Go From Here?",
+        "description": "XRP Price Prediction: XRP Is Up 10% in One Week \u2014 Where Does It Go From Here?",
+        "url": "https://247wallst.com/investing/2026/04/17/xrp-price-prediction-xrp-is-up-10-in-one-week-where-does-it-go-from-here/?.tsrc=rss",
+        "sentiment": 0.0875,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Kraken Parent Payward Agrees to Acquire Bitnomial for $550 Million",
+        "description": "Kraken Parent Payward Agrees to Acquire Bitnomial for $550 Million",
+        "url": "https://beincrypto.com/kraken-payward-acquire-bitnomial-550m/?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "Musk's Father Says Family Holds 23,400 Bitcoin As X Money Due To Go Live This Month",
+        "description": "Musk's Father Says Family Holds 23,400 Bitcoin As X Money Due To Go Live This Month",
+        "url": "https://finance.yahoo.com/markets/crypto/articles/musks-father-says-family-holds-120114358.html?.tsrc=rss",
+        "sentiment": 0.08733766233766235,
         "source": "Yahoo RSS"
     }
 ]

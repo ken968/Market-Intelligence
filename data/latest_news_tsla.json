@@ -1,6 +1,14 @@
 [
     {
         "date": "2026-04-19",
+        "title": "Why April 22 Could Be a Huge Day for Tesla Investors",
+        "description": "Why April 22 Could Be a Huge Day for Tesla Investors",
+        "url": "https://www.fool.com/investing/2026/04/19/why-april-22-could-be-huge-day-for-tesla-stock/?.tsrc=rss",
+        "sentiment": 0.39999999999999997,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
         "title": "Jim Cramer Says \u201cI\u2019m Blessing Rocket Lab (RKLB) Because It\u2019s Got a $1.85 Billion Backlog\u201d",
         "description": "Jim Cramer Says \u201cI\u2019m Blessing Rocket Lab (RKLB) Because It\u2019s Got a $1.85 Billion Backlog\u201d",
         "url": "https://finance.yahoo.com/markets/stocks/articles/jim-cramer-says-m-blessing-061250796.html?.tsrc=rss",
@@ -46,6 +54,14 @@
         "url": "https://finance.yahoo.com/sectors/technology/articles/caterpillar-turns-self-driving-tractors-003117141.html?.tsrc=rss",
         "sentiment": 0.015313852813852816,
         "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Jim Cramer Says \u201cI\u2019m Blessing Rocket Lab (RKLB) Because It\u2019s Got a $1.85 Billion Backlog\u201d",
+        "description": "Jim Cramer Says \u201cI\u2019m Blessing Rocket Lab (RKLB) Because It\u2019s Got a $1.85 Billion Backlog\u201d",
+        "url": "https://finnhub.io/api/news?id=0c169e7f379e87c0ce5beb77086cea0e95ad9afcd3761d920eb6887ea501e0b8",
+        "sentiment": 0.08333333333333333,
+        "source": "Finnhub"
     },
     {
         "date": "2026-04-19",
@@ -140,22 +156,6 @@
         "title": "Tesla rolls out robotaxis in Dallas and Houston",
         "description": "Tesla rolls out robotaxis in Dallas and Houston",
         "url": "https://finnhub.io/api/news?id=ee27243e36c091a27e9a8bd8c9ef9b0ef346c0560a7b7ea722cdbf16eba49802",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Gotta Know the Lingo, Vol. 8",
-        "description": "Gotta Know the Lingo, Vol. 8",
-        "url": "https://finnhub.io/api/news?id=8111b59be65ba1db4ad0f0bd5e13da7b8c284d20fa0b3b9d605c93d7288fef97",
-        "sentiment": 0.11045918367346941,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "2 Stocks to Buy This Week With $1 Trillion Upside Potential",
-        "description": "2 Stocks to Buy This Week With $1 Trillion Upside Potential",
-        "url": "https://finnhub.io/api/news?id=2779ee8576799fd075ebad43bc662fa700468145d661d8d9cd7e9b288e4895df",
         "sentiment": 0.0,
         "source": "Finnhub"
     }

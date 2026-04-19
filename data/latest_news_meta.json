@@ -81,22 +81,6 @@
     },
     {
         "date": "2026-04-19",
-        "title": "Arista Networks Inc stock (US0404131064): Why Google Discover changes matter more now",
-        "description": "Arista Networks Inc stock (US0404131064): Why Google Discover changes matter more now",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/arista-networks-inc-stock-us0404131064-why-google-discover-changes/69198919",
-        "sentiment": 0.11333333333333333,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Alphabet Inc. Class C stock (US02079K1079): Why AI dominance is suddenly worth a closer look",
-        "description": "Alphabet Inc. Class C stock (US02079K1079): Why AI dominance is suddenly worth a closer look",
-        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/alphabet-inc-class-c-stock-us02079k1079-why-ai-dominance-is-suddenly/69197820",
-        "sentiment": 0.10726190476190478,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-04-19",
         "title": "Fear & Greed: 27.0 (Fear)",
         "description": "Fear & Greed: 27.0 (Fear)",
         "url": "https://alternative.me/crypto/fear-and-greed-index/",
@@ -157,6 +141,22 @@
         "description": "Venture Capitalist Marc Andreessen: 'The Grand Unification Of AI And Crypto Is About To Happen'",
         "url": "https://finance.yahoo.com/markets/crypto/articles/venture-capitalist-marc-andreessen-grand-163112162.html?.tsrc=rss",
         "sentiment": 0.1,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "E-commerce giant shuts down office as layoffs rise",
+        "description": "E-commerce giant shuts down office as layoffs rise",
+        "url": "https://www.thestreet.com/employment/e-commerce-giant-ebay-shuts-down-office-as-layoffs-rise?.tsrc=rss",
+        "sentiment": 0.011851851851851855,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Apple's Smart Glasses Could Launch in 2027. Here's Why Apple Could Succeed Where Others Have Failed.",
+        "description": "Apple's Smart Glasses Could Launch in 2027. Here's Why Apple Could Succeed Where Others Have Failed.",
+        "url": "https://www.fool.com/investing/2026/04/18/apples-smart-glasses-could-launch-in-2027/?.tsrc=rss",
+        "sentiment": 0.28571428571428575,
         "source": "Yahoo RSS"
     }
 ]

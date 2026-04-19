@@ -94,8 +94,10 @@ if st.button("Run Backtesting"):
         # In a real environment, we'd stream stdout or run this asynchronously
         # For simplicity, we just block until it's done
         with st.spinner(f"Compiling intelligence layers and running rigorous backtest for {selected_asset_for_test}..."):
+            # Using absolute path to project venv to ensure consistency
+            venv_python = r"d:\Market-Intelligence\.venv\Scripts\python.exe"
             result = subprocess.run(
-                [sys.executable, "scripts/backtest_engine.py", selected_asset_for_test.lower()],
+                [venv_python, "scripts/backtest_engine.py", selected_asset_for_test.lower()],
                 capture_output=True, text=True
             )
             
