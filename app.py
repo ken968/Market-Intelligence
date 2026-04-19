@@ -27,7 +27,7 @@ inject_custom_css()
 # ==================== SIDEBAR ====================
 
 with st.sidebar:
-    st.markdown("###  Navigation")
+    st.markdown("### Navigation")
     st.info("""
     Use the pages in the sidebar to navigate:
     - **Dashboard**: Overview of all assets
@@ -40,7 +40,7 @@ with st.sidebar:
     st.markdown("---")
     
     # System Status
-    st.markdown("###  System Status")
+    st.markdown("### System Status")
     status = get_asset_status()
     
     assets_ready = sum(1 for s in status.values() if s['data'] and s['model'])
@@ -73,16 +73,16 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.markdown("#### Precious Metals")
     if status['gold']['model']:
-        render_status_badge('success', 'Gold (XAUUSD) ')
+        render_status_badge('success', 'Gold (XAUUSD)')
     else:
-        render_status_badge('danger', 'Gold (XAUUSD) ')
+        render_status_badge('danger', 'Gold (XAUUSD)')
 
 with col2:
     st.markdown("#### Cryptocurrency")
     if status['btc']['model']:
-        render_status_badge('success', 'Bitcoin (BTC) ')
+        render_status_badge('success', 'Bitcoin (BTC)')
     else:
-        render_status_badge('danger', 'Bitcoin (BTC) ')
+        render_status_badge('danger', 'Bitcoin (BTC)')
 
 with col3:
     st.markdown("#### US Equities")
@@ -100,7 +100,7 @@ st.markdown("---")
 
 # ==================== QUICK PREDICTIONS ====================
 
-st.markdown("###  Tomorrow's AI Predictions")
+st.markdown("### Tomorrow's AI Predictions")
 
 # Check if any models are available
 available_assets = [key for key, s in status.items() if s['model']]

@@ -1,5 +1,45 @@
 [
     {
+        "date": "2026-04-19",
+        "title": "Fear & Greed: 27.0 (Fear)",
+        "description": "Fear & Greed: 27.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.46,
+        "source": "Fear & Greed Index"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Assessing Barrick Mining (NYSE:B) Valuation After Its Recent Name Change And Strong Shareholder Returns",
+        "description": "Assessing Barrick Mining (NYSE:B) Valuation After Its Recent Name Change And Strong Shareholder Returns",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/assessing-barrick-mining-nyse-b-180532781.html?.tsrc=rss",
+        "sentiment": 0.15555555555555556,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Gold surges on Hormuz news: Here\u2019s what comes next",
+        "description": "Gold surges on Hormuz news: Here\u2019s what comes next",
+        "url": "https://www.thestreet.com/investing/gold-price-surges-on-hormuz-news-heres-what-comes-next?.tsrc=rss",
+        "sentiment": -0.01791666666666667,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Binance Has 'Reached The Scale' Of Major Asian National Commodities Exchanges In Gold Perpetuals Trading, Says Co-CEO Teng",
+        "description": "Binance Has 'Reached The Scale' Of Major Asian National Commodities Exchanges In Gold Perpetuals Trading, Says Co-CEO Teng",
+        "url": "https://finance.yahoo.com/markets/commodities/articles/binance-reached-scale-major-asian-153110679.html?.tsrc=rss",
+        "sentiment": 0.165625,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Every Nation on Earth Is Racing to Secure Its Own Gold Supply. Jim Rickards Says America's Answer Has Been Sitting in Alaska for Decades \u2014 Buried Under Red Tape. Until Now.",
+        "description": "Every Nation on Earth Is Racing to Secure Its Own Gold Supply. Jim Rickards Says America's Answer Has Been Sitting in Alaska for Decades \u2014 Buried Under Red Tape. Until Now.",
+        "url": "https://finance.yahoo.com/markets/commodities/articles/every-nation-earth-racing-secure-123000644.html?.tsrc=rss",
+        "sentiment": 0.23737373737373735,
+        "source": "Yahoo RSS"
+    },
+    {
         "date": "2026-04-18",
         "title": "Big Short investor Michael Burry says Trump's Iran war decisions are being driven by something other than foreign policy",
         "description": "Big Short investor Michael Burry says Trump's Iran war decisions are being driven by something other than foreign policy",
@@ -68,7 +108,7 @@
         "title": "Gold Jumps to One-Month High as Iran Says Hormuz Completely Open",
         "description": "Gold Jumps to One-Month High as Iran Says Hormuz Completely Open",
         "url": "https://finance.yahoo.com/markets/commodities/articles/gold-heads-fourth-weekly-gain-082858091.html?.tsrc=rss",
-        "sentiment": 0.03225,
+        "sentiment": 0.13178571428571428,
         "source": "Yahoo RSS"
     },
     {
@@ -117,46 +157,6 @@
         "description": "Hemlo Mining Maintained at Buy at Stifel Canada Following Q4 Results; Price Target Kept at C$12.00",
         "url": "https://finance.yahoo.com/markets/stocks/articles/hemlo-mining-maintained-buy-stifel-163041829.html?.tsrc=rss",
         "sentiment": 0.0,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "This 1 Commodity ETF Is up 42% as It\u2019s the Perfect Inflation Hedge",
-        "description": "This 1 Commodity ETF Is up 42% as It\u2019s the Perfect Inflation Hedge",
-        "url": "https://247wallst.com/investing/2026/04/17/this-1-commodity-etf-is-up-42-as-its-the-perfect-inflation-hedge/?.tsrc=rss",
-        "sentiment": 0.3523809523809523,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Aris Mining Announces Breakthrough Milestone at Marmato Underground Development",
-        "description": "Aris Mining Announces Breakthrough Milestone at Marmato Underground Development",
-        "url": "https://finance.yahoo.com/markets/commodities/articles/aris-mining-announces-breakthrough-milestone-155000605.html?.tsrc=rss",
-        "sentiment": 0.17045454545454544,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "McEwen (MUX) Just Unveiled Something That Could Change Its 2030 Outlook",
-        "description": "McEwen (MUX) Just Unveiled Something That Could Change Its 2030 Outlook",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/mcewen-mux-just-unveiled-something-153733694.html?.tsrc=rss",
-        "sentiment": 0.16875,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Bitcoin vs. gold: Safe-haven debate remains unclear after Iran shock",
-        "description": "Bitcoin vs. gold: Safe-haven debate remains unclear after Iran shock",
-        "url": "https://finance.yahoo.com/markets/crypto/articles/bitcoin-vs-gold-safe-haven-145709024.html?.tsrc=rss",
-        "sentiment": 0.3371212121212121,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Newmont Downgraded as Costs Surge: Is This Gold Giant Losing Its Shine at the Worst Possible Time?",
-        "description": "Newmont Downgraded as Costs Surge: Is This Gold Giant Losing Its Shine at the Worst Possible Time?",
-        "url": "https://247wallst.com/investing/2026/04/17/newmont-downgraded-as-costs-surge-is-this-gold-giant-losing-its-shine-at-the-worst-possible-time/?.tsrc=rss",
-        "sentiment": -0.2857142857142857,
         "source": "Yahoo RSS"
     }
 ]

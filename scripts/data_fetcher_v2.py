@@ -21,14 +21,14 @@ class MultiAssetFetcher:
         self.btc_config = {
             'ticker': 'BTC-USD',
             'start_date': '2009-01-01',  # Genesis block era
-            'filename': 'data/btc_macro_data.csv'
+            'filename': 'data/btc_global_insights.csv'
         }
         
         # Gold: 10 years (existing)
         self.gold_config = {
             'ticker': 'GC=F',
             'period': '10y',
-            'filename': 'data/gold_macro_data.csv'
+            'filename': 'data/gold_global_insights.csv'
         }
         
         # US Stocks: 10 years
@@ -53,7 +53,7 @@ class MultiAssetFetcher:
         
         self.stock_config = {
             'period': '10y',
-            'filename_template': 'data/{ticker}_macro_data.csv'  # Per-stock files
+            'filename_template': 'data/{ticker}_global_insights.csv'  # Unified naming
         }
     
     def fetch_macro_indicators(self):
@@ -149,6 +149,9 @@ class MultiAssetFetcher:
                     if col in df.columns:
                         df[col] = df[col].ffill().fillna(0)
             
+            # Preserve or Initialize Sentiment Column
+            df = self._preserve_sentiment(df, self.gold_config['filename'])
+            
             df.to_csv(self.gold_config['filename'])
             print(f"System: Success. {len(df)} Gold records saved to '{self.gold_config['filename']}'.")
             return True
@@ -207,6 +210,9 @@ class MultiAssetFetcher:
                 for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']:
                     if col in df.columns:
                         df[col] = df[col].ffill().fillna(0)
+            
+            # Preserve or Initialize Sentiment Column
+            df = self._preserve_sentiment(df, self.btc_config['filename'])
             
             df.to_csv(self.btc_config['filename'])
             print(f"System: Success. {len(df)} BTC records saved (from {df.index[0].date()} to {df.index[-1].date()}).")
@@ -272,6 +278,10 @@ class MultiAssetFetcher:
                             df[col] = df[col].ffill().fillna(0)
                 
                 filename = self.stock_config['filename_template'].format(ticker=tick)
+                
+                # Preserve or Initialize Sentiment Column
+                df = self._preserve_sentiment(df, filename)
+                
                 df.to_csv(filename)
                 print(f"  -> {len(df)} records saved to '{filename}'")
                 success_count += 1
@@ -283,6 +293,36 @@ class MultiAssetFetcher:
         print(f"System: {success_count}/{len(tickers_to_fetch)} stocks fetched successfully.")
         return success_count > 0
     
+    def _calculate_ema(self, series, period):
+        return series.ewm(span=period, adjust=False).mean()
+    
+    def _preserve_sentiment(self, new_df, filename):
+        """
+        Retains 'Sentiment' column from existing file if available,
+        otherwise initializes with 0.
+        """
+        if os.path.exists(filename):
+            try:
+                old_df = pd.read_csv(filename)
+                if 'Sentiment' in old_df.columns:
+                    # Merge based on Date (assuming index is date in new_df)
+                    old_df['Date'] = pd.to_datetime(old_df['Date'])
+                    old_sentiment = old_df[['Date', 'Sentiment']].set_index('Date')
+                    
+                    # Align dates and join
+                    new_df = new_df.join(old_sentiment, how='left')
+                    # Fill gaps in sentiment (new dates) with 0 or ffill
+                    new_df['Sentiment'] = new_df['Sentiment'].ffill().fillna(0)
+                    return new_df
+            except Exception as e:
+                print(f"Warning: Could not preserve sentiment: {e}")
+        
+        # Default: add empty sentiment column if missing
+        if 'Sentiment' not in new_df.columns:
+            new_df['Sentiment'] = 0.0
+            
+        return new_df
+
     def _calculate_halving_cycle(self, dates):
         """
         Calculate Bitcoin halving cycle feature.

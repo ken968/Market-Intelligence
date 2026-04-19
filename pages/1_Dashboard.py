@@ -177,7 +177,7 @@ try:
             v = float(be.iloc[-1]) if len(be) >= 1 else 0
             p = float(be.iloc[-2]) if len(be) >= 2 else 0
             render_metric_card(label="5Y5Y Breakeven", value=round(v, 3), delta=round(v - p, 3))
-            be_status = "Anchored" if v < 2.3 else ("Rising" if v < 2.8 else "Elevated ⚠️")
+            be_status = "Anchored" if v < 2.3 else ("Rising" if v < 2.8 else "Elevated")
             st.caption(f"Fed Credibility — {be_status}")
 
     # Row 2C: M2 YoY (Trend) + M2 Liquidity Spike + Macro Compass
@@ -186,13 +186,13 @@ try:
         if 'M2_YoY' in fred_df.columns:
             v, p = _last2(fred_df['M2_YoY'])
             render_metric_card(label="M2 YoY (%)", value=round(v, 2), delta=round(v - p, 2))
-            m2_bias = "Risk-On 🟢" if v > 5 else ("Neutral 🟡" if v > 2 else "Risk-Off 🔴")
+            m2_bias = "Risk-On" if v > 5 else ("Neutral" if v > 2 else "Risk-Off")
             st.caption(f"Liquidity Trend — {m2_bias}")
     with h2:
         if 'M2_MoM' in fred_df.columns:
             v, p = _last2(fred_df['M2_MoM'])
             render_metric_card(label="M2 MoM (%)", value=round(v, 3), delta=round(v - p, 3))
-            spike = "⚡ Liquidity Spike!" if v > 0.5 else "Normal"
+            spike = "Liquidity Spike!" if v > 0.5 else "Normal"
             st.caption(f"Momentum — {spike}")
     with h3:
         # Macro Compass: Recession Risk Score
@@ -202,8 +202,8 @@ try:
             risk = macro_ctx.get('recession_risk', 0.5)
             regime = macro_ctx.get('yield_regime', 'unknown').upper()
             risk_pct = round(risk * 100, 1)
-            risk_color = "🟢" if risk < 0.3 else ("🟡" if risk < 0.6 else "🔴")
-            st.metric(label="Recession Risk Score", value=f"{risk_color} {risk_pct}%")
+            risk_color = "LOW" if risk < 0.3 else ("MODERATE" if risk < 0.6 else "HIGH")
+            st.metric(label="Recession Risk Score", value=f"{risk_pct}%")
             st.caption(f"Regime: {regime}")
         except Exception:
             st.caption("Recession score unavailable")
@@ -212,9 +212,9 @@ try:
         if 'M2_Liquidity_Spike' in fred_df.columns:
             spike_flag = int(fred_df['M2_Liquidity_Spike'].iloc[-1])
             if spike_flag:
-                st.warning("⚡ **M2 Liquidity Spike Detected!**\nPossible Fed intervention or emergency stimulus.")
+                st.warning("M2 Liquidity Spike Detected!\nPossible Fed intervention or emergency stimulus.")
             else:
-                st.success("✅ M2 Flow: Normal")
+                st.success("M2 Flow: Normal")
 
 except Exception:
     st.info("FRED indicators not yet synced. Run FRED sync from Settings.")
@@ -236,8 +236,8 @@ try:
             fig_gauge = go.Figure(go.Indicator(
                 mode="gauge+number+delta",
                 value=buffett_ratio,
-                number={'suffix': '%', 'font': {'size': 28}},
-                title={'text': "Buffett Indicator<br><sub>Total Mkt Cap / GDP</sub>"},
+                number={'suffix': '%', 'font': {'size': 64}},
+                title={'text': "Buffett Indicator<br><sub>Total Mkt Cap / GDP</sub>", 'font': {'size': 32}},
                 gauge={
                     'axis': {'range': [0, 250], 'ticksuffix': '%'},
                     'bar': {'color': '#00A8E8'},
@@ -255,8 +255,8 @@ try:
             ))
             fig_gauge.update_layout(
                 template='plotly_dark',
-                height=300,
-                margin=dict(l=20, r=20, t=60, b=10)
+                height=450,
+                margin=dict(l=20, r=20, t=80, b=10)
             )
             st.plotly_chart(fig_gauge, use_container_width=True)
 
@@ -270,9 +270,9 @@ try:
 
             getattr(st, color)(
                 f"**Market is {level}** at {buffett_ratio:.1f}%\n\n"
-                "- 🟢 < 100%: Historically undervalued vs GDP\n"
-                "- 🟡 100–150%: Fair / moderately elevated\n"
-                "- 🔴 > 150%: Overvalued (Buffett historically cautious)"
+                "- LOW < 100%: Historically undervalued vs GDP\n"
+                "- FAIR 100–150%: Fair / moderately elevated\n"
+                "- HIGH > 150%: Overvalued (Buffett historically cautious)"
             )
 except ImportError:
     pass
@@ -335,7 +335,7 @@ else:
                             'Predicted': f"${pred['predicted']:,.2f}",
                             'Change': f"${pred['change']:+,.2f}",
                             'Change %': f"{pred['pct_change']:+.2f}%",
-                            'Direction': '🟢 Up' if pred['direction'] == 'up' else '🔴 Down'
+                            'Direction': 'UP' if pred['direction'] == 'up' else 'DOWN'
                         })
                 
                 st.markdown("#### Forecast Results")
@@ -355,7 +355,7 @@ try:
     from utils.llm_manager import analyze_news_context
     from utils.macro_processor import build_macro_context
 
-    col_ceo1, col_ceo2 = st.columns([4, 1])
+    col_ceo1, col_ceo2 = st.columns([6, 1])
 
     with col_ceo1:
         # Show macro context always (hard data, no API needed)
@@ -366,19 +366,19 @@ try:
         m2_bias = macro_ctx.get('m2_bias', 'neutral').upper()
         breakeven_regime = macro_ctx.get('breakeven_regime', 'unknown').upper()
 
-        # Regime color coding
-        regime_color = {"INVERSION": "🔴", "FLATTENING": "🟡", "EXPANSION": "🟢", "STEEPENING": "🟢"}.get(yield_regime, "⚪")
-        m2_color = {"RISK_ON": "🟢", "NEUTRAL": "🟡", "RISK_OFF": "🔴"}.get(m2_bias, "⚪")
-        be_color = {"ANCHORED": "🟢", "RISING": "🟡", "ELEVATED": "🔴"}.get(breakeven_regime, "⚪")
+        # Regime labels
+        regime_icon = {"INVERSION": "!!!", "FLATTENING": "WARN", "EXPANSION": "OK", "STEEPENING": "OK"}.get(yield_regime, "")
+        m2_icon = {"RISK_ON": "OK", "NEUTRAL": "---", "RISK_OFF": "!!!"}.get(m2_bias, "")
+        be_icon = {"ANCHORED": "OK", "RISING": "WARN", "ELEVATED": "!!!"}.get(breakeven_regime, "")
 
         st.markdown(f"""
-        **📊 Live Macro Regime:**
+        **Live Macro Regime:**
         | Signal | Status | Indicator |
         |--------|--------|-----------|
-        | Yield Curve | {regime_color} **{yield_regime}** | T10Y2Y spread |
-        | M2 Liquidity | {m2_color} **{m2_bias}** | YoY growth |
-        | Inflation Expectations | {be_color} **{breakeven_regime}** | 5Y5Y Breakeven |
-        | Recession Risk Score | {'🔴' if risk_score > 0.6 else '🟡' if risk_score > 0.3 else '🟢'} **{risk_score*100:.1f}%** | Composite |
+        | Yield Curve | {regime_icon} **{yield_regime}** | T10Y2Y spread |
+        | M2 Liquidity | {m2_icon} **{m2_bias}** | YoY growth |
+        | Inflation Expectations | {be_icon} **{breakeven_regime}** | 5Y5Y Breakeven |
+        | Recession Risk Score | **{risk_score*100:.1f}%** | Composite |
         """)
 
     with col_ceo2:

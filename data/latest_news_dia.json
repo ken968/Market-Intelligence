@@ -1,5 +1,45 @@
 [
     {
+        "date": "2026-04-19",
+        "title": "The 1-Minute Market Report, April 19, 2026",
+        "description": "The 1-Minute Market Report, April 19, 2026",
+        "url": "https://finnhub.io/api/news?id=8d216b250699fbe376aa0c6d38de5a402c3465f77e39ddff8510a2cb400c2817",
+        "sentiment": 0.13636363636363635,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Fear & Greed: 27.0 (Fear)",
+        "description": "Fear & Greed: 27.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.46,
+        "source": "Fear & Greed Index"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Playing Iranian Roulette: Investors Are Asking The Wrong Questions",
+        "description": "Playing Iranian Roulette: Investors Are Asking The Wrong Questions",
+        "url": "https://finnhub.io/api/news?id=dc5bc5ff59cace54f2ab92f91babbe8c2b57b366e98fa030175dab05bbd292f2",
+        "sentiment": -0.1875,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "4 CEOs, 4 Framings: The $108B Private Credit Story Begins",
+        "description": "4 CEOs, 4 Framings: The $108B Private Credit Story Begins",
+        "url": "https://finnhub.io/api/news?id=d480fcaf9a64b056ce0119f491979cf165ec2e5afe8f58f842e79ff5bdc1331d",
+        "sentiment": 0.025,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "It's Morning Again In The Stock Market",
+        "description": "It's Morning Again In The Stock Market",
+        "url": "https://finnhub.io/api/news?id=55022f58f93bd32bec8b43cd61d90aa5e36931058ea02e557415af9d8cc42d41",
+        "sentiment": 0.39166666666666666,
+        "source": "Finnhub"
+    },
+    {
         "date": "2026-04-18",
         "title": "Weekly Indicators: Oil Retreats, Manufacturing Advances, Consumers Stay The Course",
         "description": "Weekly Indicators: Oil Retreats, Manufacturing Advances, Consumers Stay The Course",
@@ -57,11 +97,27 @@
     },
     {
         "date": "2026-04-18",
+        "title": "Precision Trading with Spdr Dow Jones Industrial Average Etf (DIA) Risk Zones",
+        "description": "Precision Trading with Spdr Dow Jones Industrial Average Etf (DIA) Risk Zones",
+        "url": "https://news.stocktradersdaily.com/news_release/22/Precision_Trading_with_Spdr_Dow_Jones_Industrial_Average_Etf_DIA_Risk_Zones_041826094601_1776519961.html",
+        "sentiment": 0.16,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-18",
         "title": "Fear & Greed: 26.0 (Fear)",
         "description": "Fear & Greed: 26.0 (Fear)",
         "url": "https://alternative.me/crypto/fear-and-greed-index/",
         "sentiment": -0.48,
         "source": "Fear & Greed Index"
+    },
+    {
+        "date": "2026-04-17",
+        "title": "A Diamond Quality Entry in DIA ETF, or Is It Time to Get Out?",
+        "description": "A Diamond Quality Entry in DIA ETF, or Is It Time to Get Out?",
+        "url": "https://www.marketbeat.com/originals/a-diamond-quality-entry-in-dia-etf-or-is-it-time-to-get-out/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
+        "sentiment": 0.3,
+        "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-17",
@@ -97,66 +153,10 @@
     },
     {
         "date": "2026-04-17",
-        "title": "Crisis In Transit: War's Economic Fallout Is Only Beginning",
-        "description": "Crisis In Transit: War's Economic Fallout Is Only Beginning",
-        "url": "https://finnhub.io/api/news?id=cc443324565475941bdb523562ded129a07fb913aa3f8a96eac4c5fba06c08f7",
-        "sentiment": 0.21666666666666667,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "6 Signs Of An Irrational Market",
-        "description": "6 Signs Of An Irrational Market",
-        "url": "https://finnhub.io/api/news?id=79bf4dcaa92c1f397a94f5a18f2b173d3f54e1f187a83c11674a63f9096f0fc7",
-        "sentiment": -0.00833333333333334,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Victoria Fernandez And Paul Hickey On S&P 500 Volatility, Midterms And The Fed's Next Move",
-        "description": "Victoria Fernandez And Paul Hickey On S&P 500 Volatility, Midterms And The Fed's Next Move",
-        "url": "https://finnhub.io/api/news?id=91f43fec3e07b63f7ae23f52f8ec1a663ce8b8092aff1e117d88813aaaa4f586",
-        "sentiment": 0.25,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "How Much Do I Really Need To Retire With $150,000 A Year In Spending?",
-        "description": "How Much Do I Really Need To Retire With $150,000 A Year In Spending?",
-        "url": "https://finnhub.io/api/news?id=3543db3b0595a05a44e0270e6d0490733b761058583fc1a5c2ceb9a919447894",
-        "sentiment": 0.2,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Reducing Risk As This Euphoric Rally Ensues",
-        "description": "Reducing Risk As This Euphoric Rally Ensues",
-        "url": "https://finnhub.io/api/news?id=3a3118f4e3c3fec59a267b8f6f33879fab669ca29ada995e2d1795ad940b74f9",
-        "sentiment": -0.05555555555555555,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Federal Reserve Watch: Fed Keeps Pressure On",
-        "description": "Federal Reserve Watch: Fed Keeps Pressure On",
-        "url": "https://finnhub.io/api/news?id=61c895db470d88b90426470ca73eda42add70dc81080b13ce2606cf54e2eccb0",
-        "sentiment": 0.08888888888888886,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Most Investors Are Getting This Market Wrong - Here's Why I'm Bullish",
-        "description": "Most Investors Are Getting This Market Wrong - Here's Why I'm Bullish",
-        "url": "https://finnhub.io/api/news?id=c78927cab11eb93a11d8e21b7eed3223819299cccd21b171a384c1e4b9ab30f1",
-        "sentiment": 0.18393939393939393,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "BLS Jobs Report Is Broken - Is There A Better Measure?",
-        "description": "BLS Jobs Report Is Broken - Is There A Better Measure?",
-        "url": "https://finnhub.io/api/news?id=a366ef0c0376011fe454c200d963dd65c89433a97ad3ea94c374a122069f59ce",
-        "sentiment": 0.19999999999999998,
+        "title": "S&P 500, Nasdaq 100, Russell 2000 Smash Records As Hormuz Reopens: What's Moving Markets Friday?",
+        "description": "S&P 500, Nasdaq 100, Russell 2000 Smash Records As Hormuz Reopens: What's Moving Markets Friday?",
+        "url": "https://finnhub.io/api/news?id=e9d424a7213e03ebf7bf6db62be0bc10e34209feda75c05d45fe4b554109c10b",
+        "sentiment": 0.21666666666666665,
         "source": "Finnhub"
     }
 ]

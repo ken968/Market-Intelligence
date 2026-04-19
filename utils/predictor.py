@@ -109,13 +109,11 @@ class AssetPredictor:
         
         # Ensure all required features exist
         features = self.config['features']
-        missing = [f for f in features if f not in df.columns]
-        
-        if missing:
-            # Try to add missing features with defaults (Zero-fill for training compatibility)
-            for feat in missing:
-                df[feat] = 0.0
-        
+        # Check if all required features are present
+        missing_features = [f for f in features if f not in df.columns]
+        if missing_features:
+            raise ValueError(f"Missing required features in {self.asset_key}: {missing_features}")
+            
         self.data = df[features].values
         return df
     
