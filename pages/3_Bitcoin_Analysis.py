@@ -344,11 +344,9 @@ else:
                     
                     analyzer = ForecastAnalyzer()
                     
-                    # Extract prices from new format
-                    forecast_prices = []
-                    for key, value in list(forecasts.items())[1:]:  # Skip 'Current'
                     # Analysis with safety check
                     if isinstance(forecasts, dict) and 'Current' in forecasts:
+                        # Extract prices from new format
                         forecast_prices = []
                         for key in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']:
                             value = forecasts.get(key, 0)

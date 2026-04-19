@@ -409,6 +409,9 @@ def render_prediction_table(predictions_dict, asset_name):
     Args:
         predictions_dict (dict): {'Current': price, timeframe: {'price': float, 'confidence': dict}}
         asset_name (str): Asset name for column header
+    """
+    import numpy as np
+    
     # Final safety guard: If predictions_dict is not a dict (it's a float), fail gracefully
     if not isinstance(predictions_dict, dict):
         st.error("AI Model returned incomplete data. Please train the model and sync macro data.")
@@ -451,41 +454,32 @@ def render_prediction_table(predictions_dict, asset_name):
             return
         
         change = price - current_price
-        change_pct = (change / current_price) * 100
+        change_pct = (change / current_price) * 100 if current_price != 0 else 0
         
         timeframes.append(key)
         prices.append(f"${price:,.2f}")
         changes.append(f"${change:+,.2f}")
         change_pcts.append(f"{change_pct:+.2f}%")
         
-        # Format confidence badge
         conf_label = confidence.get('label', 'N/A')
         conf_color = confidence.get('color', 'info')
         
-        # Map color to emoji
-        color_map = {
-            'success': '🟢',
-            'info': '🔵',
-            'warning': '🟡',
-            'error': '🔴'
-        }
+        # Custom emoji mapping for confidence
+        color_map = {'success': '🟢', 'info': '🔵', 'warning': '🟡', 'danger': '🔴', 'error': '🔴'}
         emoji = color_map.get(conf_color, '⚪')
         confidences.append(f"{emoji} {conf_label}")
-    
-    df = pd.DataFrame({
-        'Timeframe': timeframes,
-        f'{asset_name} Price': prices,
-        'Change': changes,
-        'Change %': change_pcts,
-        'Confidence': confidences
+
+    # Create Display DataFrame
+    display_df = pd.DataFrame({
+        "Timeframe": timeframes,
+        f"Target ({asset_name})": prices,
+        "Change ($)": changes,
+        "Change (%)": change_pcts,
+        "AI Confidence": confidences
     })
     
-    st.dataframe(
-        df, 
-        use_container_width=True, 
-        hide_index=True,
-        height=(len(df) + 1) * 35 + 3
-    )
+    # Static CSS-styled table approach using markdown for better control
+    st.dataframe(display_df, use_container_width=True, hide_index=True)
 
 
 def show_loading_message(message="Processing..."):
