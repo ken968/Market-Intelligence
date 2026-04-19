@@ -1,162 +1,162 @@
 [
     {
+        "date": "2026-04-19",
+        "title": "Meta Layoffs And AI Push Reframe Costs Margins And Valuation Story",
+        "description": "Meta Layoffs And AI Push Reframe Costs Margins And Valuation Story",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/meta-layoffs-ai-push-reframe-020707677.html?.tsrc=rss",
+        "sentiment": -0.022222222222222223,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "'Fix The Money': Michael Saylor Shares Endgame For Strategy's Bitcoin-Backed Credit Instruments",
+        "description": "'Fix The Money': Michael Saylor Shares Endgame For Strategy's Bitcoin-Backed Credit Instruments",
+        "url": "https://finance.yahoo.com/markets/crypto/articles/fix-money-michael-saylor-shares-010124912.html?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Meta Layoffs And AI Push Reframe Costs Margins And Valuation Story",
+        "description": "Meta Layoffs And AI Push Reframe Costs Margins And Valuation Story",
+        "url": "https://finnhub.io/api/news?id=4746840df9915b685f515973219064a467d319013b1acb30026de72f97bb3bd1",
+        "sentiment": -0.022222222222222223,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "'Fix The Money': Michael Saylor Shares Endgame For Strategy's Bitcoin-Backed Credit Instruments",
+        "description": "'Fix The Money': Michael Saylor Shares Endgame For Strategy's Bitcoin-Backed Credit Instruments",
+        "url": "https://finnhub.io/api/news?id=faccaf615c4463b368b5d0ea9212ad72d14af8446c8876e7a21ee2fe77f33eb8",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Bank of America revamps AMD stock price target",
+        "description": "Bank of America revamps AMD stock price target",
+        "url": "https://finnhub.io/api/news?id=393cea23a950e86ce6432d3a80f5bd95f6043928d4d4b48d345261031662d1a8",
+        "sentiment": 0.09666666666666668,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "This Is My Favorite \"Magnificent Seven\" Stock Headed Into Earnings",
+        "description": "This Is My Favorite \"Magnificent Seven\" Stock Headed Into Earnings",
+        "url": "https://finnhub.io/api/news?id=84ef00fe5d975fd4688347bab57e4d550c592da90113d6f01afc364ed9941921",
+        "sentiment": 0.5,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Broadcom (AVGO) Ranks Among Unrivaled Stocks of the Next 5 Years",
+        "description": "Broadcom (AVGO) Ranks Among Unrivaled Stocks of the Next 5 Years",
+        "url": "https://finnhub.io/api/news?id=3f83ec8a96315824587f05e70e5989d85e7f1aa7350183e4c5ce41efa5487856",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Meta Platforms (META) Expands AI Chip Deal with Broadcom",
+        "description": "Meta Platforms (META) Expands AI Chip Deal with Broadcom",
+        "url": "https://finnhub.io/api/news?id=338732decb161d3a057d92cce10f65b045effec31296c74ffeafd723ee6b355c",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Meta's Earnings Report Is Coming Up. Is It Time to Buy the Growth Stock?",
+        "description": "Meta's Earnings Report Is Coming Up. Is It Time to Buy the Growth Stock?",
+        "url": "https://finnhub.io/api/news?id=117a67a609475865623960a4a88b13277a28bbf2df48d216f8e8406a59222892",
+        "sentiment": -0.008333333333333331,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "I Asked ChatGPT How the Stock Market Would Look If We Ignored the 7 Biggest Stocks",
+        "description": "I Asked ChatGPT How the Stock Market Would Look If We Ignored the 7 Biggest Stocks",
+        "url": "https://finnhub.io/api/news?id=97bb4cfbec49d76df07a746c2e97adcb18645b2976090aff30c994723022911d",
+        "sentiment": 0.75,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Arista Networks Inc stock (US0404131064): Why Google Discover changes matter more now",
+        "description": "Arista Networks Inc stock (US0404131064): Why Google Discover changes matter more now",
+        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/arista-networks-inc-stock-us0404131064-why-google-discover-changes/69198919",
+        "sentiment": 0.11333333333333333,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Alphabet Inc. Class C stock (US02079K1079): Why AI dominance is suddenly worth a closer look",
+        "description": "Alphabet Inc. Class C stock (US02079K1079): Why AI dominance is suddenly worth a closer look",
+        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/alphabet-inc-class-c-stock-us02079k1079-why-ai-dominance-is-suddenly/69197820",
+        "sentiment": 0.10726190476190478,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Fear & Greed: 27.0 (Fear)",
+        "description": "Fear & Greed: 27.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.46,
+        "source": "Fear & Greed Index"
+    },
+    {
         "date": "2026-04-18",
-        "title": "What the Allbirds 'Hail Mary' says about the AI trade right now",
-        "description": "What the Allbirds 'Hail Mary' says about the AI trade right now",
-        "url": "https://finance.yahoo.com/news/what-the-allbirds-hail-mary-says-about-the-ai-trade-right-now-113847747.html?.tsrc=rss",
-        "sentiment": 0.3595238095238095,
+        "title": "Bank of America revamps AMD stock price target",
+        "description": "Bank of America revamps AMD stock price target",
+        "url": "https://www.thestreet.com/investing/stocks/bank-of-america-revamps-amd-stock-price-target?.tsrc=rss",
+        "sentiment": 0.09666666666666668,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-18",
-        "title": "The Zuckerberg AI Clone Reveals a Brutal Truth About Your Job Security in 2026",
-        "description": "The Zuckerberg AI Clone Reveals a Brutal Truth About Your Job Security in 2026",
-        "url": "https://247wallst.com/personal-finance/2026/04/18/the-zuckerberg-ai-clone-reveals-a-brutal-truth-about-your-job-security-in-2026/?.tsrc=rss",
-        "sentiment": -0.37,
+        "title": "This Is My Favorite \"Magnificent Seven\" Stock Headed Into Earnings",
+        "description": "This Is My Favorite \"Magnificent Seven\" Stock Headed Into Earnings",
+        "url": "https://www.fool.com/investing/2026/04/18/this-is-my-favorite-magnificent-seven-stock-headed/?.tsrc=rss",
+        "sentiment": 0.5,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-18",
-        "title": "Wall Street Bullish on Alphabet Inc. (GOOGL), But Stifel Lowered PT, Here\u2019s Why",
-        "description": "Wall Street Bullish on Alphabet Inc. (GOOGL), But Stifel Lowered PT, Here\u2019s Why",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/wall-street-bullish-alphabet-inc-094228587.html?.tsrc=rss",
-        "sentiment": 0.08,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "CoreWeave (CRWV) Price Target Raised to $156",
-        "description": "CoreWeave (CRWV) Price Target Raised to $156",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/coreweave-crwv-price-target-raised-083654647.html?.tsrc=rss",
-        "sentiment": 0.3375,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Meta Plans Fresh Layoffs Starting May, AI Strategy in Focus",
-        "description": "Meta Plans Fresh Layoffs Starting May, AI Strategy in Focus",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/meta-plans-fresh-layoffs-starting-022738829.html?.tsrc=rss",
-        "sentiment": 0.17904040404040403,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Meta plans to slash roughly 8,000 jobs next month: report",
-        "description": "Meta plans to slash roughly 8,000 jobs next month: report",
-        "url": "https://www.foxbusiness.com/technology/meta-plans-major-layoffs-next-month-more-cuts-expected-report?.tsrc=rss",
+        "title": "Broadcom (AVGO) Ranks Among Unrivaled Stocks of the Next 5 Years",
+        "description": "Broadcom (AVGO) Ranks Among Unrivaled Stocks of the Next 5 Years",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/broadcom-avgo-ranks-among-unrivaled-184858144.html?.tsrc=rss",
         "sentiment": 0.0,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-18",
-        "title": "What the Allbirds 'Hail Mary' says about the AI trade right now",
-        "description": "What the Allbirds 'Hail Mary' says about the AI trade right now",
-        "url": "https://finnhub.io/api/news?id=92d939d85e45e9ed1a72da9c966ce281092e5770f5d295ee0ef781e17f4b6f5e",
-        "sentiment": 0.3595238095238095,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "The Zuckerberg AI Clone Reveals a Brutal Truth About Your Job Security in 2026",
-        "description": "The Zuckerberg AI Clone Reveals a Brutal Truth About Your Job Security in 2026",
-        "url": "https://finnhub.io/api/news?id=b895161b2c2fdf0e43839a53b4999156357a30cf7e870d1c21c255f4fb50ecbf",
-        "sentiment": -0.37,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Wall Street Bullish on Alphabet Inc. (GOOGL), But Stifel Lowered PT, Here\u2019s Why",
-        "description": "Wall Street Bullish on Alphabet Inc. (GOOGL), But Stifel Lowered PT, Here\u2019s Why",
-        "url": "https://finnhub.io/api/news?id=f3b009d3f8e2449fba38dcb00cb72c608f51defc28db643a544d938cf0dd08f1",
-        "sentiment": 0.08,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "CoreWeave (CRWV) Price Target Raised to $156",
-        "description": "CoreWeave (CRWV) Price Target Raised to $156",
-        "url": "https://finnhub.io/api/news?id=f6e9aaf96e168e6ee009f64d99c8fee0e5240e1e6707948d8b730cdc5354d59d",
-        "sentiment": 0.3375,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Meta Plans Fresh Layoffs Starting May, AI Strategy in Focus",
-        "description": "Meta Plans Fresh Layoffs Starting May, AI Strategy in Focus",
-        "url": "https://finnhub.io/api/news?id=31d8a6e9a7f1aa7310a83448912eaa4f1e1af8e39a5675c339914e898bd19e9b",
-        "sentiment": 0.17904040404040403,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Meta plans to slash roughly 8,000 jobs next month: report",
-        "description": "Meta plans to slash roughly 8,000 jobs next month: report",
-        "url": "https://finnhub.io/api/news?id=df8134bd2df82527c20c6c21d697798d0ca2708c750572b42abb58abcdb1af9f",
+        "title": "Meta Platforms (META) Expands AI Chip Deal with Broadcom",
+        "description": "Meta Platforms (META) Expands AI Chip Deal with Broadcom",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/meta-platforms-meta-expands-ai-184721791.html?.tsrc=rss",
         "sentiment": 0.0,
-        "source": "Finnhub"
+        "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-18",
-        "title": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
-        "description": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
-        "url": "https://finnhub.io/api/news?id=566792c6a7d797862e00e6c88388d73f37c3283b255334c9e66598c2a51dd258",
-        "sentiment": 0.15,
-        "source": "Finnhub"
+        "title": "Meta's Earnings Report Is Coming Up. Is It Time to Buy the Growth Stock?",
+        "description": "Meta's Earnings Report Is Coming Up. Is It Time to Buy the Growth Stock?",
+        "url": "https://www.fool.com/investing/2026/04/18/metas-earnings-report-is-coming-up-is-it-time-to-b/?.tsrc=rss",
+        "sentiment": -0.008333333333333331,
+        "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-18",
-        "title": "How the SpaceX IPO could rewrite space investing",
-        "description": "How the SpaceX IPO could rewrite space investing",
-        "url": "https://finnhub.io/api/news?id=0a822f2730a6046eb91940d69656faf47009995bff406cdc39e5fad567a55897",
-        "sentiment": 0.0,
-        "source": "Finnhub"
+        "title": "I Asked ChatGPT How the Stock Market Would Look If We Ignored the 7 Biggest Stocks",
+        "description": "I Asked ChatGPT How the Stock Market Would Look If We Ignored the 7 Biggest Stocks",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/asked-chatgpt-stock-market-look-173906448.html?.tsrc=rss",
+        "sentiment": 0.75,
+        "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-18",
-        "title": "Can Muse Spark Supercharge Meta Platforms (META)\u2019s Ad Business?",
-        "description": "Can Muse Spark Supercharge Meta Platforms (META)\u2019s Ad Business?",
-        "url": "https://finnhub.io/api/news?id=f72aec7def839512840718610039bd741114c08ae15ca238ae28602f5ef153cf",
-        "sentiment": 0.48333333333333334,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Allbirds stock gains 350% this week as shoemaker pivots to AI",
-        "description": "Allbirds stock gains 350% this week as shoemaker pivots to AI",
-        "url": "https://finnhub.io/api/news?id=e17147fe1e3e56bf31fab68f2bd499069b815ebcd338fd266743c1a6d7154c0a",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Exclusive-Meta targets May 20 for first wave of layoffs; additional cuts later in 2026",
-        "description": "Exclusive-Meta targets May 20 for first wave of layoffs; additional cuts later in 2026",
-        "url": "https://finnhub.io/api/news?id=48e95c5efbcc1cc2285777b3cf5ac5fa92ce47bcb8550a88d4de9703fc3df0f7",
-        "sentiment": 0.057575757575757586,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Why This $59 Million MercadoLibre Buy Follows a 12% Stock Drop",
-        "description": "Why This $59 Million MercadoLibre Buy Follows a 12% Stock Drop",
-        "url": "https://finnhub.io/api/news?id=37b4e8803bca217b6f6881dc1601a788874770fce38d34689a41d307b9b51766",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Sara-Bay Financial Makes Big Bet on MercadoLibre, Adds $12 Million Worth of Stock",
-        "description": "Sara-Bay Financial Makes Big Bet on MercadoLibre, Adds $12 Million Worth of Stock",
-        "url": "https://finnhub.io/api/news?id=739a497d9f24257acfe0c187308a74f917fea4f4c621b9a448f7ecd75927ad61",
-        "sentiment": 0.09999999999999999,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Stocks Hit Records on Iran Truce Hopes. Why the Rally May Have Further to Run.",
-        "description": "Stocks Hit Records on Iran Truce Hopes. Why the Rally May Have Further to Run.",
-        "url": "https://finnhub.io/api/news?id=1c83baf06c238964774d89ad0833c9660326380ef87bc74f28e6eb6d90ad0932",
-        "sentiment": 0.15,
-        "source": "Finnhub"
+        "title": "Venture Capitalist Marc Andreessen: 'The Grand Unification Of AI And Crypto Is About To Happen'",
+        "description": "Venture Capitalist Marc Andreessen: 'The Grand Unification Of AI And Crypto Is About To Happen'",
+        "url": "https://finance.yahoo.com/markets/crypto/articles/venture-capitalist-marc-andreessen-grand-163112162.html?.tsrc=rss",
+        "sentiment": 0.1,
+        "source": "Yahoo RSS"
     }
 ]

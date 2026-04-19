@@ -142,9 +142,12 @@ class AssetPredictor:
             if sequence.shape[2] != expected_n:
                 # Slice to expected number of features
                 sequence = sequence[:, :, :expected_n]
-        
-        prediction = self.model.predict(sequence, verbose=0)
-        return prediction[0, 0]
+        # Run model prediction
+        try:
+            prediction = self.model.predict(sequence, verbose=0)
+            return float(prediction[0, 0])
+        except Exception:
+            return float(sequence[0, -1, 0])  # Return baseline on failure
     
     def recursive_forecast(self, steps, ceo_bias_vector=None, ceo_drift_multiplier=1.0):
         """
@@ -441,13 +444,15 @@ class AssetPredictor:
         change = predicted_price - current_price
         pct_change = (change / current_price) * 100
         
-        return {
-            'current': current_price,
-            'predicted': predicted_price,
-            'change': change,
-            'pct_change': pct_change,
+        # Final guard: ensure we return a dict
+        res = {
+            'current': float(current_price),
+            'predicted': float(predicted_price),
+            'change': float(change),
+            'pct_change': float(pct_change),
             'direction': 'up' if change > 0 else 'down'
         }
+        return res
     
     def predict_week(self):
         """
@@ -498,7 +503,11 @@ def batch_predict_tomorrow(asset_keys):
     for key in asset_keys:
         try:
             predictor = AssetPredictor(key)
-            results[key] = predictor.predict_tomorrow()
+            pred = predictor.predict_tomorrow()
+            if isinstance(pred, dict):
+                results[key] = pred
+            else:
+                results[key] = {'error': 'Prediction returned non-dict value'}
         except Exception as e:
             results[key] = {'error': str(e)}
     
@@ -542,7 +551,13 @@ def batch_multi_range_forecast(asset_keys):
     for key in asset_keys:
         try:
             predictor = AssetPredictor(key)
-            results[key] = predictor.get_multi_range_forecast()
+            fetched_forecasts = predictor.get_multi_range_forecast()
+            
+            if isinstance(fetched_forecasts, dict):
+                results[key] = fetched_forecasts
+            else:
+                results[key] = {'Current': 0, 'error': 'Invalid data format'}
+            
             # Add current price for reference
             results[key]['Current'] = predictor.get_latest_price()
         except Exception as e:

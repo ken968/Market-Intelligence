@@ -234,7 +234,13 @@ else:
             with show_loading_message("AI analyzing 60-day patterns..."):
                 try:
                     predictor = AssetPredictor('gold')
-                    forecasts = predictor.get_multi_range_forecast()
+                    fetched_forecasts = predictor.get_multi_range_forecast()
+                    
+                    # Ensure forecasts is a dict to prevent 'float' attribute errors
+                    if isinstance(fetched_forecasts, dict):
+                        forecasts = fetched_forecasts
+                    else:
+                        forecasts = {'Current': 0, 'error': 'Invalid data format'}
                     
                     # Display table
                     st.markdown("####  Forecast Results")

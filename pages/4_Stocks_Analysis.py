@@ -401,8 +401,13 @@ else:
                     enforcer = CorrelationEnforcer(reference_ticker='SPY')
                     
                     # Get SPY forecast for comparison
-                    spy_predictor = AssetPredictor('spy')
-                    spy_forecasts = spy_predictor.get_multi_range_forecast()
+                    predictor = AssetPredictor('spy')
+                    fetched_forecasts = predictor.get_multi_range_forecast()
+                    
+                    if isinstance(fetched_forecasts, dict):
+                        spy_forecasts = fetched_forecasts
+                    else:
+                        spy_forecasts = {'Current': 0, 'error': 'Invalid data format'}
                     
                     # Prepare data for enforcement
                     raw_predictions = {
@@ -479,6 +484,14 @@ else:
                 st.markdown("####  30-Day Probability Cloud (Fan Chart)")
                 df_stock = pd.read_csv(ASSETS[forecast_stock.lower()]['data_file'])
                 df_stock['Date'] = pd.to_datetime(df_stock['Date'])
+                
+                predictor = AssetPredictor(forecast_stock.lower())
+                fetched_forecasts = predictor.get_multi_range_forecast()
+                
+                if isinstance(fetched_forecasts, dict):
+                    forecasts = fetched_forecasts
+                else:
+                    forecasts = {'Current': 0, 'error': 'Invalid data format'}
                 
                 month_data = forecasts.get('1 Month', {})
                 forecast_30d = month_data.get('series', [])

@@ -7,6 +7,7 @@ import streamlit as st
 import pandas as pd
 import json
 import os
+import sys
 import subprocess
 import glob
 from utils.config import ASSETS
@@ -94,7 +95,7 @@ if st.button("Run Backtesting"):
         # For simplicity, we just block until it's done
         with st.spinner(f"Compiling intelligence layers and running rigorous backtest for {selected_asset_for_test}..."):
             result = subprocess.run(
-                ["python", "scripts/backtest_engine.py", selected_asset_for_test.lower()],
+                [sys.executable, "scripts/backtest_engine.py", selected_asset_for_test.lower()],
                 capture_output=True, text=True
             )
             

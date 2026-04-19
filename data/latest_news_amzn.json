@@ -1,162 +1,162 @@
 [
     {
-        "date": "2026-04-18",
-        "title": "What the Allbirds 'Hail Mary' says about the AI trade right now",
-        "description": "What the Allbirds 'Hail Mary' says about the AI trade right now",
-        "url": "https://finance.yahoo.com/news/what-the-allbirds-hail-mary-says-about-the-ai-trade-right-now-113847747.html?.tsrc=rss",
-        "sentiment": 0.3595238095238095,
+        "date": "2026-04-19",
+        "title": "Jim Cramer Shares Why Amazon.com (AMZN) is Better Than Microsoft",
+        "description": "Jim Cramer Shares Why Amazon.com (AMZN) is Better Than Microsoft",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/jim-cramer-shares-why-amazon-042715529.html?.tsrc=rss",
+        "sentiment": 0.0625,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-18",
-        "title": "Amazon, FTC settlement claim deadline is 100 days away. How to sign up",
-        "description": "Amazon, FTC settlement claim deadline is 100 days away. How to sign up",
-        "url": "https://www.usatoday.com/story/money/2026/04/18/amazon-prime-ftc-settlement-lawsuit-sign-up/89604649007/?.tsrc=rss",
+        "date": "2026-04-19",
+        "title": "'Fix The Money': Michael Saylor Shares Endgame For Strategy's Bitcoin-Backed Credit Instruments",
+        "description": "'Fix The Money': Michael Saylor Shares Endgame For Strategy's Bitcoin-Backed Credit Instruments",
+        "url": "https://finance.yahoo.com/markets/crypto/articles/fix-money-michael-saylor-shares-010124912.html?.tsrc=rss",
         "sentiment": 0.0,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-18",
-        "title": "OpenAI Calls Amazon.com (AMZN) Partnership as a Key Driver of Enterprise Growth",
-        "description": "OpenAI Calls Amazon.com (AMZN) Partnership as a Key Driver of Enterprise Growth",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/openai-calls-amazon-com-amzn-094216838.html?.tsrc=rss",
-        "sentiment": 0.06818181818181818,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Amazon.com, Inc. (AMZN) Expands Partnership with NiSource",
-        "description": "Amazon.com, Inc. (AMZN) Expands Partnership with NiSource",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/amazon-com-inc-amzn-expands-084934546.html?.tsrc=rss",
-        "sentiment": 0.16999999999999998,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Why Rigetti Computing (RGTI) Is Up 34.9% After Launching Its 108-Qubit Cepheus-1-108Q System",
-        "description": "Why Rigetti Computing (RGTI) Is Up 34.9% After Launching Its 108-Qubit Cepheus-1-108Q System",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/why-rigetti-computing-rgti-34-060510609.html?.tsrc=rss",
-        "sentiment": 0.13125,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Bezos Just Bought What Musk Wanted \u2014 And The $200B Space War Is Escalating",
-        "description": "Bezos Just Bought What Musk Wanted \u2014 And The $200B Space War Is Escalating",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/bezos-just-bought-musk-wanted-003139651.html?.tsrc=rss",
-        "sentiment": -0.10595238095238092,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "What the Allbirds 'Hail Mary' says about the AI trade right now",
-        "description": "What the Allbirds 'Hail Mary' says about the AI trade right now",
-        "url": "https://finnhub.io/api/news?id=92d939d85e45e9ed1a72da9c966ce281092e5770f5d295ee0ef781e17f4b6f5e",
-        "sentiment": 0.3595238095238095,
+        "date": "2026-04-19",
+        "title": "Jim Cramer Shares Why Amazon.com (AMZN) is Better Than Microsoft",
+        "description": "Jim Cramer Shares Why Amazon.com (AMZN) is Better Than Microsoft",
+        "url": "https://finnhub.io/api/news?id=ec055683cd847e094244314e388781b3bb14dba8913650aa8cc1b6a2a0a2ab03",
+        "sentiment": 0.0625,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-18",
-        "title": "Amazon, FTC settlement claim deadline is 100 days away. How to sign up",
-        "description": "Amazon, FTC settlement claim deadline is 100 days away. How to sign up",
-        "url": "https://finnhub.io/api/news?id=520a4295e47c58c4fed623f651f62c21553758f058058f1dcfc86ebed1d26d2e",
+        "date": "2026-04-19",
+        "title": "'Fix The Money': Michael Saylor Shares Endgame For Strategy's Bitcoin-Backed Credit Instruments",
+        "description": "'Fix The Money': Michael Saylor Shares Endgame For Strategy's Bitcoin-Backed Credit Instruments",
+        "url": "https://finnhub.io/api/news?id=faccaf615c4463b368b5d0ea9212ad72d14af8446c8876e7a21ee2fe77f33eb8",
         "sentiment": 0.0,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-18",
-        "title": "OpenAI Calls Amazon.com (AMZN) Partnership as a Key Driver of Enterprise Growth",
-        "description": "OpenAI Calls Amazon.com (AMZN) Partnership as a Key Driver of Enterprise Growth",
-        "url": "https://finnhub.io/api/news?id=631a8c60f77ccedfe3e625738abd56ac628216228b7294101fb6c6fc896eb09c",
-        "sentiment": 0.06818181818181818,
+        "date": "2026-04-19",
+        "title": "Did Amazon Just Say Checkmate to Nvidia?",
+        "description": "Did Amazon Just Say Checkmate to Nvidia?",
+        "url": "https://finnhub.io/api/news?id=6db2ec2c07cd86aa2c0f0c63c6075d878b05d8279f802ea9641179edbe80af31",
+        "sentiment": -0.3,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-18",
-        "title": "Amazon.com, Inc. (AMZN) Expands Partnership with NiSource",
-        "description": "Amazon.com, Inc. (AMZN) Expands Partnership with NiSource",
-        "url": "https://finnhub.io/api/news?id=de4ac06b89e66bf2aaafc3ff049ea3737bdf50ff0fb52a93962797bc6b0b2a11",
-        "sentiment": 0.16999999999999998,
+        "date": "2026-04-19",
+        "title": "Is It Too Late To Consider Amazon.com (AMZN) After Its Recent Share Price Rally?",
+        "description": "Is It Too Late To Consider Amazon.com (AMZN) After Its Recent Share Price Rally?",
+        "url": "https://finnhub.io/api/news?id=5fae57f9abf80a03252e881c8795327c042daa8a65309e39be4d73391bc552b6",
+        "sentiment": 0.07083333333333333,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-18",
-        "title": "Why Rigetti Computing (RGTI) Is Up 34.9% After Launching Its 108-Qubit Cepheus-1-108Q System",
-        "description": "Why Rigetti Computing (RGTI) Is Up 34.9% After Launching Its 108-Qubit Cepheus-1-108Q System",
-        "url": "https://finnhub.io/api/news?id=c1d5b05c997814c2a7444d75d490664ac235c25b0a02e89d32f8f48738b681fa",
-        "sentiment": 0.13125,
+        "date": "2026-04-19",
+        "title": "This Is My Favorite \"Magnificent Seven\" Stock Headed Into Earnings",
+        "description": "This Is My Favorite \"Magnificent Seven\" Stock Headed Into Earnings",
+        "url": "https://finnhub.io/api/news?id=84ef00fe5d975fd4688347bab57e4d550c592da90113d6f01afc364ed9941921",
+        "sentiment": 0.5,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-18",
-        "title": "Bezos Just Bought What Musk Wanted \u2014 And The $200B Space War Is Escalating",
-        "description": "Bezos Just Bought What Musk Wanted \u2014 And The $200B Space War Is Escalating",
-        "url": "https://finnhub.io/api/news?id=3f8474d785b8b80fda478eef39b3b9a9cd5bacf83822ef05254afc997781eadc",
-        "sentiment": -0.10595238095238092,
+        "date": "2026-04-19",
+        "title": "AI chip startup Cerebras files for IPO",
+        "description": "AI chip startup Cerebras files for IPO",
+        "url": "https://finnhub.io/api/news?id=942d2c19cee7d9f5e558bc794c2428143a99c53a5747a06dd90537baab39ad69",
+        "sentiment": 0.26666666666666666,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-18",
-        "title": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
-        "description": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
-        "url": "https://finnhub.io/api/news?id=566792c6a7d797862e00e6c88388d73f37c3283b255334c9e66598c2a51dd258",
-        "sentiment": 0.15,
+        "date": "2026-04-19",
+        "title": "Oracle adds $100B in market cap on major announcement",
+        "description": "Oracle adds $100B in market cap on major announcement",
+        "url": "https://finnhub.io/api/news?id=f80a3bd2bfe074164290e82c0da88c7d7ea51972292c5ba4bfa68678e7276940",
+        "sentiment": 0.18035714285714285,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-18",
-        "title": "Cerebras Files for IPO as Demand Surges for More Efficient AI Chips",
-        "description": "Cerebras Files for IPO as Demand Surges for More Efficient AI Chips",
-        "url": "https://finnhub.io/api/news?id=4d04941a1c6ce963e2afd55af75066e4beae0e7cdbedd26da163780b29880439",
-        "sentiment": 0.125,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "How the SpaceX IPO could rewrite space investing",
-        "description": "How the SpaceX IPO could rewrite space investing",
-        "url": "https://finnhub.io/api/news?id=0a822f2730a6046eb91940d69656faf47009995bff406cdc39e5fad567a55897",
+        "date": "2026-04-19",
+        "title": "Tesla rolls out robotaxis in Dallas and Houston",
+        "description": "Tesla rolls out robotaxis in Dallas and Houston",
+        "url": "https://finnhub.io/api/news?id=ee27243e36c091a27e9a8bd8c9ef9b0ef346c0560a7b7ea722cdbf16eba49802",
         "sentiment": 0.0,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-18",
-        "title": "Why Iridium Stock Soared by 22% This Week",
-        "description": "Why Iridium Stock Soared by 22% This Week",
-        "url": "https://finnhub.io/api/news?id=7d629679ca7073e04a5ae230e5ada3c87ce47b5bca0c351f1a324c2c3f2b1a18",
-        "sentiment": 0.16,
+        "date": "2026-04-19",
+        "title": "Amazon.com, Inc. (AMZN) : One of the Top Unrivaled Stocks of the Next 5 Years?",
+        "description": "Amazon.com, Inc. (AMZN) : One of the Top Unrivaled Stocks of the Next 5 Years?",
+        "url": "https://finnhub.io/api/news?id=ba9280553d41e6f20b9a820539e44bea3e6cbb262b758351357d83dbded3219f",
+        "sentiment": 0.16666666666666666,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-18",
-        "title": "Dow jumps 800 points, S&P 500 at new record, Nasdaq gains 6.8% this week",
-        "description": "Dow jumps 800 points, S&P 500 at new record, Nasdaq gains 6.8% this week",
-        "url": "https://finnhub.io/api/news?id=7748680a5edede3e9a017bf2a485772e0c5295de9c8cc7ad4524ee99c71471ea",
-        "sentiment": 0.18892045454545456,
+        "date": "2026-04-19",
+        "title": "Amazon vs. Walmart: This Isn't Even Close",
+        "description": "Amazon vs. Walmart: This Isn't Even Close",
+        "url": "https://finnhub.io/api/news?id=36c952cf0fabf0b7d20b6b88e3b1d80196987110b476eceb3f1ac7dc52f3156a",
+        "sentiment": 0.09999999999999999,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-18",
-        "title": "Sector Update: Tech Stocks Gain Late Afternoon",
-        "description": "Sector Update: Tech Stocks Gain Late Afternoon",
-        "url": "https://finnhub.io/api/news?id=372fe638d451869b9c7b1b84811825cc9803b7deae1e3c13a32b730331b2b605",
-        "sentiment": -0.11666666666666665,
+        "date": "2026-04-19",
+        "title": "Amazon Vs. SpaceX Space Race Heats Up At Difficult Time For Musk's Upcoming IPO",
+        "description": "Amazon Vs. SpaceX Space Race Heats Up At Difficult Time For Musk's Upcoming IPO",
+        "url": "https://finnhub.io/api/news?id=a0d21b0e58784058db2948a405c872bd53c829bdf8fca05331b0f4e7419a0ad8",
+        "sentiment": -0.19999999999999998,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-18",
-        "title": "3 Reasons to Buy Oracle Stock as the AI Trade Gets Riskier",
-        "description": "3 Reasons to Buy Oracle Stock as the AI Trade Gets Riskier",
-        "url": "https://finnhub.io/api/news?id=ea8a51694beb199fd6e15f5161ce95557db80fafcc12e6ce393db5b8db7ca03f",
-        "sentiment": 0.1,
+        "date": "2026-04-19",
+        "title": "I Asked ChatGPT How the Stock Market Would Look If We Ignored the 7 Biggest Stocks",
+        "description": "I Asked ChatGPT How the Stock Market Would Look If We Ignored the 7 Biggest Stocks",
+        "url": "https://finnhub.io/api/news?id=97bb4cfbec49d76df07a746c2e97adcb18645b2976090aff30c994723022911d",
+        "sentiment": 0.75,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-18",
-        "title": "NVIDIA vs. TSMC: One AI Stock Is a Clear Buy Right Now",
-        "description": "NVIDIA vs. TSMC: One AI Stock Is a Clear Buy Right Now",
-        "url": "https://finnhub.io/api/news?id=be913470fadaeb71babee0c951af8c6d4a66e63b7f8a5c8d2ee6a7a8c4b2cb30",
-        "sentiment": 0.40079365079365076,
-        "source": "Finnhub"
+        "date": "2026-04-19",
+        "title": "Cencora Inc stock (US03073E1055): Why Google Discover changes matter more now",
+        "description": "Cencora Inc stock (US03073E1055): Why Google Discover changes matter more now",
+        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/cencora-inc-stock-us03073e1055-why-google-discover-changes-matter-more/69200616",
+        "sentiment": 0.1946969696969697,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "\u201cWhere is Microsoft (MSFT)?\u201d Wonders Jim Cramer",
+        "description": "\u201cWhere is Microsoft (MSFT)?\u201d Wonders Jim Cramer",
+        "url": "https://www.insidermonkey.com/blog/where-is-microsoft-msft-wonders-jim-cramer-1740639/",
+        "sentiment": 0.11481481481481481,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Jim Cramer Shares Why Amazon.com (AMZN) is Better Than Microsoft",
+        "description": "Jim Cramer Shares Why Amazon.com (AMZN) is Better Than Microsoft",
+        "url": "https://www.insidermonkey.com/blog/jim-cramer-shares-why-amazon-com-amzn-is-better-than-microsoft-1740640/",
+        "sentiment": 0.09404761904761905,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Walmart Inc. stock (US9311421039): Is its everyday low price strategy strong enough for omnichannel growth?",
+        "description": "Walmart Inc. stock (US9311421039): Is its everyday low price strategy strong enough for omnichannel growth?",
+        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/walmart-inc-stock-us9311421039-is-its-everyday-low-price-strategy/69199612",
+        "sentiment": 0.019444444444444445,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Costco Wholesale Corporation stock (US22160K1051): Is its membership model strong enough to unlock n",
+        "description": "Costco Wholesale Corporation stock (US22160K1051): Is its membership model strong enough to unlock n",
+        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/costco-wholesale-corporation-stock-us22160k1051-is-its-membership-model/69198552",
+        "sentiment": 0.1013888888888889,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Alphabet Inc. Class A stock (US02079K3059): Is AI velocity now the real test for sustained growth?",
+        "description": "Alphabet Inc. Class A stock (US02079K3059): Is AI velocity now the real test for sustained growth?",
+        "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/alphabet-inc-class-a-stock-us02079k3059-is-ai-velocity-now-the-real/69198053",
+        "sentiment": 0.12545454545454546,
+        "source": "Alpha Vantage"
     }
 ]

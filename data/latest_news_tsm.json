@@ -1,11 +1,67 @@
 [
     {
+        "date": "2026-04-19",
+        "title": "Jim Cramer Didn\u2019t Hold Back When Discussing Taiwan Semiconductor (TSM) Sellers",
+        "description": "Jim Cramer Didn\u2019t Hold Back When Discussing Taiwan Semiconductor (TSM) Sellers",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/jim-cramer-didn-t-hold-043131519.html?.tsrc=rss",
+        "sentiment": -0.010000000000000009,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Fear & Greed: 27.0 (Fear)",
+        "description": "Fear & Greed: 27.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.46,
+        "source": "Fear & Greed Index"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "BofA Raises TSMC Price Target on Strong Outlook, Keeps Buy Rating",
+        "description": "BofA Raises TSMC Price Target on Strong Outlook, Keeps Buy Rating",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/bofa-raises-tsmc-price-target-184809413.html?.tsrc=rss",
+        "sentiment": 0.07261904761904764,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Analysts rerate Taiwan Semiconductor stock after earnings",
+        "description": "Analysts rerate Taiwan Semiconductor stock after earnings",
+        "url": "https://www.thestreet.com/investing/stocks/analysts-rerate-taiwan-semiconductor-stock-after-earnings?.tsrc=rss",
+        "sentiment": 0.32222222222222224,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "Chip Stocks and Bank Earnings Extravaganza",
+        "description": "Chip Stocks and Bank Earnings Extravaganza",
+        "url": "https://www.fool.com/investing/2026/04/18/chip-stocks-and-bank-earnings-extravaganza/?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
         "date": "2026-04-18",
         "title": "Caterpillar, Nvidia Chipmaker Lead Five Stocks Near Buy Points",
         "description": "Caterpillar, Nvidia Chipmaker Lead Five Stocks Near Buy Points",
         "url": "https://finance.yahoo.com/m/5cf88f83-2be7-3e8c-b806-b2694b9e41a9/caterpillar%2C-nvidia-chipmaker.html?.tsrc=rss",
         "sentiment": 0.1,
         "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "TSMC Q4: Investors Are Still Underestimating The TAM Of AI Accelerators",
+        "description": "TSMC Q4: Investors Are Still Underestimating The TAM Of AI Accelerators",
+        "url": "https://finnhub.io/api/news?id=a35b9d3d271321480005b0b72ca18803657214e9a2bdb751b5f1bff6e9075e4f",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-18",
+        "title": "ASML: Critical EUV Bottleneck Holding Back The AI Boom",
+        "description": "ASML: Critical EUV Bottleneck Holding Back The AI Boom",
+        "url": "https://finnhub.io/api/news?id=885dc4cd4e4e8ee7f3404fd9350104c02d00b0d24ca68b069e85147b6cf922e2",
+        "sentiment": 0.0,
+        "source": "Finnhub"
     },
     {
         "date": "2026-04-18",
@@ -101,62 +157,6 @@
         "description": "Stock Market Hits Highs On Iran Hopes; Goldman Sachs, Netflix, Taiwan Semiconductor In Focus: Weekly Review",
         "url": "https://finance.yahoo.com/m/3f785ef8-8ee7-38c1-9b3b-5b88e57efad9/stock-market-hits-highs-on.html?.tsrc=rss",
         "sentiment": 0.06818181818181818,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Stifel Upgrades Onto Innovation to Buy With a Massive New Price Target: Did the Market Miss a Huge Semiconductor Signal?",
-        "description": "Stifel Upgrades Onto Innovation to Buy With a Massive New Price Target: Did the Market Miss a Huge Semiconductor Signal?",
-        "url": "https://247wallst.com/investing/2026/04/17/stifel-upgrades-onto-innovation-to-buy-with-a-massive-new-price-target-did-the-market-miss-a-huge-semiconductor-signal/?.tsrc=rss",
-        "sentiment": 0.20530303030303027,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Taiwan Semiconductor Q1 Earnings Beat Estimates, Revenues Rise Y/Y",
-        "description": "Taiwan Semiconductor Q1 Earnings Beat Estimates, Revenues Rise Y/Y",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/taiwan-semiconductor-q1-earnings-beat-144400227.html?.tsrc=rss",
-        "sentiment": 0.3416666666666667,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Tesla stock snaps 8-week losing streak with earnings ahead",
-        "description": "Tesla stock snaps 8-week losing streak with earnings ahead",
-        "url": "https://finance.yahoo.com/markets/stocks/article/tesla-stock-snaps-8-week-losing-streak-with-earnings-ahead-130116963.html?.tsrc=rss",
-        "sentiment": 0.2375,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "TSMC posts Q1 revenue surge of 40.6% YoY",
-        "description": "TSMC posts Q1 revenue surge of 40.6% YoY",
-        "url": "https://www.manufacturingdive.com/news/tsmc-q1-2026-revenue-q2-guidance-ai-arizona/817728/?.tsrc=rss",
-        "sentiment": 0.43333333333333335,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Dow Jones Futures Rise, Oil Prices Fall On Trump's Iran Comments; Netflix Dives",
-        "description": "Dow Jones Futures Rise, Oil Prices Fall On Trump's Iran Comments; Netflix Dives",
-        "url": "https://finance.yahoo.com/m/de0d09c2-e120-3a06-b712-ed53b63caeb8/dow-jones-futures-rise%2C-oil.html?.tsrc=rss",
-        "sentiment": -0.7,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "AMD Stock Bulldozes Through a 12-Day Winning Streak as U.S.-Iran Ceasefire Fires Up Risk-On Chip Rally",
-        "description": "AMD Stock Bulldozes Through a 12-Day Winning Streak as U.S.-Iran Ceasefire Fires Up Risk-On Chip Rally",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/amd-stock-bulldozes-12-day-115357174.html?.tsrc=rss",
-        "sentiment": 0.3045454545454545,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Musk Moving at \u201cLight Speed\u201d to Sign Up Suppliers for $25B Terafab Chip Dream",
-        "description": "Musk Moving at \u201cLight Speed\u201d to Sign Up Suppliers for $25B Terafab Chip Dream",
-        "url": "https://finance.yahoo.com/sectors/technology/articles/musk-moving-light-speed-sign-110616588.html?.tsrc=rss",
-        "sentiment": 0.2,
         "source": "Yahoo RSS"
     }
 ]

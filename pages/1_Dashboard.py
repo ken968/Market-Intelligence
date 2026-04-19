@@ -256,7 +256,7 @@ try:
             fig_gauge.update_layout(
                 template='plotly_dark',
                 height=450,
-                margin=dict(l=20, r=20, t=80, b=10)
+                margin=dict(l=30, r=30, t=110, b=10)
             )
             st.plotly_chart(fig_gauge, use_container_width=True)
 

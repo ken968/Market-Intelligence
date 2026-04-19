@@ -2,8 +2,8 @@
     "asset": "btc",
     "hit_ratio_3layer": 49.39613526570048,
     "hit_ratio_lstm": 49.39613526570048,
-    "rmse_3layer": 2263.9845960180537,
-    "rmse_lstm": 35857.10009111327,
+    "rmse_3layer": 2264.6056772063853,
+    "rmse_lstm": 41070.029732076706,
     "test_samples": 829,
     "start_test_date": "2024-01-11",
     "end_test_date": "2026-04-18"
