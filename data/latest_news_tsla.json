@@ -1,162 +1,162 @@
 [
     {
-        "date": "2026-04-19",
-        "title": "Why April 22 Could Be a Huge Day for Tesla Investors",
-        "description": "Why April 22 Could Be a Huge Day for Tesla Investors",
-        "url": "https://www.fool.com/investing/2026/04/19/why-april-22-could-be-huge-day-for-tesla-stock/?.tsrc=rss",
-        "sentiment": 0.39999999999999997,
+        "date": "2026-04-20",
+        "title": "Tesla Earnings: EV Sales Gain As Cash Flows Turn Negative",
+        "description": "Tesla Earnings: EV Sales Gain As Cash Flows Turn Negative",
+        "url": "https://finance.yahoo.com/m/d5b0b173-409e-350e-b150-fbd837490711/tesla-earnings%3A-ev-sales-gain.html?.tsrc=rss",
+        "sentiment": -0.3,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Jim Cramer Says \u201cI\u2019m Blessing Rocket Lab (RKLB) Because It\u2019s Got a $1.85 Billion Backlog\u201d",
-        "description": "Jim Cramer Says \u201cI\u2019m Blessing Rocket Lab (RKLB) Because It\u2019s Got a $1.85 Billion Backlog\u201d",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/jim-cramer-says-m-blessing-061250796.html?.tsrc=rss",
-        "sentiment": 0.08333333333333333,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Tesla (TSLA): The Best Stock to Buy for the Next Decade",
-        "description": "Tesla (TSLA): The Best Stock to Buy for the Next Decade",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/tesla-tsla-best-stock-buy-050529303.html?.tsrc=rss",
-        "sentiment": 0.3833333333333333,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Robots beat human runners in Beijing race, signaling manufacturing push",
-        "description": "Robots beat human runners in Beijing race, signaling manufacturing push",
-        "url": "https://finance.yahoo.com/sectors/technology/articles/robots-beat-human-runners-beijing-023519296.html?.tsrc=rss",
-        "sentiment": 0.16499999999999998,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Dow Jones Futures, Oil Prices In Focus As Iran, Hormuz News Turns",
-        "description": "Dow Jones Futures, Oil Prices In Focus As Iran, Hormuz News Turns",
-        "url": "https://finance.yahoo.com/m/2e86a733-79d1-31a8-aaf2-9bbf4acaa122/dow-jones-futures%2C-oil-prices.html?.tsrc=rss",
-        "sentiment": 0.0,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Finally, Tesla Is Said to Be Developing an All-New SUV -- but That's Not the Biggest Surprise",
-        "description": "Finally, Tesla Is Said to Be Developing an All-New SUV -- but That's Not the Biggest Surprise",
-        "url": "https://www.fool.com/investing/2026/04/18/finally-tesla-said-to-be-developing-all-new-suv-an/?.tsrc=rss",
-        "sentiment": 0.11727272727272726,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Caterpillar Turns To Self-Driving Tractors: What Buying The 'Tesla Of Agriculture' Could Mean",
-        "description": "Caterpillar Turns To Self-Driving Tractors: What Buying The 'Tesla Of Agriculture' Could Mean",
-        "url": "https://finance.yahoo.com/sectors/technology/articles/caterpillar-turns-self-driving-tractors-003117141.html?.tsrc=rss",
-        "sentiment": 0.015313852813852816,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Jim Cramer Says \u201cI\u2019m Blessing Rocket Lab (RKLB) Because It\u2019s Got a $1.85 Billion Backlog\u201d",
-        "description": "Jim Cramer Says \u201cI\u2019m Blessing Rocket Lab (RKLB) Because It\u2019s Got a $1.85 Billion Backlog\u201d",
-        "url": "https://finnhub.io/api/news?id=0c169e7f379e87c0ce5beb77086cea0e95ad9afcd3761d920eb6887ea501e0b8",
-        "sentiment": 0.08333333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Tesla (TSLA): The Best Stock to Buy for the Next Decade",
-        "description": "Tesla (TSLA): The Best Stock to Buy for the Next Decade",
-        "url": "https://finnhub.io/api/news?id=232f8a7a5413aa55a3421f357b84f1cdf7e42b35844f74c059483fc9b7f81b9f",
-        "sentiment": 0.3833333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Robots beat human runners in Beijing race, signaling manufacturing push",
-        "description": "Robots beat human runners in Beijing race, signaling manufacturing push",
-        "url": "https://finnhub.io/api/news?id=21e4af891f0314d2912cdbe88824f745515554ef02af0ce129ba6f36d015ee38",
-        "sentiment": 0.16499999999999998,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Dow Jones Futures, Oil Prices In Focus As Iran, Hormuz News Turns",
-        "description": "Dow Jones Futures, Oil Prices In Focus As Iran, Hormuz News Turns",
-        "url": "https://finnhub.io/api/news?id=8febc40b0cb42cdf9e8c59990640fd5ed9b2729a0bf2738af5604c03a769315c",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Finally, Tesla Is Said to Be Developing an All-New SUV -- but That's Not the Biggest Surprise",
-        "description": "Finally, Tesla Is Said to Be Developing an All-New SUV -- but That's Not the Biggest Surprise",
-        "url": "https://finnhub.io/api/news?id=fff65798e904251aca6639234410d5368dee6361b277b2c78608f5b624011510",
-        "sentiment": 0.11727272727272726,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Caterpillar Turns To Self-Driving Tractors: What Buying The 'Tesla Of Agriculture' Could Mean",
-        "description": "Caterpillar Turns To Self-Driving Tractors: What Buying The 'Tesla Of Agriculture' Could Mean",
-        "url": "https://finnhub.io/api/news?id=d54a9caa820b1f0ff905b0c5bd2bf51474cb56bfb3dd73f46a2423c45d6161bf",
-        "sentiment": 0.015313852813852816,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Everyone's Talking About the SpaceX IPO. Why I Think You Should Avoid It, and What to Buy Instead.",
-        "description": "Everyone's Talking About the SpaceX IPO. Why I Think You Should Avoid It, and What to Buy Instead.",
-        "url": "https://finnhub.io/api/news?id=0775a66c3ad1ffada9296db62592e2d5d94cb48658cb4ba052ac5d7e1fc6350c",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Trump-Linked Crypto Venture Faces Questions After Ties To Sanctioned Network Revealed",
-        "description": "Trump-Linked Crypto Venture Faces Questions After Ties To Sanctioned Network Revealed",
-        "url": "https://finnhub.io/api/news?id=cb01c6fc4018514aee356de1eb997ea6345635f18bb2ef1c3ecf7d493d454a31",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Musk Toasts Tesla's US Lead\u2014But BYD Is 3X Bigger Globally",
-        "description": "Musk Toasts Tesla's US Lead\u2014But BYD Is 3X Bigger Globally",
-        "url": "https://finnhub.io/api/news?id=4e50f4ba4f5c91813131d397bbb942f6fabbfb27a2489615aacaa10a11e2d9d5",
-        "sentiment": 0.015476190476190473,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Tesla's Price Targets Are Coming Down, but Many Analysts Still See Plenty of Upside",
-        "description": "Tesla's Price Targets Are Coming Down, but Many Analysts Still See Plenty of Upside",
-        "url": "https://finnhub.io/api/news?id=07da094e28d54a98993f7376f792627d5db64e87397096bec1b7693d19c0246a",
-        "sentiment": 0.2111111111111111,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
+        "date": "2026-04-20",
         "title": "Tesla Robotaxi Service Expands To Dallas And Houston",
         "description": "Tesla Robotaxi Service Expands To Dallas And Houston",
-        "url": "https://finnhub.io/api/news?id=2aece64d75de9123a49dc27865a54a21f9862303d01d94e8797082101c4c3635",
+        "url": "https://finance.yahoo.com/m/9315aed7-01ea-3d05-8e9f-381dcf2f3320/tesla-robotaxi-service.html?.tsrc=rss",
         "sentiment": 0.19318181818181818,
-        "source": "Finnhub"
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "2 Reasons Rivian Is a Once-in-a-Decade Stock Pick for Long-Term Investors",
-        "description": "2 Reasons Rivian Is a Once-in-a-Decade Stock Pick for Long-Term Investors",
-        "url": "https://finnhub.io/api/news?id=b6bba4979d93c2c9cbfa28fd4b4fd156e5b418e2f6ed0ac11734fe59e254f60b",
-        "sentiment": 0.0,
-        "source": "Finnhub"
+        "date": "2026-04-20",
+        "title": "Will Tesla (TSLA) Make a Comeback in 2026?",
+        "description": "Will Tesla (TSLA) Make a Comeback in 2026?",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/tesla-tsla-comeback-2026-131738258.html?.tsrc=rss",
+        "sentiment": 0.4313492063492064,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Tesla rolls out robotaxis in Dallas and Houston",
-        "description": "Tesla rolls out robotaxis in Dallas and Houston",
-        "url": "https://finnhub.io/api/news?id=ee27243e36c091a27e9a8bd8c9ef9b0ef346c0560a7b7ea722cdbf16eba49802",
+        "date": "2026-04-20",
+        "title": "Broadcom\u2019s 140% Surge Shows XMAG Investors Get AI Exposure Without the Mag 7 Trap",
+        "description": "Broadcom\u2019s 140% Surge Shows XMAG Investors Get AI Exposure Without the Mag 7 Trap",
+        "url": "https://247wallst.com/investing/2026/04/20/broadcoms-140-surge-shows-xmag-investors-get-ai-exposure-without-the-mag-7-trap/?.tsrc=rss",
+        "sentiment": 0.07001488095238095,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Inside one of Amsterdam's first supervised self-driving Teslas",
+        "description": "Inside one of Amsterdam's first supervised self-driving Teslas",
+        "url": "https://uk.finance.yahoo.com/news/inside-one-amsterdams-first-supervised-125108173.html?.tsrc=rss",
+        "sentiment": 0.10787037037037035,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Why Tesla Stock Could Double as Optimus Reaches Human-Level Proficiency This Year",
+        "description": "Why Tesla Stock Could Double as Optimus Reaches Human-Level Proficiency This Year",
+        "url": "https://www.fool.com/investing/2026/04/20/why-tesla-stock-could-double-as-optimus-reaches-hu/?.tsrc=rss",
         "sentiment": 0.0,
-        "source": "Finnhub"
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Renewed Tensions in Middle East, Iran's Refusal to Restart Peace Talks Dampen US Equity Futures Pre-Bell",
+        "description": "Renewed Tensions in Middle East, Iran's Refusal to Restart Peace Talks Dampen US Equity Futures Pre-Bell",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/renewed-tensions-middle-east-iran-124917970.html?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "S&P 500 Holds 7100 as Oil Surges Amid Moment of Hormuz Strait Reckoning",
+        "description": "S&P 500 Holds 7100 as Oil Surges Amid Moment of Hormuz Strait Reckoning",
+        "url": "https://247wallst.com/investing/2026/04/20/sp-500-holds-7100-as-oil-surges-amid-moment-of-hormuz-strait-reckoning/?.tsrc=rss",
+        "sentiment": -0.18125,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Nvidia, Meta and Tesla Lead Tech Stocks Fall as U.S.-Iran Peace Hopes Collapse",
+        "description": "Nvidia, Meta and Tesla Lead Tech Stocks Fall as U.S.-Iran Peace Hopes Collapse",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/nvidia-meta-tesla-lead-tech-124052832.html?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Tesla Energy Unit Seen Offsetting Margin Pressure",
+        "description": "Tesla Energy Unit Seen Offsetting Margin Pressure",
+        "url": "https://finance.yahoo.com/sectors/energy/articles/tesla-energy-unit-seen-offsetting-123323703.html?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Tesla Stock Slips After Snapping 8-Week Losing Streak. Earnings Are Up Next.",
+        "description": "Tesla Stock Slips After Snapping 8-Week Losing Streak. Earnings Are Up Next.",
+        "url": "https://finance.yahoo.com/m/c54883e0-0f3d-3542-922a-0119a89bfe95/tesla-stock-slips-after.html?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Dow Jones Futures Fall; Trump Says Talks, Iran Says No; Marvell Jumps, Tesla Earnings Due",
+        "description": "Dow Jones Futures Fall; Trump Says Talks, Iran Says No; Marvell Jumps, Tesla Earnings Due",
+        "url": "https://finance.yahoo.com/m/225a78f0-2503-3005-bbcc-1091e9249be1/dow-jones-futures-fall%3B-trump.html?.tsrc=rss",
+        "sentiment": 0.005681818181818177,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "AXOM Partners Adds Tricia Shaw as Partner to Expand Technology M&A Advisory",
+        "description": "AXOM Partners Adds Tricia Shaw as Partner to Expand Technology M&A Advisory",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/axom-partners-adds-tricia-shaw-120000955.html?.tsrc=rss",
+        "sentiment": -0.2,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Renewed Tensions in Middle East Dampen US Equity Futures Pre-Bell",
+        "description": "Renewed Tensions in Middle East Dampen US Equity Futures Pre-Bell",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/renewed-tensions-middle-east-dampen-115647588.html?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "5 Things to Know Before the Stock Market Opens",
+        "description": "5 Things to Know Before the Stock Market Opens",
+        "url": "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-april-20-2026-11953702?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Stocks Down Pre-Bell Amid Renewed US-Iran Tensions",
+        "description": "Stocks Down Pre-Bell Amid Renewed US-Iran Tensions",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/stocks-down-pre-bell-amid-114317305.html?.tsrc=rss",
+        "sentiment": -0.07777777777777778,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Market Chatter: Tesla Reportedly May Have Shifted $18 Billion Offshore to Cut US Taxes",
+        "description": "Market Chatter: Tesla Reportedly May Have Shifted $18 Billion Offshore to Cut US Taxes",
+        "url": "https://finance.yahoo.com/economy/policy/articles/market-chatter-tesla-reportedly-may-113959054.html?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Persian Gulf Tensions Undercut Wall Street Pre-Bell; Asia Up, Europe Down",
+        "description": "Persian Gulf Tensions Undercut Wall Street Pre-Bell; Asia Up, Europe Down",
+        "url": "https://finance.yahoo.com/markets/world-indices/articles/persian-gulf-tensions-undercut-wall-111059383.html?.tsrc=rss",
+        "sentiment": -0.06388888888888888,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "This Week In Electric Vehicles - Revolutionizing Truck Chassis: Modular Designs Drive Growth",
+        "description": "This Week In Electric Vehicles - Revolutionizing Truck Chassis: Modular Designs Drive Growth",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/week-electric-vehicles-revolutionizing-truck-104008345.html?.tsrc=rss",
+        "sentiment": 0.03809523809523809,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Social Buzz: Wallstreetbets Stocks Mostly Lower Premarket Monday; AST SpaceMobile to Fall, Marvell to Rise",
+        "description": "Social Buzz: Wallstreetbets Stocks Mostly Lower Premarket Monday; AST SpaceMobile to Fall, Marvell to Rise",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/social-buzz-wallstreetbets-stocks-mostly-103920129.html?.tsrc=rss",
+        "sentiment": 0.3444444444444444,
+        "source": "Yahoo RSS"
     }
 ]

@@ -427,30 +427,29 @@ def render_prediction_table(predictions_dict, asset_name):
     change_pcts = []
     confidences = []
     
-    for key, value in predictions_dict.items():
-        if key == 'Current':
+    # Only process known timeframe keys - skip metadata like 'ceo_context', 'error', etc.
+    VALID_TIMEFRAMES = ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']
+    
+    for key in VALID_TIMEFRAMES:
+        if key not in predictions_dict:
             continue
+        
+        value = predictions_dict[key]
         
         # Handle both old format (float) and new format (dict with price/confidence)
         if isinstance(value, dict):
             price = value.get('price', 0)
             confidence = value.get('confidence', {})
-        else:
-            # Fallback for old format
+        elif isinstance(value, (int, float)):
             price = value
             confidence = {'label': 'N/A', 'color': 'info'}
+        else:
+            # Skip non-numeric, non-dict values entirely
+            continue
         
         # Safety check for NaN
         if pd.isna(price) or (isinstance(price, float) and np.isnan(price)):
-            st.error("""
-            ⚠️ **Prediction Error**: Invalid data detected (NaN values).
-            
-            **Possible causes:**
-            - Recent market data not yet available
-            - Missing macro indicators (DXY, VIX, Yield)
-            
-            **Solution**: Try syncing data from the Settings page.
-            """)
+            st.error("**Prediction Error**: Invalid data detected (NaN values). Try syncing data from the Settings page.")
             return
         
         change = price - current_price
@@ -461,8 +460,12 @@ def render_prediction_table(predictions_dict, asset_name):
         changes.append(f"${change:+,.2f}")
         change_pcts.append(f"{change_pct:+.2f}%")
         
-        conf_label = confidence.get('label', 'N/A')
-        conf_color = confidence.get('color', 'info')
+        if isinstance(confidence, dict):
+            conf_label = confidence.get('label', 'N/A')
+            conf_color = confidence.get('color', 'info')
+        else:
+            conf_label = 'N/A'
+            conf_color = 'info'
         
         # Custom emoji mapping for confidence
         color_map = {'success': '🟢', 'info': '🔵', 'warning': '🟡', 'danger': '🔴', 'error': '🔴'}

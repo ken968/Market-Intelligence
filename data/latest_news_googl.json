@@ -1,162 +1,162 @@
 [
     {
-        "date": "2026-04-19",
-        "title": "Fading \u2019American Dream\u2019: China\u2019s elite talent pivots toward home",
-        "description": "Fading \u2019American Dream\u2019: China\u2019s elite talent pivots toward home",
-        "url": "https://finance.yahoo.com/economy/articles/fading-american-dream-china-elite-075737108.html?.tsrc=rss",
-        "sentiment": 0.2708333333333333,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "1 Smart Stock to Buy Right Now",
-        "description": "1 Smart Stock to Buy Right Now",
-        "url": "https://www.fool.com/investing/2026/04/19/1-smart-stock-to-buy-right-now/?.tsrc=rss",
-        "sentiment": 0.45,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Bernstein shares a 5+ year view on how AI might impact the software industry",
-        "description": "Bernstein shares a 5+ year view on how AI might impact the software industry",
-        "url": "https://finance.yahoo.com/sectors/technology/articles/bernstein-shares-5-view-ai-070801923.html?.tsrc=rss",
-        "sentiment": 0.1,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Jim Cramer Reveals Why Intel\u2019s (INTC) CEO\u2019s a Winner",
-        "description": "Jim Cramer Reveals Why Intel\u2019s (INTC) CEO\u2019s a Winner",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/jim-cramer-reveals-why-intel-041846090.html?.tsrc=rss",
-        "sentiment": -3.96508223080413e-18,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "'Fix The Money': Michael Saylor Shares Endgame For Strategy's Bitcoin-Backed Credit Instruments",
-        "description": "'Fix The Money': Michael Saylor Shares Endgame For Strategy's Bitcoin-Backed Credit Instruments",
-        "url": "https://finance.yahoo.com/markets/crypto/articles/fix-money-michael-saylor-shares-010124912.html?.tsrc=rss",
+        "date": "2026-04-20",
+        "title": "Marvell Stock Pops on Reports of Google AI Chip Deal to Challenge Nvidia",
+        "description": "Marvell Stock Pops on Reports of Google AI Chip Deal to Challenge Nvidia",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/marvell-stock-pops-reports-google-134316098.html?.tsrc=rss",
         "sentiment": 0.0,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Fading \u2019American Dream\u2019: China\u2019s elite talent pivots toward home",
-        "description": "Fading \u2019American Dream\u2019: China\u2019s elite talent pivots toward home",
-        "url": "https://finnhub.io/api/news?id=c3408249417d81410c2f1fc21e9a25ddd44c509aeec9bf61b8edd194603273de",
-        "sentiment": 0.2708333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "1 Smart Stock to Buy Right Now",
-        "description": "1 Smart Stock to Buy Right Now",
-        "url": "https://finnhub.io/api/news?id=127b4cdb180bf816ca4a3be8dd0c977674245bf76292c809723e0c49c1126e5a",
-        "sentiment": 0.45,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Bernstein shares a 5+ year view on how AI might impact the software industry",
-        "description": "Bernstein shares a 5+ year view on how AI might impact the software industry",
-        "url": "https://finnhub.io/api/news?id=89bcd05fd04177c02cd911132bc86dd2309e312c965b7b7df721590bec91e157",
-        "sentiment": 0.1,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Jim Cramer Reveals Why Intel\u2019s (INTC) CEO\u2019s a Winner",
-        "description": "Jim Cramer Reveals Why Intel\u2019s (INTC) CEO\u2019s a Winner",
-        "url": "https://finnhub.io/api/news?id=6f1fd01ce43fa1190800f19edabc6b951ee5e16566cf98ee07b4f203445f02ff",
-        "sentiment": -3.96508223080413e-18,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "'Fix The Money': Michael Saylor Shares Endgame For Strategy's Bitcoin-Backed Credit Instruments",
-        "description": "'Fix The Money': Michael Saylor Shares Endgame For Strategy's Bitcoin-Backed Credit Instruments",
-        "url": "https://finnhub.io/api/news?id=faccaf615c4463b368b5d0ea9212ad72d14af8446c8876e7a21ee2fe77f33eb8",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
+        "date": "2026-04-20",
         "title": "Tesla Robotaxi Service Expands To Dallas And Houston",
         "description": "Tesla Robotaxi Service Expands To Dallas And Houston",
-        "url": "https://finnhub.io/api/news?id=2aece64d75de9123a49dc27865a54a21f9862303d01d94e8797082101c4c3635",
+        "url": "https://finance.yahoo.com/m/9315aed7-01ea-3d05-8e9f-381dcf2f3320/tesla-robotaxi-service.html?.tsrc=rss",
         "sentiment": 0.19318181818181818,
-        "source": "Finnhub"
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Jim Cramer Says \u201cThe Only Viable Quantum Businesses Belong to Google, IBM, and Honeywell (HON)\u201d",
-        "description": "Jim Cramer Says \u201cThe Only Viable Quantum Businesses Belong to Google, IBM, and Honeywell (HON)\u201d",
-        "url": "https://finnhub.io/api/news?id=76519e69c1d81f6f40fe8b564ddebc70ac0df2488a753eb3ad3ffed63d3b7cdd",
-        "sentiment": 0.1842857142857143,
-        "source": "Finnhub"
+        "date": "2026-04-20",
+        "title": "Up 77% This Year Already, Comfort Systems Stock Is Outpacing Nvidia (And It's Not Even Close)",
+        "description": "Up 77% This Year Already, Comfort Systems Stock Is Outpacing Nvidia (And It's Not Even Close)",
+        "url": "https://www.fool.com/investing/2026/04/20/up-77-this-year-already-comfort-systems-stock-is-o/?.tsrc=rss",
+        "sentiment": -0.1,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "EXCLUSIVE: Google Rebuilds Ads For AI, Perplexity Signals A Premium, No-Ad Future",
-        "description": "EXCLUSIVE: Google Rebuilds Ads For AI, Perplexity Signals A Premium, No-Ad Future",
-        "url": "https://finnhub.io/api/news?id=763908fed8fff7defac73b9c5fd2c5193b7225edf59c8cf1e02f3cd0802cf9c7",
-        "sentiment": -0.08333333333333333,
-        "source": "Finnhub"
+        "date": "2026-04-20",
+        "title": "Is Broadcom (AVGO) The Best AI Chip Stock Pick of Motley Fool?",
+        "description": "Is Broadcom (AVGO) The Best AI Chip Stock Pick of Motley Fool?",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/broadcom-avgo-best-ai-chip-131740989.html?.tsrc=rss",
+        "sentiment": 0.6078125,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "An Alphabet Stock Deep Dive",
-        "description": "An Alphabet Stock Deep Dive",
-        "url": "https://finnhub.io/api/news?id=1b575b35cd01dfe1d46eb9e8d76df4789c7f78d7c6579fbedec10fda8dc6036e",
-        "sentiment": 0.10555555555555556,
-        "source": "Finnhub"
+        "date": "2026-04-20",
+        "title": "Broadcom\u2019s 140% Surge Shows XMAG Investors Get AI Exposure Without the Mag 7 Trap",
+        "description": "Broadcom\u2019s 140% Surge Shows XMAG Investors Get AI Exposure Without the Mag 7 Trap",
+        "url": "https://247wallst.com/investing/2026/04/20/broadcoms-140-surge-shows-xmag-investors-get-ai-exposure-without-the-mag-7-trap/?.tsrc=rss",
+        "sentiment": 0.07001488095238095,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Alphabet's $122 Billion SpaceX Bombshell Just Surfaced In A Routine Alaska Filing",
-        "description": "Alphabet's $122 Billion SpaceX Bombshell Just Surfaced In A Routine Alaska Filing",
-        "url": "https://finnhub.io/api/news?id=08b3fd0eb7665c68bfdcb3caa6e43e9dfb27613230ff046c130e91d6c594d6ec",
-        "sentiment": 0.1606060606060606,
-        "source": "Finnhub"
+        "date": "2026-04-20",
+        "title": "Alphabet (GOOGL): The Best Debt Free Blue Chip Stock to Invest In",
+        "description": "Alphabet (GOOGL): The Best Debt Free Blue Chip Stock to Invest In",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/alphabet-googl-best-debt-free-131223172.html?.tsrc=rss",
+        "sentiment": 0.32499999999999996,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "This Is My Favorite \"Magnificent Seven\" Stock Headed Into Earnings",
-        "description": "This Is My Favorite \"Magnificent Seven\" Stock Headed Into Earnings",
-        "url": "https://finnhub.io/api/news?id=84ef00fe5d975fd4688347bab57e4d550c592da90113d6f01afc364ed9941921",
-        "sentiment": 0.5,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Jim Cramer on Lumen Technologies (LUMN): \u201cI\u2019ve Always Felt That It Was a Decent Spec\u201d",
-        "description": "Jim Cramer on Lumen Technologies (LUMN): \u201cI\u2019ve Always Felt That It Was a Decent Spec\u201d",
-        "url": "https://finnhub.io/api/news?id=0850a17a789a39a10bd5f0d571759fa8f39d2da453410f549b9fc6aef05bf301",
-        "sentiment": 0.13333333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-19",
-        "title": "Tesla rolls out robotaxis in Dallas and Houston",
-        "description": "Tesla rolls out robotaxis in Dallas and Houston",
-        "url": "https://finnhub.io/api/news?id=ee27243e36c091a27e9a8bd8c9ef9b0ef346c0560a7b7ea722cdbf16eba49802",
+        "date": "2026-04-20",
+        "title": "Google Eyes Marvell Deal To Challenge Nvidia",
+        "description": "Google Eyes Marvell Deal To Challenge Nvidia",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/google-eyes-marvell-deal-challenge-125550975.html?.tsrc=rss",
         "sentiment": 0.0,
-        "source": "Finnhub"
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Jim Cramer Believes \u201cIBM\u2019s a Terrific Buy Here\u201d",
-        "description": "Jim Cramer Believes \u201cIBM\u2019s a Terrific Buy Here\u201d",
-        "url": "https://finnhub.io/api/news?id=ff75b9e9479ef2ad2d9c56b5f9e47a3d24fdf8ce41a670d46f072fe09300671e",
-        "sentiment": 0.03614285714285714,
-        "source": "Finnhub"
+        "date": "2026-04-20",
+        "title": "Renewed Tensions in Middle East, Iran's Refusal to Restart Peace Talks Dampen US Equity Futures Pre-Bell",
+        "description": "Renewed Tensions in Middle East, Iran's Refusal to Restart Peace Talks Dampen US Equity Futures Pre-Bell",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/renewed-tensions-middle-east-iran-124917970.html?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "I Asked ChatGPT How the Stock Market Would Look If We Ignored the 7 Biggest Stocks",
-        "description": "I Asked ChatGPT How the Stock Market Would Look If We Ignored the 7 Biggest Stocks",
-        "url": "https://finnhub.io/api/news?id=97bb4cfbec49d76df07a746c2e97adcb18645b2976090aff30c994723022911d",
-        "sentiment": 0.75,
-        "source": "Finnhub"
+        "date": "2026-04-20",
+        "title": "Alphabet vs. Meta: Better Mega Tech Stock To Own for 2026",
+        "description": "Alphabet vs. Meta: Better Mega Tech Stock To Own for 2026",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/alphabet-vs-meta-better-mega-124708289.html?.tsrc=rss",
+        "sentiment": 0.275,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "These Stocks Are Today\u2019s Movers: AST SpaceMobile, Marvell, Fermi, USA Rare Earth, American, AtaiBeckley, and More",
+        "description": "These Stocks Are Today\u2019s Movers: AST SpaceMobile, Marvell, Fermi, USA Rare Earth, American, AtaiBeckley, and More",
+        "url": "https://finance.yahoo.com/m/92dc0ee0-d7c2-3f7d-8066-c861560b1cbc/these-stocks-are-today%E2%80%99s.html?.tsrc=rss",
+        "sentiment": 0.12708333333333335,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Scott Galloway Says the SpaceX IPO Has \u2018No Anchor.\u2019 Here\u2019s Why I Think He\u2019s Wrong.",
+        "description": "Scott Galloway Says the SpaceX IPO Has \u2018No Anchor.\u2019 Here\u2019s Why I Think He\u2019s Wrong.",
+        "url": "https://247wallst.com/investing/2026/04/20/scott-galloway-says-the-spacex-ipo-has-no-anchor-heres-why-i-think-hes-wrong/?.tsrc=rss",
+        "sentiment": -0.03333333333333335,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Alphabet Explores New AI Chips With Marvell",
+        "description": "Alphabet Explores New AI Chips With Marvell",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/alphabet-explores-ai-chips-marvell-121914017.html?.tsrc=rss",
+        "sentiment": 0.06818181818181818,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Is Alphabet (GOOGL) The Best AI Stock to Buy in 2026?",
+        "description": "Is Alphabet (GOOGL) The Best AI Stock to Buy in 2026?",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/alphabet-googl-best-ai-stock-121126680.html?.tsrc=rss",
+        "sentiment": 0.6583333333333333,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Marvell in Talks With Google for AI Chips.  How Alphabet Is Playing Semiconductor King Maker.",
+        "description": "Marvell in Talks With Google for AI Chips.  How Alphabet Is Playing Semiconductor King Maker.",
+        "url": "https://finance.yahoo.com/m/50a9f110-9e4a-3616-a325-44e881442728/marvell-in-talks-with-google.html?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Companies Are Spending Millions On Enterprise AI Tools, But Employees Are Boycotting Them, Study Finds",
+        "description": "Companies Are Spending Millions On Enterprise AI Tools, But Employees Are Boycotting Them, Study Finds",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/companies-spending-millions-enterprise-ai-120104941.html?.tsrc=rss",
+        "sentiment": 0.3,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Dow Jones Futures Fall; Trump Says Talks, Iran Says No; Marvell Jumps, Tesla Earnings Due",
+        "description": "Dow Jones Futures Fall; Trump Says Talks, Iran Says No; Marvell Jumps, Tesla Earnings Due",
+        "url": "https://finance.yahoo.com/m/225a78f0-2503-3005-bbcc-1091e9249be1/dow-jones-futures-fall%3B-trump.html?.tsrc=rss",
+        "sentiment": 0.005681818181818177,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "AI Stocks: Google Makes 'Agentic Cloud' Pitch, Adobe Conference Takes Stage",
+        "description": "AI Stocks: Google Makes 'Agentic Cloud' Pitch, Adobe Conference Takes Stage",
+        "url": "https://finance.yahoo.com/m/74f62836-7ede-3a20-828e-61a4a2051c72/ai-stocks%3A-google-makes.html?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Stocks to Watch: AST SpaceMobile, TopBuild, Marvell",
+        "description": "Stocks to Watch: AST SpaceMobile, TopBuild, Marvell",
+        "url": "https://finance.yahoo.com/m/fe3a10a7-049a-340d-b9a1-64adc0087074/stocks-to-watch%3A-ast.html?.tsrc=rss",
+        "sentiment": -0.25,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Marvell shares gain on report of deal talks with Google to develop two AI chips",
+        "description": "Marvell shares gain on report of deal talks with Google to develop two AI chips",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/marvell-shares-gain-report-deal-105200335.html?.tsrc=rss",
+        "sentiment": 0.08842975206611571,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Social Buzz: Wallstreetbets Stocks Mostly Lower Premarket Monday; AST SpaceMobile to Fall, Marvell to Rise",
+        "description": "Social Buzz: Wallstreetbets Stocks Mostly Lower Premarket Monday; AST SpaceMobile to Fall, Marvell to Rise",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/social-buzz-wallstreetbets-stocks-mostly-103920129.html?.tsrc=rss",
+        "sentiment": 0.3444444444444444,
+        "source": "Yahoo RSS"
     }
 ]

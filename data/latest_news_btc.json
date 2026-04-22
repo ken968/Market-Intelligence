@@ -1,162 +1,162 @@
 [
     {
-        "date": "2026-04-19",
-        "title": "Fear & Greed: 27.0 (Fear)",
-        "description": "Fear & Greed: 27.0 (Fear)",
-        "url": "https://alternative.me/crypto/fear-and-greed-index/",
-        "sentiment": -0.46,
-        "source": "Fear & Greed Index"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "AI XRP Price Prediction: ChatGPT and Claude Predict XRP Price After Hitting $1.45",
-        "description": "AI XRP Price Prediction: ChatGPT and Claude Predict XRP Price After Hitting $1.45",
-        "url": "https://247wallst.com/investing/2026/04/18/ai-xrp-price-prediction-chatgpt-and-claude-predict-xrp-price-after-hitting-1-45/?.tsrc=rss",
-        "sentiment": 0.3333333333333333,
+        "date": "2026-04-20",
+        "title": "Hyperscale Data Accelerates Michigan Operations Capabilities for AI Data Center and Robotics Hub",
+        "description": "Hyperscale Data Accelerates Michigan Operations Capabilities for AI Data Center and Robotics Hub",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/hyperscale-data-accelerates-michigan-operations-100000045.html?.tsrc=rss",
+        "sentiment": -0.012499999999999983,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-18",
-        "title": "Why BitMine\u2019s Tom Lee Sees Ethereum at $62,500 in 2030 \u2014 and What the Numbers Actually Show",
-        "description": "Why BitMine\u2019s Tom Lee Sees Ethereum at $62,500 in 2030 \u2014 and What the Numbers Actually Show",
-        "url": "https://247wallst.com/investing/2026/04/18/why-bitmines-tom-lee-sees-ethereum-at-62500-in-2030-and-what-the-numbers-actually-show/?.tsrc=rss",
+        "date": "2026-04-20",
+        "title": "U.S. stock futures tumble, oil surges as this weekend\u2019s Iran developments rekindle uncertainty",
+        "description": "U.S. stock futures tumble, oil surges as this weekend\u2019s Iran developments rekindle uncertainty",
+        "url": "https://www.marketwatch.com/story/investors-brace-for-renewed-volatility-after-this-weekends-iran-developments-4b707c11?.tsrc=rss",
+        "sentiment": 0.06818181818181818,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Why Is The Crypto Market Down Today?",
+        "description": "Why Is The Crypto Market Down Today?",
+        "url": "https://beincrypto.com/why-is-the-crypto-market-down-today/?.tsrc=rss",
+        "sentiment": 0.0022222222222222227,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Strategy Adds $2.5 Billion in Bitcoin as STRC Dividend Traders Drive Largest Buy Since 2024",
+        "description": "Strategy Adds $2.5 Billion in Bitcoin as STRC Dividend Traders Drive Largest Buy Since 2024",
+        "url": "https://decrypt.co/364883/strategy-2-5-billion-bitcoin-strc-dividend-traders-drive-largest-buy-2024",
         "sentiment": 0.0,
-        "source": "Yahoo RSS"
+        "source": "Alpha Vantage"
     },
     {
-        "date": "2026-04-18",
-        "title": "Fear & Greed: 26.0 (Fear)",
-        "description": "Fear & Greed: 26.0 (Fear)",
-        "url": "https://alternative.me/crypto/fear-and-greed-index/",
-        "sentiment": -0.48,
-        "source": "Fear & Greed Index"
+        "date": "2026-04-20",
+        "title": "Morning Minute: DeFi's Future in Question After $292M KelpDAO Exploit",
+        "description": "Morning Minute: DeFi's Future in Question After $292M KelpDAO Exploit",
+        "url": "https://decrypt.co/364875/morning-minute-defis-future-in-question-after-292m-kelpdao-exploit",
+        "sentiment": 0.25,
+        "source": "Alpha Vantage"
     },
     {
-        "date": "2026-04-18",
-        "title": "BTC Network Transfer Vol: $2.77B",
-        "description": "BTC Network Transfer Vol: $2.77B",
-        "url": "https://www.blockchain.com/explorer/charts",
-        "sentiment": -0.4849232353638597,
-        "source": "Blockchain.com"
+        "date": "2026-04-20",
+        "title": "Saylor's Strategy Boosts Bitcoin Holdings Past 815,000 BTC",
+        "description": "Saylor's Strategy Boosts Bitcoin Holdings Past 815,000 BTC",
+        "url": "https://cointelegraph.com/news/strategy-buys-34-164-bitcoin-total-holdings-hit-815-061-btc",
+        "sentiment": -0.125,
+        "source": "Alpha Vantage"
     },
     {
-        "date": "2026-04-17",
-        "title": "The WSJ Dollar Index Falls 0.52% This Week to 95.17",
-        "description": "The WSJ Dollar Index Falls 0.52% This Week to 95.17",
-        "url": "https://finance.yahoo.com/m/0226c957-8e78-34e2-a0fa-fdf0d0538132/the-wsj-dollar-index-falls.html?.tsrc=rss",
-        "sentiment": -0.13722222222222222,
-        "source": "Yahoo RSS"
+        "date": "2026-04-20",
+        "title": "These Classic Bitcoin Metrics Forecast a 'Big Move' Ahead in BTC Price",
+        "description": "These Classic Bitcoin Metrics Forecast a 'Big Move' Ahead in BTC Price",
+        "url": "https://cointelegraph.com/markets/bitcoin-metrics-line-up-bull-signals-78k-btc-price-level-beat",
+        "sentiment": 0.07828282828282827,
+        "source": "Alpha Vantage"
     },
     {
-        "date": "2026-04-17",
-        "title": "How Michael Saylor's Strategy is shaping bitcoin's price landscape",
-        "description": "How Michael Saylor's Strategy is shaping bitcoin's price landscape",
-        "url": "https://finance.yahoo.com/video/how-michael-saylors-strategy-is-shaping-bitcoins-price-landscape-210842819.html?.tsrc=rss",
-        "sentiment": 0.1851010101010101,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Bitcoin Price: Bitcoin (BTC) Breaks $78,000 as Iran Opens the Strait of Hormuz",
-        "description": "Bitcoin Price: Bitcoin (BTC) Breaks $78,000 as Iran Opens the Strait of Hormuz",
-        "url": "https://247wallst.com/investing/2026/04/17/bitcoin-price-bitcoin-btc-breaks-78000-as-iran-opens-the-strait-of-hormuz/?.tsrc=rss",
-        "sentiment": -0.1,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Should You Chase the 15% Rally in MicroStrategy Stock Today?",
-        "description": "Should You Chase the 15% Rally in MicroStrategy Stock Today?",
-        "url": "https://www.barchart.com/story/news/1374037/should-you-chase-the-15-rally-in-microstrategy-stock-today?.tsrc=rss",
-        "sentiment": 0.012499999999999997,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Bitcoin Climbs to Two-Month High Amid Middle East Deal Optimism",
-        "description": "Bitcoin Climbs to Two-Month High Amid Middle East Deal Optimism",
-        "url": "https://finance.yahoo.com/markets/crypto/articles/bitcoin-climbs-two-month-high-185621449.html?.tsrc=rss",
-        "sentiment": 0.08444444444444443,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Ripple (XRP) Leads Weekly Crypto Gains as Altcoins Outperform Bitcoin",
-        "description": "Ripple (XRP) Leads Weekly Crypto Gains as Altcoins Outperform Bitcoin",
-        "url": "https://247wallst.com/investing/2026/04/17/ripple-xrp-leads-weekly-crypto-gains-as-altcoins-outperform-bitcoin/?.tsrc=rss",
-        "sentiment": 0.18303571428571427,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Bitcoin miners are dealing with this triple-threat. \u2018I\u2019m a seven worried,\u2019 says mining CEO",
-        "description": "Bitcoin miners are dealing with this triple-threat. \u2018I\u2019m a seven worried,\u2019 says mining CEO",
-        "url": "https://www.dlnews.com/articles/markets/seven-worried-says-bitcoin-miner-about-ai-quantum-computing/?.tsrc=rss",
+        "date": "2026-04-20",
+        "title": "Coinbase Expands Crypto-Backed USDC Loans to UK Users",
+        "description": "Coinbase Expands Crypto-Backed USDC Loans to UK Users",
+        "url": "https://cointelegraph.com/news/coinbase-crypto-backed-usdc-loans-uk-morpho-fca-rules",
         "sentiment": 0.0,
-        "source": "Yahoo RSS"
+        "source": "Alpha Vantage"
     },
     {
-        "date": "2026-04-17",
-        "title": "Can Bitcoin Reach $80,000 This Weekend as the Strait of Hormuz Opens?",
-        "description": "Can Bitcoin Reach $80,000 This Weekend as the Strait of Hormuz Opens?",
-        "url": "https://beincrypto.com/bitcoin-price-80000-weekly-close-breakout/?.tsrc=rss",
-        "sentiment": 0.1,
-        "source": "Yahoo RSS"
+        "date": "2026-04-20",
+        "title": "Bitcoin Tested $78,000 Resistance On $996M ETF Week: Breakout Coming This Week?",
+        "description": "Bitcoin Tested $78,000 Resistance On $996M ETF Week: Breakout Coming This Week?",
+        "url": "https://www.benzinga.com/crypto/cryptocurrency/26/04/51909207/bitcoin-tested-78000-resistance-on-996m-etf-week-breakout-coming-this-week",
+        "sentiment": 0.07954545454545454,
+        "source": "Alpha Vantage"
     },
     {
-        "date": "2026-04-17",
-        "title": "Strive Soars 12%, Bitmine Jumps 5% as Bitcoin and Ethereum\u2019s Surge Lifts the Crypto Proxy Trade",
-        "description": "Strive Soars 12%, Bitmine Jumps 5% as Bitcoin and Ethereum\u2019s Surge Lifts the Crypto Proxy Trade",
-        "url": "https://247wallst.com/investing/2026/04/17/strive-soars-12-bitmine-jumps-5-as-bitcoin-and-ethereums-surge-lifts-the-crypto-proxy-trade/?.tsrc=rss",
-        "sentiment": 0.05249999999999999,
-        "source": "Yahoo RSS"
+        "date": "2026-04-20",
+        "title": "Bitcoin Holds $75,000 As Ethereum, XRP, Dogecoin Start Week Flat On Geopolitical Uncertainty",
+        "description": "Bitcoin Holds $75,000 As Ethereum, XRP, Dogecoin Start Week Flat On Geopolitical Uncertainty",
+        "url": "https://www.benzinga.com/crypto/cryptocurrency/26/04/51908581/bitcoin-holds-75000-as-ethereum-xrp-dogecoin-start-week-flat-on-geopolitical-uncertainty",
+        "sentiment": -0.02857142857142857,
+        "source": "Alpha Vantage"
     },
     {
-        "date": "2026-04-17",
-        "title": "Bitcoin vs. gold: Safe-haven debate remains unclear after Iran shock",
-        "description": "Bitcoin vs. gold: Safe-haven debate remains unclear after Iran shock",
-        "url": "https://finance.yahoo.com/markets/crypto/articles/bitcoin-vs-gold-safe-haven-145709024.html?.tsrc=rss",
-        "sentiment": 0.3371212121212121,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Bitcoin, Stocks Surge as Iran Says Strait of Hormuz Is 'Completely Open'",
-        "description": "Bitcoin, Stocks Surge as Iran Says Strait of Hormuz Is 'Completely Open'",
-        "url": "https://decrypt.co/364725/bitcoin-stocks-surge-iran-strait-hormuz-completely-open?.tsrc=rss",
+        "date": "2026-04-20",
+        "title": "Crypto Funds Post $1.4B Inflows as BTC Almost Touches $78K",
+        "description": "Crypto Funds Post $1.4B Inflows as BTC Almost Touches $78K",
+        "url": "https://cointelegraph.com/news/crypto-etp-1-4-billion-inflows-third-straight-week",
         "sentiment": 0.0,
-        "source": "Yahoo RSS"
+        "source": "Alpha Vantage"
     },
     {
-        "date": "2026-04-17",
-        "title": "Strategy Climbs 6% as Bitcoin Surges: 762,000 Coins and a Mountain of Debt Keep Investors Divided",
-        "description": "Strategy Climbs 6% as Bitcoin Surges: 762,000 Coins and a Mountain of Debt Keep Investors Divided",
-        "url": "https://247wallst.com/investing/2026/04/17/strategy-climbs-6-as-bitcoin-surges-762000-coins-and-a-mountain-of-debt-keep-investors-divided/?.tsrc=rss",
-        "sentiment": 0.047,
-        "source": "Yahoo RSS"
+        "date": "2026-04-20",
+        "title": "Toobit Announces $150,000 Event Contracts Campaign with Daily Win Rewards",
+        "description": "Toobit Announces $150,000 Event Contracts Campaign with Daily Win Rewards",
+        "url": "https://www.benzinga.com/pressreleases/26/04/g51908348/toobit-announces-150-000-event-contracts-campaign-with-daily-win-rewards",
+        "sentiment": 0.325,
+        "source": "Alpha Vantage"
     },
     {
-        "date": "2026-04-17",
-        "title": "XRP Price Prediction: XRP Is Up 10% in One Week \u2014 Where Does It Go From Here?",
-        "description": "XRP Price Prediction: XRP Is Up 10% in One Week \u2014 Where Does It Go From Here?",
-        "url": "https://247wallst.com/investing/2026/04/17/xrp-price-prediction-xrp-is-up-10-in-one-week-where-does-it-go-from-here/?.tsrc=rss",
-        "sentiment": 0.0875,
-        "source": "Yahoo RSS"
+        "date": "2026-04-20",
+        "title": "What's the Best Bitcoin ETF to Buy in 2026?",
+        "description": "What's the Best Bitcoin ETF to Buy in 2026?",
+        "url": "https://www.fool.com/investing/2026/04/20/whats-the-best-bitcoin-etf-to-buy-in-2026/",
+        "sentiment": 0.5681818181818181,
+        "source": "Alpha Vantage"
     },
     {
-        "date": "2026-04-17",
-        "title": "Kraken Parent Payward Agrees to Acquire Bitnomial for $550 Million",
-        "description": "Kraken Parent Payward Agrees to Acquire Bitnomial for $550 Million",
-        "url": "https://beincrypto.com/kraken-payward-acquire-bitnomial-550m/?.tsrc=rss",
+        "date": "2026-04-20",
+        "title": "Bitcoin Preserves Green Weekly Candle as Markets React to US-Iran War",
+        "description": "Bitcoin Preserves Green Weekly Candle as Markets React to US-Iran War",
+        "url": "https://cointelegraph.com/markets/btc-price-due-new-highs-five-things-bitcoin-this-week",
+        "sentiment": -0.06000000000000001,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Where Will Dogecoin  ( DOGE )  Be in 1 Year?",
+        "description": "Where Will Dogecoin  ( DOGE )  Be in 1 Year?",
+        "url": "https://www.fool.com/investing/2026/04/20/where-will-dogecoin-be-in-1-year/",
         "sentiment": 0.0,
-        "source": "Yahoo RSS"
+        "source": "Alpha Vantage"
     },
     {
-        "date": "2026-04-17",
-        "title": "Musk's Father Says Family Holds 23,400 Bitcoin As X Money Due To Go Live This Month",
-        "description": "Musk's Father Says Family Holds 23,400 Bitcoin As X Money Due To Go Live This Month",
-        "url": "https://finance.yahoo.com/markets/crypto/articles/musks-father-says-family-holds-120114358.html?.tsrc=rss",
-        "sentiment": 0.08733766233766235,
-        "source": "Yahoo RSS"
+        "date": "2026-04-20",
+        "title": "Why Some Investors Are Buying Gold-Backed Cryptocurrency Instead of Bitcoin",
+        "description": "Why Some Investors Are Buying Gold-Backed Cryptocurrency Instead of Bitcoin",
+        "url": "https://www.fool.com/investing/2026/04/20/why-some-investors-are-buying-gold-backed-cryptocu/",
+        "sentiment": 0.06818181818181818,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Better Store of Value: Bitcoin vs. Zcash",
+        "description": "Better Store of Value: Bitcoin vs. Zcash",
+        "url": "https://www.fool.com/investing/2026/04/20/better-store-of-value-bitcoin-vs-zcash/",
+        "sentiment": 0.5,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Strategy  ( MSTR )  Soars 11.8%: Is Further Upside Left in the Stock?",
+        "description": "Strategy  ( MSTR )  Soars 11.8%: Is Further Upside Left in the Stock?",
+        "url": "https://www.zacks.com/stock/news/2902855/strategy-mstr-soars-118-is-further-upside-left-in-the-stock",
+        "sentiment": 0.05740740740740741,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Saylor Hints at New BTC Buy, Strategy Eyes Semi-Monthly Dividends",
+        "description": "Saylor Hints at New BTC Buy, Strategy Eyes Semi-Monthly Dividends",
+        "url": "https://cointelegraph.com/news/strategy-semi-monthly-dividends-saylor-bitcoin-buy",
+        "sentiment": 0.06818181818181818,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Bitcoin vs Ethereum: Two Different Approaches to Quantum Threats",
+        "description": "Bitcoin vs Ethereum: Two Different Approaches to Quantum Threats",
+        "url": "https://cointelegraph.com/explained/bitcoin-and-ethereum-quantum-threat-strategy",
+        "sentiment": 0.0,
+        "source": "Alpha Vantage"
     }
 ]

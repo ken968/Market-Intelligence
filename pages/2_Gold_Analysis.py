@@ -251,13 +251,16 @@ else:
                     
                     analyzer = ForecastAnalyzer()
                     
-                    # Extract prices from new format
+                    # Extract prices from known timeframe keys only
                     forecast_prices = []
-                    for key, value in list(forecasts.items())[1:]:  # Skip 'Current'
+                    for key in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']:
+                        value = forecasts.get(key, 0)
                         if isinstance(value, dict):
-                            forecast_prices.append(value['price'])
-                        else:
+                            forecast_prices.append(value.get('price', 0))
+                        elif isinstance(value, (int, float)):
                             forecast_prices.append(value)
+                        else:
+                            forecast_prices.append(0)
                     
                     insights = analyzer.analyze_forecast(
                         current_price=forecasts['Current'],

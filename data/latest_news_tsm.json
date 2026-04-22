@@ -1,5 +1,133 @@
 [
     {
+        "date": "2026-04-20",
+        "title": "Amazon expected to report a strong quarter on the backs of Anthropic's Claude, AI demand",
+        "description": "Amazon expected to report a strong quarter on the backs of Anthropic's Claude, AI demand",
+        "url": "https://finance.yahoo.com/news/amazon-expected-to-report-a-strong-quarter-on-the-backs-of-anthropics-claude-ai-demand-133116973.html?.tsrc=rss",
+        "sentiment": 0.11111111111111112,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Taiwan Semiconductor Manufacturing (TSM) Reports Q1 EPS Beat",
+        "description": "Taiwan Semiconductor Manufacturing (TSM) Reports Q1 EPS Beat",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/taiwan-semiconductor-manufacturing-tsm-reports-131144249.html?.tsrc=rss",
+        "sentiment": 0.20952380952380956,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Semiconductor stocks haven't been this hot since the dot-com bubble \u2014 and it could end badly",
+        "description": "Semiconductor stocks haven't been this hot since the dot-com bubble \u2014 and it could end badly",
+        "url": "https://finance.yahoo.com/news/semiconductor-stocks-havent-been-this-hot-since-the-dot-com-bubble--and-it-could-end-badly-131124176.html?.tsrc=rss",
+        "sentiment": 0.08000000000000003,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "TSM gained 147% last year; TSMY investors missed 38 points",
+        "description": "TSM gained 147% last year; TSMY investors missed 38 points",
+        "url": "https://247wallst.com/investing/2026/04/20/tsm-gained-147-last-year-tsmy-investors-missed-38-points/?.tsrc=rss",
+        "sentiment": 0.09999999999999999,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Taiwan Semi\u2019s (TSM) Impressive Quarter Sets The Tone For 2026",
+        "description": "Taiwan Semi\u2019s (TSM) Impressive Quarter Sets The Tone For 2026",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/taiwan-semi-tsm-impressive-quarter-053105061.html?.tsrc=rss",
+        "sentiment": 0.6239583333333334,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "2 Stocks That Could Be Worth More Than Apple by 2028",
+        "description": "2 Stocks That Could Be Worth More Than Apple by 2028",
+        "url": "https://www.fool.com/investing/2026/04/19/2-stocks-that-could-be-worth-more-than-apple-by-20/?.tsrc=rss",
+        "sentiment": 0.375,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "TSMC: AI Supercycle Buys Don't Come Stronger Than This",
+        "description": "TSMC: AI Supercycle Buys Don't Come Stronger Than This",
+        "url": "https://finnhub.io/api/news?id=5f39c8c0ef68ca8a463c2a5ac415d140a15f10a5002cd20cdb3600e579eaca02",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Foundry Wars: Government-backed fabs and AI workloads drive capacity race beyond TSMC",
+        "description": "Foundry Wars: Government-backed fabs and AI workloads drive capacity race beyond TSMC",
+        "url": "https://www.astutegroup.com/news/general/foundry-wars-government-backed-fabs-and-ai-workloads-drive-capacity-race-beyond-tsmc/",
+        "sentiment": 0.22329545454545452,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Taiwan Semiconductor Manufacturing Company Ltd. $TSM Shares Sold by Hudson Edge Investment Partners Inc.",
+        "description": "Taiwan Semiconductor Manufacturing Company Ltd. $TSM Shares Sold by Hudson Edge Investment Partners Inc.",
+        "url": "https://www.marketbeat.com/instant-alerts/filing-taiwan-semiconductor-manufacturing-company-ltd-tsm-shares-sold-by-hudson-edge-investment-partners-inc-2026-04-20/",
+        "sentiment": 0.14444444444444446,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Cwm LLC Increases Stock Holdings in Taiwan Semiconductor Manufacturing Company Ltd. $TSM",
+        "description": "Cwm LLC Increases Stock Holdings in Taiwan Semiconductor Manufacturing Company Ltd. $TSM",
+        "url": "https://www.marketbeat.com/instant-alerts/filing-cwm-llc-increases-stock-holdings-in-taiwan-semiconductor-manufacturing-company-ltd-tsm-2026-04-20/",
+        "sentiment": 0.10277777777777779,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Fear & Greed: 29.0 (Fear)",
+        "description": "Fear & Greed: 29.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.42,
+        "source": "Fear & Greed Index"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Forget The Chip Boom: Wall Street's 'Ultimate Contrarian Trade' Favors Software For 2026",
+        "description": "Forget The Chip Boom: Wall Street's 'Ultimate Contrarian Trade' Favors Software For 2026",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/forget-chip-boom-wall-streets-173111755.html?.tsrc=rss",
+        "sentiment": 0.05416666666666666,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Is Taiwan Semiconductor Manufacturing Stock a Buy on Strong AI Demand?",
+        "description": "Is Taiwan Semiconductor Manufacturing Stock a Buy on Strong AI Demand?",
+        "url": "https://www.fool.com/investing/2026/04/19/taiwan-semiconductor-manufacturing-stock-buy-ai/?.tsrc=rss",
+        "sentiment": 0.45555555555555555,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Profit Jumped 58% at Taiwan Semi. Does That Make TSM Stock a Buy Here?",
+        "description": "Profit Jumped 58% at Taiwan Semi. Does That Make TSM Stock a Buy Here?",
+        "url": "https://www.barchart.com/story/news/1389671/profit-jumped-58-at-taiwan-semi-does-that-make-tsm-stock-a-buy-here?.tsrc=rss",
+        "sentiment": -0.1,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "S&P 500 at 7,000: 7 investing rules you must now live by",
+        "description": "S&P 500 at 7,000: 7 investing rules you must now live by",
+        "url": "https://finance.yahoo.com/news/sp-500-at-7000-7-investing-rules-you-must-now-live-by-123015841.html?.tsrc=rss",
+        "sentiment": 0.13636363636363635,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Something Happening at Amazon, Meta Platforms, and Potentially Anthropic is Fantastic News for Taiwan Semiconductor Manufacturing.",
+        "description": "Something Happening at Amazon, Meta Platforms, and Potentially Anthropic is Fantastic News for Taiwan Semiconductor Manufacturing.",
+        "url": "https://www.fool.com/investing/2026/04/19/something-happening-at-amazon-meta-platforms-and-p/?.tsrc=rss",
+        "sentiment": 0.2,
+        "source": "Yahoo RSS"
+    },
+    {
         "date": "2026-04-19",
         "title": "Jim Cramer Didn\u2019t Hold Back When Discussing Taiwan Semiconductor (TSM) Sellers",
         "description": "Jim Cramer Didn\u2019t Hold Back When Discussing Taiwan Semiconductor (TSM) Sellers",
@@ -29,134 +157,6 @@
         "description": "BofA Raises TSMC Price Target on Strong Outlook, Keeps Buy Rating",
         "url": "https://finance.yahoo.com/markets/stocks/articles/bofa-raises-tsmc-price-target-184809413.html?.tsrc=rss",
         "sentiment": 0.07261904761904764,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Analysts rerate Taiwan Semiconductor stock after earnings",
-        "description": "Analysts rerate Taiwan Semiconductor stock after earnings",
-        "url": "https://www.thestreet.com/investing/stocks/analysts-rerate-taiwan-semiconductor-stock-after-earnings?.tsrc=rss",
-        "sentiment": 0.32222222222222224,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Chip Stocks and Bank Earnings Extravaganza",
-        "description": "Chip Stocks and Bank Earnings Extravaganza",
-        "url": "https://www.fool.com/investing/2026/04/18/chip-stocks-and-bank-earnings-extravaganza/?.tsrc=rss",
-        "sentiment": 0.0,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Caterpillar, Nvidia Chipmaker Lead Five Stocks Near Buy Points",
-        "description": "Caterpillar, Nvidia Chipmaker Lead Five Stocks Near Buy Points",
-        "url": "https://finance.yahoo.com/m/5cf88f83-2be7-3e8c-b806-b2694b9e41a9/caterpillar%2C-nvidia-chipmaker.html?.tsrc=rss",
-        "sentiment": 0.1,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "TSMC Q4: Investors Are Still Underestimating The TAM Of AI Accelerators",
-        "description": "TSMC Q4: Investors Are Still Underestimating The TAM Of AI Accelerators",
-        "url": "https://finnhub.io/api/news?id=a35b9d3d271321480005b0b72ca18803657214e9a2bdb751b5f1bff6e9075e4f",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "ASML: Critical EUV Bottleneck Holding Back The AI Boom",
-        "description": "ASML: Critical EUV Bottleneck Holding Back The AI Boom",
-        "url": "https://finnhub.io/api/news?id=885dc4cd4e4e8ee7f3404fd9350104c02d00b0d24ca68b069e85147b6cf922e2",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Tech Divergence: Chips Soar, Software Weak - Will It Continue?",
-        "description": "Tech Divergence: Chips Soar, Software Weak - Will It Continue?",
-        "url": "https://finnhub.io/api/news?id=a1151d2e8aa708e746c42d7c23311a1622e5c78cb2bbfb13016d3392447e2068",
-        "sentiment": -0.16666666666666666,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Top AI Companies To Watch In 2026",
-        "description": "Top AI Companies To Watch In 2026",
-        "url": "https://finnhub.io/api/news?id=3cc040994bef53bce1a4ce4aa197368a93d4b01c57dbe88f6f8877779bde9e9d",
-        "sentiment": 0.5,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Can AI Chip Design Help Baidu And Alibaba Unlock Shareholder Value?",
-        "description": "Can AI Chip Design Help Baidu And Alibaba Unlock Shareholder Value?",
-        "url": "https://finnhub.io/api/news?id=316adac89ecad6d6a7ea991c4ea8615861215c5bbf71a292a126098e430ae67e",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
-        "description": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
-        "url": "https://finnhub.io/api/news?id=566792c6a7d797862e00e6c88388d73f37c3283b255334c9e66598c2a51dd258",
-        "sentiment": 0.15,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Fear & Greed: 26.0 (Fear)",
-        "description": "Fear & Greed: 26.0 (Fear)",
-        "url": "https://alternative.me/crypto/fear-and-greed-index/",
-        "sentiment": -0.48,
-        "source": "Fear & Greed Index"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Is It Too Late To Consider Taiwan Semiconductor Manufacturing (TWSE:2330) After Its 142% One-Year Surge?",
-        "description": "Is It Too Late To Consider Taiwan Semiconductor Manufacturing (TWSE:2330) After Its 142% One-Year Surge?",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/too-consider-taiwan-semiconductor-manufacturing-230424335.html?.tsrc=rss",
-        "sentiment": 0.06333333333333334,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Will Intel (INTC) Stock Drop to $50?",
-        "description": "Will Intel (INTC) Stock Drop to $50?",
-        "url": "https://www.fool.com/investing/2026/04/17/will-intel-stock-hit-x/?.tsrc=rss",
-        "sentiment": -0.2,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "NVIDIA vs. TSMC: One AI Stock Is a Clear Buy Right Now",
-        "description": "NVIDIA vs. TSMC: One AI Stock Is a Clear Buy Right Now",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/nvidia-vs-tsmc-one-ai-190000812.html?.tsrc=rss",
-        "sentiment": 0.40079365079365076,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Today's Market: Dow Soars 1,000 Points, S&P 500 and Nasdaq Surge 1. ...",
-        "description": "Today's Market: Dow Soars 1,000 Points, S&P 500 and Nasdaq Surge 1. ...",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/todays-market-dow-soars-1-181352100.html?.tsrc=rss",
-        "sentiment": -0.35,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Prediction: These Will Be the Next 3 Stocks to Join the $3 Trillion Club",
-        "description": "Prediction: These Will Be the Next 3 Stocks to Join the $3 Trillion Club",
-        "url": "https://www.fool.com/investing/2026/04/17/prediction-these-will-be-the-next-3-stocks-to-join/?.tsrc=rss",
-        "sentiment": 0.25,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Nvidia Is 'Not A Car,' Jensen Huang Says, Defending Its Hard-To-Replace AI Ecosystem",
-        "description": "Nvidia Is 'Not A Car,' Jensen Huang Says, Defending Its Hard-To-Replace AI Ecosystem",
-        "url": "https://finance.yahoo.com/sectors/technology/articles/nvidia-not-car-jensen-huang-180115580.html?.tsrc=rss",
-        "sentiment": 0.20714285714285716,
         "source": "Yahoo RSS"
     }
 ]

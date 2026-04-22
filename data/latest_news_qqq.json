@@ -1,5 +1,125 @@
 [
     {
+        "date": "2026-04-20",
+        "title": "Exchange-Traded Funds, Equity Futures Lower Pre-Bell Monday as Oil Prices Rise on Renewed Middle East Tensions",
+        "description": "Exchange-Traded Funds, Equity Futures Lower Pre-Bell Monday as Oil Prices Rise on Renewed Middle East Tensions",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/exchange-traded-funds-equity-futures-131028007.html?.tsrc=rss",
+        "sentiment": -0.05659722222222222,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Stock Market Today: Dow Slides On Rising U.S.-Iran Tensions; Oil Prices Jumping Again (Live Coverage)",
+        "description": "Stock Market Today: Dow Slides On Rising U.S.-Iran Tensions; Oil Prices Jumping Again (Live Coverage)",
+        "url": "https://finance.yahoo.com/m/eb0ff88d-6203-3b32-b483-5da2153bf650/stock-market-today%3A-dow.html?.tsrc=rss",
+        "sentiment": 0.13636363636363635,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "S&P 500 Holds 7100 as Oil Surges Amid Moment of Hormuz Strait Reckoning",
+        "description": "S&P 500 Holds 7100 as Oil Surges Amid Moment of Hormuz Strait Reckoning",
+        "url": "https://247wallst.com/investing/2026/04/20/sp-500-holds-7100-as-oil-surges-amid-moment-of-hormuz-strait-reckoning/?.tsrc=rss",
+        "sentiment": -0.18125,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Top-Performing ETFs of Last Week",
+        "description": "Top-Performing ETFs of Last Week",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/top-performing-etfs-last-week-120000761.html?.tsrc=rss",
+        "sentiment": 0.14444444444444446,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "The War Is Not Over",
+        "description": "The War Is Not Over",
+        "url": "https://finnhub.io/api/news?id=89b79b594096a04013bc01e7402d135d2f929b47ba2fe977b8faf4f49f94c70f",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Breadth Breakout Turns Into Broad Confirmation",
+        "description": "Breadth Breakout Turns Into Broad Confirmation",
+        "url": "https://finnhub.io/api/news?id=22d2b5b21b1942273b125fd9f3daefc10494c075eb441abf8c66155e2645ea1b",
+        "sentiment": 0.10545454545454544,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "AI Spending: The Biggest Gamble In U.S. History",
+        "description": "AI Spending: The Biggest Gamble In U.S. History",
+        "url": "https://finnhub.io/api/news?id=37491849c292b2deb9f23dd50ea188537127a900592b613f0b86c5586982766b",
+        "sentiment": 0.3208333333333333,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "The Market's All-Time High Is A Warning Sign",
+        "description": "The Market's All-Time High Is A Warning Sign",
+        "url": "https://finnhub.io/api/news?id=3fa328bd75939d90d5dcb273e1b9d08702e86a0e274c6943f8d65dfd6c184adc",
+        "sentiment": 0.16,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Weekly Market Pulse: Stop Reading The News",
+        "description": "Weekly Market Pulse: Stop Reading The News",
+        "url": "https://finnhub.io/api/news?id=763f30fecab73663ba38dbb363bd6952238eb5bd751550265186e242285a232c",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Invesco QQQ Trust, Series 1 (QQQ) Stock Price, Quote, News & History",
+        "description": "Invesco QQQ Trust, Series 1 (QQQ) Stock Price, Quote, News & History",
+        "url": "https://www.benzinga.com/quote/QQQ",
+        "sentiment": 0.08333333333333333,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Fear & Greed: 29.0 (Fear)",
+        "description": "Fear & Greed: 29.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.42,
+        "source": "Fear & Greed Index"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Why FFLG Is the Best Fidelity ETF You\u2019ve Never Heard Of",
+        "description": "Why FFLG Is the Best Fidelity ETF You\u2019ve Never Heard Of",
+        "url": "https://247wallst.com/investing/2026/04/19/why-fflg-is-the-best-fidelity-etf-youve-never-heard-of/?.tsrc=rss",
+        "sentiment": 0.35833333333333334,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "The Trade Driving The S&P 500 Higher May Not Last",
+        "description": "The Trade Driving The S&P 500 Higher May Not Last",
+        "url": "https://finnhub.io/api/news?id=b5219bd85e1b1e203fd1ebaa9b7447140745a6acfbf1d5111dac03a9d6d15322",
+        "sentiment": 0.08333333333333333,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "Short Covering Rally Or Is The Bull Market Back?",
+        "description": "Short Covering Rally Or Is The Bull Market Back?",
+        "url": "https://finnhub.io/api/news?id=819d929a294398786657c4287fca2ffee7fca068fe3728c5b19908154f7755ae",
+        "sentiment": 0.075,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "The Year's Most Positive Signal Rallies Markets, But Iran Risk Favors Select Sectors",
+        "description": "The Year's Most Positive Signal Rallies Markets, But Iran Risk Favors Select Sectors",
+        "url": "https://finnhub.io/api/news?id=34ee50280fdbfd8fa4cb367455304ddb150bd09fd3f83537d0d7fe551c26f5fb",
+        "sentiment": 0.4090909090909091,
+        "source": "Finnhub"
+    },
+    {
         "date": "2026-04-19",
         "title": "The 1-Minute Market Report, April 19, 2026",
         "description": "The 1-Minute Market Report, April 19, 2026",
@@ -38,125 +158,5 @@
         "url": "https://finnhub.io/api/news?id=a5c9d09d7c7f4d672c8560149da676f30ad6d3758f70e4bf2486ef5a47d36983",
         "sentiment": 0.0,
         "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Global Economic Outlook: April 2026",
-        "description": "Global Economic Outlook: April 2026",
-        "url": "https://finnhub.io/api/news?id=ead678f73dedf88fd43f5b70460eeda47748d3c508890505082979810f0a8435",
-        "sentiment": 0.1,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Nasdaq Up By 60% Since Liberation Day Selloff And By 100% In 3 Years - People Are Just Having Fun",
-        "description": "Nasdaq Up By 60% Since Liberation Day Selloff And By 100% In 3 Years - People Are Just Having Fun",
-        "url": "https://finnhub.io/api/news?id=057ee1772bb800c98a6e39e7c3f5dd3324355ea4f4a4ed29809d9b5c20b6b9e0",
-        "sentiment": 0.09999999999999999,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Market Commentary: Teetering",
-        "description": "Market Commentary: Teetering",
-        "url": "https://finnhub.io/api/news?id=8fd979d511e52321ee1e7b30135144e352062e1da978595c7d79424a833aadfe",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Playing Iranian Roulette: Investors Are Asking The Wrong Questions",
-        "description": "Playing Iranian Roulette: Investors Are Asking The Wrong Questions",
-        "url": "https://finnhub.io/api/news?id=dc5bc5ff59cace54f2ab92f91babbe8c2b57b366e98fa030175dab05bbd292f2",
-        "sentiment": -0.1875,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Tech Divergence: Chips Soar, Software Weak - Will It Continue?",
-        "description": "Tech Divergence: Chips Soar, Software Weak - Will It Continue?",
-        "url": "https://finnhub.io/api/news?id=a1151d2e8aa708e746c42d7c23311a1622e5c78cb2bbfb13016d3392447e2068",
-        "sentiment": -0.16666666666666666,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "It's Morning Again In The Stock Market",
-        "description": "It's Morning Again In The Stock Market",
-        "url": "https://finnhub.io/api/news?id=55022f58f93bd32bec8b43cd61d90aa5e36931058ea02e557415af9d8cc42d41",
-        "sentiment": 0.39166666666666666,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Weekly Indicators: Oil Retreats, Manufacturing Advances, Consumers Stay The Course",
-        "description": "Weekly Indicators: Oil Retreats, Manufacturing Advances, Consumers Stay The Course",
-        "url": "https://finnhub.io/api/news?id=c078d4b64be05a262a9fbe45b534cf89cefa4dae656d290a0b2cec587f107dc6",
-        "sentiment": 0.18333333333333335,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Macro Insights: The 'Spoils Of The Iran War' Hidden In The Market",
-        "description": "Macro Insights: The 'Spoils Of The Iran War' Hidden In The Market",
-        "url": "https://finnhub.io/api/news?id=504a38fe7e94657ea5cf5fbca01b15ca171991f6409181921d4da35a7a1158a0",
-        "sentiment": 0.11111111111111112,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "How The 'Fake-Death' Of Petrodollar Supremacy Rewrites The S&P 500 Playbook (It's Not What You Think)",
-        "description": "How The 'Fake-Death' Of Petrodollar Supremacy Rewrites The S&P 500 Playbook (It's Not What You Think)",
-        "url": "https://finnhub.io/api/news?id=669c2fcb2f66f232306390bd7efd7be71c0b1ad3488da9cadadd3c9db543470f",
-        "sentiment": 0.029523809523809525,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "The Alfred E. Neuman Market Returns",
-        "description": "The Alfred E. Neuman Market Returns",
-        "url": "https://finnhub.io/api/news?id=a551ab1d9ada671030488e1d36f3646593742b735c9e7b9d4c90b3cb34d4c213",
-        "sentiment": 0.049999999999999996,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "An Important Lesson For Investors",
-        "description": "An Important Lesson For Investors",
-        "url": "https://finnhub.io/api/news?id=bead01bc7a84bc4603220622b8364d59c6bce1dd565fabed71f5b086c6727828",
-        "sentiment": 0.050892857142857156,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "April 2026 Trading Outlook: Fiscal Flows, Oil, Bank Credit, And Fed Interest Rates",
-        "description": "April 2026 Trading Outlook: Fiscal Flows, Oil, Bank Credit, And Fed Interest Rates",
-        "url": "https://finnhub.io/api/news?id=8aa20afe644de319a8b3b7b19e41a58d6e0afa490581650de5a57ca2197494dd",
-        "sentiment": -0.1875,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Markets Weekly Outlook: A Real Peace Process Or A Fantasy?",
-        "description": "Markets Weekly Outlook: A Real Peace Process Or A Fantasy?",
-        "url": "https://finnhub.io/api/news?id=e7bae6d1d6b8a03bb82b34d85accfac8e11b7ab4d3664f73ada49b8f6f268587",
-        "sentiment": 0.1,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
-        "description": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
-        "url": "https://finnhub.io/api/news?id=566792c6a7d797862e00e6c88388d73f37c3283b255334c9e66598c2a51dd258",
-        "sentiment": 0.15,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Fear & Greed: 26.0 (Fear)",
-        "description": "Fear & Greed: 26.0 (Fear)",
-        "url": "https://alternative.me/crypto/fear-and-greed-index/",
-        "sentiment": -0.48,
-        "source": "Fear & Greed Index"
     }
 ]

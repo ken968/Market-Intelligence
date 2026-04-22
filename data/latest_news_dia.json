@@ -1,5 +1,69 @@
 [
     {
+        "date": "2026-04-20",
+        "title": "S&P 500 Holds 7100 as Oil Surges Amid Moment of Hormuz Strait Reckoning",
+        "description": "S&P 500 Holds 7100 as Oil Surges Amid Moment of Hormuz Strait Reckoning",
+        "url": "https://247wallst.com/investing/2026/04/20/sp-500-holds-7100-as-oil-surges-amid-moment-of-hormuz-strait-reckoning/?.tsrc=rss",
+        "sentiment": -0.18125,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Top-Performing ETFs of Last Week",
+        "description": "Top-Performing ETFs of Last Week",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/top-performing-etfs-last-week-120000761.html?.tsrc=rss",
+        "sentiment": 0.14444444444444446,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "The War Is Not Over",
+        "description": "The War Is Not Over",
+        "url": "https://finnhub.io/api/news?id=89b79b594096a04013bc01e7402d135d2f929b47ba2fe977b8faf4f49f94c70f",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "AI Spending: The Biggest Gamble In U.S. History",
+        "description": "AI Spending: The Biggest Gamble In U.S. History",
+        "url": "https://finnhub.io/api/news?id=37491849c292b2deb9f23dd50ea188537127a900592b613f0b86c5586982766b",
+        "sentiment": 0.3208333333333333,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Weekly Market Pulse: Stop Reading The News",
+        "description": "Weekly Market Pulse: Stop Reading The News",
+        "url": "https://finnhub.io/api/news?id=763f30fecab73663ba38dbb363bd6952238eb5bd751550265186e242285a232c",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-20",
+        "title": "Fear & Greed: 29.0 (Fear)",
+        "description": "Fear & Greed: 29.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.42,
+        "source": "Fear & Greed Index"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "The Trade Driving The S&P 500 Higher May Not Last",
+        "description": "The Trade Driving The S&P 500 Higher May Not Last",
+        "url": "https://finnhub.io/api/news?id=b5219bd85e1b1e203fd1ebaa9b7447140745a6acfbf1d5111dac03a9d6d15322",
+        "sentiment": 0.08333333333333333,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-19",
+        "title": "The Year's Most Positive Signal Rallies Markets, But Iran Risk Favors Select Sectors",
+        "description": "The Year's Most Positive Signal Rallies Markets, But Iran Risk Favors Select Sectors",
+        "url": "https://finnhub.io/api/news?id=34ee50280fdbfd8fa4cb367455304ddb150bd09fd3f83537d0d7fe551c26f5fb",
+        "sentiment": 0.4090909090909091,
+        "source": "Finnhub"
+    },
+    {
         "date": "2026-04-19",
         "title": "The 1-Minute Market Report, April 19, 2026",
         "description": "The 1-Minute Market Report, April 19, 2026",
@@ -93,70 +157,6 @@
         "description": "This Week's Market Wrap: War Fades, Markets Rip, Fed Hopes Rise",
         "url": "https://finnhub.io/api/news?id=566792c6a7d797862e00e6c88388d73f37c3283b255334c9e66598c2a51dd258",
         "sentiment": 0.15,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-18",
-        "title": "Fear & Greed: 26.0 (Fear)",
-        "description": "Fear & Greed: 26.0 (Fear)",
-        "url": "https://alternative.me/crypto/fear-and-greed-index/",
-        "sentiment": -0.48,
-        "source": "Fear & Greed Index"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "A Diamond Quality Entry in DIA ETF, or Is It Time to Get Out?",
-        "description": "A Diamond Quality Entry in DIA ETF, or Is It Time to Get Out?",
-        "url": "https://www.marketbeat.com/originals/a-diamond-quality-entry-in-dia-etf-or-is-it-time-to-get-out/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
-        "sentiment": 0.3,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "The Final Push Toward A Deal And Why I'm Now Fully Invested",
-        "description": "The Final Push Toward A Deal And Why I'm Now Fully Invested",
-        "url": "https://finnhub.io/api/news?id=f8906cd78c2cadea8b6b19c594d281c707f7d7877b06cbce32b5ed37961514f1",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Hormuz Opens: Oil Crashes, Stocks Rip Higher",
-        "description": "Hormuz Opens: Oil Crashes, Stocks Rip Higher",
-        "url": "https://finnhub.io/api/news?id=e9a0336a25fd7ac98ac25483f48500783c3db2883f097b9dba47c2e79a2a6306",
-        "sentiment": 0.375,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Liquidity Drain Underway, Will It Even Matter?",
-        "description": "Liquidity Drain Underway, Will It Even Matter?",
-        "url": "https://finnhub.io/api/news?id=55e7c6d377ca1c5390042a5f6846de776db09e4cf848dcb2c69e14d2597d3803",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Sell Before May And Go Away: Why Another Big Market Drawdown Is Likely In 2026",
-        "description": "Sell Before May And Go Away: Why Another Big Market Drawdown Is Likely In 2026",
-        "url": "https://finnhub.io/api/news?id=3d263626c7532d6dde4e4cded8cbe4e39c08ce5e5e8a405e118a08aec63d0561",
-        "sentiment": -0.09999999999999999,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "S&P 500, Nasdaq 100, Russell 2000 Smash Records As Hormuz Reopens: What's Moving Markets Friday?",
-        "description": "S&P 500, Nasdaq 100, Russell 2000 Smash Records As Hormuz Reopens: What's Moving Markets Friday?",
-        "url": "https://finnhub.io/api/news?id=e9d424a7213e03ebf7bf6db62be0bc10e34209feda75c05d45fe4b554109c10b",
-        "sentiment": 0.21666666666666665,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-17",
-        "title": "Crisis In Transit: War's Economic Fallout Is Only Beginning",
-        "description": "Crisis In Transit: War's Economic Fallout Is Only Beginning",
-        "url": "https://finnhub.io/api/news?id=cc443324565475941bdb523562ded129a07fb913aa3f8a96eac4c5fba06c08f7",
-        "sentiment": 0.21666666666666667,
         "source": "Finnhub"
     }
 ]
