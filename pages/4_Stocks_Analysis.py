@@ -410,7 +410,57 @@ else:
                             with col_c:
                                 st.metric("Risk", insights['risk_level'].title())
                             st.warning(f" {insights['recommendation']}")
-                
+
+                # ── Sector-Level XAI (one Gemini call for all stocks) ──
+                st.markdown("---")
+                st.markdown("### 🔍 Sector Intelligence — *Why are markets moving this way?*")
+                try:
+                    from utils.xai_explainer import explain_sector_forecast, get_top_macro_drivers
+                    from utils.macro_processor import build_macro_context
+
+                    # Build compact ticker forecast summary for Gemini
+                    ticker_forecasts_xai = {}
+                    for ticker in stocks_with_models:
+                        fc = all_forecasts.get(ticker.lower(), {})
+                        if 'error' not in fc:
+                            cur = fc.get('Current', 0)
+                            week_val = fc.get('1 Week', {})
+                            week_price = week_val['price'] if isinstance(week_val, dict) else week_val
+                            pct = ((week_price - cur) / cur * 100) if cur > 0 else 0
+                            ticker_forecasts_xai[ticker] = {
+                                'direction': 'up' if pct > 0 else ('down' if pct < 0 else 'sideways'),
+                                'pct_change': round(pct, 2),
+                            }
+
+                    # Get top macro drivers using SPY as reference
+                    top_drivers_xai = get_top_macro_drivers('spy', lookback_days=14, top_n=3)
+                    macro_ctx_xai = build_macro_context()
+                    macro_summary_xai = macro_ctx_xai.get('macro_summary', '')
+
+                    # Show driver table
+                    if top_drivers_xai:
+                        import pandas as _pd_xai
+                        st.markdown("**📊 Top Macro Drivers (14-Day Movement vs Historical):**")
+                        driver_rows_xai = [{
+                            'Indicator': d['label'],
+                            'Recent Avg': d['recent_mean'],
+                            'Hist Avg': d['hist_mean'],
+                            'Z-Score': d['z_score'],
+                            'Direction': '▲ Rising' if d['direction'] == 'rising' else '▼ Falling',
+                        } for d in top_drivers_xai]
+                        st.dataframe(_pd_xai.DataFrame(driver_rows_xai), use_container_width=True, hide_index=True)
+
+                    with st.spinner("🧠 Gemini analyzing sector dynamics..."):
+                        sector_narrative = explain_sector_forecast(
+                            ticker_forecasts=ticker_forecasts_xai,
+                            macro_summary=macro_summary_xai,
+                            top_drivers=top_drivers_xai,
+                        )
+                    st.info(f"🧠 **Gemini Sector Analysis:** {sector_narrative}")
+                    st.caption("⚠️ PROBABILISTIC FORECAST — Not a trading signal. Confidence intervals apply.")
+                except Exception as _xe:
+                    st.caption(f"XAI sector analysis unavailable: {_xe}")
+
             except Exception as e:
                 show_error_message(f"Prediction error: {e}")
     

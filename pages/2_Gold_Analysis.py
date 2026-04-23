@@ -280,13 +280,67 @@ else:
                         st.metric("Risk", insights['risk_level'].title())
                     
                     st.success(f" **Recommendation**: {insights['recommendation']}")
-                    
+
+                    # ── XAI: Forecast Rationale (Why did the model predict this?) ──
+                    st.markdown("---")
+                    st.markdown("### 🔍 Forecast Rationale — *Why this prediction?*")
+
+                    try:
+                        from utils.xai_explainer import get_top_macro_drivers, explain_forecast
+                        from utils.macro_processor import build_macro_context
+
+                        drivers = get_top_macro_drivers('gold', lookback_days=14, top_n=3)
+                        macro_ctx = build_macro_context()
+                        macro_summary_xai = macro_ctx.get('macro_summary', '')
+
+                        # Show macro driver table
+                        if drivers:
+                            import pandas as _pd_xai
+                            st.markdown("**📊 Top Macro Drivers (14-Day Movement vs Historical):**")
+                            driver_rows = [{
+                                'Indicator': d['label'],
+                                'Recent Avg': d['recent_mean'],
+                                'Hist Avg': d['hist_mean'],
+                                'Z-Score': d['z_score'],
+                                'Direction': '▲ Rising' if d['direction'] == 'rising' else '▼ Falling',
+                            } for d in drivers]
+                            st.dataframe(_pd_xai.DataFrame(driver_rows), use_container_width=True, hide_index=True)
+
+                        # Determine direction from 1-month forecast
+                        xai_dir = insights.get('trend', 'up')
+                        xai_pct = insights.get('change_pct', 0)
+
+                        with st.spinner("🧠 Gemini explaining forecast rationale..."):
+                            rationale = explain_forecast(
+                                asset_key='gold',
+                                asset_name='Gold (XAUUSD)',
+                                direction=xai_dir,
+                                pct_change=xai_pct,
+                                drivers=drivers,
+                                macro_summary=macro_summary_xai,
+                            )
+
+                        xai_col1, xai_col2 = st.columns(2)
+                        with xai_col1:
+                            st.markdown("**🟢 Tailwinds** *(factors supporting forecast)*")
+                            for tw in rationale['tailwinds']:
+                                st.markdown(f"- {tw}")
+                        with xai_col2:
+                            st.markdown("**🔴 Headwinds** *(factors working against forecast)*")
+                            for hw in rationale['headwinds']:
+                                st.markdown(f"- {hw}")
+                        st.info(f"🧠 **Gemini Summary:** {rationale['summary']}")
+                        st.caption("⚠️ PROBABILISTIC FORECAST — Not a trading signal.")
+
+                    except Exception as _xe:
+                        st.caption(f"XAI unavailable: {_xe}")
+
                     # Highlight tomorrow
                     tomorrow = predictor.predict_tomorrow()
-                    
+
                     st.markdown("---")
                     st.markdown("####  Next Day Prediction")
-                    
+
                     col_a, col_b, col_c = st.columns(3)
                     with col_a:
                         st.metric("Current Price", f"${tomorrow['current']:,.2f}")
@@ -294,22 +348,22 @@ else:
                         st.metric("Tomorrow", f"${tomorrow['predicted']:,.2f}", f"{tomorrow['change']:+.2f}")
                     with col_c:
                         st.metric("Change %", f"{tomorrow['pct_change']:+.2f}%")
-                    
+
                     if tomorrow['direction'] == 'up':
                         st.success(" **Bullish Signal**: Model predicts upward momentum")
                     else:
                         st.error(" **Bearish Signal**: Model predicts downward pressure")
-                    
+
                     # Show forecast chart (Fan Chart) with safety check
                     st.markdown("####  Probability Cloud (Fan Chart)")
                     month_data = forecasts.get('1 Month', {}) if isinstance(forecasts, dict) else {}
                     forecast_30d = month_data.get('series', []) if isinstance(month_data, dict) else []
                     fan_p10 = month_data.get('fan_p10') if isinstance(month_data, dict) else None
                     fan_p90 = month_data.get('fan_p90') if isinstance(month_data, dict) else None
-                    
+
                     if not forecast_30d:
                         forecast_30d = predictor.recursive_forecast(30)
-                        
+
                     fig = create_forecast_chart(df.tail(90), forecast_30d, 'Gold', len(forecast_30d), fan_p10=fan_p10, fan_p90=fan_p90)
                     st.plotly_chart(fig, use_container_width=True)
                     

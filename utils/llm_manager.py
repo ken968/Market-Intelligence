@@ -160,23 +160,28 @@ def deduplicate_headlines(headlines: list) -> list:
 def filter_stale_news(news_items: list, cutoff_hours: int = NEWS_STALENESS_HOURS) -> list:
     """
     Filter out news items older than cutoff_hours.
-    Expects items as dicts with 'published_at' (ISO datetime string) and 'headline'.
-    Falls back to keeping items without timestamp.
+    Supports both 'published_at' and 'date' keys, and both offset-aware and
+    offset-naive datetime strings — all are normalised to UTC before comparison
+    to avoid 'can't compare offset-naive and offset-aware datetimes' errors.
     Returns items SORTED chronologically (oldest first) so Gemini reads narrative evolution.
     """
     cutoff = datetime.now(timezone.utc) - timedelta(hours=cutoff_hours)
     fresh = []
     no_ts = []  # items without timestamp — append at start (treat as oldest)
     for item in news_items:
-        ts = item.get('published_at')
+        # Support both key names used across different news files
+        ts = item.get('published_at') or item.get('date')
         if ts is None:
             no_ts.append(item)
             continue
         try:
-            pub = datetime.fromisoformat(ts.replace('Z', '+00:00'))
+            pub = datetime.fromisoformat(str(ts).replace('Z', '+00:00'))
+            # If offset-naive (no tzinfo), assume UTC to avoid comparison crash
+            if pub.tzinfo is None:
+                pub = pub.replace(tzinfo=timezone.utc)
             if pub >= cutoff:
                 fresh.append((pub, item))
-        except (ValueError, AttributeError):
+        except (ValueError, AttributeError, TypeError):
             no_ts.append(item)
 
     # Sort by timestamp, oldest first → newest last
