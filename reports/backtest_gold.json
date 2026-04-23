@@ -3,7 +3,7 @@
     "hit_ratio_3layer": 41.83673469387755,
     "hit_ratio_lstm": 41.83673469387755,
     "rmse_3layer": 70.7329487468,
-    "rmse_lstm": 1690.018324031931,
+    "rmse_lstm": 1725.9872383325048,
     "test_samples": 491,
     "start_test_date": "2024-05-06",
     "end_test_date": "2026-04-17"

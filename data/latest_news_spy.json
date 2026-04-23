@@ -1,162 +1,162 @@
 [
     {
-        "date": "2026-04-20",
-        "title": "Exchange-Traded Funds, Equity Futures Lower Pre-Bell Monday as Oil Prices Rise on Renewed Middle East Tensions",
-        "description": "Exchange-Traded Funds, Equity Futures Lower Pre-Bell Monday as Oil Prices Rise on Renewed Middle East Tensions",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/exchange-traded-funds-equity-futures-131028007.html?.tsrc=rss",
-        "sentiment": -0.05659722222222222,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "Stock Market Today: Dow Slides On Rising U.S.-Iran Tensions; Oil Prices Jumping Again (Live Coverage)",
-        "description": "Stock Market Today: Dow Slides On Rising U.S.-Iran Tensions; Oil Prices Jumping Again (Live Coverage)",
-        "url": "https://finance.yahoo.com/m/eb0ff88d-6203-3b32-b483-5da2153bf650/stock-market-today%3A-dow.html?.tsrc=rss",
-        "sentiment": 0.13636363636363635,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "S&P 500 Holds 7100 as Oil Surges Amid Moment of Hormuz Strait Reckoning",
-        "description": "S&P 500 Holds 7100 as Oil Surges Amid Moment of Hormuz Strait Reckoning",
-        "url": "https://247wallst.com/investing/2026/04/20/sp-500-holds-7100-as-oil-surges-amid-moment-of-hormuz-strait-reckoning/?.tsrc=rss",
-        "sentiment": -0.18125,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "Top-Performing ETFs of Last Week",
-        "description": "Top-Performing ETFs of Last Week",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/top-performing-etfs-last-week-120000761.html?.tsrc=rss",
-        "sentiment": 0.14444444444444446,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "9 S&P 500 Stocks Get Green Light To Post Insane Growth This Year",
-        "description": "9 S&P 500 Stocks Get Green Light To Post Insane Growth This Year",
-        "url": "https://finance.yahoo.com/m/2ad45363-a417-34a9-8890-bd761417c0da/9-s%26p-500-stocks-get-green.html?.tsrc=rss",
-        "sentiment": -0.26666666666666666,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "3 Key Differences Between These 3 S&P 500 ETFs \u2014 and Which One To Invest In, According to a Money Expert",
-        "description": "3 Key Differences Between These 3 S&P 500 ETFs \u2014 and Which One To Invest In, According to a Money Expert",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/3-key-differences-between-3-001104180.html?.tsrc=rss",
-        "sentiment": 0.14285714285714285,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "Stock Market Today: Dow Slides On Rising U.S.-Iran Tensions; Oil Prices Jumping Again (Live Coverage)",
-        "description": "Stock Market Today: Dow Slides On Rising U.S.-Iran Tensions; Oil Prices Jumping Again (Live Coverage)",
-        "url": "https://finnhub.io/api/news?id=2e4335459606cf08ca1ea83c84a779de40d17229f3f8dea179ce35eb6abae67b",
-        "sentiment": 0.13636363636363635,
+        "date": "2026-04-22",
+        "title": "Capital Markets Outlook Q2 2026: At The Intersection Of AI And All The Other Stuff",
+        "description": "Capital Markets Outlook Q2 2026: At The Intersection Of AI And All The Other Stuff",
+        "url": "https://finnhub.io/api/news?id=f96df8553f9c95b9a7b629fa21837ceca5d30ab59857b35abb72b7a351e6c370",
+        "sentiment": -0.053125000000000006,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-20",
-        "title": "9 S&P 500 Stocks Get Green Light To Post Insane Growth This Year",
-        "description": "9 S&P 500 Stocks Get Green Light To Post Insane Growth This Year",
-        "url": "https://finnhub.io/api/news?id=79d1e66fbc9aa04eba07ed2cf3e12ad4bce1c794287a17c80be68d3c47cb3fc9",
-        "sentiment": -0.26666666666666666,
+        "date": "2026-04-22",
+        "title": "Global Export Orders Fall Amid Outbreak Of War In The Middle East",
+        "description": "Global Export Orders Fall Amid Outbreak Of War In The Middle East",
+        "url": "https://finnhub.io/api/news?id=3d4783cc27abe6550d0622f9dc3213510cdb10536bff7b9908d7ff02bfe17393",
+        "sentiment": 0.10714285714285714,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-20",
-        "title": "The War Is Not Over",
-        "description": "The War Is Not Over",
-        "url": "https://finnhub.io/api/news?id=89b79b594096a04013bc01e7402d135d2f929b47ba2fe977b8faf4f49f94c70f",
+        "date": "2026-04-22",
+        "title": "A New Era For The Fed? Looking Back On Kevin Warsh's U.S. Senate Hearing And Market Reactions",
+        "description": "A New Era For The Fed? Looking Back On Kevin Warsh's U.S. Senate Hearing And Market Reactions",
+        "url": "https://finnhub.io/api/news?id=605eb49526079f7728906f82d9ba186fd45aaf2901782adfbfa27c79bfe45dd2",
+        "sentiment": 0.03409090909090909,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-22",
+        "title": "The AI-Enabled Wealth Transfer No One is Talking About",
+        "description": "The AI-Enabled Wealth Transfer No One is Talking About",
+        "url": "https://finnhub.io/api/news?id=854e5597007986ebeef50f6efccbddd3fe5f3fe4989320caecf419fa4f17aa63",
+        "sentiment": 0.2,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-22",
+        "title": "IWMI: A Different Take On Income Investing",
+        "description": "IWMI: A Different Take On Income Investing",
+        "url": "https://finnhub.io/api/news?id=f7cec8b60e0bbec12e84aebe29ab8c8edd0b024401d403127b80b31ea5e027d3",
+        "sentiment": 0.08,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-22",
+        "title": "SCHD: Why I'm Choosing The S&P 500 Over This Dividend Favorite",
+        "description": "SCHD: Why I'm Choosing The S&P 500 Over This Dividend Favorite",
+        "url": "https://finnhub.io/api/news?id=a092f6e21d4b3852cc588e0e1fe1a96d22e092b68e2579e9a313c55e7b662d0d",
+        "sentiment": 0.11111111111111112,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-22",
+        "title": "John Hancock\u2019s CEO Explains the Explosive Growth of Active ETFs",
+        "description": "John Hancock\u2019s CEO Explains the Explosive Growth of Active ETFs",
+        "url": "https://finnhub.io/api/news?id=fdeafb4bcd6411765c6bde2adb591e002b5721339a21c68d68daa555b160206e",
+        "sentiment": -0.019444444444444445,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-22",
+        "title": "Warsh Testimony",
+        "description": "Warsh Testimony",
+        "url": "https://finnhub.io/api/news?id=f19f43dcea4578401054678a79708e05674c4c6eb8bf42b0780079b134ddcdbe",
         "sentiment": 0.0,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-20",
-        "title": "Breadth Breakout Turns Into Broad Confirmation",
-        "description": "Breadth Breakout Turns Into Broad Confirmation",
-        "url": "https://finnhub.io/api/news?id=22d2b5b21b1942273b125fd9f3daefc10494c075eb441abf8c66155e2645ea1b",
-        "sentiment": 0.10545454545454544,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "S&P 500 Clocks New Record High As Near-Record Winning Streak Continues",
-        "description": "S&P 500 Clocks New Record High As Near-Record Winning Streak Continues",
-        "url": "https://finnhub.io/api/news?id=50795aa5ab6a7cab57de062e7da798786c322437c095422a43619ce31327f37b",
-        "sentiment": 0.26545454545454544,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "AI Spending: The Biggest Gamble In U.S. History",
-        "description": "AI Spending: The Biggest Gamble In U.S. History",
-        "url": "https://finnhub.io/api/news?id=37491849c292b2deb9f23dd50ea188537127a900592b613f0b86c5586982766b",
-        "sentiment": 0.3208333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "Table Of The Day: After S&P 500 Sees Near-Record Swing, What's Next?",
-        "description": "Table Of The Day: After S&P 500 Sees Near-Record Swing, What's Next?",
-        "url": "https://finnhub.io/api/news?id=6339c3173ebef58e7ac3017cbc6bdd614092d769536168e6f9b2ae9968a7f7f1",
+        "date": "2026-04-22",
+        "title": "Integrated Wealth Concepts LLC's State Street SPDR S&P 500 ETF Trust(SPY) Holding History",
+        "description": "Integrated Wealth Concepts LLC's State Street SPDR S&P 500 ETF Trust(SPY) Holding History",
+        "url": "https://www.gurufocus.com/guru-portfolio/Integrated%20Wealth%20Concepts%20LLC/SPY",
         "sentiment": 0.0,
-        "source": "Finnhub"
+        "source": "Alpha Vantage"
     },
     {
-        "date": "2026-04-20",
-        "title": "The Market's All-Time High Is A Warning Sign",
-        "description": "The Market's All-Time High Is A Warning Sign",
-        "url": "https://finnhub.io/api/news?id=3fa328bd75939d90d5dcb273e1b9d08702e86a0e274c6943f8d65dfd6c184adc",
-        "sentiment": 0.16,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "S&P 500 Earnings: Forward Estimated Growth Is Really Remarkable, Revenue Growth Too",
-        "description": "S&P 500 Earnings: Forward Estimated Growth Is Really Remarkable, Revenue Growth Too",
-        "url": "https://finnhub.io/api/news?id=bc2e1f5d543323e001b6d1701a520195222290791be3c3e26cfe348f6efd3279",
-        "sentiment": 0.75,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "Weekly Market Pulse: Stop Reading The News",
-        "description": "Weekly Market Pulse: Stop Reading The News",
-        "url": "https://finnhub.io/api/news?id=763f30fecab73663ba38dbb363bd6952238eb5bd751550265186e242285a232c",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "3 Key Differences Between These 3 S&P 500 ETFs \u2014 and Which One To Invest In, According to a Money Expert",
-        "description": "3 Key Differences Between These 3 S&P 500 ETFs \u2014 and Which One To Invest In, According to a Money Expert",
-        "url": "https://finnhub.io/api/news?id=dc1bfb5bf12dc82f1127d1364a75503fbaa68920311a5be8fc01e8d39689088f",
-        "sentiment": 0.14285714285714285,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-20",
-        "title": "Fear & Greed: 29.0 (Fear)",
-        "description": "Fear & Greed: 29.0 (Fear)",
+        "date": "2026-04-22",
+        "title": "Fear & Greed: 32.0 (Fear)",
+        "description": "Fear & Greed: 32.0 (Fear)",
         "url": "https://alternative.me/crypto/fear-and-greed-index/",
-        "sentiment": -0.42,
+        "sentiment": -0.36,
         "source": "Fear & Greed Index"
     },
     {
-        "date": "2026-04-19",
-        "title": "\u2018This Is Highway Robbery\u2019: George Kamel Blasts Family Member\u2019s Investment Fees",
-        "description": "\u2018This Is Highway Robbery\u2019: George Kamel Blasts Family Member\u2019s Investment Fees",
-        "url": "https://247wallst.com/personal-finance/2026/04/19/this-is-highway-robbery-george-kamel-blasts-family-members-investment-fees/?.tsrc=rss",
+        "date": "2026-04-21",
+        "title": "The AI-Enabled Wealth Transfer No One is Talking About",
+        "description": "The AI-Enabled Wealth Transfer No One is Talking About",
+        "url": "http://www.etf.com/sections/equity/ai-enabled-wealth-transfer-no-one-talking-about?utm_source=yahoo-finance&utm_medium=rss&utm_campaign=yahoo-finance-rss&.tsrc=rss",
         "sentiment": 0.2,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-19",
-        "title": "Why FFLG Is the Best Fidelity ETF You\u2019ve Never Heard Of",
-        "description": "Why FFLG Is the Best Fidelity ETF You\u2019ve Never Heard Of",
-        "url": "https://247wallst.com/investing/2026/04/19/why-fflg-is-the-best-fidelity-etf-youve-never-heard-of/?.tsrc=rss",
-        "sentiment": 0.35833333333333334,
+        "date": "2026-04-21",
+        "title": "John Hancock\u2019s CEO Explains the Explosive Growth of Active ETFs",
+        "description": "John Hancock\u2019s CEO Explains the Explosive Growth of Active ETFs",
+        "url": "http://www.etf.com/sections/conferences/john-hancocks-ceo-explains-explosive-growth-active-etfs?utm_source=yahoo-finance&utm_medium=rss&utm_campaign=yahoo-finance-rss&.tsrc=rss",
+        "sentiment": -0.0031746031746031794,
         "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-21",
+        "title": "SPY and GLD: Are There More Affordable Alternatives to These Very Popular ETFs?",
+        "description": "SPY and GLD: Are There More Affordable Alternatives to These Very Popular ETFs?",
+        "url": "https://www.fool.com/coverage/etfs/2026/04/21/spy-and-gld-are-there-more-affordable-alternatives-to-these-very-popular-etfs/?.tsrc=rss",
+        "sentiment": 0.5933333333333334,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-21",
+        "title": "Gold Drops as Investors Flee Safe Havens for Stocks on Iran Deal Hopes",
+        "description": "Gold Drops as Investors Flee Safe Havens for Stocks on Iran Deal Hopes",
+        "url": "https://247wallst.com/investing/2026/04/21/gold-drops-as-investors-flee-safe-havens-for-stocks-on-iran-deal-hopes/?.tsrc=rss",
+        "sentiment": 0.26666666666666666,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-21",
+        "title": "Russell 2000\u2019s Gains Fueled by Risk-On Trade as Small Caps Extend Run",
+        "description": "Russell 2000\u2019s Gains Fueled by Risk-On Trade as Small Caps Extend Run",
+        "url": "https://247wallst.com/investing/2026/04/21/russell-2000s-gains-fueled-by-risk-on-trade-as-small-caps-extend-run/?.tsrc=rss",
+        "sentiment": 0.006623376623376627,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-21",
+        "title": "Exchange-Traded Funds, Equity Futures Higher Pre-Bell Tuesday Amid Second Round of US-Iran Talks",
+        "description": "Exchange-Traded Funds, Equity Futures Higher Pre-Bell Tuesday Amid Second Round of US-Iran Talks",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/exchange-traded-funds-equity-futures-130622104.html?.tsrc=rss",
+        "sentiment": -0.004166666666666668,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-21",
+        "title": "S&P 500 Eyes Apple\u2019s Changing of Guard, AI Tailwinds as Oil Pulls Back on Iran Deal Talks",
+        "description": "S&P 500 Eyes Apple\u2019s Changing of Guard, AI Tailwinds as Oil Pulls Back on Iran Deal Talks",
+        "url": "https://247wallst.com/investing/2026/04/21/sp-500-eyes-apples-changing-of-guard-ai-tailwinds-as-oil-pulls-back-on-iran-deal-talks/?.tsrc=rss",
+        "sentiment": -0.06,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-21",
+        "title": "Best-Performing Leveraged ETFs of Last Week",
+        "description": "Best-Performing Leveraged ETFs of Last Week",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/best-performing-leveraged-etfs-last-120000570.html?.tsrc=rss",
+        "sentiment": 0.14444444444444446,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-21",
+        "title": "President Trump Posts On Truth Social \"Based on the fact that the Government of Iran is seriously fractured, not unexpectedly so and, upon the request of Field Marshal Asim Munir, and Prime Minister Shehbaz Sharif, of Pakistan, we have been asked to hold our Attack on the Country of Iran until such time as their leaders and representatives can come up with a unified proposal...\"",
+        "description": "President Trump Posts On Truth Social \"Based on the fact that the Government of Iran is seriously fractured, not unexpectedly so and, upon the request of Field Marshal Asim Munir, and Prime Minister Shehbaz Sharif, of Pakistan, we have been asked to hold our Attack on the Country of Iran until such time as their leaders and representatives can come up with a unified proposal...\"",
+        "url": "https://finnhub.io/api/news?id=8e50f5cabe64ca0f5559193b3c0a4927ace1997e0cc69d4ca14f11f7c21dd2ad",
+        "sentiment": -0.0875,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-21",
+        "title": "Yardeni Says Buy Energy Stocks \u2014 Just As Trump's Iran Ceasefire Runs Out Of Time",
+        "description": "Yardeni Says Buy Energy Stocks \u2014 Just As Trump's Iran Ceasefire Runs Out Of Time",
+        "url": "https://finnhub.io/api/news?id=ed4a930bf9d59994c75f1c0ea581ca09a2889a400f146e4dad9e2e6eb2884cb2",
+        "sentiment": -0.016666666666666666,
+        "source": "Finnhub"
     }
 ]

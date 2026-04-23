@@ -34,8 +34,10 @@ GEMINI_KEYS = [
 
 # ---------------------------------------------------------------------------
 # Staleness cutoff: news older than N hours are discarded
+# 7 days = 168 hours — captures full narrative arc for CEO analysis
+# Retail sentiment (Reddit) must be filtered to 24h separately at ingestion level
 # ---------------------------------------------------------------------------
-NEWS_STALENESS_HOURS = 12
+NEWS_STALENESS_HOURS = 168
 
 # ---------------------------------------------------------------------------
 # Deduplication: cosine similarity threshold for near-duplicate headlines
@@ -78,8 +80,14 @@ Scores: supply_shock_severity=0.15, geopolitical_stress=0.25, monetary_policy_ha
 # Build the system prompt using Causal Hierarchy + Few-Shot Calibration
 # ---------------------------------------------------------------------------
 SYSTEM_PROMPT_TEMPLATE = """
-You are a quantitative macro analyst. Your task is to analyze a set of financial news headlines 
-and assign precise numerical scores (0.0 to 1.0) for each of the following categories.
+You are a quantitative macro analyst. Your task is to analyze a chronological timeline of financial news
+headlines from the past 7 days and assign precise numerical scores (0.0 to 1.0) for each category below.
+
+CRITICAL — NARRATIVE EVOLUTION RULE:
+The headlines are ordered from OLDEST (top) to NEWEST (bottom).
+If a later headline contradicts or cancels an earlier one (e.g., Monday: "Iran-US peace deal" → Friday: "US fires on Iran vessel" → Friday night: "Peace deal cancelled"),
+you MUST treat the most recent headline as the current reality. Disregard the outdated sentiment from older, superseded headlines.
+Do NOT average or blend conflicting narratives — prioritize the latest facts.
 
 IMPORTANT — CAUSAL HIERARCHY: Always reason in this exact order:
 1. supply_shock_severity       — physical supply/demand disruptions (wars, embargoes, natural disasters)
@@ -154,21 +162,26 @@ def filter_stale_news(news_items: list, cutoff_hours: int = NEWS_STALENESS_HOURS
     Filter out news items older than cutoff_hours.
     Expects items as dicts with 'published_at' (ISO datetime string) and 'headline'.
     Falls back to keeping items without timestamp.
+    Returns items SORTED chronologically (oldest first) so Gemini reads narrative evolution.
     """
     cutoff = datetime.now(timezone.utc) - timedelta(hours=cutoff_hours)
     fresh = []
+    no_ts = []  # items without timestamp — append at start (treat as oldest)
     for item in news_items:
         ts = item.get('published_at')
         if ts is None:
-            fresh.append(item)
+            no_ts.append(item)
             continue
         try:
             pub = datetime.fromisoformat(ts.replace('Z', '+00:00'))
             if pub >= cutoff:
-                fresh.append(item)
+                fresh.append((pub, item))
         except (ValueError, AttributeError):
-            fresh.append(item)
-    return fresh
+            no_ts.append(item)
+
+    # Sort by timestamp, oldest first → newest last
+    fresh.sort(key=lambda x: x[0])
+    return no_ts + [item for _, item in fresh]
 
 
 # ---------------------------------------------------------------------------
@@ -347,8 +360,11 @@ def analyze_news_context(
             'headlines_used': 0,
         }
 
-    # --- 3. Build prompt ---
-    headlines_block = '\n'.join(f'- {h}' for h in headlines[:30])  # cap at 30 headlines
+    # --- 3. Build prompt with CHRONOLOGICAL ordering label ---
+    # Headlines are already sorted oldest→newest by filter_stale_news
+    headlines_block = '\n'.join(
+        f"[{i+1}/{min(len(headlines),30)}] {h}" for i, h in enumerate(headlines[:30])
+    )  # Cap at 30 headlines, numbered so Gemini understands sequence
 
     system = SYSTEM_PROMPT_TEMPLATE.format(
         few_shot_examples=FEW_SHOT_EXAMPLES,

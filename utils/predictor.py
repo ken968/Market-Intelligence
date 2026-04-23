@@ -27,14 +27,17 @@ except ImportError:
     LLM_AVAILABLE = False
 
 
-def get_confidence_score(asset_key, timeframe):
+def get_confidence_score(asset_key, timeframe, ceo_confidence: float = 0.0):
     """
-    Get confidence score for asset and timeframe
-    
+    Get confidence score for asset and timeframe.
+    Applies a Dynamic Confidence Multiplier when CEO Layer (Gemini) provides
+    a strong, high-confidence signal that confirms the LSTM direction.
+
     Args:
-        asset_key (str): Asset identifier (e.g., 'gold', 'btc', 'aapl')
-        timeframe (str): Forecast timeframe (e.g., '1 Week', '1 Month')
-    
+        asset_key (str)    : Asset identifier (e.g., 'gold', 'btc', 'aapl')
+        timeframe (str)    : Forecast timeframe (e.g., '1 Week', '1 Month')
+        ceo_confidence (float): Gemini CEO confidence score [0.0 – 1.0]
+
     Returns:
         dict: {'score': float, 'label': str, 'color': str}
     """
@@ -45,10 +48,28 @@ def get_confidence_score(asset_key, timeframe):
         asset_type = 'btc'
     else:
         asset_type = 'stocks'
-    
-    return CONFIDENCE_SCORES.get(asset_type, {}).get(timeframe, {
+
+    base = CONFIDENCE_SCORES.get(asset_type, {}).get(timeframe, {
         'score': 0.50, 'label': 'Unknown', 'color': 'info'
-    })
+    }).copy()
+
+    # Dynamic uplift: if Gemini is highly confident (>= 0.7), boost the score
+    # This reflects that strong fundamental context reduces forecast uncertainty
+    if ceo_confidence >= 0.70:
+        uplift = (ceo_confidence - 0.50) * 0.20   # max +0.10 boost at confidence=1.0
+        base['score'] = min(0.95, base['score'] + uplift)
+        # Re-label if score crosses thresholds
+        if base['score'] >= 0.80:
+            base['label'] = 'High'
+            base['color'] = 'success'
+        elif base['score'] >= 0.65:
+            base['label'] = 'Good'
+            base['color'] = 'success'
+        elif base['score'] >= 0.50:
+            base['label'] = 'Moderate'
+            base['color'] = 'info'
+
+    return base
 
 
 class AssetPredictor:
@@ -363,36 +384,59 @@ class AssetPredictor:
             contextual = self.recursive_forecast(steps,
                                                   ceo_bias_vector=ceo_bias_vector,
                                                   ceo_drift_multiplier=ceo_drift_multiplier)
-            confidence = get_confidence_score(self.asset_key, label)
-            
-            # Grounded Monte Carlo (Fan Charts) using Historical AI Error
+            confidence = get_confidence_score(
+                self.asset_key, label,
+                ceo_confidence=ceo_context.get('confidence', 0.0)
+            )
+
+            # ── Dynamic Monte Carlo ──
+            # Volatility is driven by 3 factors:
+            #   1. Historical AI error (RMSE from backtest, most precise)
+            #   2. Live VIX level (fear index — widens cloud during panic)
+            #   3. CEO Confidence (narrows cloud when Gemini is highly certain)
             fan_p10, fan_p90 = [], []
             if contextual:
                 try:
-                    # Attempt to load AI's actual historical error from Backtest
                     import json
                     with open(f'reports/backtest_{self.asset_key}.json', 'r') as f:
                         metrics = json.load(f)
-                        if isinstance(metrics, dict):
-                            rmse = metrics.get('rmse_3layer', metrics.get('rmse', 0))
-                            # Convert absolute RMSE to percentage error approximation
-                            vol = (rmse / current_price) if current_price > 0 else 0.02
-                            # Cap it to realistic extremes (min 0.5%, max 5% daily standard deviation spread)
-                            vol = max(0.005, min(0.05, vol))
-                        else:
-                            vol = 0.015
+                    if isinstance(metrics, dict):
+                        rmse = metrics.get('rmse_3layer', metrics.get('rmse', 0))
+                        vol = (rmse / current_price) if current_price > 0 else 0.02
+                        vol = max(0.005, min(0.05, vol))
+                    else:
+                        vol = 0.015
                 except Exception:
-                    # Fallback if backtest hasn't been run yet
                     vol = 0.04 if self.asset_key == 'btc' else (0.012 if self.asset_key == 'gold' else 0.015)
-                    
+
+                # — VIX Scaling: widen cloud when market is fearful —
+                try:
+                    macro_df = pd.read_csv('data/macro_indicators.csv')
+                    vix_live = float(macro_df['VIX'].dropna().iloc[-1])
+                    # VIX baseline is ~15 (calm). Scale multiplicatively.
+                    # VIX=30 → 2x wider; VIX=10 → 0.67x (narrower)
+                    vix_multiplier = max(0.5, min(3.0, vix_live / 15.0))
+                    vol = vol * vix_multiplier
+                except Exception:
+                    pass  # No VIX data — use base vol
+
+                # — CEO Confidence Scaling: narrow cloud when Gemini is sure —
+                ceo_conf = ceo_context.get('confidence', 0.0)
+                if ceo_conf > 0.0:
+                    # confidence=1.0 → 60% narrower; confidence=0.5 → 20% narrower
+                    ceo_narrow = 1.0 - (ceo_conf * 0.40)
+                    vol = vol * max(0.50, ceo_narrow)
+
+                # Cap final volatility to realistic daily bounds
+                vol = max(0.003, min(0.08, vol))
+
                 # Random walk drift simulation
                 paths = np.zeros((100, steps))
                 for i in range(100):
                     noises = np.random.normal(0, vol, steps)
-                    # cumulative noise growth scales by sqrt(t) 
                     cum_noise = np.exp(np.cumsum(noises) - 0.5 * vol**2 * np.arange(1, steps + 1))
                     paths[i] = np.array(contextual) * cum_noise
-                
+
                 fan_p10 = np.percentile(paths, 10, axis=0).tolist()
                 fan_p90 = np.percentile(paths, 90, axis=0).tolist()
 

@@ -396,20 +396,37 @@ try:
         except Exception:
             st.info("Collecting data...")
 
-    # Gemini analysis button (requires news cache)
+    # Gemini analysis button — reads from all available news files
+    import json
     news_headlines = []
     published_at_list = []
-    if os.path.exists('data/news_cache.json'):
-        import json
-        try:
-            with open('data/news_cache.json', 'r') as _f:
-                news_cache = json.load(_f)
-            news_headlines = [item.get('headline', '') for item in news_cache if item.get('headline')]
-            published_at_list = [item.get('published_at') for item in news_cache]
-        except Exception:
-            pass
+
+    # Aggregate news from all per-asset news files created by sentiment_fetcher_v2.py
+    news_source_files = [
+        'data/latest_news_meta.json',
+        'data/latest_news_gold.json',
+        'data/latest_news_btc.json',
+    ]
+    seen_titles = set()
+    for news_file in news_source_files:
+        if os.path.exists(news_file):
+            try:
+                with open(news_file, 'r', encoding='utf-8') as _f:
+                    news_items = json.load(_f)
+                for item in news_items:
+                    # Support both 'headline' and 'title' key formats
+                    headline = item.get('headline') or item.get('title', '')
+                    if headline and headline not in seen_titles:
+                        seen_titles.add(headline)
+                        news_headlines.append(headline)
+                        # Support both 'published_at' and 'date' key formats
+                        ts = item.get('published_at') or item.get('date')
+                        published_at_list.append(ts)
+            except Exception:
+                pass
 
     if news_headlines:
+        st.caption(f"📰 {len(news_headlines)} headlines loaded from news cache · Ready for CEO analysis")
         if st.button("🔄 Run Gemini CEO Analysis", use_container_width=False, key="ceo_analysis_btn"):
             with st.spinner("Gemini reasoning through Causal Hierarchy..."):
                 result = analyze_news_context(

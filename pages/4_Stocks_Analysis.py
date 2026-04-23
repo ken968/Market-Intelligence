@@ -275,40 +275,74 @@ else:
                                 else:
                                     all_forecasts[ticker.lower()][key] = adjusted[ticker][i]
                 
+                # Valid timeframe keys only (exclude 'ceo_context', 'Current', etc.)
+                VALID_TIMEFRAMES = ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']
+
                 # Create results dataframe
                 results = []
+                chart_data = {}  # For grouped bar chart
                 for ticker in stocks_with_models:
                     forecast = all_forecasts[ticker.lower()]
                     if 'error' not in forecast:
+                        current_price = forecast.get('Current', 0)
                         row = {
                             'Stock': ticker,
-                            'Current': f"${forecast['Current']:,.2f}",
+                            'Current': f"${current_price:,.2f}",
                         }
-                        # Add each range from FORECAST_RANGES
-                        for range_name in forecast.keys():
-                            if range_name != 'Current':
-                                # Handle both dict and float format
-                                value = forecast[range_name]
-                                if isinstance(value, dict):
-                                    row[range_name] = f"${value['price']:,.2f}"
-                                else:
-                                    row[range_name] = f"${value:,.2f}"
-                        
+                        pct_changes = []
+                        for range_name in VALID_TIMEFRAMES:
+                            value = forecast.get(range_name)
+                            if value is None:
+                                continue
+                            price = value['price'] if isinstance(value, dict) else value
+                            row[range_name] = f"${price:,.2f}"
+                            if current_price > 0:
+                                pct = ((price - current_price) / current_price) * 100
+                                pct_changes.append(pct)
+                            else:
+                                pct_changes.append(0)
+                        chart_data[ticker] = pct_changes
                         results.append(row)
-                
+
                 st.markdown("####  Multi-Range Forecast Summary")
-                
+
                 # Dynamic height calculation to avoid scrolling
-                # Base height + (rows * pixels per row)
                 row_height = 35
                 table_height = (len(results) + 1) * row_height + 3
-                
+
                 st.dataframe(
-                    pd.DataFrame(results), 
-                    use_container_width=True, 
+                    pd.DataFrame(results),
+                    use_container_width=True,
                     hide_index=True,
                     height=table_height
                 )
+
+                # ── Grouped Bar Chart: % Change per Timeframe ──
+                if chart_data:
+                    st.markdown("####  Forecast % Change — Visual Comparison")
+                    fig_bar = go.Figure()
+                    colors_map = {t: ASSETS[t.lower()]['color'] for t in stocks_with_models if t.lower() in ASSETS}
+                    for ticker, pcts in chart_data.items():
+                        fig_bar.add_trace(go.Bar(
+                            name=ticker,
+                            x=VALID_TIMEFRAMES[:len(pcts)],
+                            y=[round(p, 2) for p in pcts],
+                            marker_color=colors_map.get(ticker, '#00A8E8'),
+                            text=[f"{p:+.1f}%" for p in pcts],
+                            textposition='outside',
+                        ))
+                    fig_bar.update_layout(
+                        template='plotly_dark',
+                        barmode='group',
+                        height=450,
+                        yaxis_title="Projected Change (%)",
+                        xaxis_title="Timeframe",
+                        hovermode='x unified',
+                        legend=dict(orientation='h', y=-0.2),
+                        margin=dict(t=40, b=80),
+                    )
+                    fig_bar.add_hline(y=0, line_dash='dash', line_color='rgba(255,255,255,0.3)')
+                    st.plotly_chart(fig_bar, use_container_width=True)
                 
                 # NEW: Add deep analysis for batch forecasts
                 st.markdown("---")
