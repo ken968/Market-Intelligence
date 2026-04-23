@@ -1,27 +1,72 @@
-"""
+﻿"""
 XAI Explainer — Explainable AI for Market Intelligence Terminal
 
-Provides two capabilities:
-  1. Macro Driver Extraction: identifies the top 3 macro features with the
-     most extreme recent movement vs their historical mean.
-  2. Gemini Explainer: sends those drivers + forecast direction to Gemini and
-     gets a plain-language rationale (Tailwinds / Headwinds / Summary).
-  3. Sector-Level Batch Analysis: one Gemini call that explains why
-     Tech/Industrial/Index stocks moved in different directions.
-
-Architecture note: uses the same Gemini key-rotation logic as llm_manager.py
+Provides:
+  1. Macro Driver Extraction: top 3 macro features with the most extreme
+     recent movement vs their historical mean (Z-score ranked).
+  2. Asset-Specific Impact Mapping: maps each driver to its known directional
+     impact on the specific asset (e.g. rising DXY = bearish for Gold).
+  3. Gemini Explainer: structured institutional-style rationale.
+  4. Sector-Level Batch Analysis: one Gemini call for all-stock divergence.
 """
 
 import os
-import json
 import pandas as pd
 import numpy as np
 from datetime import datetime, timezone, timedelta
 
 
 # ---------------------------------------------------------------------------
-# Macro feature labels (human-readable names for the UI)
+# Known directional impact of each macro indicator per asset type
 # ---------------------------------------------------------------------------
+ASSET_IMPACT_MAP = {
+    'gold': {
+        'DXY':              'BEARISH',   # Stronger dollar → gold cheaper globally
+        'VIX':              'BULLISH',   # Fear → safe-haven demand
+        'Yield_10Y':        'BEARISH',   # Higher yields → opportunity cost rises
+        'Oil_Price':        'BULLISH',   # Inflation proxy → gold hedge
+        'CPI_MoM':          'BULLISH',   # Inflation → gold inflation hedge
+        'PPI_MoM':          'BULLISH',   # Upstream inflation → gold hedge
+        'PCE_MoM':          'BULLISH',   # Fed inflation gauge → policy signal
+        'NFP_Change':       'BEARISH',   # Strong jobs → rate hike risk
+        'YieldCurve_10Y2Y': 'MIXED',     # Inversion → recession fear → mixed
+        'M2_MoM':           'BULLISH',   # More liquidity → gold rises
+        'M2_YoY':           'BULLISH',   # Liquidity trend → gold positive
+        'Yield_10Y_Rate':   'BEARISH',   # Higher cost of capital → gold negative
+        'Breakeven_5Y5Y':   'BULLISH',   # Inflation expectations → gold positive
+    },
+    'btc': {
+        'DXY':              'BEARISH',   # Strong dollar → risk-off
+        'VIX':              'BEARISH',   # Fear → risk assets sold
+        'Yield_10Y':        'BEARISH',   # Higher yields → risk-off rotation
+        'Oil_Price':        'MIXED',
+        'CPI_MoM':          'BEARISH',   # Inflation → rate hike → risk-off
+        'PPI_MoM':          'BEARISH',
+        'PCE_MoM':          'BEARISH',
+        'NFP_Change':       'BEARISH',   # Strong jobs → rate hike → BTC down
+        'YieldCurve_10Y2Y': 'BULLISH',   # Normal curve → growth regime → risk-on
+        'M2_MoM':           'BULLISH',   # Liquidity → crypto positive
+        'M2_YoY':           'BULLISH',
+        'Yield_10Y_Rate':   'BEARISH',
+        'Breakeven_5Y5Y':   'MIXED',
+    },
+    'stocks': {
+        'DXY':              'MIXED',     # Depends on export exposure
+        'VIX':              'BEARISH',   # Fear → sell-off
+        'Yield_10Y':        'BEARISH',   # Discount rate rises → equity down
+        'Oil_Price':        'MIXED',     # Energy sector up, consumer down
+        'CPI_MoM':          'BEARISH',   # Inflation → rate hike risk
+        'PPI_MoM':          'BEARISH',   # Margin compression
+        'PCE_MoM':          'BEARISH',
+        'NFP_Change':       'BULLISH',   # Strong jobs → earnings growth
+        'YieldCurve_10Y2Y': 'BULLISH',   # Normal → growth → equities up
+        'M2_MoM':           'BULLISH',   # Liquidity → equities bid
+        'M2_YoY':           'BULLISH',
+        'Yield_10Y_Rate':   'BEARISH',
+        'Breakeven_5Y5Y':   'MIXED',
+    },
+}
+
 MACRO_LABELS = {
     'DXY':               'US Dollar Index (DXY)',
     'VIX':               'Fear Index (VIX)',
@@ -31,33 +76,27 @@ MACRO_LABELS = {
     'PPI_MoM':           'PPI Month-over-Month',
     'PCE_MoM':           'PCE Month-over-Month',
     'NFP_Change':        'Non-Farm Payrolls',
-    'YieldCurve_10Y2Y':  'Yield Curve (10Y-2Y)',
+    'YieldCurve_10Y2Y':  'Yield Curve (10Y-2Y Spread)',
     'M2_MoM':            'M2 Money Supply MoM',
     'M2_YoY':            'M2 Money Supply YoY',
     'Yield_10Y_Rate':    '10Y Treasury Rate',
     'Breakeven_5Y5Y':    '5Y5Y Breakeven Inflation',
-    'M2_Liquidity_Spike':'M2 Liquidity Spike Flag',
-}
-
-BULLISH_DIRECTION = {
-    'gold':   'Bullish (price expected to rise)',
-    'btc':    'Bullish (price expected to rise)',
-    'stocks': 'Bullish (price expected to rise)',
+    'M2_Liquidity_Spike': 'M2 Liquidity Spike Flag',
 }
 
 
 # ---------------------------------------------------------------------------
-# 1. Macro Driver Extraction
+# 1. Macro Driver Extraction (Z-score ranked)
 # ---------------------------------------------------------------------------
 
 def get_top_macro_drivers(asset_key: str, lookback_days: int = 14, top_n: int = 3) -> list[dict]:
     """
     Identify the top N macro features with the most extreme Z-score movement
-    over the past `lookback_days` vs the asset's full history.
+    over the past lookback_days vs the full history.
 
-    Returns list of dicts:
-        [{'feature': str, 'label': str, 'recent_mean': float,
-          'hist_mean': float, 'z_score': float, 'direction': 'rising'|'falling'}]
+    Returns list of dicts with keys:
+        feature, label, current_value, recent_mean, hist_mean,
+        z_score, direction, impact (asset-specific)
     """
     from utils.config import get_asset_config
     config = get_asset_config(asset_key)
@@ -70,39 +109,82 @@ def get_top_macro_drivers(asset_key: str, lookback_days: int = 14, top_n: int = 
 
     df = pd.read_csv(data_path)
     features = [f for f in config['features'] if f in df.columns]
-    # Exclude the price column itself and binary flags
+
+    # Exclude price column and non-numeric/binary flags
     macro_features = [
         f for f in features
         if f not in [config['features'][0], 'M2_Liquidity_Spike', 'MacroEvent_Flag',
                      'Halving_Cycle', 'EMA_90', 'Sentiment']
     ]
 
-    if len(df) < lookback_days + 1:
+    if len(df) < lookback_days + 5:
         return []
+
+    # Determine asset type for impact mapping
+    if asset_key == 'gold':
+        atype = 'gold'
+    elif asset_key == 'btc':
+        atype = 'btc'
+    else:
+        atype = 'stocks'
+
+    impact_map = ASSET_IMPACT_MAP.get(atype, {})
 
     results = []
     for feat in macro_features:
         series = df[feat].dropna()
         if len(series) < lookback_days + 5:
             continue
-        recent = series.iloc[-lookback_days:].mean()
-        hist_mean = series.iloc[:-lookback_days].mean()
-        hist_std = series.iloc[:-lookback_days].std()
+
+        current_val = float(series.iloc[-1])
+        recent_mean = float(series.iloc[-lookback_days:].mean())
+        hist_mean   = float(series.iloc[:-lookback_days].mean())
+        hist_std    = float(series.iloc[:-lookback_days].std())
+
         if hist_std < 1e-8:
             continue
-        z = (recent - hist_mean) / hist_std
+
+        z = (recent_mean - hist_mean) / hist_std
+        impact = impact_map.get(feat, 'MIXED')
+
+        # Flip impact interpretation if indicator is falling
+        effective_impact = impact
+        if impact != 'MIXED' and z < 0:
+            effective_impact = 'BEARISH' if impact == 'BULLISH' else 'BULLISH'
+
         results.append({
-            'feature': feat,
-            'label': MACRO_LABELS.get(feat, feat),
-            'recent_mean': round(float(recent), 4),
-            'hist_mean': round(float(hist_mean), 4),
-            'z_score': round(float(z), 2),
-            'direction': 'rising' if z > 0 else 'falling',
+            'feature':        feat,
+            'label':          MACRO_LABELS.get(feat, feat),
+            'current_value':  round(current_val, 4),
+            'recent_mean':    round(recent_mean, 4),
+            'hist_mean':      round(hist_mean, 4),
+            'z_score':        round(z, 2),
+            'direction':      'Rising' if z > 0 else 'Falling',
+            'impact':         effective_impact,   # net impact on this asset
         })
 
-    # Sort by absolute Z-score (most extreme first)
     results.sort(key=lambda x: abs(x['z_score']), reverse=True)
     return results[:top_n]
+
+
+def build_driver_dataframe(drivers: list[dict]) -> pd.DataFrame:
+    """
+    Convert driver list into a clean DataFrame for st.dataframe display.
+    Columns: Indicator | Current | 14D Avg | vs History | Trend | Asset Impact
+    """
+    rows = []
+    for d in drivers:
+        zsign = f"+{d['z_score']}" if d['z_score'] >= 0 else str(d['z_score'])
+        rows.append({
+            'Indicator':     d['label'],
+            'Current':       d['current_value'],
+            '14D Avg':       d['recent_mean'],
+            'Hist Avg':      d['hist_mean'],
+            'Deviation':     f"{zsign}σ",
+            'Trend':         d['direction'],
+            'Asset Impact':  d['impact'],
+        })
+    return pd.DataFrame(rows)
 
 
 # ---------------------------------------------------------------------------
@@ -110,7 +192,7 @@ def get_top_macro_drivers(asset_key: str, lookback_days: int = 14, top_n: int = 
 # ---------------------------------------------------------------------------
 
 def _call_gemini_text(prompt: str) -> str | None:
-    """Minimal Gemini call that returns raw text (not JSON)."""
+    """Minimal Gemini call returning raw text."""
     try:
         import google.generativeai as genai
     except ImportError:
@@ -130,7 +212,7 @@ def _call_gemini_text(prompt: str) -> str | None:
             model = genai.GenerativeModel('gemini-1.5-flash')
             resp = model.generate_content(
                 prompt,
-                generation_config={'temperature': 0.2, 'max_output_tokens': 600}
+                generation_config={'temperature': 0.2, 'max_output_tokens': 500}
             )
             return resp.text.strip()
         except Exception:
@@ -141,97 +223,108 @@ def _call_gemini_text(prompt: str) -> str | None:
 def explain_forecast(
     asset_key: str,
     asset_name: str,
-    direction: str,          # 'up' | 'down' | 'sideways'
+    direction: str,        # 'up' | 'down' | 'sideways'
     pct_change: float,
     drivers: list[dict],
     macro_summary: str = '',
 ) -> dict:
     """
-    Ask Gemini to explain WHY the model predicted this direction,
-    given the top macro drivers.
+    Ask Gemini to produce an institutional-style rationale explaining
+    why the listed macro drivers logically support the predicted direction.
 
     Returns:
         {
-          'tailwinds': [str, ...],
-          'headwinds': [str, ...],
-          'summary':   str,
-          'available': bool,
+          'tailwinds':  [str, ...],
+          'headwinds':  [str, ...],
+          'summary':    str,
+          'available':  bool,
         }
     """
-    if not drivers:
-        return {'tailwinds': [], 'headwinds': [], 'summary': 'Insufficient macro data for explanation.', 'available': False}
+    direction_str = 'BULLISH' if direction == 'up' else ('BEARISH' if direction == 'down' else 'NEUTRAL/SIDEWAYS')
 
-    direction_str = 'UP (Bullish)' if direction == 'up' else ('DOWN (Bearish)' if direction == 'down' else 'SIDEWAYS (Neutral)')
-    drivers_text = '\n'.join(
-        f"  - {d['label']}: {d['direction'].upper()} by {abs(d['z_score']):.1f} standard deviations "
-        f"(recent avg {d['recent_mean']:.3f} vs historical avg {d['hist_mean']:.3f})"
+    if not drivers:
+        return {
+            'tailwinds': ['Quantitative pattern momentum detected by LSTM model.'],
+            'headwinds': ['Insufficient macro data for detailed attribution.'],
+            'summary': f"Model output: {direction_str} ({pct_change:+.2f}%). No macro driver data available.",
+            'available': False,
+        }
+
+    driver_lines = '\n'.join(
+        f"  - {d['label']}: {d['direction']} by {abs(d['z_score']):.1f} standard deviations "
+        f"(current {d['current_value']:.3f}, 14D avg {d['recent_mean']:.3f}, "
+        f"historical avg {d['hist_mean']:.3f}) → estimated net impact on {asset_name}: {d['impact']}"
         for d in drivers
     )
 
-    prompt = f"""You are a professional quantitative macro analyst writing a brief forecast rationale.
+    prompt = f"""You are a senior quantitative macro strategist writing a concise forecast attribution note.
 
 ASSET: {asset_name}
-AI MODEL PREDICTION: {direction_str} ({pct_change:+.2f}% projected change)
+MODEL FORECAST: {direction_str} | Projected change: {pct_change:+.2f}%
 
-TOP MACRO DRIVERS IDENTIFIED (by statistical deviation from historical norm):
-{drivers_text}
+TOP MACRO DRIVERS (ranked by statistical deviation from historical norm):
+{driver_lines}
 
-MACRO CONTEXT:
-{macro_summary or 'No additional macro context available.'}
+SUPPLEMENTARY MACRO CONTEXT:
+{macro_summary or 'Not available.'}
 
-TASK:
-Explain in plain, professional language why the combination of these macro drivers logically supports
-the AI model's {direction_str} prediction for {asset_name}.
+TASK: Write a professional, plain-language attribution explaining why these macro drivers
+logically support the {direction_str} forecast for {asset_name}.
 
-Respond ONLY in this exact format (no extra text):
+Rules:
+- No emoji or decorative symbols.
+- Be direct and factual.
+- Reference specific indicators by name.
+- Do NOT hedge with phrases like "it's important to note" or "it's worth mentioning".
+
+Respond in exactly this format:
 TAILWINDS:
-- [factor supporting the predicted direction]
-- [factor supporting the predicted direction]
+- [specific macro factor supporting the forecast direction]
+- [second factor]
 
 HEADWINDS:
-- [factor working against the predicted direction, or 'None significant' if bullish/bearish is clear]
+- [factor working against the forecast, or "None significant" if the direction is very clear]
 
 SUMMARY:
-[2 sentences max. Explain the dominant macro narrative and why it drives {asset_name} {direction_str}.]
-"""
+[2 sentences. State the dominant macro theme and its logical effect on {asset_name} pricing.]"""
 
     raw = _call_gemini_text(prompt)
     if not raw:
         return {
-            'tailwinds': ['Model detected statistical momentum.'],
-            'headwinds': ['Macro data inconclusive.'],
-            'summary': f"AI model predicts {direction_str} based on quantitative pattern recognition.",
+            'tailwinds': ['Statistical momentum in AI model output.'],
+            'headwinds': ['Gemini API unreachable. Using rule-based attribution only.'],
+            'summary': f"Model forecast: {direction_str} ({pct_change:+.2f}%). Driven by deviations in {', '.join(d['label'] for d in drivers[:2])}.",
             'available': False,
         }
 
-    # Parse response
-    tailwinds, headwinds, summary = [], [], ''
+    tailwinds, headwinds, summary_lines = [], [], []
     section = None
     for line in raw.splitlines():
-        line = line.strip()
-        if line.upper().startswith('TAILWINDS'):
+        stripped = line.strip()
+        upper = stripped.upper()
+        if upper.startswith('TAILWINDS'):
             section = 'tail'
-        elif line.upper().startswith('HEADWINDS'):
+        elif upper.startswith('HEADWINDS'):
             section = 'head'
-        elif line.upper().startswith('SUMMARY'):
+        elif upper.startswith('SUMMARY'):
             section = 'sum'
-        elif line.startswith('-') and section == 'tail':
-            tailwinds.append(line.lstrip('- '))
-        elif line.startswith('-') and section == 'head':
-            headwinds.append(line.lstrip('- '))
-        elif section == 'sum' and line:
-            summary += line + ' '
+        elif stripped.startswith('-') and section == 'tail':
+            tailwinds.append(stripped.lstrip('- ').strip())
+        elif stripped.startswith('-') and section == 'head':
+            headwinds.append(stripped.lstrip('- ').strip())
+        elif section == 'sum' and stripped:
+            summary_lines.append(stripped)
 
     return {
-        'tailwinds': tailwinds or ['Statistical momentum detected.'],
-        'headwinds': headwinds or ['None significant.'],
-        'summary': summary.strip() or f"Forecast direction: {direction_str}.",
+        'tailwinds': tailwinds or ['Statistical momentum detected by LSTM pattern recognition.'],
+        'headwinds': headwinds or ['None significant given current macro configuration.'],
+        'summary': ' '.join(summary_lines).strip() or f"Forecast direction: {direction_str}.",
         'available': True,
     }
 
 
 # ---------------------------------------------------------------------------
-# 3. Sector-Level Batch Analysis (for All Stocks page)
+# 3. Sector-Level Batch Analysis
 # ---------------------------------------------------------------------------
 
 def explain_sector_forecast(
@@ -240,14 +333,12 @@ def explain_sector_forecast(
     top_drivers: list[dict] = None,
 ) -> str:
     """
-    One Gemini call that provides a sector-level narrative explaining
-    divergences between Tech, Consumer, Index stocks.
-    Returns a plain text explanation string.
+    One Gemini call explaining sector-level divergences across all stock forecasts.
+    Returns a plain text paragraph (no emoji).
     """
     if not ticker_forecasts:
         return 'No forecast data available for sector analysis.'
 
-    # Group by implicit sector
     sector_map = {
         'SPY': 'Index', 'QQQ': 'Index', 'DIA': 'Index',
         'AAPL': 'Technology', 'MSFT': 'Technology', 'GOOGL': 'Technology',
@@ -267,25 +358,27 @@ def explain_sector_forecast(
 
     drivers_block = ''
     if top_drivers:
-        drivers_block = 'KEY MACRO DRIVERS THIS WEEK:\n' + '\n'.join(
-            f"  - {d['label']}: {d['direction'].upper()} by {abs(d['z_score']):.1f}σ"
+        drivers_block = 'MACRO DRIVERS THIS WEEK:\n' + '\n'.join(
+            f"  - {d['label']}: {d['direction']} by {abs(d['z_score']):.1f} standard deviations "
+            f"(current {d['current_value']:.3f} vs historical {d['hist_mean']:.3f})"
             for d in top_drivers
         )
 
-    prompt = f"""You are a senior equity strategist. Below are AI model forecasts for US stocks, grouped by sector.
+    prompt = f"""You are a senior equity strategist writing a concise sector attribution note.
 
+AI MODEL FORECASTS BY SECTOR:
 {forecast_block}
 {drivers_block}
 
-MACRO CONTEXT:
-{macro_summary or 'No macro context available.'}
+SUPPLEMENTARY MACRO CONTEXT:
+{macro_summary or 'Not available.'}
 
-In 3-4 sentences, explain the macro logic behind the forecasts:
-- Why are some sectors diverging from others?
+In 3-4 sentences, explain the macro logic behind the sector divergences:
 - What macro factor is the primary driver this week?
-- What is the dominant market regime (Risk-On / Risk-Off / Stagflation / etc.)?
+- Why are certain sectors outperforming or underperforming others?
+- What is the dominant market regime (Risk-On / Risk-Off / Stagflation / Reflation / etc.)?
 
-Be direct and professional. No bullet points. Plain paragraph only."""
+Rules: No emoji. No bullet points. Plain professional paragraph only. Be direct."""
 
     result = _call_gemini_text(prompt)
     return result or 'Sector narrative unavailable — Gemini API not reachable.'

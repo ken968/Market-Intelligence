@@ -1,4 +1,4 @@
-"""
+﻿"""
 Trading Signal Generator
 Multi-factor analysis for entry/exit signals
 """

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Reusable UI Components for Multi-Asset Terminal
 Provides consistent design elements across all pages
 """

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Macro Insights Processor
 Translates raw FRED macro data into actionable regime signals and risk scores.
 These outputs feed directly into the CEO Layer (LLM Manager) and Level 2 Anchor.

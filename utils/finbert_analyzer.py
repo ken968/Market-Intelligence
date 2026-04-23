@@ -1,4 +1,4 @@
-"""
+﻿"""
 FinBERT Sentiment Analyzer
 Wraps HuggingFace ProsusAI/finbert model for financial text classification.
 """

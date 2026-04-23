@@ -1,4 +1,4 @@
-"""
+﻿"""
 Forecast Analyzer - Automated Insights Generation
 Analyzes forecast predictions and generates human-readable insights
 """

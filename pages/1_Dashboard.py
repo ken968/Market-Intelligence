@@ -1,4 +1,4 @@
-"""
+﻿"""
 Dashboard Overview Page
 Multi-asset performance tracking and portfolio insights
 """
@@ -348,7 +348,7 @@ st.markdown("---")
 
 # ==================== CEO LAYER — GEMINI NARRATIVE ====================
 
-st.markdown("### 🧠 CEO Layer — Contextual Market Intelligence")
+st.markdown("### CEO Layer — Contextual Market Intelligence")
 st.caption("Powered by Gemini AI · Causal Hierarchy: Supply → Geopolitics → Monetary → Risk → Sentiment")
 
 try:
@@ -426,7 +426,7 @@ try:
                 pass
 
     if news_headlines:
-        st.caption(f"📰 {len(news_headlines)} headlines loaded from news cache · Ready for CEO analysis")
+        st.caption(f"{len(news_headlines)} headlines loaded from news cache · Ready for CEO analysis")
         if st.button("🔄 Run Gemini CEO Analysis", use_container_width=False, key="ceo_analysis_btn"):
             with st.spinner("Gemini reasoning through Causal Hierarchy..."):
                 result = analyze_news_context(
@@ -435,7 +435,7 @@ try:
                     published_at_list=published_at_list,
                 )
                 if result['is_fallback']:
-                    st.warning("⚠️ Gemini unavailable. System running on Statistical Baseline only.")
+                    st.warning("Gemini unavailable. System running on Statistical Baseline only.")
                 else:
                     st.success(f"✅ Analysis complete · {result['headlines_used']} unique headlines processed")
 
@@ -443,24 +443,24 @@ try:
                     with narr_col:
                         st.markdown(f"**Dominant Regime:** `{result['dominant_regime'].upper()}`")
                         st.markdown(f"**Confidence:** {result['confidence']*100:.0f}%")
-                        st.markdown(f"> 💬 *{result['narrative']}*")
-                        st.caption("⚠️ PROBABILISTIC FORECAST — Not a trading signal. Confidence intervals apply.")
+                        st.markdown(f"> *{result['narrative']}*")
+                        st.caption("PROBABILISTIC FORECAST — Not a trading signal. Confidence intervals apply.")
 
                     with score_col:
                         scores = result.get('scores', {})
                         categories = {
-                            'supply_shock_severity':        '📦 Supply Shock',
-                            'geopolitical_stress':          '⚔️ Geopolitical',
-                            'monetary_policy_hawkishness':  '🏦 Monetary',
-                            'risk_appetite':                '📈 Risk Appetite',
-                            'market_sentiment':             '💬 Sentiment',
+                            'supply_shock_severity':        'Supply Shock',
+                            'geopolitical_stress':          'Geopolitical',
+                            'monetary_policy_hawkishness':  'Monetary',
+                            'risk_appetite':                'Risk Appetite',
+                            'market_sentiment':             'Sentiment',
                         }
                         for key, label in categories.items():
                             val = scores.get(key, 0.5)
                             bar = "█" * int(val * 10) + "░" * (10 - int(val * 10))
                             st.markdown(f"`{label}` {bar} **{val:.2f}**")
     else:
-        with st.expander("📊 Macro Context (CEO Layer waiting for news data)"):
+        with st.expander("Macro Context (CEO Layer waiting for news data)"):
             st.text(macro_summary)
         st.caption("Run Sentiment Sync to enable live Gemini CEO analysis.")
 

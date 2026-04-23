@@ -1,4 +1,4 @@
-"""
+﻿"""
 Settings & Control Panel
 Data synchronization and model training interface
 """

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Alternative Data Page
 Display Google Trends, Reddit sentiment, and Fed Watch data
 """
@@ -188,7 +188,7 @@ with tab1:
 #             
 #             except Exception as e:
 #                 show_error_message(f"Error: {e}")
-st.markdown("⚠️ Reddit Sentiment is currently disabled locally.")
+st.markdown("Reddit Sentiment is currently disabled locally.")
 
 # Tab 3: Fed Watch
 with tab3:

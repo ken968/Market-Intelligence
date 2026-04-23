@@ -1,4 +1,4 @@
-"""
+﻿"""
 Trading Signals Page
 Display entry/exit signals based on multi-factor analysis
 """

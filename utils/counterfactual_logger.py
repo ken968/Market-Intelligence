@@ -1,4 +1,4 @@
-"""
+﻿"""
 Counterfactual Logger
 Saves parallel forecast records:
   - 'baseline'   : Pure LSTM output (Worker + Manager layers only)
@@ -142,7 +142,7 @@ def get_performance_summary(asset_key: str = None) -> dict:
         'baseline_hit_ratio':   round(baseline_ratio, 3),
         'contextual_hit_ratio': round(contextual_ratio, 3),
         'ceo_delta':            round(contextual_ratio - baseline_ratio, 3),
-        'verdict':              '✅ CEO Layer adds value' if contextual_ratio > baseline_ratio else '⚠️ CEO Layer not improving accuracy yet',
+        'verdict':              '✅ CEO Layer adds value' if contextual_ratio > baseline_ratio else 'CEO Layer not improving accuracy yet',
     }
 
 

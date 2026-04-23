@@ -1,4 +1,4 @@
-"""
+﻿"""
 US Stocks Analysis Page
 Multi-stock tracking for indices, Mag7, and semiconductors
 """
@@ -242,7 +242,7 @@ else:
                 
                 # Check if we have SPY in forecasts (needed as anchor)
                 if 'spy' in [s.lower() for s in stocks_with_models]:
-                    st.info("🔗 Applying correlation enforcement...")
+                    st.info("Applying correlation enforcement...")
                     
                     enforcer = CorrelationEnforcer(reference_ticker='SPY')
                     
@@ -411,11 +411,14 @@ else:
                                 st.metric("Risk", insights['risk_level'].title())
                             st.warning(f" {insights['recommendation']}")
 
-                # ── Sector-Level XAI (one Gemini call for all stocks) ──
+                # ── Sector Attribution ──
                 st.markdown("---")
-                st.markdown("### 🔍 Sector Intelligence — *Why are markets moving this way?*")
+                st.markdown("### Sector Attribution")
+                st.caption("Why are equity sectors moving in different directions?")
                 try:
-                    from utils.xai_explainer import explain_sector_forecast, get_top_macro_drivers
+                    from utils.xai_explainer import (
+                        explain_sector_forecast, get_top_macro_drivers, build_driver_dataframe
+                    )
                     from utils.macro_processor import build_macro_context
 
                     # Build compact ticker forecast summary for Gemini
@@ -437,29 +440,24 @@ else:
                     macro_ctx_xai = build_macro_context()
                     macro_summary_xai = macro_ctx_xai.get('macro_summary', '')
 
-                    # Show driver table
                     if top_drivers_xai:
-                        import pandas as _pd_xai
-                        st.markdown("**📊 Top Macro Drivers (14-Day Movement vs Historical):**")
-                        driver_rows_xai = [{
-                            'Indicator': d['label'],
-                            'Recent Avg': d['recent_mean'],
-                            'Hist Avg': d['hist_mean'],
-                            'Z-Score': d['z_score'],
-                            'Direction': '▲ Rising' if d['direction'] == 'rising' else '▼ Falling',
-                        } for d in top_drivers_xai]
-                        st.dataframe(_pd_xai.DataFrame(driver_rows_xai), use_container_width=True, hide_index=True)
+                        st.markdown("**Top Macro Drivers — 14-Day Movement vs Historical Norm**")
+                        st.dataframe(
+                            build_driver_dataframe(top_drivers_xai),
+                            use_container_width=True,
+                            hide_index=True
+                        )
 
-                    with st.spinner("🧠 Gemini analyzing sector dynamics..."):
+                    with st.spinner("Generating sector analysis..."):
                         sector_narrative = explain_sector_forecast(
                             ticker_forecasts=ticker_forecasts_xai,
                             macro_summary=macro_summary_xai,
                             top_drivers=top_drivers_xai,
                         )
-                    st.info(f"🧠 **Gemini Sector Analysis:** {sector_narrative}")
-                    st.caption("⚠️ PROBABILISTIC FORECAST — Not a trading signal. Confidence intervals apply.")
+                    st.info(sector_narrative)
+                    st.caption("PROBABILISTIC FORECAST — Not a trading signal.")
                 except Exception as _xe:
-                    st.caption(f"XAI sector analysis unavailable: {_xe}")
+                    st.caption(f"Sector attribution unavailable: {_xe}")
 
             except Exception as e:
                 show_error_message(f"Prediction error: {e}")
@@ -483,7 +481,7 @@ else:
                 # Check if this stock needs correlation enforcement
                 # (i.e., if it's highly correlated with SPY and not SPY itself)
                 if forecast_stock.upper() != 'SPY':
-                    st.info(f"🔗 Checking correlation with SPY for realistic forecast...")
+                    st.info(f"Checking correlation with SPY for realistic forecast...")
                     
                     enforcer = CorrelationEnforcer(reference_ticker='SPY')
                     

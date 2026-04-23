@@ -1,4 +1,4 @@
-"""
+﻿"""
 LLM Manager — CEO Layer (Gemini Intelligence Engine)
 Implements the full Hierarchical Intelligence CEO Layer:
 

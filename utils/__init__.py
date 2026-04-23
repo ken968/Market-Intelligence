@@ -1,4 +1,4 @@
-"""
+﻿"""
 XAUUSD Multi-Asset Terminal - Utilities Package
 Shared components for prediction, UI, and configuration
 """

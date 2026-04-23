@@ -1,4 +1,4 @@
-"""
+﻿"""
 Unified Prediction Engine for Multi-Asset Terminal
 Handles forecasting for Gold, Bitcoin, and all US Stocks
 """

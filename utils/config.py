@@ -1,4 +1,4 @@
-"""
+﻿"""
 XAUUSD Multi-Asset Terminal - Global Configuration
 Centralized config for all assets, models, and UI settings
 """
@@ -148,7 +148,7 @@ CONFIDENCE_SCORES = {
 }
 
 FORECAST_DISCLAIMER = """
-⚠️ **Forecast Limitations**: AI predictions are based on historical patterns and current market conditions. 
+**Forecast Limitations**: AI predictions are based on historical patterns and current market conditions. 
 Actual results may vary significantly due to unforeseen events, policy changes, or market shocks. 
 Use forecasts as directional guidance, not precise targets. Always combine with fundamental analysis.
 """

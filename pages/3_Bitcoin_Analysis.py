@@ -1,4 +1,4 @@
-"""
+﻿"""
 Bitcoin Analysis Page
 Comprehensive crypto market analysis with halving cycle tracking
 """

@@ -1,58 +1,114 @@
 [
     {
+        "date": "2026-04-23",
+        "title": "How Investors Are Reacting To Wheaton Precious Metals (TSX:WPM) Expanding Streams Into Australia And Canada",
+        "description": "How Investors Are Reacting To Wheaton Precious Metals (TSX:WPM) Expanding Streams Into Australia And Canada",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/investors-reacting-wheaton-precious-metals-070642756.html?.tsrc=rss",
+        "sentiment": 0.20959595959595959,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Avanti Commences 42,000 Metre Drill Program at Misisi, Targeting Resource Expansion and Delineation of New Targets",
+        "description": "Avanti Commences 42,000 Metre Drill Program at Misisi, Targeting Resource Expansion and Delineation of New Targets",
+        "url": "https://finance.yahoo.com/markets/commodities/articles/avanti-commences-42-000-metre-070000061.html?.tsrc=rss",
+        "sentiment": 0.06717171717171717,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Aris Mining Marks Marmato Access Breakthrough As Expansion Risks And Rewards Build",
+        "description": "Aris Mining Marks Marmato Access Breakthrough As Expansion Risks And Rewards Build",
+        "url": "https://finance.yahoo.com/news/aris-mining-marks-marmato-access-030903408.html?.tsrc=rss",
+        "sentiment": 0.04545454545454545,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "A Look At Warrior Met Coal (HCC) Valuation As Blue Creek Project And Earnings Metrics Draw Focus",
+        "description": "A Look At Warrior Met Coal (HCC) Valuation As Blue Creek Project And Earnings Metrics Draw Focus",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/look-warrior-met-coal-hcc-030902506.html?.tsrc=rss",
+        "sentiment": 0.06363636363636363,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Assessing Newmont (NEM) Valuation After Earnings Beats Higher Gold Prices And The Newcrest Deal",
+        "description": "Assessing Newmont (NEM) Valuation After Earnings Beats Higher Gold Prices And The Newcrest Deal",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/assessing-newmont-nem-valuation-earnings-022011392.html?.tsrc=rss",
+        "sentiment": 0.1976190476190476,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Barton Gold launches dual-rig Tunkillia diamond drilling to support reserves, mine design and PFS",
+        "description": "Barton Gold launches dual-rig Tunkillia diamond drilling to support reserves, mine design and PFS",
+        "url": "https://www.proactiveinvestors.com/companies/news/1091036/barton-gold-launches-dual-rig-tunkillia-diamond-drilling-to-support-reserves-mine-design-and-pfs-1091036.html?.tsrc=rss",
+        "sentiment": 0.13636363636363635,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Morgan Stanley resets gold price target for rest of 2026",
+        "description": "Morgan Stanley resets gold price target for rest of 2026",
+        "url": "https://www.thestreet.com/investing/morgan-stanley-resets-gold-price-target-for-rest-of-2026?.tsrc=rss",
+        "sentiment": 0.011111111111111113,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Alkane Resources posts record production as cash builds to $374M on strong gold prices",
+        "description": "Alkane Resources posts record production as cash builds to $374M on strong gold prices",
+        "url": "https://www.proactiveinvestors.com/companies/news/1091031/alkane-resources-posts-record-production-as-cash-builds-to-374m-on-strong-gold-prices-1091031.html?.tsrc=rss",
+        "sentiment": -0.04833333333333334,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Dual Rigs Commence Tunkillia Diamond Drilling",
+        "description": "Dual Rigs Commence Tunkillia Diamond Drilling",
+        "url": "https://finance.yahoo.com/markets/commodities/articles/dual-rigs-commence-tunkillia-diamond-002000817.html?.tsrc=rss",
+        "sentiment": 0.15,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Is It Time To Reassess Eldorado Gold (TSX:ELD) After The Recent Share Price Pullback?",
+        "description": "Is It Time To Reassess Eldorado Gold (TSX:ELD) After The Recent Share Price Pullback?",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/time-reassess-eldorado-gold-tsx-001503367.html?.tsrc=rss",
+        "sentiment": -0.02978395061728395,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Discovery Produces 60,269 Ounces of Gold in First Quarter 2026",
+        "description": "Discovery Produces 60,269 Ounces of Gold in First Quarter 2026",
+        "url": "https://finance.yahoo.com/markets/commodities/articles/discovery-produces-60-269-ounces-001500963.html?.tsrc=rss",
+        "sentiment": 0.08333333333333334,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Fear & Greed: 46.0 (Fear)",
+        "description": "Fear & Greed: 46.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.08,
+        "source": "Fear & Greed Index"
+    },
+    {
         "date": "2026-04-22",
-        "title": "A Look At Permian Basin Royalty Trust (PBT) Valuation After Its Latest Cash Distribution Announcement",
-        "description": "A Look At Permian Basin Royalty Trust (PBT) Valuation After Its Latest Cash Distribution Announcement",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/look-permian-basin-royalty-trust-090814513.html?.tsrc=rss",
-        "sentiment": 0.25,
+        "title": "Small Cap Watch: Resource stocks deliver fresh project updates as quarterly season starts to ramp up",
+        "description": "Small Cap Watch: Resource stocks deliver fresh project updates as quarterly season starts to ramp up",
+        "url": "https://www.proactiveinvestors.com/companies/news/1091029/small-cap-watch-resource-stocks-deliver-fresh-project-updates-as-quarterly-season-starts-to-ramp-up-1091029.html?.tsrc=rss",
+        "sentiment": -0.06913580246913581,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-22",
-        "title": "SOMA GOLD PROVIDES PRODUCTION UPDATE AND OUTLOOK IN COLOMBIA",
-        "description": "SOMA GOLD PROVIDES PRODUCTION UPDATE AND OUTLOOK IN COLOMBIA",
-        "url": "https://finance.yahoo.com/sectors/energy/articles/soma-gold-provides-production-outlook-082000905.html?.tsrc=rss",
-        "sentiment": 0.4666666666666667,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Agnico Eagle Mines (NYSE:AEM) Valuation Check After Recent Share Price Volatility",
-        "description": "Agnico Eagle Mines (NYSE:AEM) Valuation Check After Recent Share Price Volatility",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/agnico-eagle-mines-nyse-aem-070436835.html?.tsrc=rss",
-        "sentiment": 0.06875,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Magna Mining Inc (MGMNF) Q4 2025 Earnings Call Highlights: Strong Safety Record and Strategic ...",
-        "description": "Magna Mining Inc (MGMNF) Q4 2025 Earnings Call Highlights: Strong Safety Record and Strategic ...",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/magna-mining-inc-mgmnf-q4-070129558.html?.tsrc=rss",
-        "sentiment": 0.21666666666666667,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Valereum announces VGOLD deal with QGP that's described as \"final jigsaw piece\" for mine-to-token ecosystem",
-        "description": "Valereum announces VGOLD deal with QGP that's described as \"final jigsaw piece\" for mine-to-token ecosystem",
-        "url": "https://www.proactiveinvestors.com/companies/news/1090978/valereum-announces-vgold-deal-with-qgp-that-s-described-as-final-jigsaw-piece-for-mine-to-token-ecosystem-1090978.html?.tsrc=rss",
-        "sentiment": 0.0,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Why Analysts Just Raised Expectations For Alamos Gold (AGI) To C$80",
-        "description": "Why Analysts Just Raised Expectations For Alamos Gold (AGI) To C$80",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/why-analysts-just-raised-expectations-063837516.html?.tsrc=rss",
-        "sentiment": 0.24833333333333335,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Why Equinox Gold (EQX) May Be Building Toward A Stronger Second Half",
-        "description": "Why Equinox Gold (EQX) May Be Building Toward A Stronger Second Half",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/why-equinox-gold-eqx-may-063800933.html?.tsrc=rss",
-        "sentiment": -0.002222222222222218,
+        "title": "Pantoro Gold backs high-grade Rama project with funding, processing deal and underground option",
+        "description": "Pantoro Gold backs high-grade Rama project with funding, processing deal and underground option",
+        "url": "https://www.proactiveinvestors.com/companies/news/1091028/pantoro-gold-backs-high-grade-rama-project-with-funding-processing-deal-and-underground-option-1091028.html?.tsrc=rss",
+        "sentiment": 0.03409090909090909,
         "source": "Yahoo RSS"
     },
     {
@@ -60,103 +116,47 @@
         "title": "Gold Recovers After Two-Day Drop as Trump Extends Iran Ceasefire",
         "description": "Gold Recovers After Two-Day Drop as Trump Extends Iran Ceasefire",
         "url": "https://finance.yahoo.com/markets/commodities/articles/gold-recovers-two-day-drop-055855723.html?.tsrc=rss",
-        "sentiment": 0.26666666666666666,
+        "sentiment": 0.31875000000000003,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-22",
-        "title": "Have Global Tensions Affected the Price of Wheaton Precious Metal Stock?",
-        "description": "Have Global Tensions Affected the Price of Wheaton Precious Metal Stock?",
-        "url": "https://www.fool.com/investing/2026/04/22/have-global-tensions-affected-the-price-of-wheaton/?.tsrc=rss",
-        "sentiment": 0.3333333333333333,
+        "title": "Assessing Wesdome Gold Mines (TSX:WDO) Valuation After Recent Share Price Momentum",
+        "description": "Assessing Wesdome Gold Mines (TSX:WDO) Valuation After Recent Share Price Momentum",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/assessing-wesdome-gold-mines-tsx-200433842.html?.tsrc=rss",
+        "sentiment": 0.10875639512003148,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-22",
-        "title": "Assessing Seadrill (SDRL) Valuation As Offshore Drilling Optimism Meets Premium Pricing",
-        "description": "Assessing Seadrill (SDRL) Valuation As Offshore Drilling Optimism Meets Premium Pricing",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/assessing-seadrill-sdrl-valuation-offshore-030744679.html?.tsrc=rss",
-        "sentiment": 0.10408163265306124,
+        "title": "Kalshi Launches 'Commodities Hub' That Offers Gold And Oil Markets",
+        "description": "Kalshi Launches 'Commodities Hub' That Offers Gold And Oil Markets",
+        "url": "https://www.cryptoprowl.com/releases/kalshi-launches-commodities-hub-that-offers-gold-and-oil-markets-4254?.tsrc=rss",
+        "sentiment": 0.11212121212121212,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-22",
-        "title": "Pantoro extends high-grade Scotia mineralisation as drilling points to mine life growth",
-        "description": "Pantoro extends high-grade Scotia mineralisation as drilling points to mine life growth",
-        "url": "https://www.proactiveinvestors.com/companies/news/1090956/pantoro-extends-high-grade-scotia-mineralisation-as-drilling-points-to-mine-life-growth-1090956.html?.tsrc=rss",
-        "sentiment": 0.09722222222222222,
+        "title": "Precious Metals Gain, but Appear Vulnerable to Downturn",
+        "description": "Precious Metals Gain, but Appear Vulnerable to Downturn",
+        "url": "https://finance.yahoo.com/m/8c9d0c77-2ace-3273-aa47-989b471bd24b/precious-metals-gain%2C-but.html?.tsrc=rss",
+        "sentiment": 0.12037037037037036,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-22",
-        "title": "Wildsky Resources Inc. Signs LOI",
-        "description": "Wildsky Resources Inc. Signs LOI",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/wildsky-resources-inc-signs-loi-000000251.html?.tsrc=rss",
-        "sentiment": -0.017857142857142856,
+        "title": "RETRANSMISSION - Drilling at Swanson Gold Deposit Confirms Large-Scale Gold Discovery with 1.18 g/t Au over 255.04 metres and 1.65 g/t Au over 136.01 metres",
+        "description": "RETRANSMISSION - Drilling at Swanson Gold Deposit Confirms Large-Scale Gold Discovery with 1.18 g/t Au over 255.04 metres and 1.65 g/t Au over 136.01 metres",
+        "url": "https://finance.yahoo.com/markets/commodities/articles/retransmission-drilling-swanson-gold-deposit-182200887.html?.tsrc=rss",
+        "sentiment": 0.11647727272727272,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-22",
-        "title": "Fear & Greed: 32.0 (Fear)",
-        "description": "Fear & Greed: 32.0 (Fear)",
-        "url": "https://alternative.me/crypto/fear-and-greed-index/",
-        "sentiment": -0.36,
-        "source": "Fear & Greed Index"
-    },
-    {
-        "date": "2026-04-21",
-        "title": "5 Top Earnings Charts to Watch This Week",
-        "description": "5 Top Earnings Charts to Watch This Week",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/5-top-earnings-charts-watch-233500499.html?.tsrc=rss",
-        "sentiment": 0.5,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-21",
-        "title": "Gold Port Announces Option Grants",
-        "description": "Gold Port Announces Option Grants",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/gold-port-announces-option-grants-225500001.html?.tsrc=rss",
-        "sentiment": -0.15,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-21",
-        "title": "Here's Why AngloGold Ashanti (AU) Fell More Than Broader Market",
-        "description": "Here's Why AngloGold Ashanti (AU) Fell More Than Broader Market",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/heres-why-anglogold-ashanti-au-221506747.html?.tsrc=rss",
-        "sentiment": 0.2777777777777778,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-21",
-        "title": "Grande Portage Resources Announces SEDAR+ Filing of Preliminary Economic Assessment (PEA) Study for the New Amalga Gold Project in SE Alaska",
-        "description": "Grande Portage Resources Announces SEDAR+ Filing of Preliminary Economic Assessment (PEA) Study for the New Amalga Gold Project in SE Alaska",
-        "url": "https://finance.yahoo.com/sectors/energy/articles/grande-portage-resources-announces-sedar-220000693.html?.tsrc=rss",
-        "sentiment": 0.2090909090909091,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-21",
-        "title": "Gold Falls Most in Two Weeks as US-Iran Talks Hang in Balance",
-        "description": "Gold Falls Most in Two Weeks as US-Iran Talks Hang in Balance",
-        "url": "https://finance.yahoo.com/markets/commodities/articles/gold-falls-traders-weigh-next-042705966.html?.tsrc=rss",
-        "sentiment": 0.3333333333333333,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-21",
-        "title": "Commodity Traders Reap Billions in Profit as War Upends Markets",
-        "description": "Commodity Traders Reap Billions in Profit as War Upends Markets",
-        "url": "https://finance.yahoo.com/markets/commodities/articles/commodity-traders-reap-profit-bonanza-210039350.html?.tsrc=rss",
-        "sentiment": 0.27999999999999997,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-21",
-        "title": "Stock Market Today: Dow Falls As Oil Prices Rise, Trump Extends Ceasefire; These Gold Miners Fall (Live Coverage)",
-        "description": "Stock Market Today: Dow Falls As Oil Prices Rise, Trump Extends Ceasefire; These Gold Miners Fall (Live Coverage)",
-        "url": "https://finance.yahoo.com/m/e81783f5-f375-3023-a796-be49147ad66f/stock-market-today%3A-dow-falls.html?.tsrc=rss",
-        "sentiment": -0.02618371212121212,
+        "title": "Update: Gold Trading Higher as the U.S. Extends as Ceasefire for Its War on Iran",
+        "description": "Update: Gold Trading Higher as the U.S. Extends as Ceasefire for Its War on Iran",
+        "url": "https://finance.yahoo.com/markets/commodities/articles/gold-trading-higher-u-extends-180010950.html?.tsrc=rss",
+        "sentiment": 0.16666666666666666,
         "source": "Yahoo RSS"
     }
 ]

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Gold (XAUUSD) Analysis Page
 Complete technical and fundamental analysis for precious metal
 """
@@ -281,36 +281,33 @@ else:
                     
                     st.success(f" **Recommendation**: {insights['recommendation']}")
 
-                    # ── XAI: Forecast Rationale (Why did the model predict this?) ──
+                    # ── Forecast Rationale ──
                     st.markdown("---")
-                    st.markdown("### 🔍 Forecast Rationale — *Why this prediction?*")
+                    st.markdown("### Forecast Attribution")
+                    st.caption("What macro data is driving this prediction?")
 
                     try:
-                        from utils.xai_explainer import get_top_macro_drivers, explain_forecast
+                        from utils.xai_explainer import (
+                            get_top_macro_drivers, build_driver_dataframe, explain_forecast
+                        )
                         from utils.macro_processor import build_macro_context
 
                         drivers = get_top_macro_drivers('gold', lookback_days=14, top_n=3)
                         macro_ctx = build_macro_context()
                         macro_summary_xai = macro_ctx.get('macro_summary', '')
 
-                        # Show macro driver table
                         if drivers:
-                            import pandas as _pd_xai
-                            st.markdown("**📊 Top Macro Drivers (14-Day Movement vs Historical):**")
-                            driver_rows = [{
-                                'Indicator': d['label'],
-                                'Recent Avg': d['recent_mean'],
-                                'Hist Avg': d['hist_mean'],
-                                'Z-Score': d['z_score'],
-                                'Direction': '▲ Rising' if d['direction'] == 'rising' else '▼ Falling',
-                            } for d in drivers]
-                            st.dataframe(_pd_xai.DataFrame(driver_rows), use_container_width=True, hide_index=True)
+                            st.markdown("**Top Macro Drivers — 14-Day Movement vs Historical Norm**")
+                            st.dataframe(
+                                build_driver_dataframe(drivers),
+                                use_container_width=True,
+                                hide_index=True
+                            )
 
-                        # Determine direction from 1-month forecast
                         xai_dir = insights.get('trend', 'up')
                         xai_pct = insights.get('change_pct', 0)
 
-                        with st.spinner("🧠 Gemini explaining forecast rationale..."):
+                        with st.spinner("Generating forecast rationale..."):
                             rationale = explain_forecast(
                                 asset_key='gold',
                                 asset_name='Gold (XAUUSD)',
@@ -322,18 +319,19 @@ else:
 
                         xai_col1, xai_col2 = st.columns(2)
                         with xai_col1:
-                            st.markdown("**🟢 Tailwinds** *(factors supporting forecast)*")
+                            st.markdown("**Factors Supporting Forecast**")
                             for tw in rationale['tailwinds']:
-                                st.markdown(f"- {tw}")
+                                st.markdown(f"🟢 {tw}")
                         with xai_col2:
-                            st.markdown("**🔴 Headwinds** *(factors working against forecast)*")
+                            st.markdown("**Factors Working Against Forecast**")
                             for hw in rationale['headwinds']:
-                                st.markdown(f"- {hw}")
-                        st.info(f"🧠 **Gemini Summary:** {rationale['summary']}")
-                        st.caption("⚠️ PROBABILISTIC FORECAST — Not a trading signal.")
+                                st.markdown(f"🔴 {hw}")
+
+                        st.info(rationale['summary'])
+                        st.caption("PROBABILISTIC FORECAST — Not a trading signal.")
 
                     except Exception as _xe:
-                        st.caption(f"XAI unavailable: {_xe}")
+                        st.caption(f"Attribution unavailable: {_xe}")
 
                     # Highlight tomorrow
                     tomorrow = predictor.predict_tomorrow()
