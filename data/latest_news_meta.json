@@ -1,162 +1,162 @@
 [
     {
-        "date": "2026-04-22",
-        "title": "Hong Kong Life Celebrates Its 25th Anniversary Under the Theme \"Hong Kong Life 25 Years With You\" Launching a Series of Brand Campaigns and Exclusive Rewards",
-        "description": "Hong Kong Life Celebrates Its 25th Anniversary Under the Theme \"Hong Kong Life 25 Years With You\" Launching a Series of Brand Campaigns and Exclusive Rewards",
-        "url": "https://finance.yahoo.com/sectors/healthcare/articles/hong-kong-life-celebrates-25th-091400926.html?.tsrc=rss",
-        "sentiment": -0.07142857142857142,
+        "date": "2026-04-23",
+        "title": "Is Meta Platforms (META) Trading at an Attractive Price?",
+        "description": "Is Meta Platforms (META) Trading at an Attractive Price?",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/meta-platforms-meta-trading-attractive-141400218.html?.tsrc=rss",
+        "sentiment": 0.12500000000000003,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-22",
-        "title": "Meta, Noon Energy partner on 100GWh energy storage deal",
-        "description": "Meta, Noon Energy partner on 100GWh energy storage deal",
-        "url": "https://www.energymonitor.ai/news/meta-noon-energy-partner/?.tsrc=rss",
+        "date": "2026-04-23",
+        "title": "Meta's latest AI move is raising questions among employees",
+        "description": "Meta's latest AI move is raising questions among employees",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/metas-latest-ai-move-raising-134929979.html?.tsrc=rss",
+        "sentiment": 0.5,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Microsoft ramps up AI push with record Australia investment",
+        "description": "Microsoft ramps up AI push with record Australia investment",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/microsoft-ramps-ai-push-record-134820653.html?.tsrc=rss",
+        "sentiment": 0.043181818181818175,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Applied Digital signs $7.5 billion AI data center lease with US hyperscaler",
+        "description": "Applied Digital signs $7.5 billion AI data center lease with US hyperscaler",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/applied-digital-signs-7-5-133658684.html?.tsrc=rss",
+        "sentiment": 0.002797202797202798,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Amazon.com Inc. (AMZN) Gains Analyst Support on Strong AWS and AI Demand",
+        "description": "Amazon.com Inc. (AMZN) Gains Analyst Support on Strong AWS and AI Demand",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/amazon-com-inc-amzn-gains-133422641.html?.tsrc=rss",
+        "sentiment": 0.4777777777777778,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Meta Platforms (META) Gains Analyst Support on AI Engagement and Ad Strength",
+        "description": "Meta Platforms (META) Gains Analyst Support on AI Engagement and Ad Strength",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/meta-platforms-meta-gains-analyst-133407787.html?.tsrc=rss",
+        "sentiment": 0.25,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Taiwan Semiconductor Manufacturing Company (TSM) in Focus as Barclays Raises Target After Strong Earnings",
+        "description": "Taiwan Semiconductor Manufacturing Company (TSM) in Focus as Barclays Raises Target After Strong Earnings",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/taiwan-semiconductor-manufacturing-company-tsm-133400185.html?.tsrc=rss",
+        "sentiment": 0.2154761904761905,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Broadcom (AVGO) and Meta Announce Multi-Year AI Infrastructure Partnership",
+        "description": "Broadcom (AVGO) and Meta Announce Multi-Year AI Infrastructure Partnership",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/broadcom-avgo-meta-announce-multi-133355191.html?.tsrc=rss",
+        "sentiment": -0.13333333333333333,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Tesla (TSLA) Gains Analyst Support as Robotaxi Opportunity Takes Shape",
+        "description": "Tesla (TSLA) Gains Analyst Support as Robotaxi Opportunity Takes Shape",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/tesla-tsla-gains-analyst-support-133340680.html?.tsrc=rss",
+        "sentiment": 0.5,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Intel (INTC) Backed by HSBC as Server CPU Growth Drives Re-Rating",
+        "description": "Intel (INTC) Backed by HSBC as Server CPU Growth Drives Re-Rating",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/intel-intc-backed-hsbc-server-133332103.html?.tsrc=rss",
+        "sentiment": 0.25,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Snowflake (SNOW) Seen as Long-Term Winner Despite Recent Stock Weakness",
+        "description": "Snowflake (SNOW) Seen as Long-Term Winner Despite Recent Stock Weakness",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/snowflake-snow-seen-long-term-133322514.html?.tsrc=rss",
+        "sentiment": 0.09999999999999999,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Marvell (MRVL) Gains Analyst Support on AWS Exposure, Optical Demand",
+        "description": "Marvell (MRVL) Gains Analyst Support on AWS Exposure, Optical Demand",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/marvell-mrvl-gains-analyst-support-133313265.html?.tsrc=rss",
+        "sentiment": 0.3333333333333333,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Baidu Inc. (BIDU) Gains Analyst Backing on AI Cloud Strength Despite Ad Weakness",
+        "description": "Baidu Inc. (BIDU) Gains Analyst Backing on AI Cloud Strength Despite Ad Weakness",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/baidu-inc-bidu-gains-analyst-133301816.html?.tsrc=rss",
+        "sentiment": 0.25,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Astera Labs (ALAB) Initiated at Neutral Despite Strong AI Networking Growth Outlook",
+        "description": "Astera Labs (ALAB) Initiated at Neutral Despite Strong AI Networking Growth Outlook",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/astera-labs-alab-initiated-neutral-133254046.html?.tsrc=rss",
+        "sentiment": 0.3111111111111111,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "SoundHound AI (SOUN) Expands Platform With LivePerson Deal, Analyst Maintains Buy Rating",
+        "description": "SoundHound AI (SOUN) Expands Platform With LivePerson Deal, Analyst Maintains Buy Rating",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/soundhound-ai-soun-expands-platform-133248747.html?.tsrc=rss",
+        "sentiment": 0.25,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Zacks Investment Ideas feature highlights ARM, Apple, NVIDIA and Meta",
+        "description": "Zacks Investment Ideas feature highlights ARM, Apple, NVIDIA and Meta",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/zacks-investment-ideas-feature-highlights-131400864.html?.tsrc=rss",
         "sentiment": 0.0,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-22",
-        "title": "Bull of the Day: Broadcom (AVGO)",
-        "description": "Bull of the Day: Broadcom (AVGO)",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/bull-day-broadcom-avgo-083000901.html?.tsrc=rss",
+        "date": "2026-04-23",
+        "title": "Oklo Partners With Nvidia to Fast-Track Nuclear Fuel. What It Means for the Stock.",
+        "description": "Oklo Partners With Nvidia to Fast-Track Nuclear Fuel. What It Means for the Stock.",
+        "url": "https://finance.yahoo.com/m/1259be94-919b-30fd-b71e-dde657779bc5/oklo-partners-with-nvidia-to.html?.tsrc=rss",
         "sentiment": 0.0,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-22",
-        "title": "Is It Too Late To Consider Meta Platforms (META) After Its Strong Multi Year Run?",
-        "description": "Is It Too Late To Consider Meta Platforms (META) After Its Strong Multi Year Run?",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/too-consider-meta-platforms-meta-080813680.html?.tsrc=rss",
-        "sentiment": 0.08280423280423281,
+        "date": "2026-04-23",
+        "title": "Apple's Leadership Change to Boost AI Integration? ETFs in Focus",
+        "description": "Apple's Leadership Change to Boost AI Integration? ETFs in Focus",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/apples-leadership-change-boost-ai-120000359.html?.tsrc=rss",
+        "sentiment": 0.06818181818181818,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-22",
-        "title": "Australian social media ban marred by weak platform checks, tech providers say",
-        "description": "Australian social media ban marred by weak platform checks, tech providers say",
-        "url": "https://finance.yahoo.com/sectors/technology/articles/australian-social-media-ban-marred-035805855.html?.tsrc=rss",
-        "sentiment": -0.016666666666666666,
+        "date": "2026-04-23",
+        "title": "Canada Social Commerce Market Report 2026 Featuring Instagram, YouTube, Facebook, Think Dirty, MILLIONS.CO, PopshopLive - TikTok and Canada Post Lead the Shift to Search-Led Social Shopping",
+        "description": "Canada Social Commerce Market Report 2026 Featuring Instagram, YouTube, Facebook, Think Dirty, MILLIONS.CO, PopshopLive - TikTok and Canada Post Lead the Shift to Search-Led Social Shopping",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/canada-social-commerce-market-report-112900086.html?.tsrc=rss",
+        "sentiment": -0.04666666666666667,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-22",
-        "title": "Nuclear Stock Face-Off: Is Oklo or Cameco the Better Buy Right Now?",
-        "description": "Nuclear Stock Face-Off: Is Oklo or Cameco the Better Buy Right Now?",
-        "url": "https://www.fool.com/investing/2026/04/21/nuclear-stock-face-off-is-oklo-or-cameco/?.tsrc=rss",
-        "sentiment": 0.39285714285714285,
+        "date": "2026-04-23",
+        "title": "Focus Turns to Social Media Stress as Tech Giants Face Scrutiny",
+        "description": "Focus Turns to Social Media Stress as Tech Giants Face Scrutiny",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/focus-turns-social-media-stress-100000174.html?.tsrc=rss",
+        "sentiment": -0.022222222222222227,
         "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Hong Kong Life Celebrates Its 25th Anniversary Under the Theme \"Hong Kong Life 25 Years With You\" Launching a Series of Brand Campaigns and Exclusive Rewards",
-        "description": "Hong Kong Life Celebrates Its 25th Anniversary Under the Theme \"Hong Kong Life 25 Years With You\" Launching a Series of Brand Campaigns and Exclusive Rewards",
-        "url": "https://finnhub.io/api/news?id=7027f4abe064fea20610c8f5f7a50b7516f8bff5aa0459bca4b569744764e1d3",
-        "sentiment": -0.07142857142857142,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Meta, Noon Energy partner on 100GWh energy storage deal",
-        "description": "Meta, Noon Energy partner on 100GWh energy storage deal",
-        "url": "https://finnhub.io/api/news?id=18d6a0ac8a78ff1e3bcac08b04a696733f0f2596cf0ffec3ed0a79a5dd92280f",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Bull of the Day: Broadcom (AVGO)",
-        "description": "Bull of the Day: Broadcom (AVGO)",
-        "url": "https://finnhub.io/api/news?id=ba462521d67cc32c462480edcd441c3bc7f700c4f52812941c180460848671d1",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Is It Too Late To Consider Meta Platforms (META) After Its Strong Multi Year Run?",
-        "description": "Is It Too Late To Consider Meta Platforms (META) After Its Strong Multi Year Run?",
-        "url": "https://finnhub.io/api/news?id=a86d656108763e3a843bd9132823d78225150b6b2c86e9211098cab06206c69c",
-        "sentiment": 0.08280423280423281,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Australian social media ban marred by weak platform checks, tech providers say",
-        "description": "Australian social media ban marred by weak platform checks, tech providers say",
-        "url": "https://finnhub.io/api/news?id=155aa1437729c04552efc81d782b01dc2aaffc16edc114de4bdf36fe03b854ac",
-        "sentiment": -0.016666666666666666,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Nuclear Stock Face-Off: Is Oklo or Cameco the Better Buy Right Now?",
-        "description": "Nuclear Stock Face-Off: Is Oklo or Cameco the Better Buy Right Now?",
-        "url": "https://finnhub.io/api/news?id=4ab44f7d810a921ad9ed626d20ebc095e0b3f970cd09521a15218efd90ca5955",
-        "sentiment": 0.39285714285714285,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Meta Platforms: The Long Game",
-        "description": "Meta Platforms: The Long Game",
-        "url": "https://finnhub.io/api/news?id=86bd0098c3bba27858ec184d69bf3a0da9e7bbf8cab611c4c746dec4792998ad",
-        "sentiment": 0.07999999999999999,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Stifel resets AMD price target for rest of 2026",
-        "description": "Stifel resets AMD price target for rest of 2026",
-        "url": "https://finnhub.io/api/news?id=08485c28a568fb3dd8af73c29481ca2d95404133ac8a1a707541f5942c1004d5",
-        "sentiment": 0.14727272727272728,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Meta failed to protect social media users from scam ads, lawsuit alleges",
-        "description": "Meta failed to protect social media users from scam ads, lawsuit alleges",
-        "url": "https://finnhub.io/api/news?id=e594cb829345e0e02f242686f0f7af4869fd653352751ad95293c15bacc07948",
-        "sentiment": -0.23333333333333334,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Consumer watchdog group files suit alleging Meta profited on ads for scams",
-        "description": "Consumer watchdog group files suit alleging Meta profited on ads for scams",
-        "url": "https://finnhub.io/api/news?id=35fa16b3e9a13eeeb4283f3f4d0be7f6608ea0d2ac659c9e342c969cb8bd420e",
-        "sentiment": -0.009523809523809526,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Update: Meta Platforms to Track Employees' Mouse Movements, Keystrokes for AI Training",
-        "description": "Update: Meta Platforms to Track Employees' Mouse Movements, Keystrokes for AI Training",
-        "url": "https://finnhub.io/api/news?id=98e7d8cef085077ee49097633e265dc0c4bd7d65ab821995d13d9263b6dd2f6c",
-        "sentiment": 0.125,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Tech Layoffs Are Surpassing 2025 Levels. The Real Reason Companies Are Slashing Headcount.",
-        "description": "Tech Layoffs Are Surpassing 2025 Levels. The Real Reason Companies Are Slashing Headcount.",
-        "url": "https://finnhub.io/api/news?id=be57abdab4db9de2b8c813c401dee600e3ae5560116d8b1e368d90c076ac7e30",
-        "sentiment": 0.109375,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "How Apple and Its Stock Performed During Tim Cook's Time as CEO",
-        "description": "How Apple and Its Stock Performed During Tim Cook's Time as CEO",
-        "url": "https://finnhub.io/api/news?id=7c4343088adee9cf2334d34455fe840a79dd6265469f3c752ccf1d22cbe6c226",
-        "sentiment": 0.17222222222222222,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Meta breaks ground on over $1 billion data center in Oklahoma's Tulsa",
-        "description": "Meta breaks ground on over $1 billion data center in Oklahoma's Tulsa",
-        "url": "https://finnhub.io/api/news?id=89519fb824cc10dbc656381715946643d5bac0f6806b5292a82fe732f4a3e8ed",
-        "sentiment": 0.0896694214876033,
-        "source": "Finnhub"
     }
 ]

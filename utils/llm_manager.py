@@ -1,4 +1,4 @@
-﻿"""
+"""
 LLM Manager — CEO Layer (Gemini Intelligence Engine)
 Implements the full Hierarchical Intelligence CEO Layer:
 
@@ -270,7 +270,7 @@ def _call_gemini(prompt: str, max_retries: int = 2) -> dict | None:
         for attempt in range(max_retries):
             try:
                 genai.configure(api_key=key)
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                model = genai.GenerativeModel('gemini-2.5-flash')
                 response = model.generate_content(
                     prompt,
                     generation_config={"temperature": 0.1, "max_output_tokens": 512}

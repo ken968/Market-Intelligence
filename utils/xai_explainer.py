@@ -1,4 +1,4 @@
-﻿"""
+"""
 XAI Explainer — Explainable AI for Market Intelligence Terminal
 
 Provides:
@@ -209,7 +209,7 @@ def _call_gemini_text(prompt: str) -> str | None:
     for key in keys:
         try:
             genai.configure(api_key=key)
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            model = genai.GenerativeModel('gemini-2.5-flash')
             resp = model.generate_content(
                 prompt,
                 generation_config={'temperature': 0.2, 'max_output_tokens': 500}
