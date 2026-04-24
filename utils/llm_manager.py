@@ -273,14 +273,13 @@ def _call_gemini(prompt: str, max_retries: int = 2) -> dict | None:
                 model = genai.GenerativeModel('gemini-2.5-flash')
                 response = model.generate_content(
                     prompt,
-                    generation_config={"temperature": 0.1, "max_output_tokens": 512}
+                    generation_config={
+                        "temperature": 0.1, 
+                        "max_output_tokens": 512,
+                        "response_mime_type": "application/json"
+                    }
                 )
                 text = response.text.strip()
-                # Extract JSON block
-                if '```json' in text:
-                    text = text.split('```json')[1].split('```')[0].strip()
-                elif '```' in text:
-                    text = text.split('```')[1].split('```')[0].strip()
                 return json.loads(text)
             except json.JSONDecodeError:
                 print(f"Warning: Gemini returned non-JSON response (key ...{key[-4:]}, attempt {attempt+1})")
