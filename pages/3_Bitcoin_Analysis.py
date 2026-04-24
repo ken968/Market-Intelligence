@@ -1,4 +1,4 @@
-﻿"""
+"""
 Bitcoin Analysis Page
 Comprehensive crypto market analysis with halving cycle tracking
 """
@@ -373,6 +373,60 @@ else:
                             st.metric("Risk", insights['risk_level'].title())
                         
                         st.success(f" **Recommendation**: {insights['recommendation']}")
+                        
+                        # --- XAI FORECAST ATTRIBUTION BLOCK ---
+                        st.markdown("---")
+                        st.markdown("### Forecast Attribution")
+                        st.caption("What macro data is driving this prediction?")
+                        
+                        try:
+                            from utils.xai_explainer import (
+                                get_top_macro_drivers, build_driver_dataframe, explain_forecast
+                            )
+                            from utils.macro_processor import build_macro_context
+
+                            drivers = get_top_macro_drivers('btc', lookback_days=14, top_n=3)
+                            macro_ctx = build_macro_context()
+                            macro_summary_xai = macro_ctx.get('macro_summary', '')
+
+                            if drivers:
+                                st.markdown("**Top Macro Drivers — 14-Day Movement vs Historical Norm**")
+                                st.dataframe(
+                                    build_driver_dataframe(drivers),
+                                    use_container_width=True,
+                                    hide_index=True
+                                )
+
+                            xai_dir = insights.get('trend', 'up')
+                            xai_pct = insights.get('change_pct', 0)
+
+                            with st.spinner("Generating forecast rationale..."):
+                                rationale = explain_forecast(
+                                    asset_key='btc',
+                                    asset_name='Bitcoin (BTC)',
+                                    direction=xai_dir,
+                                    pct_change=xai_pct,
+                                    drivers=drivers,
+                                    macro_summary=macro_summary_xai,
+                                )
+
+                            xai_col1, xai_col2 = st.columns(2)
+                            with xai_col1:
+                                st.markdown("**Factors Supporting Forecast**")
+                                for tw in rationale['tailwinds']:
+                                    st.markdown(f"🟢 {tw}")
+                            with xai_col2:
+                                st.markdown("**Factors Working Against Forecast**")
+                                for hw in rationale['headwinds']:
+                                    st.markdown(f"🔴 {hw}")
+
+                            st.info(rationale['summary'])
+                            st.caption("PROBABILISTIC FORECAST — Not a trading signal.")
+
+                        except Exception as _xe:
+                            st.caption(f"Attribution unavailable: {_xe}")
+                        # --- END XAI FORECAST ATTRIBUTION BLOCK ---
+
                     else:
                         st.warning(" Detailed AI analysis unavailable due to incomplete forecast data.")
                     

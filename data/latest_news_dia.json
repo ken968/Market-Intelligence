@@ -1,5 +1,141 @@
 [
     {
+        "date": "2026-04-24",
+        "title": "Dow Jones And U.S. Stock Market Outlook - Nasdaq And Tech Continue To Outperform",
+        "description": "Dow Jones And U.S. Stock Market Outlook - Nasdaq And Tech Continue To Outperform",
+        "url": "https://finnhub.io/api/news?id=452d02fd9a2b0c5320bc0e4f8f734240d54b4a3057f03314a6e829dc9ec58395",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-24",
+        "title": "Stocks Are Rising Despite Falling Liquidity Amid Mounting Risks",
+        "description": "Stocks Are Rising Despite Falling Liquidity Amid Mounting Risks",
+        "url": "https://finnhub.io/api/news?id=3ea4b83e51c52f33b15731cd66785aaf0266605e5f720b2556110a55901f729f",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-24",
+        "title": "The Calm Before The Storm? Key Weekend Risk Incoming - Overnight Market Check",
+        "description": "The Calm Before The Storm? Key Weekend Risk Incoming - Overnight Market Check",
+        "url": "https://finnhub.io/api/news?id=a6d345012fdff00b7905cda0cf8deada0124e9118093a5825a9884af2c911b54",
+        "sentiment": 0.225,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-24",
+        "title": "Oil And Equity Markets: Someone Is Lying",
+        "description": "Oil And Equity Markets: Someone Is Lying",
+        "url": "https://finnhub.io/api/news?id=3166ab0685ca30805f179141f82ebfab14b89b601e8eb5507dfe82954f7189c1",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-24",
+        "title": "Oil Is A Critical War Gauge For Tracking Iran Risk In Real Time",
+        "description": "Oil Is A Critical War Gauge For Tracking Iran Risk In Real Time",
+        "url": "https://finnhub.io/api/news?id=4f4d5316d700e08f67547552f48c5f9955a4a1d21de467c455564da4b8398de7",
+        "sentiment": -0.13333333333333333,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-24",
+        "title": "Layoffs Are Accelerating Again",
+        "description": "Layoffs Are Accelerating Again",
+        "url": "https://finnhub.io/api/news?id=927a2eeb53ff24924d4bccf0486a9abc2c29884fce08c19a4a7b005a05e2bab8",
+        "sentiment": 0.3,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-24",
+        "title": "Buy Fear And Sell Greed",
+        "description": "Buy Fear And Sell Greed",
+        "url": "https://finnhub.io/api/news?id=980deab73ebee12b23cab812bca14e6ceaa52aa0cf0b56882da0898739f2fe67",
+        "sentiment": 0.125,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-24",
+        "title": "How To Build A $7,000/Mo Income Using BlackRock's 8% Yielding 32 CEFs",
+        "description": "How To Build A $7,000/Mo Income Using BlackRock's 8% Yielding 32 CEFs",
+        "url": "https://finnhub.io/api/news?id=4a3b779ea296e85493734aab48b11f90a485bb549b1691fb9f92f7776f8ede37",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-24",
+        "title": "Government Debt: Not What The Doom Crowd Thinks It Is",
+        "description": "Government Debt: Not What The Doom Crowd Thinks It Is",
+        "url": "https://finnhub.io/api/news?id=d7cd0588bf2cbff5777ed545861d1990d4c2c5904154b324d3c83da6dfd4e243",
+        "sentiment": 0.08750000000000001,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-24",
+        "title": "Fear & Greed: 39.0 (Fear)",
+        "description": "Fear & Greed: 39.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.22,
+        "source": "Fear & Greed Index"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Major indices are trading lower as investors react to reports that air defenses were activated in Tehran, which may indicate an escalation of regional conflict. President Trump posted on social media that a deal with Iran will be made when it is \"appropriate and good\" for the United States.",
+        "description": "Major indices are trading lower as investors react to reports that air defenses were activated in Tehran, which may indicate an escalation of regional conflict. President Trump posted on social media that a deal with Iran will be made when it is \"appropriate and good\" for the United States.",
+        "url": "https://finnhub.io/api/news?id=28a42fec68bedbb60a5e20269e7271ef82493771d504f7bffcdab23934dea571",
+        "sentiment": 0.32395833333333335,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Markets Are Stuck In The Waiting For U.S.-Iran Talks",
+        "description": "Markets Are Stuck In The Waiting For U.S.-Iran Talks",
+        "url": "https://finnhub.io/api/news?id=84432f968312b6816f8242bad2312887b42b03be209247e8945fa040f40662b8",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "AAII Sentiment Survey: Optimism Roars",
+        "description": "AAII Sentiment Survey: Optimism Roars",
+        "url": "https://finnhub.io/api/news?id=c8049cdf2336778afd30b21359f3ed4a990418b13896ea985e389590c848df93",
+        "sentiment": 0.04999999999999999,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Procter & Gamble Q3 Preview: Consumer Staple Giant Could Provide Clues On Economic Health",
+        "description": "Procter & Gamble Q3 Preview: Consumer Staple Giant Could Provide Clues On Economic Health",
+        "url": "https://finnhub.io/api/news?id=38285ddfc9de7403855c8462871972ce2cdba82569bdc9bd99d97641aee2a99f",
+        "sentiment": 0.1,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Nasdaq 100 Eases From Records As Software Stocks Plunge: Stock Market Today",
+        "description": "Nasdaq 100 Eases From Records As Software Stocks Plunge: Stock Market Today",
+        "url": "https://finnhub.io/api/news?id=a4c1add16fe777c2fc9b08a343c61165c87609cbfe3d6ae3e03dafd1622cb0a1",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "Confidence In 'Rules Of The Game'",
+        "description": "Confidence In 'Rules Of The Game'",
+        "url": "https://finnhub.io/api/news?id=56ef661b5fc6e1f54544d4b235ae1feb2a8e8f59107d8cf851778507e05b5cbd",
+        "sentiment": -0.4,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-23",
+        "title": "S&P 500 Is Hitting The Upper Circuit: Here's What Happens Next",
+        "description": "S&P 500 Is Hitting The Upper Circuit: Here's What Happens Next",
+        "url": "https://finnhub.io/api/news?id=c08c636273f3760e8165829241b3a23ef43d115ec811ab816bb34aff4fef6eb9",
+        "sentiment": 0.08727272727272727,
+        "source": "Finnhub"
+    },
+    {
         "date": "2026-04-23",
         "title": "The Fed Preview - Brace For Hikes, Inflation Is Likely Persistent",
         "description": "The Fed Preview - Brace For Hikes, Inflation Is Likely Persistent",
@@ -21,142 +157,6 @@
         "description": "Business Conditions Monthly February 2026",
         "url": "https://finnhub.io/api/news?id=ef3d664992168e77f57fc3bf672bc1b30fdf77a6120cbee8d2e610284fb3644f",
         "sentiment": 0.08333333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-23",
-        "title": "Fed Rate Raise, Pause, Or Cut At Next Week's Meeting?",
-        "description": "Fed Rate Raise, Pause, Or Cut At Next Week's Meeting?",
-        "url": "https://finnhub.io/api/news?id=9cf7bdfed76a139746c11298ba465cb60d3c7bdf3a18143ffa239745b11cdbc6",
-        "sentiment": 0.13333333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-23",
-        "title": "Another 40 Days Like This And A Recession Could Hit Us",
-        "description": "Another 40 Days Like This And A Recession Could Hit Us",
-        "url": "https://finnhub.io/api/news?id=61b7dce1ca3473067ba29b26cee2d8fe30f33ace29d81eb0980bec03eda81f46",
-        "sentiment": 0.175,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-23",
-        "title": "Fear & Greed: 46.0 (Fear)",
-        "description": "Fear & Greed: 46.0 (Fear)",
-        "url": "https://alternative.me/crypto/fear-and-greed-index/",
-        "sentiment": -0.08,
-        "source": "Fear & Greed Index"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "The VIX Hasn\u2019t Been This Calm Since March. Here\u2019s Why Traders Are Breathing Easier.",
-        "description": "The VIX Hasn\u2019t Been This Calm Since March. Here\u2019s Why Traders Are Breathing Easier.",
-        "url": "https://247wallst.com/investing/2026/04/22/the-vix-hasnt-been-this-calm-since-march-heres-why-traders-are-breathing-easier/?.tsrc=rss",
-        "sentiment": 0.13695286195286197,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Warsh Advocates For Regime Change And Narrows The Definition Of Fed Independence",
-        "description": "Warsh Advocates For Regime Change And Narrows The Definition Of Fed Independence",
-        "url": "https://finnhub.io/api/news?id=c1ca88af211f2397f89e9483b357d6df2962c7c790f996b2365138899daebb3e",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Dow Jones And U.S. Stock Market Outlook - Nasdaq Breaks A New Record After Ceasefire Extension",
-        "description": "Dow Jones And U.S. Stock Market Outlook - Nasdaq Breaks A New Record After Ceasefire Extension",
-        "url": "https://finnhub.io/api/news?id=9ee3b7c3e0b10a0029442f50b6d08f84ccf0afd751ebc8a28de0ac1bd38c51bc",
-        "sentiment": 0.0028409090909090884,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Nasdaq 100 Tops Records As Iran Ceasefire Extends, GE Vernova Soars 13%: Stock Market Today",
-        "description": "Nasdaq 100 Tops Records As Iran Ceasefire Extends, GE Vernova Soars 13%: Stock Market Today",
-        "url": "https://finnhub.io/api/news?id=57808e97307dbffd0e07df952b05a5abba22debcbc30e267ce503ca1b7def584",
-        "sentiment": 0.13727272727272727,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Retail Sales Spike, Here's What It Means For Markets",
-        "description": "Retail Sales Spike, Here's What It Means For Markets",
-        "url": "https://finnhub.io/api/news?id=1217669f799fa6b2477eadbe23f04cc2fd9cd043dc0fefc23a38d0b31883928b",
-        "sentiment": 0.09375,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "3 Market Risks Investors Won't See Coming",
-        "description": "3 Market Risks Investors Won't See Coming",
-        "url": "https://finnhub.io/api/news?id=549e46837feb6731b96b62117316ac5b09e367b984e4445259c23461e1bfdf86",
-        "sentiment": 0.027840909090909083,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "A Less Friendly Fed Is Bad News For Markets",
-        "description": "A Less Friendly Fed Is Bad News For Markets",
-        "url": "https://finnhub.io/api/news?id=883b5790eacddf03c1ab7ff9e14bb8cfabc517cd1c76a7aff926c61b88c7ea88",
-        "sentiment": -0.16458333333333328,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "March Retail Surge Hides Warning Signs For Consumers",
-        "description": "March Retail Surge Hides Warning Signs For Consumers",
-        "url": "https://finnhub.io/api/news?id=22496b8e1856bf48e98ec813e9f6531e7e4681eb70f3e3a2677eace7428a3f93",
-        "sentiment": 0.5333333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Can The Market Look Past Coming Headwinds?",
-        "description": "Can The Market Look Past Coming Headwinds?",
-        "url": "https://finnhub.io/api/news?id=423ad0975487757b4b0e6fd425668f5768c7b93ccb9892b0db58eb27151f859a",
-        "sentiment": -0.016666666666666663,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Warsh Will Change The Fed Forever",
-        "description": "Warsh Will Change The Fed Forever",
-        "url": "https://finnhub.io/api/news?id=b494ce971b80b6d06c8ce233afb80d2269985241a2b8ad6abc2557dc18074759",
-        "sentiment": -0.3125,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Climbing Limo GDP Forecast For 2026-Q1",
-        "description": "Climbing Limo GDP Forecast For 2026-Q1",
-        "url": "https://finnhub.io/api/news?id=00f8615206729e723e649fbc765e3724ad0c5360a6fcf4d116c703b31879f43d",
-        "sentiment": 0.175,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Chart Of The Day: Can The Market Really Crack Here?",
-        "description": "Chart Of The Day: Can The Market Really Crack Here?",
-        "url": "https://finnhub.io/api/news?id=34a77704e3b9cffc90be92055bf3f6169203703071f6b1ae30c163887ca4e911",
-        "sentiment": 0.09422619047619048,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "A New Era For The Fed? Looking Back On Kevin Warsh's U.S. Senate Hearing And Market Reactions",
-        "description": "A New Era For The Fed? Looking Back On Kevin Warsh's U.S. Senate Hearing And Market Reactions",
-        "url": "https://finnhub.io/api/news?id=605eb49526079f7728906f82d9ba186fd45aaf2901782adfbfa27c79bfe45dd2",
-        "sentiment": 0.03409090909090909,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-22",
-        "title": "Warsh Testimony",
-        "description": "Warsh Testimony",
-        "url": "https://finnhub.io/api/news?id=f19f43dcea4578401054678a79708e05674c4c6eb8bf42b0780079b134ddcdbe",
-        "sentiment": 0.0,
         "source": "Finnhub"
     }
 ]
