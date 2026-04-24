@@ -271,18 +271,28 @@ def _call_gemini(prompt: str, max_retries: int = 2) -> dict | None:
             try:
                 genai.configure(api_key=key)
                 model = genai.GenerativeModel('gemini-2.5-flash')
-                response = model.generate_content(
-                    prompt,
-                    generation_config={
-                        "temperature": 0.1, 
-                        "max_output_tokens": 512,
-                        "response_mime_type": "application/json"
-                    }
-                )
+                response = model.generate_content(prompt)
                 text = response.text.strip()
+                
+                # Extract JSON block using robust string matching
+                if '```json' in text:
+                    text = text.split('```json')[1].split('```')[0].strip()
+                elif '```' in text:
+                    text = text.split('```')[1].split('```')[0].strip()
+                elif text.startswith('{') and text.endswith('}'):
+                    pass # already clean JSON
+                else:
+                    # Try to find first { and last }
+                    start = text.find('{')
+                    end = text.rfind('}')
+                    if start != -1 and end != -1:
+                        text = text[start:end+1]
+                
                 return json.loads(text)
-            except json.JSONDecodeError:
+            except json.JSONDecodeError as jde:
                 print(f"Warning: Gemini returned non-JSON response (key ...{key[-4:]}, attempt {attempt+1})")
+                print(f"--- RAW RESPONSE START ---\n{text}\n--- RAW RESPONSE END ---")
+                print(f"Error details: {jde}")
             except Exception as e:
                 print(f"Warning: Gemini API error (key ...{key[-4:]}, attempt {attempt+1}): {e}")
                 time.sleep(1)

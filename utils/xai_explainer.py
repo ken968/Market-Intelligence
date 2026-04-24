@@ -210,10 +210,7 @@ def _call_gemini_text(prompt: str) -> str | None:
         try:
             genai.configure(api_key=key)
             model = genai.GenerativeModel('gemini-2.5-flash')
-            resp = model.generate_content(
-                prompt,
-                generation_config={'temperature': 0.2, 'max_output_tokens': 500}
-            )
+            resp = model.generate_content(prompt)
             return resp.text.strip()
         except Exception:
             continue
