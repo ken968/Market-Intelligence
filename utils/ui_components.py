@@ -1,4 +1,4 @@
-﻿"""
+"""
 Reusable UI Components for Multi-Asset Terminal
 Provides consistent design elements across all pages
 """
@@ -347,7 +347,19 @@ def create_forecast_chart(historical_df, forecast_values, price_col, forecast_da
     ))
     
     # Forecast data
-    last_date = pd.to_datetime(x_hist.iloc[-1])
+    # IMPORTANT: Anchor forecast start to TODAY, not the last CSV date.
+    # If the CSV data lags behind (e.g. last sync was April 18 but today is May 1),
+    # using the CSV date would incorrectly render real historical data inside the
+    # forecast cloud — making it look like the model "predicted" real past prices.
+    last_csv_date = pd.to_datetime(x_hist.iloc[-1])
+    today = pd.Timestamp.now().normalize()  # Midnight of today, no timezone
+
+    # If data is stale by more than 1 day, snap forecast start to today
+    if (today - last_csv_date).days > 1:
+        last_date = today
+    else:
+        last_date = last_csv_date
+
     forecast_dates = pd.date_range(start=last_date, periods=forecast_days+1, freq='D')[1:]
     
     # Probability Cloud (Fan Chart)
