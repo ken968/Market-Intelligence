@@ -1,4 +1,4 @@
-﻿"""
+"""
 Unified Prediction Engine for Multi-Asset Terminal
 Handles forecasting for Gold, Bitcoin, and all US Stocks
 """
@@ -389,50 +389,63 @@ class AssetPredictor:
                 ceo_confidence=ceo_context.get('confidence', 0.0)
             )
 
-            # ── Dynamic Monte Carlo ──
-            # Volatility is driven by 3 factors:
-            #   1. Historical AI error (RMSE from backtest, most precise)
-            #   2. Live VIX level (fear index — widens cloud during panic)
-            #   3. CEO Confidence (narrows cloud when Gemini is highly certain)
+            # ── Black-Scholes Implied Volatility Monte Carlo ──
+            # Cloud width is now driven by real-time market expectations (IV),
+            # NOT by historical RMSE. This reflects what institutional money
+            # is actually pricing for future volatility via options markets.
+            #
+            # Sources:
+            #   - BTC  : Deribit DVOL (BTC's VIX) via free public API
+            #   - Gold/Stocks: CBOE VIX via yfinance (Black-Scholes derived)
+            #
+            # Modifiers:
+            #   - CEO Confidence: still narrows cloud when Gemini is highly certain
             fan_p10, fan_p90 = [], []
             if contextual:
                 try:
-                    import json
-                    with open(f'reports/backtest_{self.asset_key}.json', 'r') as f:
-                        metrics = json.load(f)
-                    if isinstance(metrics, dict):
-                        rmse = metrics.get('rmse_3layer', metrics.get('rmse', 0))
-                        vol = (rmse / current_price) if current_price > 0 else 0.02
-                        vol = max(0.005, min(0.05, vol))
+                    from utils.realtime_prices import get_live_dvol, get_live_vix, iv_to_daily_vol
+
+                    # --- Step 1: Fetch live Implied Volatility ---
+                    if self.asset_key == 'btc':
+                        iv_annual = get_live_dvol(fallback=60.0)
+                        print(f"[Monte Carlo] BTC DVOL (Deribit): {iv_annual:.1f}% annualized")
                     else:
-                        vol = 0.015
-                except Exception:
-                    vol = 0.04 if self.asset_key == 'btc' else (0.012 if self.asset_key == 'gold' else 0.015)
+                        # Gold, Stocks: use CBOE VIX as proxy IV
+                        iv_annual = get_live_vix(fallback=20.0)
+                        print(f"[Monte Carlo] VIX (yfinance): {iv_annual:.1f}% annualized")
 
-                # — VIX Scaling: widen cloud when market is fearful —
-                try:
-                    macro_df = pd.read_csv('data/macro_indicators.csv')
-                    vix_live = float(macro_df['VIX'].dropna().iloc[-1])
-                    # VIX baseline is ~15 (calm). Scale multiplicatively.
-                    # VIX=30 → 2x wider; VIX=10 → 0.67x (narrower)
-                    vix_multiplier = max(0.5, min(3.0, vix_live / 15.0))
-                    vol = vol * vix_multiplier
-                except Exception:
-                    pass  # No VIX data — use base vol
+                    # --- Step 2: Convert IV to Daily Volatility (Black-Scholes) ---
+                    # Standard formula: Daily Vol = IV_annual (%) / 100 / sqrt(365)
+                    vol = iv_to_daily_vol(iv_annual)
 
-                # — CEO Confidence Scaling: narrow cloud when Gemini is sure —
+                    # Safety bounds — prevent degenerate Monte Carlo simulations
+                    if self.asset_key == 'btc':
+                        vol = max(0.010, min(0.12, vol))   # BTC: 1% - 12% daily
+                    elif self.asset_key == 'gold':
+                        vol = max(0.003, min(0.04, vol))   # Gold: 0.3% - 4% daily
+                    else:
+                        vol = max(0.004, min(0.06, vol))   # Stocks: 0.4% - 6% daily
+
+                    print(f"[Monte Carlo] Daily IV vol = {vol:.4f} ({vol*100:.2f}%/day)")
+
+                except Exception as e:
+                    # Graceful fallback if both APIs fail
+                    print(f"[Monte Carlo] IV fetch failed: {e}. Using conservative historical fallback.")
+                    vol = 0.035 if self.asset_key == 'btc' else (0.010 if self.asset_key == 'gold' else 0.012)
+
+                # --- Step 3: CEO Confidence narrows cloud when Gemini is sure ---
                 ceo_conf = ceo_context.get('confidence', 0.0)
                 if ceo_conf > 0.0:
-                    # confidence=1.0 → 60% narrower; confidence=0.5 → 20% narrower
+                    # confidence=1.0 → 40% narrower; confidence=0.5 → 20% narrower
                     ceo_narrow = 1.0 - (ceo_conf * 0.40)
                     vol = vol * max(0.50, ceo_narrow)
+                    print(f"[Monte Carlo] After CEO confidence ({ceo_conf:.2f}) adjustment: vol={vol:.4f}")
 
-                # Cap final volatility to realistic daily bounds
-                vol = max(0.003, min(0.08, vol))
-
-                # Random walk drift simulation
-                paths = np.zeros((100, steps))
-                for i in range(100):
+                # --- Step 4: Run Geometric Brownian Motion Monte Carlo ---
+                # Using 500 paths for smoother percentile bands (was 100)
+                n_paths = 500
+                paths = np.zeros((n_paths, steps))
+                for i in range(n_paths):
                     noises = np.random.normal(0, vol, steps)
                     cum_noise = np.exp(np.cumsum(noises) - 0.5 * vol**2 * np.arange(1, steps + 1))
                     paths[i] = np.array(contextual) * cum_noise

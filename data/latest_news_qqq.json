@@ -1,162 +1,162 @@
 [
     {
-        "date": "2026-04-24",
-        "title": "Exchange-Traded Funds Rise, US Equities Mixed After Midday",
-        "description": "Exchange-Traded Funds Rise, US Equities Mixed After Midday",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/exchange-traded-funds-rise-us-171211024.html?.tsrc=rss",
-        "sentiment": -0.02361111111111111,
+        "date": "2026-05-01",
+        "title": "Performance Insights - April 2026",
+        "description": "Performance Insights - April 2026",
+        "url": "https://finnhub.io/api/news?id=49e4350915dab7757543cd74fb8e124e5226a7749a0d22ce40f4e007db0ea190",
+        "sentiment": 0.07708333333333334,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Asset Allocation Insights - March 2026",
+        "description": "Asset Allocation Insights - March 2026",
+        "url": "https://finnhub.io/api/news?id=8f3ed1fef3a8457beb51dcc4806299b5e5a12f5c18b387f2f4cf1c04e23ce548",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "U.S. Federal Reserve Holds Interest Rates Steady",
+        "description": "U.S. Federal Reserve Holds Interest Rates Steady",
+        "url": "https://finnhub.io/api/news?id=729103d8f9ba05e0efcaa76877552f2c281d157002a7672e41e98666843b86f3",
+        "sentiment": 0.16666666666666666,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Powell Exits A Fed Fractured By Inflation Debate",
+        "description": "Powell Exits A Fed Fractured By Inflation Debate",
+        "url": "https://finnhub.io/api/news?id=7e9721945d46237a0db8fd1317f0aefa3fbd45eba89260465e049b60123bd452",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Rates Spark: A Cacophony Of Mad Stuff",
+        "description": "Rates Spark: A Cacophony Of Mad Stuff",
+        "url": "https://finnhub.io/api/news?id=0dafd5aa5a7b8fa9855d4153f1dd9389d6b9fb4c7df365b7739b2844f8ead46f",
+        "sentiment": -0.10625,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Core PCE Inflation At 3.2% In March, Highest Level Since 2023",
+        "description": "Core PCE Inflation At 3.2% In March, Highest Level Since 2023",
+        "url": "https://finnhub.io/api/news?id=25feb51c4b67aa0299cfe94214f0d58b00b0a66701ed2ebcf88b44c1489387b1",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "ProShares UltraPro QQQ ETF(TQQQ) Stock Options Chain | Quotes & News",
+        "description": "ProShares UltraPro QQQ ETF(TQQQ) Stock Options Chain | Quotes & News",
+        "url": "https://www.moomoo.com/etfs/TQQQ-US/options-chain?chain_id=Name1K9-3FXPhg.1kv56s0&global_content=%7B%22promote_id%22%3A13764,%22sub_promote_id%22%3A107,%22f%22%3A%22www.moomoo.com%2Fetfs%2FUUP-US%22%7D",
+        "sentiment": -0.0575,
+        "source": "Alpha Vantage"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Fear & Greed: 26.0 (Fear)",
+        "description": "Fear & Greed: 26.0 (Fear)",
+        "url": "https://alternative.me/crypto/fear-and-greed-index/",
+        "sentiment": -0.48,
+        "source": "Fear & Greed Index"
+    },
+    {
+        "date": "2026-04-30",
+        "title": "Exchange-Traded Funds Higher as US Equities Advance After Midday",
+        "description": "Exchange-Traded Funds Higher as US Equities Advance After Midday",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/exchange-traded-funds-higher-us-172801204.html?.tsrc=rss",
+        "sentiment": 0.19479166666666667,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-24",
-        "title": "The VIX Dips Below 19. Here\u2019s What That Means for Your Portfolio.",
-        "description": "The VIX Dips Below 19. Here\u2019s What That Means for Your Portfolio.",
-        "url": "https://247wallst.com/investing/2026/04/24/the-vix-dips-below-19-heres-what-that-means-for-your-portfolio/?.tsrc=rss",
-        "sentiment": 0.014814814814814817,
+        "date": "2026-04-30",
+        "title": "VIX in Whipsaw on Sticky Inflation, Fed Dissent and Lofty AI Capex",
+        "description": "VIX in Whipsaw on Sticky Inflation, Fed Dissent and Lofty AI Capex",
+        "url": "https://247wallst.com/investing/2026/04/30/vix-in-whipsaw-on-sticky-inflation-fed-dissent-and-lofty-ai-capex/?.tsrc=rss",
+        "sentiment": 0.0,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-24",
-        "title": "S&P 500 Climbs as Intel Posts Best Quarter in Years and Oil Retreats",
-        "description": "S&P 500 Climbs as Intel Posts Best Quarter in Years and Oil Retreats",
-        "url": "https://247wallst.com/investing/2026/04/24/sp-500-climbs-as-intel-posts-best-quarter-in-years-and-oil-retreats/?.tsrc=rss",
-        "sentiment": 0.5,
+        "date": "2026-04-30",
+        "title": "Exchange-Traded Funds, Equity Futures Higher Pre-Bell Thursday Amid Big Tech Earnings, Economic Data",
+        "description": "Exchange-Traded Funds, Equity Futures Higher Pre-Bell Thursday Amid Big Tech Earnings, Economic Data",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/exchange-traded-funds-equity-futures-122608330.html?.tsrc=rss",
+        "sentiment": 0.07583333333333334,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-24",
-        "title": "Exchange-Traded Funds Rise, Equity Futures Mixed Pre-Bell as Traders Assess Tech Earnings Amid Global Uncertainty",
-        "description": "Exchange-Traded Funds Rise, Equity Futures Mixed Pre-Bell as Traders Assess Tech Earnings Amid Global Uncertainty",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/exchange-traded-funds-rise-equity-130802590.html?.tsrc=rss",
-        "sentiment": -0.017708333333333333,
-        "source": "Yahoo RSS"
+        "date": "2026-04-30",
+        "title": "The Dark Side Of Dividend Investing That Leads To Underperformance",
+        "description": "The Dark Side Of Dividend Investing That Leads To Underperformance",
+        "url": "https://finnhub.io/api/news?id=4edbd2720f7a68d37416d2920e194f744a4a30def3282bfca3dc2e7b74ab4540",
+        "sentiment": -0.15833333333333333,
+        "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Investors Will Soon Have Two New Alternatives to Invesco QQQ",
-        "description": "Investors Will Soon Have Two New Alternatives to Invesco QQQ",
-        "url": "https://www.fool.com/investing/2026/04/24/investors-will-soon-have-two-new-alternatives-to-i/?.tsrc=rss",
-        "sentiment": 0.13636363636363635,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Stocks Are Rising Despite Falling Liquidity Amid Mounting Risks",
-        "description": "Stocks Are Rising Despite Falling Liquidity Amid Mounting Risks",
-        "url": "https://finnhub.io/api/news?id=3ea4b83e51c52f33b15731cd66785aaf0266605e5f720b2556110a55901f729f",
+        "date": "2026-04-30",
+        "title": "Why The S&P 500's 10% April Surge May Have Legs, Even With $4+ Gas",
+        "description": "Why The S&P 500's 10% April Surge May Have Legs, Even With $4+ Gas",
+        "url": "https://finnhub.io/api/news?id=ef71e97f7412bd258b31204a32c82a912e893aed941eedcd1ff9d349f67aaacc",
         "sentiment": 0.0,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Is Intel The Next Nvidia As Agentic AI Increases CPU Demand; Oil Storage Crunch May Force Iran To Strike Deal",
-        "description": "Is Intel The Next Nvidia As Agentic AI Increases CPU Demand; Oil Storage Crunch May Force Iran To Strike Deal",
-        "url": "https://finnhub.io/api/news?id=1f401ca4f2f3255faef015c42e427862dcdb42cd1166f3e8a9809de5dc6f5745",
+        "date": "2026-04-30",
+        "title": "Without Government Spending And Trade, GDP Rose By 2.5% In Q1, Boosted By AI Investments",
+        "description": "Without Government Spending And Trade, GDP Rose By 2.5% In Q1, Boosted By AI Investments",
+        "url": "https://finnhub.io/api/news?id=065981abed8c73504bce4c18b004415fcf169c667a5a03880df5f7978b1cf666",
+        "sentiment": 0.6,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-04-30",
+        "title": "GDP Prints At 2%, But There's Noise In The Numbers",
+        "description": "GDP Prints At 2%, But There's Noise In The Numbers",
+        "url": "https://finnhub.io/api/news?id=773242137709b784b13603708fb2fd1dfff489e2cd4c217b7af9d419d6789d51",
         "sentiment": 0.0,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "The Calm Before The Storm? Key Weekend Risk Incoming - Overnight Market Check",
-        "description": "The Calm Before The Storm? Key Weekend Risk Incoming - Overnight Market Check",
-        "url": "https://finnhub.io/api/news?id=a6d345012fdff00b7905cda0cf8deada0124e9118093a5825a9884af2c911b54",
-        "sentiment": 0.225,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Oil And Equity Markets: Someone Is Lying",
-        "description": "Oil And Equity Markets: Someone Is Lying",
-        "url": "https://finnhub.io/api/news?id=3166ab0685ca30805f179141f82ebfab14b89b601e8eb5507dfe82954f7189c1",
+        "date": "2026-04-30",
+        "title": "AAII Sentiment Survey: Optimism Recoils",
+        "description": "AAII Sentiment Survey: Optimism Recoils",
+        "url": "https://finnhub.io/api/news?id=68ba28441f362cff107db6ffb3adb58807527fada2bd964cf6d197e3f8bd1653",
         "sentiment": 0.0,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Are You Focusing On The Wrong Things In This Market?",
-        "description": "Are You Focusing On The Wrong Things In This Market?",
-        "url": "https://finnhub.io/api/news?id=92eee320bc78fc2a3889d7ac8e6891e51f943481dc5c6f890c13a61672791455",
-        "sentiment": -0.3839285714285714,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Warsh, Oil, And The April FOMC: The Case For June Rate Cuts",
-        "description": "Warsh, Oil, And The April FOMC: The Case For June Rate Cuts",
-        "url": "https://finnhub.io/api/news?id=beeaf86d0143d54a7b6fc327bb425f0ebb758115f19582278e173e4b8ce9b1cd",
+        "date": "2026-04-30",
+        "title": "Why I Stopped Reading 10-Year Rolling Return Charts",
+        "description": "Why I Stopped Reading 10-Year Rolling Return Charts",
+        "url": "https://finnhub.io/api/news?id=5d437f297e7af1758e40fae739bbaf6204dfcc8133ca84eee419a7752e6067c0",
         "sentiment": 0.0,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "S&P 500 Is Overbought\u2014But JPMorgan Says The Rally Isn't Done Yet",
-        "description": "S&P 500 Is Overbought\u2014But JPMorgan Says The Rally Isn't Done Yet",
-        "url": "https://finnhub.io/api/news?id=e91bfbda25a428f6568ec2f8a64c05464dd7f505149cb877f3af3b678716cd97",
-        "sentiment": -0.05000000000000002,
+        "date": "2026-04-30",
+        "title": "Dow Jones And U.S. Stock Market Intraday Outlook - Defensive Rebalancing For Month-End, The Trend Resumes?",
+        "description": "Dow Jones And U.S. Stock Market Intraday Outlook - Defensive Rebalancing For Month-End, The Trend Resumes?",
+        "url": "https://finnhub.io/api/news?id=5bd0db13963f05d11fdc28bb187accc6473da14ae1fe86ba56afded5125b5f1c",
+        "sentiment": 0.05333333333333334,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Trade Strategy For SPY, QQQ, AAPL, MSFT, NVDA, GOOGL, META, And TSLA",
-        "description": "Trade Strategy For SPY, QQQ, AAPL, MSFT, NVDA, GOOGL, META, And TSLA",
-        "url": "https://finnhub.io/api/news?id=fbd75f2e7741b20770ba00a371ba343c268e0510ecf7ec7ad3cc9202e400bc00",
+        "date": "2026-04-30",
+        "title": "Hyperscaler Capex Growth Reignites Semi Mania; Jobless Claims This Low Last Seen In 1969",
+        "description": "Hyperscaler Capex Growth Reignites Semi Mania; Jobless Claims This Low Last Seen In 1969",
+        "url": "https://finnhub.io/api/news?id=6b0e0fe7dc9557d7939bd98ae0d10c7db8e5258c1b62309953423068ae96d863",
         "sentiment": 0.0,
         "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Oil Is A Critical War Gauge For Tracking Iran Risk In Real Time",
-        "description": "Oil Is A Critical War Gauge For Tracking Iran Risk In Real Time",
-        "url": "https://finnhub.io/api/news?id=4f4d5316d700e08f67547552f48c5f9955a4a1d21de467c455564da4b8398de7",
-        "sentiment": -0.13333333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Layoffs Are Accelerating Again",
-        "description": "Layoffs Are Accelerating Again",
-        "url": "https://finnhub.io/api/news?id=927a2eeb53ff24924d4bccf0486a9abc2c29884fce08c19a4a7b005a05e2bab8",
-        "sentiment": 0.3,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Buy Fear And Sell Greed",
-        "description": "Buy Fear And Sell Greed",
-        "url": "https://finnhub.io/api/news?id=980deab73ebee12b23cab812bca14e6ceaa52aa0cf0b56882da0898739f2fe67",
-        "sentiment": 0.125,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Market Breadth Holds Positive Despite a One-Day Pullback",
-        "description": "Market Breadth Holds Positive Despite a One-Day Pullback",
-        "url": "https://finnhub.io/api/news?id=5e2d25ffb30aeb92042434507cace70587369698b243b968450a1c077b9eb9f5",
-        "sentiment": 0.22727272727272727,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "How To Build A $7,000/Mo Income Using BlackRock's 8% Yielding 32 CEFs",
-        "description": "How To Build A $7,000/Mo Income Using BlackRock's 8% Yielding 32 CEFs",
-        "url": "https://finnhub.io/api/news?id=4a3b779ea296e85493734aab48b11f90a485bb549b1691fb9f92f7776f8ede37",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Stock Market Today: Nasdaq, S&P 500 Futures Gain While Dow Slips Amid Israel-Lebanon Ceasefire Extension\u2014Intel, SAP, Lunai Bioworks In Focus (UPDATED)",
-        "description": "Stock Market Today: Nasdaq, S&P 500 Futures Gain While Dow Slips Amid Israel-Lebanon Ceasefire Extension\u2014Intel, SAP, Lunai Bioworks In Focus (UPDATED)",
-        "url": "https://finnhub.io/api/news?id=07e8feaeac4540d71fe068bc705116b227cf8418a51932dfaa1b924aaadd21d5",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Energy Volatility Complicates The Inflation Outlook But This Isn't 2022",
-        "description": "Energy Volatility Complicates The Inflation Outlook But This Isn't 2022",
-        "url": "https://finnhub.io/api/news?id=75980e67f0da605f66753dfd16cae9a382ed2b0278daaae255aa7c0a25580721",
-        "sentiment": 0.03333333333333333,
+        "date": "2026-04-30",
+        "title": "Stock Market Today: Dow Jones Roars As Industrials Rescue Wall Street From Meta-Led Tech Slide",
+        "description": "Stock Market Today: Dow Jones Roars As Industrials Rescue Wall Street From Meta-Led Tech Slide",
+        "url": "https://finnhub.io/api/news?id=7302462da6dad5aeb3198002c4478f9463fa7ced6f746af04e070e5b75c2b302",
+        "sentiment": 0.0625,
         "source": "Finnhub"
     }
 ]

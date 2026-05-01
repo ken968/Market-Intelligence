@@ -1,162 +1,162 @@
 [
     {
-        "date": "2026-04-24",
-        "title": "Sector Update: Tech Stocks Gain Friday Afternoon",
-        "description": "Sector Update: Tech Stocks Gain Friday Afternoon",
-        "url": "https://finance.yahoo.com/sectors/technology/articles/sector-tech-stocks-gain-friday-173453938.html?.tsrc=rss",
-        "sentiment": 0.25,
+        "date": "2026-05-01",
+        "title": "This Catalyst Helped AMD Avoid Bankruptcy, and It's Coming Back to Supercharge the Stock (Hint: It's Not Artificial Intelligence)",
+        "description": "This Catalyst Helped AMD Avoid Bankruptcy, and It's Coming Back to Supercharge the Stock (Hint: It's Not Artificial Intelligence)",
+        "url": "https://www.fool.com/investing/2026/05/01/this-catalyst-helped-amd-avoid-bankruptcy-and-it-i/?.tsrc=rss",
+        "sentiment": 0.007272727272727264,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-24",
-        "title": "Meta Platforms May Disclose More Job Cuts as AI Integration Ramps Up, Wedbush Says",
-        "description": "Meta Platforms May Disclose More Job Cuts as AI Integration Ramps Up, Wedbush Says",
-        "url": "https://finance.yahoo.com/sectors/technology/articles/meta-platforms-may-disclose-more-171417414.html?.tsrc=rss",
-        "sentiment": 0.25,
+        "date": "2026-05-01",
+        "title": "Unprecedented AI Spending Is Rewriting Big Tech\u2019s Earnings Season Playbook",
+        "description": "Unprecedented AI Spending Is Rewriting Big Tech\u2019s Earnings Season Playbook",
+        "url": "https://finance.yahoo.com/m/61aa9e9a-1ba6-39bb-a4a2-1df81f18d72d/unprecedented-ai-spending-is.html?.tsrc=rss",
+        "sentiment": 0.14285714285714285,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-24",
-        "title": "Meta Platforms Signs Multiyear AI Chip Deal With Amazon",
-        "description": "Meta Platforms Signs Multiyear AI Chip Deal With Amazon",
-        "url": "https://finance.yahoo.com/sectors/technology/articles/meta-platforms-signs-multiyear-ai-171108799.html?.tsrc=rss",
+        "date": "2026-05-01",
+        "title": "This Tech Sector ETF Gives Investors the Best Bang for Their Buck",
+        "description": "This Tech Sector ETF Gives Investors the Best Bang for Their Buck",
+        "url": "https://finance.yahoo.com/m/483ffe26-d884-3fdb-b2b5-0cebfe400568/this-tech-sector-etf-gives.html?.tsrc=rss",
+        "sentiment": 0.3,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Zuckerberg says Meta layoffs tied to AI spending, won't rule out future cuts",
+        "description": "Zuckerberg says Meta layoffs tied to AI spending, won't rule out future cuts",
+        "url": "https://www.foxbusiness.com/technology/zuckerberg-says-meta-layoffs-tied-ai-spending-wont-rule-out-future-cuts?.tsrc=rss",
         "sentiment": 0.0,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-24",
-        "title": "Stock Market Today: Nasdaq, S&P 500 Rise As Intel Surges; Nvidia Soars (Live Coverage)",
-        "description": "Stock Market Today: Nasdaq, S&P 500 Rise As Intel Surges; Nvidia Soars (Live Coverage)",
-        "url": "https://finance.yahoo.com/m/52e306ce-7e7b-3209-bf84-7e6ce3d57e4f/stock-market-today%3A-nasdaq%2C.html?.tsrc=rss",
-        "sentiment": 0.19318181818181818,
+        "date": "2026-05-01",
+        "title": "Meta Stock: Is It Time for Investors to Buy the Dip?",
+        "description": "Meta Stock: Is It Time for Investors to Buy the Dip?",
+        "url": "https://www.fool.com/investing/2026/04/30/meta-stock-plummets-is-this-a-buy-the-dip-moment-f/?.tsrc=rss",
+        "sentiment": 0.011111111111111112,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-24",
-        "title": "'We Will Have More Agents Than Human Employees,' Coinbase CEO Brian Armstrong Says As The Company Tests Al Agents In Work Communication Channels",
-        "description": "'We Will Have More Agents Than Human Employees,' Coinbase CEO Brian Armstrong Says As The Company Tests Al Agents In Work Communication Channels",
-        "url": "https://finance.yahoo.com/markets/crypto/articles/more-agents-human-employees-coinbase-170105061.html?.tsrc=rss",
-        "sentiment": 0.26161616161616164,
+        "date": "2026-05-01",
+        "title": "Did Nvidia Just Deliver a Breakout Fake-Out? Why Dip\u2011Buyers Should Welcome a Dip",
+        "description": "Did Nvidia Just Deliver a Breakout Fake-Out? Why Dip\u2011Buyers Should Welcome a Dip",
+        "url": "https://247wallst.com/investing/2026/04/30/did-nvidia-just-deliver-a-breakout-fake-out-why-dip%e2%80%91buyers-should-welcome-a-dip/?.tsrc=rss",
+        "sentiment": 0.15634920634920638,
         "source": "Yahoo RSS"
     },
     {
-        "date": "2026-04-24",
-        "title": "Google's AI Reckoning: Can Gemini Turn Dominance Into Dollars?",
-        "description": "Google's AI Reckoning: Can Gemini Turn Dominance Into Dollars?",
-        "url": "https://finance.yahoo.com/m/4b22d8c4-6f75-3ddb-84fe-7b61d25dc7c2/google%27s-ai-reckoning%3A-can.html?.tsrc=rss",
-        "sentiment": -0.06666666666666667,
-        "source": "Yahoo RSS"
+        "date": "2026-05-01",
+        "title": "Unprecedented AI Spending Is Rewriting Big Tech\u2019s Earnings Season Playbook",
+        "description": "Unprecedented AI Spending Is Rewriting Big Tech\u2019s Earnings Season Playbook",
+        "url": "https://finnhub.io/api/news?id=ddd3c5e9c768a153d5fde37f43aa6869a42c5512a765a287a58a1b96859f42f2",
+        "sentiment": 0.14285714285714285,
+        "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Meta to deploy Amazon\u2019s Graviton chips in expanded multiyear AWS agreement",
-        "description": "Meta to deploy Amazon\u2019s Graviton chips in expanded multiyear AWS agreement",
-        "url": "https://www.proactiveinvestors.com/companies/news/1091175/meta-to-deploy-amazon-s-graviton-chips-in-expanded-multiyear-aws-agreement-1091175.html?.tsrc=rss",
-        "sentiment": -0.6,
-        "source": "Yahoo RSS"
+        "date": "2026-05-01",
+        "title": "This Tech Sector ETF Gives Investors the Best Bang for Their Buck",
+        "description": "This Tech Sector ETF Gives Investors the Best Bang for Their Buck",
+        "url": "https://finnhub.io/api/news?id=e68095adf6bb4b58ed348e4ddefe18493778a66982653764dba09cb40926de14",
+        "sentiment": 0.3,
+        "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Advanced Micro Devices (AMD): The Best Fast Growth Stock to Invest In Now",
-        "description": "Advanced Micro Devices (AMD): The Best Fast Growth Stock to Invest In Now",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/advanced-micro-devices-amd-best-164035056.html?.tsrc=rss",
-        "sentiment": 0.37777777777777777,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Meta Expands AWS Partnership as Agentic AI Push Drives New Compute Demand",
-        "description": "Meta Expands AWS Partnership as Agentic AI Push Drives New Compute Demand",
-        "url": "https://www.cryptoprowl.com/releases/meta-expands-aws-partnership-as-agentic-ai-push-drives-new-compute-demand-4281?.tsrc=rss",
-        "sentiment": 0.13636363636363635,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Apple Got the CEO It Wants. The Stock Gets the One It Needs.",
-        "description": "Apple Got the CEO It Wants. The Stock Gets the One It Needs.",
-        "url": "https://finance.yahoo.com/m/39104980-96a9-369b-9f23-f02cb7ce2195/apple-got-the-ceo-it-wants..html?.tsrc=rss",
-        "sentiment": 0.12727272727272726,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Crypto latest: Michael Saylor says crypto 'winter' is 'over'",
-        "description": "Crypto latest: Michael Saylor says crypto 'winter' is 'over'",
-        "url": "https://finance.yahoo.com/video/crypto-latest-michael-saylor-says-crypto-winter-is-over-155548899.html?.tsrc=rss",
-        "sentiment": 0.28409090909090906,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Unity Software (U) Faces AI Challenges Despite Powering Meta\u2019s Virtual Reality",
-        "description": "Unity Software (U) Faces AI Challenges Despite Powering Meta\u2019s Virtual Reality",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/unity-software-u-faces-ai-155520975.html?.tsrc=rss",
-        "sentiment": 0.11666666666666665,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-24",
-        "title": "Meta signs multibillion-dollar deal for Amazon Graviton AI chips",
-        "description": "Meta signs multibillion-dollar deal for Amazon Graviton AI chips",
-        "url": "https://qz.com/meta-amazon-aws-graviton-chips-ai-deal-042426?.tsrc=rss",
+        "date": "2026-05-01",
+        "title": "Zuckerberg says Meta layoffs tied to AI spending, won't rule out future cuts",
+        "description": "Zuckerberg says Meta layoffs tied to AI spending, won't rule out future cuts",
+        "url": "https://finnhub.io/api/news?id=3d1aa430a3028916af45fe64e27f105787160c26d4e4a53201ad59f10a7fb3d6",
         "sentiment": 0.0,
-        "source": "Yahoo RSS"
+        "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Tired Of Being Homeowners, They Want To Sell Their House 'To Move West' And Rent An Apartment Closer To Outdoor Activities. A Dumb Decision?",
-        "description": "Tired Of Being Homeowners, They Want To Sell Their House 'To Move West' And Rent An Apartment Closer To Outdoor Activities. A Dumb Decision?",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/tired-being-homeowners-want-sell-154605323.html?.tsrc=rss",
-        "sentiment": -0.15208333333333335,
-        "source": "Yahoo RSS"
+        "date": "2026-05-01",
+        "title": "Meta Q1 2026 Earnings: Nothing To Complain About",
+        "description": "Meta Q1 2026 Earnings: Nothing To Complain About",
+        "url": "https://finnhub.io/api/news?id=a85b1e67c065fc44a2db5353e93615d9b59cb7106f4dea0de3ec25710e708091",
+        "sentiment": 0.0,
+        "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Are large layoff announcements a sign of something bigger?",
-        "description": "Are large layoff announcements a sign of something bigger?",
-        "url": "https://finance.yahoo.com/sectors/technology/articles/large-layoff-announcements-sign-something-153936794.html?.tsrc=rss",
-        "sentiment": 0.0016865079365079398,
-        "source": "Yahoo RSS"
+        "date": "2026-05-01",
+        "title": "Meta Stock: Is It Time for Investors to Buy the Dip?",
+        "description": "Meta Stock: Is It Time for Investors to Buy the Dip?",
+        "url": "https://finnhub.io/api/news?id=7645871c651770772dc8d37777e39412bcfdd568e015fdd115b08f9048f9487f",
+        "sentiment": 0.011111111111111112,
+        "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Meta Platforms, Inc. (META): Bill Ackman Opens New Position",
-        "description": "Meta Platforms, Inc. (META): Bill Ackman Opens New Position",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/meta-platforms-inc-meta-bill-153005682.html?.tsrc=rss",
-        "sentiment": 0.3181818181818181,
-        "source": "Yahoo RSS"
+        "date": "2026-05-01",
+        "title": "PRESS DIGEST-Wall Street Journal - May 1",
+        "description": "PRESS DIGEST-Wall Street Journal - May 1",
+        "url": "https://finnhub.io/api/news?id=ffadd20609f46fbb93aaa0b26d5281a5d9d60c01dd7dd0570b491fa850bab4eb",
+        "sentiment": 0.25,
+        "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Top Midday Stories: Intel Shares Soar After Q1 Beat; Meta to use AWS Graviton Cores",
-        "description": "Top Midday Stories: Intel Shares Soar After Q1 Beat; Meta to use AWS Graviton Cores",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/top-midday-stories-intel-shares-152838318.html?.tsrc=rss",
-        "sentiment": 0.06481481481481481,
-        "source": "Yahoo RSS"
+        "date": "2026-05-01",
+        "title": "Did Nvidia Just Deliver a Breakout Fake-Out? Why Dip\u2011Buyers Should Welcome a Dip",
+        "description": "Did Nvidia Just Deliver a Breakout Fake-Out? Why Dip\u2011Buyers Should Welcome a Dip",
+        "url": "https://finnhub.io/api/news?id=8f7975ee0799f6cd140336af92d5b310ab679d8b35f46b356b08e08ba6fc9cb4",
+        "sentiment": 0.15634920634920638,
+        "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "META Builds Advanced Tools for Creators: Can They Drive Revenues?",
-        "description": "META Builds Advanced Tools for Creators: Can They Drive Revenues?",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/meta-builds-advanced-tools-creators-152800905.html?.tsrc=rss",
-        "sentiment": 0.36111111111111116,
-        "source": "Yahoo RSS"
+        "date": "2026-05-01",
+        "title": "EMEA Morning Briefing : Wall Street Posts Best Month Since 2020",
+        "description": "EMEA Morning Briefing : Wall Street Posts Best Month Since 2020",
+        "url": "https://finnhub.io/api/news?id=0fb1ae07cb343f2d60478959e779c35129221270405c3771f994f4df3aa29476",
+        "sentiment": 0.3333333333333333,
+        "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Amazon Expands AI Chip Reach And Deepens Healthcare Push With GLP\u20111 Program",
-        "description": "Amazon Expands AI Chip Reach And Deepens Healthcare Push With GLP\u20111 Program",
-        "url": "https://finance.yahoo.com/sectors/technology/articles/amazon-expands-ai-chip-reach-150944927.html?.tsrc=rss",
-        "sentiment": 0.06818181818181818,
-        "source": "Yahoo RSS"
+        "date": "2026-05-01",
+        "title": "Review & Preview: Partying Like It\u2019s 2020",
+        "description": "Review & Preview: Partying Like It\u2019s 2020",
+        "url": "https://finnhub.io/api/news?id=a600fa9277981ee33346c30137fd8275aabc5847e51c3884a1fc821a5b7b4fbe",
+        "sentiment": 0.3015625,
+        "source": "Finnhub"
     },
     {
-        "date": "2026-04-24",
-        "title": "Amazon, Meta, Microsoft, Salesforce, and Stripe Join the Universal Commerce Protocol Tech Council",
-        "description": "Amazon, Meta, Microsoft, Salesforce, and Stripe Join the Universal Commerce Protocol Tech Council",
-        "url": "https://finance.yahoo.com/sectors/technology/articles/amazon-meta-microsoft-salesforce-stripe-150500021.html?.tsrc=rss",
-        "sentiment": -0.0375,
-        "source": "Yahoo RSS"
+        "date": "2026-05-01",
+        "title": "Ex-PayPal president unveils bullish Bitcoin target",
+        "description": "Ex-PayPal president unveils bullish Bitcoin target",
+        "url": "https://finnhub.io/api/news?id=cf1ba1d9cbf221461cfa71a7a35a6cb3c07a97b752914f2597a678b8f1da346e",
+        "sentiment": -0.13333333333333333,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Coastal Pay Launches SignUp Link\u2014Two-Minute, Friction-Free Merchant Onboarding for Retail and E-Commerce",
+        "description": "Coastal Pay Launches SignUp Link\u2014Two-Minute, Friction-Free Merchant Onboarding for Retail and E-Commerce",
+        "url": "https://finnhub.io/api/news?id=43d66c1ebcbb60eb73f8dfbd3da4ac51faec8d3e4ce794ae5ad3ba421520b74e",
+        "sentiment": 0.13749999999999998,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Everyone's Wondering What's Next for Nvidia. This News From Amazon and Alphabet Offers Us an Idea That's Strikingly Clear",
+        "description": "Everyone's Wondering What's Next for Nvidia. This News From Amazon and Alphabet Offers Us an Idea That's Strikingly Clear",
+        "url": "https://finnhub.io/api/news?id=5dbaaa55ef25b89c54dfcdfe927f7e97bd64eb6450a17f4ccccb18507a75ef37",
+        "sentiment": 0.06666666666666667,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Stock Market Today, April 30: Alphabet Surges After Reporting Accelerating Google Cloud Growth",
+        "description": "Stock Market Today, April 30: Alphabet Surges After Reporting Accelerating Google Cloud Growth",
+        "url": "https://finnhub.io/api/news?id=766b1535f170344e3a3d57c19d72f4edce9fc6d72469fd16f7100f2b8346b4a3",
+        "sentiment": 0.0,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Stock Market Today, April 30: Meta Falls as Higher AI Capex Outlook Overshadows Strong Q1 Results",
+        "description": "Stock Market Today, April 30: Meta Falls as Higher AI Capex Outlook Overshadows Strong Q1 Results",
+        "url": "https://finnhub.io/api/news?id=846ca502f7b181ea4adf4c5dfbc103808868e5e01155447b5afa9aed9e146dc0",
+        "sentiment": 0.26866666666666666,
+        "source": "Finnhub"
     }
 ]
