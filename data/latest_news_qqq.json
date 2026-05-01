@@ -1,6 +1,54 @@
 [
     {
         "date": "2026-05-01",
+        "title": "Breadth Rebound Restores the Positive Trend at Month-End",
+        "description": "Breadth Rebound Restores the Positive Trend at Month-End",
+        "url": "https://finnhub.io/api/news?id=f50a538d8ed5ce5f13571ddea35f61c98bf0f926548ee0e3dd58412c48239756",
+        "sentiment": 0.18787878787878787,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Powell To Stay In The Best Interest Of The Institution",
+        "description": "Powell To Stay In The Best Interest Of The Institution",
+        "url": "https://finnhub.io/api/news?id=bc617ff0f75459512ba706cb68f309bfce52988cd9ff127ef1ec73294b74b902",
+        "sentiment": 0.2111111111111111,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "A Robot Economy: Who Gets Rich, Who Gets Left Behind",
+        "description": "A Robot Economy: Who Gets Rich, Who Gets Left Behind",
+        "url": "https://finnhub.io/api/news?id=27c20cf061fba1b32b8298ffb8d3ad0667cdae22b6e3fa63e28d1f90ce93ef9b",
+        "sentiment": 0.2125,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Charting A Distinct Course To Asia's Awakening Equity Markets",
+        "description": "Charting A Distinct Course To Asia's Awakening Equity Markets",
+        "url": "https://finnhub.io/api/news?id=1f943f5832bbeb2b95486721bc75d11f72ef680acc60ae88b798d7762c4e26f2",
+        "sentiment": 0.12666666666666665,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "U.S. Stocks: This Chart Indicator Signals A Sell Now",
+        "description": "U.S. Stocks: This Chart Indicator Signals A Sell Now",
+        "url": "https://finnhub.io/api/news?id=8bd9d5cc486b1aa3a2644944c14d2bc32cd06bcdab047dc43377a2a548aaeead",
+        "sentiment": -0.08333333333333333,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "It's All About The 2027 AI Capex - And It Doesn't Look Pretty",
+        "description": "It's All About The 2027 AI Capex - And It Doesn't Look Pretty",
+        "url": "https://finnhub.io/api/news?id=b262e4141e7caab6964603b746c38d2484bc830466712f72b5238248fe6aec10",
+        "sentiment": 0.075,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
         "title": "Performance Insights - April 2026",
         "description": "Performance Insights - April 2026",
         "url": "https://finnhub.io/api/news?id=49e4350915dab7757543cd74fb8e124e5226a7749a0d22ce40f4e007db0ea190",
@@ -49,19 +97,19 @@
     },
     {
         "date": "2026-05-01",
-        "title": "ProShares UltraPro QQQ ETF(TQQQ) Stock Options Chain | Quotes & News",
-        "description": "ProShares UltraPro QQQ ETF(TQQQ) Stock Options Chain | Quotes & News",
-        "url": "https://www.moomoo.com/etfs/TQQQ-US/options-chain?chain_id=Name1K9-3FXPhg.1kv56s0&global_content=%7B%22promote_id%22%3A13764,%22sub_promote_id%22%3A107,%22f%22%3A%22www.moomoo.com%2Fetfs%2FUUP-US%22%7D",
-        "sentiment": -0.0575,
-        "source": "Alpha Vantage"
-    },
-    {
-        "date": "2026-05-01",
         "title": "Fear & Greed: 26.0 (Fear)",
         "description": "Fear & Greed: 26.0 (Fear)",
         "url": "https://alternative.me/crypto/fear-and-greed-index/",
         "sentiment": -0.48,
         "source": "Fear & Greed Index"
+    },
+    {
+        "date": "2026-04-30",
+        "title": "Tech ETFs Dominate as $11.4B Floods Into U.S. Equity Funds",
+        "description": "Tech ETFs Dominate as $11.4B Floods Into U.S. Equity Funds",
+        "url": "http://www.etf.com/sections/daily-etf-flows/tech-etfs-dominate-114b-floods-us-equity-funds?utm_source=yahoo-finance&utm_medium=rss&utm_campaign=yahoo-finance-rss&.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
     },
     {
         "date": "2026-04-30",
@@ -109,54 +157,6 @@
         "description": "Without Government Spending And Trade, GDP Rose By 2.5% In Q1, Boosted By AI Investments",
         "url": "https://finnhub.io/api/news?id=065981abed8c73504bce4c18b004415fcf169c667a5a03880df5f7978b1cf666",
         "sentiment": 0.6,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "GDP Prints At 2%, But There's Noise In The Numbers",
-        "description": "GDP Prints At 2%, But There's Noise In The Numbers",
-        "url": "https://finnhub.io/api/news?id=773242137709b784b13603708fb2fd1dfff489e2cd4c217b7af9d419d6789d51",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "AAII Sentiment Survey: Optimism Recoils",
-        "description": "AAII Sentiment Survey: Optimism Recoils",
-        "url": "https://finnhub.io/api/news?id=68ba28441f362cff107db6ffb3adb58807527fada2bd964cf6d197e3f8bd1653",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "Why I Stopped Reading 10-Year Rolling Return Charts",
-        "description": "Why I Stopped Reading 10-Year Rolling Return Charts",
-        "url": "https://finnhub.io/api/news?id=5d437f297e7af1758e40fae739bbaf6204dfcc8133ca84eee419a7752e6067c0",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "Dow Jones And U.S. Stock Market Intraday Outlook - Defensive Rebalancing For Month-End, The Trend Resumes?",
-        "description": "Dow Jones And U.S. Stock Market Intraday Outlook - Defensive Rebalancing For Month-End, The Trend Resumes?",
-        "url": "https://finnhub.io/api/news?id=5bd0db13963f05d11fdc28bb187accc6473da14ae1fe86ba56afded5125b5f1c",
-        "sentiment": 0.05333333333333334,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "Hyperscaler Capex Growth Reignites Semi Mania; Jobless Claims This Low Last Seen In 1969",
-        "description": "Hyperscaler Capex Growth Reignites Semi Mania; Jobless Claims This Low Last Seen In 1969",
-        "url": "https://finnhub.io/api/news?id=6b0e0fe7dc9557d7939bd98ae0d10c7db8e5258c1b62309953423068ae96d863",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "Stock Market Today: Dow Jones Roars As Industrials Rescue Wall Street From Meta-Led Tech Slide",
-        "description": "Stock Market Today: Dow Jones Roars As Industrials Rescue Wall Street From Meta-Led Tech Slide",
-        "url": "https://finnhub.io/api/news?id=7302462da6dad5aeb3198002c4478f9463fa7ced6f746af04e070e5b75c2b302",
-        "sentiment": 0.0625,
         "source": "Finnhub"
     }
 ]

@@ -1,11 +1,83 @@
 [
     {
         "date": "2026-05-01",
+        "title": "4 S&P 500 Stocks Turn $10,000 To $109,607 In Four Months",
+        "description": "4 S&P 500 Stocks Turn $10,000 To $109,607 In Four Months",
+        "url": "https://finance.yahoo.com/m/411bce67-9920-3964-8ee1-760d16f92613/4-s%26p-500-stocks-turn-%2410%2C000.html?.tsrc=rss",
+        "sentiment": 0.5777777777777778,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
         "title": "K-Shaped and Cracking: Stocks Hit All-Time Highs as Consumer Sentiment Posts Lowest Score in History",
         "description": "K-Shaped and Cracking: Stocks Hit All-Time Highs as Consumer Sentiment Posts Lowest Score in History",
         "url": "https://247wallst.com/personal-finance/2026/04/30/k-shaped-and-cracking-stocks-hit-all-time-highs-as-consumer-sentiment-posts-lowest-score-in-history/?.tsrc=rss",
         "sentiment": -0.004365079365079362,
         "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "4 S&P 500 Stocks Turn $10,000 To $109,607 In Four Months",
+        "description": "4 S&P 500 Stocks Turn $10,000 To $109,607 In Four Months",
+        "url": "https://finnhub.io/api/news?id=ef63ebfbe4b504d92da052e4947d30d2658d496912a68286bf54c5e10901c465",
+        "sentiment": 0.5777777777777778,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Breadth Rebound Restores the Positive Trend at Month-End",
+        "description": "Breadth Rebound Restores the Positive Trend at Month-End",
+        "url": "https://finnhub.io/api/news?id=f50a538d8ed5ce5f13571ddea35f61c98bf0f926548ee0e3dd58412c48239756",
+        "sentiment": 0.18787878787878787,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Why An Income-Centric Approach Matters For Investing In Retirement",
+        "description": "Why An Income-Centric Approach Matters For Investing In Retirement",
+        "url": "https://finnhub.io/api/news?id=72f053fd0a24aa65f58557fc5dd46abd951bb955789caecf8b238d89dc26c5b9",
+        "sentiment": 0.2,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Powell To Stay In The Best Interest Of The Institution",
+        "description": "Powell To Stay In The Best Interest Of The Institution",
+        "url": "https://finnhub.io/api/news?id=bc617ff0f75459512ba706cb68f309bfce52988cd9ff127ef1ec73294b74b902",
+        "sentiment": 0.2111111111111111,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "A Robot Economy: Who Gets Rich, Who Gets Left Behind",
+        "description": "A Robot Economy: Who Gets Rich, Who Gets Left Behind",
+        "url": "https://finnhub.io/api/news?id=27c20cf061fba1b32b8298ffb8d3ad0667cdae22b6e3fa63e28d1f90ce93ef9b",
+        "sentiment": 0.2125,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Charting A Distinct Course To Asia's Awakening Equity Markets",
+        "description": "Charting A Distinct Course To Asia's Awakening Equity Markets",
+        "url": "https://finnhub.io/api/news?id=1f943f5832bbeb2b95486721bc75d11f72ef680acc60ae88b798d7762c4e26f2",
+        "sentiment": 0.12666666666666665,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "U.S. Stocks: This Chart Indicator Signals A Sell Now",
+        "description": "U.S. Stocks: This Chart Indicator Signals A Sell Now",
+        "url": "https://finnhub.io/api/news?id=8bd9d5cc486b1aa3a2644944c14d2bc32cd06bcdab047dc43377a2a548aaeead",
+        "sentiment": -0.08333333333333333,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "It's All About The 2027 AI Capex - And It Doesn't Look Pretty",
+        "description": "It's All About The 2027 AI Capex - And It Doesn't Look Pretty",
+        "url": "https://finnhub.io/api/news?id=b262e4141e7caab6964603b746c38d2484bc830466712f72b5238248fe6aec10",
+        "sentiment": 0.075,
+        "source": "Finnhub"
     },
     {
         "date": "2026-05-01",
@@ -73,11 +145,11 @@
     },
     {
         "date": "2026-05-01",
-        "title": "Western Standard LLC's State Street SPDR S&P 500 ETF Trust(SPY) Holding History",
-        "description": "Western Standard LLC's State Street SPDR S&P 500 ETF Trust(SPY) Holding History",
-        "url": "https://www.gurufocus.com/guru-portfolio/Western%20Standard%20LLC/SPY",
-        "sentiment": -0.01875,
-        "source": "Alpha Vantage"
+        "title": "S&P 500 pushes to new highs. Here is the \u2018line in the sand\u2019 for this bull run.",
+        "description": "S&P 500 pushes to new highs. Here is the \u2018line in the sand\u2019 for this bull run.",
+        "url": "https://finnhub.io/api/news?id=3c17fff404254d67e01604573f85fc5002c7a99b49c560afa73e938b535ff584",
+        "sentiment": 0.06818181818181818,
+        "source": "Finnhub"
     },
     {
         "date": "2026-05-01",
@@ -86,77 +158,5 @@
         "url": "https://alternative.me/crypto/fear-and-greed-index/",
         "sentiment": -0.48,
         "source": "Fear & Greed Index"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "S&P 500 Rides Tech Earnings Wave Despite Inflation Warning Shot",
-        "description": "S&P 500 Rides Tech Earnings Wave Despite Inflation Warning Shot",
-        "url": "https://247wallst.com/investing/2026/04/30/sp-500-rides-tech-earnings-wave-despite-inflation-warning-shot/?.tsrc=rss",
-        "sentiment": 0.03166666666666666,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "Exchange-Traded Funds, Equity Futures Higher Pre-Bell Thursday Amid Big Tech Earnings, Economic Data",
-        "description": "Exchange-Traded Funds, Equity Futures Higher Pre-Bell Thursday Amid Big Tech Earnings, Economic Data",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/exchange-traded-funds-equity-futures-122608330.html?.tsrc=rss",
-        "sentiment": 0.07583333333333334,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "8 Microcap Stocks Pick Up A Head Of Steam For Enormous Gains",
-        "description": "8 Microcap Stocks Pick Up A Head Of Steam For Enormous Gains",
-        "url": "https://finance.yahoo.com/m/ad2bed74-a89a-3ddc-ba3f-f2099c506e24/8-microcap-stocks-pick-up-a.html?.tsrc=rss",
-        "sentiment": 0.02142857142857142,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "The Dark Side Of Dividend Investing That Leads To Underperformance",
-        "description": "The Dark Side Of Dividend Investing That Leads To Underperformance",
-        "url": "https://finnhub.io/api/news?id=4edbd2720f7a68d37416d2920e194f744a4a30def3282bfca3dc2e7b74ab4540",
-        "sentiment": -0.15833333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "Why The S&P 500's 10% April Surge May Have Legs, Even With $4+ Gas",
-        "description": "Why The S&P 500's 10% April Surge May Have Legs, Even With $4+ Gas",
-        "url": "https://finnhub.io/api/news?id=ef71e97f7412bd258b31204a32c82a912e893aed941eedcd1ff9d349f67aaacc",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "Without Government Spending And Trade, GDP Rose By 2.5% In Q1, Boosted By AI Investments",
-        "description": "Without Government Spending And Trade, GDP Rose By 2.5% In Q1, Boosted By AI Investments",
-        "url": "https://finnhub.io/api/news?id=065981abed8c73504bce4c18b004415fcf169c667a5a03880df5f7978b1cf666",
-        "sentiment": 0.6,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "U.S. Trade Representative: In This Year's Special 301 Report, USTR Identifies Vietnam As A Priority Foreign Country; Moving Argentina And Mexico From Priority Watch List To Watch List Due To Important Improvements On IP Policy; Adding European Union To Watch List, And Removing Bulgaria From Watch List",
-        "description": "U.S. Trade Representative: In This Year's Special 301 Report, USTR Identifies Vietnam As A Priority Foreign Country; Moving Argentina And Mexico From Priority Watch List To Watch List Due To Important Improvements On IP Policy; Adding European Union To Watch List, And Removing Bulgaria From Watch List",
-        "url": "https://finnhub.io/api/news?id=e07e51fd311640f8a9d41c327761092d7e030550cccf1417cb915d03d7659b73",
-        "sentiment": 0.10142857142857142,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "GDP Prints At 2%, But There's Noise In The Numbers",
-        "description": "GDP Prints At 2%, But There's Noise In The Numbers",
-        "url": "https://finnhub.io/api/news?id=773242137709b784b13603708fb2fd1dfff489e2cd4c217b7af9d419d6789d51",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "AAII Sentiment Survey: Optimism Recoils",
-        "description": "AAII Sentiment Survey: Optimism Recoils",
-        "url": "https://finnhub.io/api/news?id=68ba28441f362cff107db6ffb3adb58807527fada2bd964cf6d197e3f8bd1653",
-        "sentiment": 0.0,
-        "source": "Finnhub"
     }
 ]

@@ -1,6 +1,142 @@
 [
     {
         "date": "2026-05-01",
+        "title": "Meta Platforms Signals More Layoffs Amid Rising AI Costs",
+        "description": "Meta Platforms Signals More Layoffs Amid Rising AI Costs",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/meta-platforms-signals-more-layoffs-122606947.html?.tsrc=rss",
+        "sentiment": 0.5,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Meta Stock Just Dropped 9%: Is This the Dip to Buy?",
+        "description": "Meta Stock Just Dropped 9%: Is This the Dip to Buy?",
+        "url": "https://247wallst.com/investing/2026/05/01/meta-stock-just-dropped-9-is-this-the-dip-to-buy/?.tsrc=rss",
+        "sentiment": -0.05416666666666667,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Sandisk Falls After Strong Earnings Report. Analyst Sees Stock Hitting $2,000.",
+        "description": "Sandisk Falls After Strong Earnings Report. Analyst Sees Stock Hitting $2,000.",
+        "url": "https://finance.yahoo.com/m/9035aa31-2bb1-3b96-99b0-8d8617200c0d/sandisk-falls-after-strong.html?.tsrc=rss",
+        "sentiment": 0.08492063492063491,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Bill Ackman\u2019s \u2018Influencer Hedge Fund\u2019 IPO Tanks 18% on Day 1",
+        "description": "Bill Ackman\u2019s \u2018Influencer Hedge Fund\u2019 IPO Tanks 18% on Day 1",
+        "url": "https://247wallst.com/investing/2026/05/01/bill-ackmans-influencer-hedge-fund-ipo-tanks-18-on-day-1/?.tsrc=rss",
+        "sentiment": 0.2714285714285714,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Dolby Laboratories Q2 Earnings Call Highlights",
+        "description": "Dolby Laboratories Q2 Earnings Call Highlights",
+        "url": "https://www.marketbeat.com/instant-alerts/dolby-laboratories-q2-earnings-call-highlights-2026-05-01/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
+        "sentiment": 0.125,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Hyperscalers Hit $700 Billion in 2026 AI Spending Plans",
+        "description": "Hyperscalers Hit $700 Billion in 2026 AI Spending Plans",
+        "url": "https://247wallst.com/investing/2026/05/01/hyperscalers-hit-700-billion-in-2026-ai-spending-plans/?.tsrc=rss",
+        "sentiment": 0.11458333333333333,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Markets Enjoyed an Historic April. Why the S&P 500 Could Fall Short in May.",
+        "description": "Markets Enjoyed an Historic April. Why the S&P 500 Could Fall Short in May.",
+        "url": "https://finance.yahoo.com/m/74694d08-3abd-3fb3-bce7-32a0479d4c40/markets-enjoyed-an-historic.html?.tsrc=rss",
+        "sentiment": 0.25,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Apple CEO warns memory constraints are intensifying",
+        "description": "Apple CEO warns memory constraints are intensifying",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/apple-ceo-warns-memory-constraints-104915472.html?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Social Buzz: Wallstreetbets Stocks Mostly Advancing Premarket Friday; Reddit, Apple to Open Higher",
+        "description": "Social Buzz: Wallstreetbets Stocks Mostly Advancing Premarket Friday; Reddit, Apple to Open Higher",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/social-buzz-wallstreetbets-stocks-mostly-103654647.html?.tsrc=rss",
+        "sentiment": 0.25555555555555554,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Meta's Massive AI Spending Shows No Signs Of Slowing As CFO Susan Li Warns: 'We Have Continued To Underestimate Our Compute Needs'",
+        "description": "Meta's Massive AI Spending Shows No Signs Of Slowing As CFO Susan Li Warns: 'We Have Continued To Underestimate Our Compute Needs'",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/metas-massive-ai-spending-shows-102843620.html?.tsrc=rss",
+        "sentiment": -0.03666666666666667,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "What's Going on With Meta Stock?",
+        "description": "What's Going on With Meta Stock?",
+        "url": "https://www.fool.com/investing/2026/05/01/whats-going-on-with-meta-stock/?.tsrc=rss",
+        "sentiment": -0.06875,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "US Stock Market Today: S&P 500 Futures Edge Higher On Slower Growth Hotter Inflation",
+        "description": "US Stock Market Today: S&P 500 Futures Edge Higher On Slower Growth Hotter Inflation",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/us-stock-market-today-p-101742104.html?.tsrc=rss",
+        "sentiment": 0.10731292517006803,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Big Tech Is Making \u2018Empty Promises\u2019 on 500 Gigawatts of Data Centers It Can\u2019t Deliver",
+        "description": "Big Tech Is Making \u2018Empty Promises\u2019 on 500 Gigawatts of Data Centers It Can\u2019t Deliver",
+        "url": "https://247wallst.com/investing/2026/05/01/big-tech-is-making-empty-promises-on-500-gigawatts-of-data-centers-it-cant-deliver/?.tsrc=rss",
+        "sentiment": -0.09999999999999999,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Reddit rallies as AI\u2011driven ad growth fuels strong revenue outlook",
+        "description": "Reddit rallies as AI\u2011driven ad growth fuels strong revenue outlook",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/reddit-rallies-ai-driven-ad-092049214.html?.tsrc=rss",
+        "sentiment": 0.19999999999999998,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Why CoreWeave (CRWV) Is Strengthening Its AI Cloud Growth Story With Meta",
+        "description": "Why CoreWeave (CRWV) Is Strengthening Its AI Cloud Growth Story With Meta",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/why-coreweave-crwv-strengthening-ai-090553768.html?.tsrc=rss",
+        "sentiment": -0.2,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Western Digital Beat Earnings Estimates. The Stock Is Falling Anyway.",
+        "description": "Western Digital Beat Earnings Estimates. The Stock Is Falling Anyway.",
+        "url": "https://finance.yahoo.com/m/2413fec0-46ad-3b50-8491-e4d96f77dbd1/western-digital-beat-earnings.html?.tsrc=rss",
+        "sentiment": -0.06,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Meta wants to spend more even after it lost $80 billion on the Metaverse and over 20 million users",
+        "description": "Meta wants to spend more even after it lost $80 billion on the Metaverse and over 20 million users",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/meta-wants-spend-more-even-081900708.html?.tsrc=rss",
+        "sentiment": 0.35,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
         "title": "This Catalyst Helped AMD Avoid Bankruptcy, and It's Coming Back to Supercharge the Stock (Hint: It's Not Artificial Intelligence)",
         "description": "This Catalyst Helped AMD Avoid Bankruptcy, and It's Coming Back to Supercharge the Stock (Hint: It's Not Artificial Intelligence)",
         "url": "https://www.fool.com/investing/2026/05/01/this-catalyst-helped-amd-avoid-bankruptcy-and-it-i/?.tsrc=rss",
@@ -22,141 +158,5 @@
         "url": "https://finance.yahoo.com/m/483ffe26-d884-3fdb-b2b5-0cebfe400568/this-tech-sector-etf-gives.html?.tsrc=rss",
         "sentiment": 0.3,
         "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Zuckerberg says Meta layoffs tied to AI spending, won't rule out future cuts",
-        "description": "Zuckerberg says Meta layoffs tied to AI spending, won't rule out future cuts",
-        "url": "https://www.foxbusiness.com/technology/zuckerberg-says-meta-layoffs-tied-ai-spending-wont-rule-out-future-cuts?.tsrc=rss",
-        "sentiment": 0.0,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Meta Stock: Is It Time for Investors to Buy the Dip?",
-        "description": "Meta Stock: Is It Time for Investors to Buy the Dip?",
-        "url": "https://www.fool.com/investing/2026/04/30/meta-stock-plummets-is-this-a-buy-the-dip-moment-f/?.tsrc=rss",
-        "sentiment": 0.011111111111111112,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Did Nvidia Just Deliver a Breakout Fake-Out? Why Dip\u2011Buyers Should Welcome a Dip",
-        "description": "Did Nvidia Just Deliver a Breakout Fake-Out? Why Dip\u2011Buyers Should Welcome a Dip",
-        "url": "https://247wallst.com/investing/2026/04/30/did-nvidia-just-deliver-a-breakout-fake-out-why-dip%e2%80%91buyers-should-welcome-a-dip/?.tsrc=rss",
-        "sentiment": 0.15634920634920638,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Unprecedented AI Spending Is Rewriting Big Tech\u2019s Earnings Season Playbook",
-        "description": "Unprecedented AI Spending Is Rewriting Big Tech\u2019s Earnings Season Playbook",
-        "url": "https://finnhub.io/api/news?id=ddd3c5e9c768a153d5fde37f43aa6869a42c5512a765a287a58a1b96859f42f2",
-        "sentiment": 0.14285714285714285,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "This Tech Sector ETF Gives Investors the Best Bang for Their Buck",
-        "description": "This Tech Sector ETF Gives Investors the Best Bang for Their Buck",
-        "url": "https://finnhub.io/api/news?id=e68095adf6bb4b58ed348e4ddefe18493778a66982653764dba09cb40926de14",
-        "sentiment": 0.3,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Zuckerberg says Meta layoffs tied to AI spending, won't rule out future cuts",
-        "description": "Zuckerberg says Meta layoffs tied to AI spending, won't rule out future cuts",
-        "url": "https://finnhub.io/api/news?id=3d1aa430a3028916af45fe64e27f105787160c26d4e4a53201ad59f10a7fb3d6",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Meta Q1 2026 Earnings: Nothing To Complain About",
-        "description": "Meta Q1 2026 Earnings: Nothing To Complain About",
-        "url": "https://finnhub.io/api/news?id=a85b1e67c065fc44a2db5353e93615d9b59cb7106f4dea0de3ec25710e708091",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Meta Stock: Is It Time for Investors to Buy the Dip?",
-        "description": "Meta Stock: Is It Time for Investors to Buy the Dip?",
-        "url": "https://finnhub.io/api/news?id=7645871c651770772dc8d37777e39412bcfdd568e015fdd115b08f9048f9487f",
-        "sentiment": 0.011111111111111112,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "PRESS DIGEST-Wall Street Journal - May 1",
-        "description": "PRESS DIGEST-Wall Street Journal - May 1",
-        "url": "https://finnhub.io/api/news?id=ffadd20609f46fbb93aaa0b26d5281a5d9d60c01dd7dd0570b491fa850bab4eb",
-        "sentiment": 0.25,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Did Nvidia Just Deliver a Breakout Fake-Out? Why Dip\u2011Buyers Should Welcome a Dip",
-        "description": "Did Nvidia Just Deliver a Breakout Fake-Out? Why Dip\u2011Buyers Should Welcome a Dip",
-        "url": "https://finnhub.io/api/news?id=8f7975ee0799f6cd140336af92d5b310ab679d8b35f46b356b08e08ba6fc9cb4",
-        "sentiment": 0.15634920634920638,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "EMEA Morning Briefing : Wall Street Posts Best Month Since 2020",
-        "description": "EMEA Morning Briefing : Wall Street Posts Best Month Since 2020",
-        "url": "https://finnhub.io/api/news?id=0fb1ae07cb343f2d60478959e779c35129221270405c3771f994f4df3aa29476",
-        "sentiment": 0.3333333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Review & Preview: Partying Like It\u2019s 2020",
-        "description": "Review & Preview: Partying Like It\u2019s 2020",
-        "url": "https://finnhub.io/api/news?id=a600fa9277981ee33346c30137fd8275aabc5847e51c3884a1fc821a5b7b4fbe",
-        "sentiment": 0.3015625,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Ex-PayPal president unveils bullish Bitcoin target",
-        "description": "Ex-PayPal president unveils bullish Bitcoin target",
-        "url": "https://finnhub.io/api/news?id=cf1ba1d9cbf221461cfa71a7a35a6cb3c07a97b752914f2597a678b8f1da346e",
-        "sentiment": -0.13333333333333333,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Coastal Pay Launches SignUp Link\u2014Two-Minute, Friction-Free Merchant Onboarding for Retail and E-Commerce",
-        "description": "Coastal Pay Launches SignUp Link\u2014Two-Minute, Friction-Free Merchant Onboarding for Retail and E-Commerce",
-        "url": "https://finnhub.io/api/news?id=43d66c1ebcbb60eb73f8dfbd3da4ac51faec8d3e4ce794ae5ad3ba421520b74e",
-        "sentiment": 0.13749999999999998,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Everyone's Wondering What's Next for Nvidia. This News From Amazon and Alphabet Offers Us an Idea That's Strikingly Clear",
-        "description": "Everyone's Wondering What's Next for Nvidia. This News From Amazon and Alphabet Offers Us an Idea That's Strikingly Clear",
-        "url": "https://finnhub.io/api/news?id=5dbaaa55ef25b89c54dfcdfe927f7e97bd64eb6450a17f4ccccb18507a75ef37",
-        "sentiment": 0.06666666666666667,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Stock Market Today, April 30: Alphabet Surges After Reporting Accelerating Google Cloud Growth",
-        "description": "Stock Market Today, April 30: Alphabet Surges After Reporting Accelerating Google Cloud Growth",
-        "url": "https://finnhub.io/api/news?id=766b1535f170344e3a3d57c19d72f4edce9fc6d72469fd16f7100f2b8346b4a3",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Stock Market Today, April 30: Meta Falls as Higher AI Capex Outlook Overshadows Strong Q1 Results",
-        "description": "Stock Market Today, April 30: Meta Falls as Higher AI Capex Outlook Overshadows Strong Q1 Results",
-        "url": "https://finnhub.io/api/news?id=846ca502f7b181ea4adf4c5dfbc103808868e5e01155447b5afa9aed9e146dc0",
-        "sentiment": 0.26866666666666666,
-        "source": "Finnhub"
     }
 ]

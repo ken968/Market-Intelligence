@@ -1,19 +1,27 @@
 [
     {
         "date": "2026-05-01",
+        "title": "TSM Stock Bolts Into A Buy Zone With AI Trade Back In Focus",
+        "description": "TSM Stock Bolts Into A Buy Zone With AI Trade Back In Focus",
+        "url": "https://finance.yahoo.com/m/e769eb1a-af5e-3d30-81a7-22b24d0b42fa/tsm-stock-bolts-into-a-buy.html?.tsrc=rss",
+        "sentiment": -0.135,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Apple shares rise on strong quarterly sales in run-up to CEO change",
+        "description": "Apple shares rise on strong quarterly sales in run-up to CEO change",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/apple-shares-rise-strong-quarterly-101520198.html?.tsrc=rss",
+        "sentiment": 0.1531060606060606,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
         "title": "Northland inks 30-year CPPA with TSMC for Hai Long wind project",
         "description": "Northland inks 30-year CPPA with TSMC for Hai Long wind project",
         "url": "https://www.power-technology.com/news/northland-cppa-tsmc-hai-long-project/?.tsrc=rss",
         "sentiment": 0.0,
         "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Fear & Greed: 26.0 (Fear)",
-        "description": "Fear & Greed: 26.0 (Fear)",
-        "url": "https://alternative.me/crypto/fear-and-greed-index/",
-        "sentiment": -0.48,
-        "source": "Fear & Greed Index"
     },
     {
         "date": "2026-04-30",
@@ -149,14 +157,6 @@
         "description": "Here's How Much You Would Have Made Owning Taiwan Semiconductor Stock In The Last 15 Years",
         "url": "https://finnhub.io/api/news?id=98761d16c14fe504699fce519c59e814ee91c4f0d0c1d90bf4d7b4e2527abc9e",
         "sentiment": 0.1,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "The AI Bubble Is Starting To Crack",
-        "description": "The AI Bubble Is Starting To Crack",
-        "url": "https://finnhub.io/api/news?id=996e5bbeda873d7f2c3dfc3835dbd565bad19335edd4ab361278f50abb7d2fcc",
-        "sentiment": 0.19238095238095237,
         "source": "Finnhub"
     }
 ]

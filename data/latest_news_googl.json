@@ -1,38 +1,6 @@
 [
     {
         "date": "2026-05-01",
-        "title": "Stock Futures Rise as Strong Earnings Season Rolls On",
-        "description": "Stock Futures Rise as Strong Earnings Season Rolls On",
-        "url": "https://finance.yahoo.com/m/9a26981a-3129-3eb7-95d2-5212f9721944/stock-futures-rise-as-strong.html?.tsrc=rss",
-        "sentiment": 0.6583333333333333,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Marvell\u2019s AI Data Center Push Meets Early Quantum Computing Exposure",
-        "description": "Marvell\u2019s AI Data Center Push Meets Early Quantum Computing Exposure",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/marvell-ai-data-center-push-073212848.html?.tsrc=rss",
-        "sentiment": 0.08708333333333333,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Unprecedented AI Spending Is Rewriting Big Tech\u2019s Earnings Season Playbook",
-        "description": "Unprecedented AI Spending Is Rewriting Big Tech\u2019s Earnings Season Playbook",
-        "url": "https://finance.yahoo.com/m/61aa9e9a-1ba6-39bb-a4a2-1df81f18d72d/unprecedented-ai-spending-is.html?.tsrc=rss",
-        "sentiment": 0.14285714285714285,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "This Tech Sector ETF Gives Investors the Best Bang for Their Buck",
-        "description": "This Tech Sector ETF Gives Investors the Best Bang for Their Buck",
-        "url": "https://finance.yahoo.com/m/483ffe26-d884-3fdb-b2b5-0cebfe400568/this-tech-sector-etf-gives.html?.tsrc=rss",
-        "sentiment": 0.3,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-05-01",
         "title": "Dow Jones Futures Rise As Apple Climbs On Earnings, Sandisk Skids; Stock Market At High",
         "description": "Dow Jones Futures Rise As Apple Climbs On Earnings, Sandisk Skids; Stock Market At High",
         "url": "https://finance.yahoo.com/m/c0df32c8-866d-379a-9315-203c3bff518e/dow-jones-futures-rise-as.html?.tsrc=rss",
@@ -41,122 +9,154 @@
     },
     {
         "date": "2026-05-01",
-        "title": "Is This AI Stock a Buy After a Game-Changing Earnings Report?",
-        "description": "Is This AI Stock a Buy After a Game-Changing Earnings Report?",
-        "url": "https://www.fool.com/investing/2026/04/30/is-this-ai-stock-a-buy-after-a-game-changing-earni/?.tsrc=rss",
-        "sentiment": -0.07291666666666667,
+        "title": "TSM Stock Bolts Into A Buy Zone With AI Trade Back In Focus",
+        "description": "TSM Stock Bolts Into A Buy Zone With AI Trade Back In Focus",
+        "url": "https://finance.yahoo.com/m/e769eb1a-af5e-3d30-81a7-22b24d0b42fa/tsm-stock-bolts-into-a-buy.html?.tsrc=rss",
+        "sentiment": -0.135,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Xcel Energy Q1 Earnings Call Highlights",
-        "description": "Xcel Energy Q1 Earnings Call Highlights",
-        "url": "https://www.marketbeat.com/instant-alerts/xcel-energy-q1-earnings-call-highlights-2026-04-30/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
+        "title": "This Nvidia Rival Gains Momentum Ahead Of Earnings Report",
+        "description": "This Nvidia Rival Gains Momentum Ahead Of Earnings Report",
+        "url": "https://finance.yahoo.com/m/0b716c71-dab3-30d7-8893-a166eb4bb2f3/this-nvidia-rival-gains.html?.tsrc=rss",
+        "sentiment": -0.15000000000000002,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Datavault AI and CyberCatch Announce Signing of Binding Letter of Intent for Datavault AI to Acquire CyberCatch to Accelerate AI-Driven, Quantum-Resistant Cyber Risk Mitigation Solutions",
+        "description": "Datavault AI and CyberCatch Announce Signing of Binding Letter of Intent for Datavault AI to Acquire CyberCatch to Accelerate AI-Driven, Quantum-Resistant Cyber Risk Mitigation Solutions",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/datavault-ai-cybercatch-announce-signing-120000027.html?.tsrc=rss",
         "sentiment": 0.0,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Why Alphabet Stock Surged to an All-Time High Today",
-        "description": "Why Alphabet Stock Surged to an All-Time High Today",
-        "url": "https://www.fool.com/investing/2026/04/30/why-alphabet-stock-surged-to-all-time-high-today/?.tsrc=rss",
-        "sentiment": 0.16,
+        "title": "S&P 500 logs best month since 2020 despite Iran oil shock",
+        "description": "S&P 500 logs best month since 2020 despite Iran oil shock",
+        "url": "https://qz.com/wall-street-best-month-2020-earnings-iran-oil-050126?.tsrc=rss",
+        "sentiment": 0.5,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Stagwell Q1 Earnings Call Highlights",
-        "description": "Stagwell Q1 Earnings Call Highlights",
-        "url": "https://www.marketbeat.com/instant-alerts/stagwell-q1-earnings-call-highlights-2026-04-30/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
-        "sentiment": 0.09242424242424242,
+        "title": "Sandisk Falls After Strong Earnings Report. Analyst Sees Stock Hitting $2,000.",
+        "description": "Sandisk Falls After Strong Earnings Report. Analyst Sees Stock Hitting $2,000.",
+        "url": "https://finance.yahoo.com/m/9035aa31-2bb1-3b96-99b0-8d8617200c0d/sandisk-falls-after-strong.html?.tsrc=rss",
+        "sentiment": 0.08492063492063491,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Did Nvidia Just Deliver a Breakout Fake-Out? Why Dip\u2011Buyers Should Welcome a Dip",
-        "description": "Did Nvidia Just Deliver a Breakout Fake-Out? Why Dip\u2011Buyers Should Welcome a Dip",
-        "url": "https://247wallst.com/investing/2026/04/30/did-nvidia-just-deliver-a-breakout-fake-out-why-dip%e2%80%91buyers-should-welcome-a-dip/?.tsrc=rss",
-        "sentiment": 0.15634920634920638,
+        "title": "Bill Ackman\u2019s \u2018Influencer Hedge Fund\u2019 IPO Tanks 18% on Day 1",
+        "description": "Bill Ackman\u2019s \u2018Influencer Hedge Fund\u2019 IPO Tanks 18% on Day 1",
+        "url": "https://247wallst.com/investing/2026/05/01/bill-ackmans-influencer-hedge-fund-ipo-tanks-18-on-day-1/?.tsrc=rss",
+        "sentiment": 0.2714285714285714,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Rubrik (RBRK) Expands Cyber Resilience to Google Cloud SQL for Managed PostgreSQL Databases",
-        "description": "Rubrik (RBRK) Expands Cyber Resilience to Google Cloud SQL for Managed PostgreSQL Databases",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/rubrik-rbrk-expands-cyber-resilience-010855868.html?.tsrc=rss",
-        "sentiment": 0.3333333333333333,
+        "title": "DTE Energy Q1 Earnings Call Highlights",
+        "description": "DTE Energy Q1 Earnings Call Highlights",
+        "url": "https://www.marketbeat.com/instant-alerts/dte-energy-q1-earnings-call-highlights-2026-05-01/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
+        "sentiment": 0.16666666666666669,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Haleon (HLN) Appoints Richard Manso as US Chief Marketing Officer to Drive Consumer Agility",
-        "description": "Haleon (HLN) Appoints Richard Manso as US Chief Marketing Officer to Drive Consumer Agility",
-        "url": "https://finance.yahoo.com/sectors/healthcare/articles/haleon-hln-appoints-richard-manso-010805211.html?.tsrc=rss",
-        "sentiment": 0.5340909090909091,
+        "title": "Hyperscalers Hit $700 Billion in 2026 AI Spending Plans",
+        "description": "Hyperscalers Hit $700 Billion in 2026 AI Spending Plans",
+        "url": "https://247wallst.com/investing/2026/05/01/hyperscalers-hit-700-billion-in-2026-ai-spending-plans/?.tsrc=rss",
+        "sentiment": 0.11458333333333333,
         "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Marvell\u2019s AI Data Center Push Meets Early Quantum Computing Exposure",
-        "description": "Marvell\u2019s AI Data Center Push Meets Early Quantum Computing Exposure",
-        "url": "https://finnhub.io/api/news?id=e1221fd05a2bbc3ee1a217cb6ac49454235c902f385666cda71bc00b59c13cee",
-        "sentiment": 0.08708333333333333,
-        "source": "Finnhub"
+        "title": "The Week in Numbers: big tech spends big on AI, oil marches on",
+        "description": "The Week in Numbers: big tech spends big on AI, oil marches on",
+        "url": "https://finance.yahoo.com/video/week-numbers-big-tech-spends-095315750.html?.tsrc=rss",
+        "sentiment": 0.07529761904761903,
+        "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Unprecedented AI Spending Is Rewriting Big Tech\u2019s Earnings Season Playbook",
-        "description": "Unprecedented AI Spending Is Rewriting Big Tech\u2019s Earnings Season Playbook",
-        "url": "https://finnhub.io/api/news?id=ddd3c5e9c768a153d5fde37f43aa6869a42c5512a765a287a58a1b96859f42f2",
-        "sentiment": 0.14285714285714285,
-        "source": "Finnhub"
+        "title": "Markets Enjoyed an Historic April. Why the S&P 500 Could Fall Short in May.",
+        "description": "Markets Enjoyed an Historic April. Why the S&P 500 Could Fall Short in May.",
+        "url": "https://finance.yahoo.com/m/74694d08-3abd-3fb3-bce7-32a0479d4c40/markets-enjoyed-an-historic.html?.tsrc=rss",
+        "sentiment": 0.25,
+        "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "This Tech Sector ETF Gives Investors the Best Bang for Their Buck",
-        "description": "This Tech Sector ETF Gives Investors the Best Bang for Their Buck",
-        "url": "https://finnhub.io/api/news?id=e68095adf6bb4b58ed348e4ddefe18493778a66982653764dba09cb40926de14",
-        "sentiment": 0.3,
-        "source": "Finnhub"
+        "title": "Social Buzz: Wallstreetbets Stocks Mostly Advancing Premarket Friday; Reddit, Apple to Open Higher",
+        "description": "Social Buzz: Wallstreetbets Stocks Mostly Advancing Premarket Friday; Reddit, Apple to Open Higher",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/social-buzz-wallstreetbets-stocks-mostly-103654647.html?.tsrc=rss",
+        "sentiment": 0.25555555555555554,
+        "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Is This AI Stock a Buy After a Game-Changing Earnings Report?",
-        "description": "Is This AI Stock a Buy After a Game-Changing Earnings Report?",
-        "url": "https://finnhub.io/api/news?id=d15b0742561bdfdfd8e6d6f0059c3335feab7c8d9a434810130e838299410e6d",
-        "sentiment": -0.07291666666666667,
-        "source": "Finnhub"
+        "title": "What's Going on With Meta Stock?",
+        "description": "What's Going on With Meta Stock?",
+        "url": "https://www.fool.com/investing/2026/05/01/whats-going-on-with-meta-stock/?.tsrc=rss",
+        "sentiment": -0.06875,
+        "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Xcel Energy Q1 Earnings Call Highlights",
-        "description": "Xcel Energy Q1 Earnings Call Highlights",
-        "url": "https://finnhub.io/api/news?id=b45c1bddfcbe03676d55e6e66387271844e4086c66fdd59fd0fdb3d8e0e2b312",
+        "title": "VOLT Investors: Here\u2019s the One Signal That Predicts Your Returns This Year",
+        "description": "VOLT Investors: Here\u2019s the One Signal That Predicts Your Returns This Year",
+        "url": "https://247wallst.com/investing/2026/05/01/volt-investors-heres-the-one-signal-that-predicts-your-returns-this-year/?.tsrc=rss",
         "sentiment": 0.0,
-        "source": "Finnhub"
+        "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Why Alphabet Stock Surged to an All-Time High Today",
-        "description": "Why Alphabet Stock Surged to an All-Time High Today",
-        "url": "https://finnhub.io/api/news?id=c15292137d2fba2265d8d98f035aed5d018e85f1d913de595e185c2f2b0b77d5",
-        "sentiment": 0.16,
-        "source": "Finnhub"
+        "title": "Big Tech Is Making \u2018Empty Promises\u2019 on 500 Gigawatts of Data Centers It Can\u2019t Deliver",
+        "description": "Big Tech Is Making \u2018Empty Promises\u2019 on 500 Gigawatts of Data Centers It Can\u2019t Deliver",
+        "url": "https://247wallst.com/investing/2026/05/01/big-tech-is-making-empty-promises-on-500-gigawatts-of-data-centers-it-cant-deliver/?.tsrc=rss",
+        "sentiment": -0.09999999999999999,
+        "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Asian shares gain with most markets closed for May Day, while oil holds steady at $111 a barrel",
-        "description": "Asian shares gain with most markets closed for May Day, while oil holds steady at $111 a barrel",
-        "url": "https://finnhub.io/api/news?id=4f7746090d45bc45d719370ff3dc7c6e603370c295f0074d5165a24cd09ca4ab",
-        "sentiment": -0.08333333333333333,
-        "source": "Finnhub"
+        "title": "The downstream winners of the AI trade's latest phase",
+        "description": "The downstream winners of the AI trade's latest phase",
+        "url": "https://finance.yahoo.com/video/downstream-winners-ai-trades-latest-100000215.html?.tsrc=rss",
+        "sentiment": 0.6666666666666666,
+        "source": "Yahoo RSS"
     },
     {
         "date": "2026-05-01",
-        "title": "Stagwell Q1 Earnings Call Highlights",
-        "description": "Stagwell Q1 Earnings Call Highlights",
-        "url": "https://finnhub.io/api/news?id=5a1f802b64e4804627fd28aa5c711de1c28d810aae1e7f63fe9de4b347e2b2bc",
-        "sentiment": 0.09242424242424242,
-        "source": "Finnhub"
+        "title": "AI Agents Are Becoming Day Traders, But Gains Are Elusive",
+        "description": "AI Agents Are Becoming Day Traders, But Gains Are Elusive",
+        "url": "https://finance.yahoo.com/markets/options/articles/ai-agents-becoming-day-traders-094518580.html?.tsrc=rss",
+        "sentiment": 0.2294642857142857,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Alphabet CEO Sundar Pichai Says Google's Custom Chips, Gemini Models And Cloud Stack Give It Unique AI Edge: 'We Are Compute Constrained'",
+        "description": "Alphabet CEO Sundar Pichai Says Google's Custom Chips, Gemini Models And Cloud Stack Give It Unique AI Edge: 'We Are Compute Constrained'",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/alphabet-ceo-sundar-pichai-says-094500775.html?.tsrc=rss",
+        "sentiment": 0.09583333333333333,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Stock Futures Rise as Strong Earnings Season Rolls On",
+        "description": "Stock Futures Rise as Strong Earnings Season Rolls On",
+        "url": "https://finance.yahoo.com/m/9a26981a-3129-3eb7-95d2-5212f9721944/stock-futures-rise-as-strong.html?.tsrc=rss",
+        "sentiment": 0.6583333333333333,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Want in on AI Superstar Anthropic Before Its IPO? These 4 Companies Are Some of Its Earliest Investors.",
+        "description": "Want in on AI Superstar Anthropic Before Its IPO? These 4 Companies Are Some of Its Earliest Investors.",
+        "url": "https://www.fool.com/investing/2026/05/01/want-in-anthropic-ipo-4-companies-early-investors/?.tsrc=rss",
+        "sentiment": 0.0,
+        "source": "Yahoo RSS"
     }
 ]

@@ -1,11 +1,107 @@
 [
     {
         "date": "2026-05-01",
+        "title": "Tesla Revenue From Musk-Linked Companies Tops $500M",
+        "description": "Tesla Revenue From Musk-Linked Companies Tops $500M",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/tesla-revenue-musk-linked-companies-122643774.html?.tsrc=rss",
+        "sentiment": 0.25,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Tesla Reports Musk's $158 Billion Compensation Figure",
+        "description": "Tesla Reports Musk's $158 Billion Compensation Figure",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/tesla-reports-musks-158-billion-122630436.html?.tsrc=rss",
+        "sentiment": -0.125,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Market Chatter: Tesla CEO Elon Musk's SpaceX Starship Development Costs Exceed $15 Billion",
+        "description": "Market Chatter: Tesla CEO Elon Musk's SpaceX Starship Development Costs Exceed $15 Billion",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/market-chatter-tesla-ceo-elon-121446373.html?.tsrc=rss",
+        "sentiment": 0.2,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Tesla Stock Rose in April, but Don\u2019t Call It a Rally. There Is Still a Problem.",
+        "description": "Tesla Stock Rose in April, but Don\u2019t Call It a Rally. There Is Still a Problem.",
+        "url": "https://finance.yahoo.com/m/9bf9d53f-9069-3255-8d2b-733b102c1031/tesla-stock-rose-in-april%2C.html?.tsrc=rss",
+        "sentiment": 0.2753787878787879,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "China Has EV Problems, Too. NIO Stock Is Down.",
+        "description": "China Has EV Problems, Too. NIO Stock Is Down.",
+        "url": "https://finance.yahoo.com/m/5a94db5c-b9f9-3d4d-a546-d8b2a58ed998/china-has-ev-problems%2C-too..html?.tsrc=rss",
+        "sentiment": -0.09801587301587301,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Tesla sales rebound continues in several European markets in April",
+        "description": "Tesla sales rebound continues in several European markets in April",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/tesla-sales-rebound-continues-several-110427134.html?.tsrc=rss",
+        "sentiment": 0.06666666666666667,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Latest News In Electric Vehicles - Two-Wheelers Drive Growth Amidst Infrastructure Challenges",
+        "description": "Latest News In Electric Vehicles - Two-Wheelers Drive Growth Amidst Infrastructure Challenges",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/latest-news-electric-vehicles-two-103948562.html?.tsrc=rss",
+        "sentiment": 0.22784090909090907,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Deutsche Bank Aktiengesellschaft Q1 Earnings Call Highlights",
+        "description": "Deutsche Bank Aktiengesellschaft Q1 Earnings Call Highlights",
+        "url": "https://www.marketbeat.com/instant-alerts/deutsche-bank-aktiengesellschaft-q1-earnings-call-highlights-2026-05-01/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
+        "sentiment": 0.13333333333333333,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
         "title": "Bitcoin, ETH, XRP, DOGE, MSTR Cashtags Go Live on X Web, Musk Says Most Crypto Are Scams",
         "description": "Bitcoin, ETH, XRP, DOGE, MSTR Cashtags Go Live on X Web, Musk Says Most Crypto Are Scams",
         "url": "https://coingape.com/bitcoin-eth-xrp-doge-mstr-cashtags-go-live-on-x-web-musk-says-most-crypto-are-scams/?.tsrc=rss",
         "sentiment": 0.19994588744588743,
         "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Tesla sales rebound continues in several European markets in April",
+        "description": "Tesla sales rebound continues in several European markets in April",
+        "url": "https://finnhub.io/api/news?id=456df5429953bedd9d1e29cfbc69bf387cc7fffbebe2294773ffb6d4bd4238b5",
+        "sentiment": 0.06666666666666667,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Latest News In Electric Vehicles - Two-Wheelers Drive Growth Amidst Infrastructure Challenges",
+        "description": "Latest News In Electric Vehicles - Two-Wheelers Drive Growth Amidst Infrastructure Challenges",
+        "url": "https://finnhub.io/api/news?id=7cceaa48f3cd0ad39d5057041625f6587f3b55c68973df86cf406ce1f15dc7ae",
+        "sentiment": 0.22784090909090907,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Deutsche Bank Aktiengesellschaft Q1 Earnings Call Highlights",
+        "description": "Deutsche Bank Aktiengesellschaft Q1 Earnings Call Highlights",
+        "url": "https://finnhub.io/api/news?id=594421cf7b758a32826f301ddd4d1ef11c838594499fe36c22f627374a7af647",
+        "sentiment": 0.13333333333333333,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "New Tesla registrations in Netherlands up 23% in April, to 469",
+        "description": "New Tesla registrations in Netherlands up 23% in April, to 469",
+        "url": "https://finnhub.io/api/news?id=c68c0c13d29ab4954684f7d063be7a846008cf1fd353fb7b855f8372585c045d",
+        "sentiment": 0.13636363636363635,
+        "source": "Finnhub"
     },
     {
         "date": "2026-05-01",
@@ -49,114 +145,18 @@
     },
     {
         "date": "2026-05-01",
+        "title": "Elon Musk\u2019s Tesla Compensation Totals $158 Billion for 2025",
+        "description": "Elon Musk\u2019s Tesla Compensation Totals $158 Billion for 2025",
+        "url": "https://finnhub.io/api/news?id=25a4deeb776247cfa1a796f6c9f141025cfbd2f07ad6fc3670004938b8323307",
+        "sentiment": 0.27999999999999997,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
         "title": "Elon Musk reportedly labels most cryptocurrencies as 'scams'",
         "description": "Elon Musk reportedly labels most cryptocurrencies as 'scams'",
         "url": "https://finnhub.io/api/news?id=1f74c25de8fbc08ebe9abbbfaff6d3b9812d802cab8a46be9e6782caec2a5c62",
         "sentiment": 0.13333333333333333,
         "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Tesla Stock Is Outrageously Cheap. Here's Why There Could Be Another 100% in Upside Potential.",
-        "description": "Tesla Stock Is Outrageously Cheap. Here's Why There Could Be Another 100% in Upside Potential.",
-        "url": "https://finnhub.io/api/news?id=aa6b563f76c3ee8581ae7b411fdfb6f0fc85c98eb2af8e2b81691742947e9c42",
-        "sentiment": 0.2,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Nasdaq leads US stocks in monthly gains following April rally",
-        "description": "Nasdaq leads US stocks in monthly gains following April rally",
-        "url": "https://finnhub.io/api/news?id=e94ad74455feae127c7981939932c620e3ff14f3d5b2ce55dc04c9cf46ee60b2",
-        "sentiment": 0.15,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Elon Musk Says Most Crypto Are Scams, But X Launches New Crypto Trading Terminal",
-        "description": "Elon Musk Says Most Crypto Are Scams, But X Launches New Crypto Trading Terminal",
-        "url": "https://finnhub.io/api/news?id=b7f0dee362674ebcedbab6688f29e33d75a83f84bdedfab9628e0300c81b4c75",
-        "sentiment": 0.37878787878787873,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "France new car registrations down 0.26% in April, industry body",
-        "description": "France new car registrations down 0.26% in April, industry body",
-        "url": "https://finnhub.io/api/news?id=cad47424bb5661d47c6c111ffe8d2c4a2285baf606f08abffa6ed0a5ac32aada",
-        "sentiment": 0.10245310245310245,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Why Tesla Stock Is Climbing Today",
-        "description": "Why Tesla Stock Is Climbing Today",
-        "url": "https://finnhub.io/api/news?id=b43527e4c5dfd8b93493650699ce9d92da0c4bbb320432523775e6cbc16ac172",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "These Were the Best and Worst S&P 500 Stocks in April",
-        "description": "These Were the Best and Worst S&P 500 Stocks in April",
-        "url": "https://finnhub.io/api/news?id=dcc25764dac4704d431a2862cfbdf6aece48d3e5bac9b00388e9eb53bc318452",
-        "sentiment": 0.19999999999999998,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Nasdaq Gains Steam as Best Month Since 2020 Winds Down",
-        "description": "Nasdaq Gains Steam as Best Month Since 2020 Winds Down",
-        "url": "https://finnhub.io/api/news?id=d02acccd5502575f22f1bb0c26869417854a8121f18bf2a60ad5b960a646193e",
-        "sentiment": 0.4222222222222222,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Explore the S&P500 index on Thursday and find out which stocks are the most active in today's session.",
-        "description": "Explore the S&P500 index on Thursday and find out which stocks are the most active in today's session.",
-        "url": "https://finnhub.io/api/news?id=14709cd303959730f61b8f2f11c2cf185fe3473c01f7873bf738459c4fa0ef97",
-        "sentiment": 0.18333333333333335,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Travel Is Struggling, But Unusual Options Activity Shows Someone Just Bet Big on Booking Holdings Stock",
-        "description": "Travel Is Struggling, But Unusual Options Activity Shows Someone Just Bet Big on Booking Holdings Stock",
-        "url": "https://finnhub.io/api/news?id=d222cd082bc3e7cfd273ad400aa1e79893747d458cd9f0f535fd90ae6a29161f",
-        "sentiment": 0.2125,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Why Is Hertz Stock Up Today? A New Deal With Uber Focuses on Robo-Taxi Fleets.",
-        "description": "Why Is Hertz Stock Up Today? A New Deal With Uber Focuses on Robo-Taxi Fleets.",
-        "url": "https://finnhub.io/api/news?id=6b6216bb9248dd79535f60c0fd6d19bb07ff5addcb61d694717704094599195c",
-        "sentiment": 0.06818181818181818,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-05-01",
-        "title": "Fear & Greed: 26.0 (Fear)",
-        "description": "Fear & Greed: 26.0 (Fear)",
-        "url": "https://alternative.me/crypto/fear-and-greed-index/",
-        "sentiment": -0.48,
-        "source": "Fear & Greed Index"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "Tesla Made $573 Million in Sales From SpaceX and xAI Last Year",
-        "description": "Tesla Made $573 Million in Sales From SpaceX and xAI Last Year",
-        "url": "https://finance.yahoo.com/markets/stocks/articles/tesla-made-573-million-sales-235340429.html?.tsrc=rss",
-        "sentiment": 0.16979166666666667,
-        "source": "Yahoo RSS"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "Stock Market Today, April 30: Aurora Innovation Jumps on Hirschbach\u2019s 500-Truck Autonomous Freight Plan",
-        "description": "Stock Market Today, April 30: Aurora Innovation Jumps on Hirschbach\u2019s 500-Truck Autonomous Freight Plan",
-        "url": "https://www.fool.com/coverage/stock-market-today/2026/04/30/stock-market-today-april-30-aurora-innovation-jumps-on-hirschbach-s-500-truck-autonomous-freight-plan/?.tsrc=rss",
-        "sentiment": 0.2833333333333333,
-        "source": "Yahoo RSS"
     }
 ]

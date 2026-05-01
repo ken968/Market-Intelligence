@@ -1,6 +1,54 @@
 [
     {
         "date": "2026-05-01",
+        "title": "Caterpillar Q1 Earnings Call Highlights",
+        "description": "Caterpillar Q1 Earnings Call Highlights",
+        "url": "https://www.marketbeat.com/instant-alerts/caterpillar-q1-earnings-call-highlights-2026-05-01/?utm_source=yahoofinance&utm_medium=yahoofinance&.tsrc=rss",
+        "sentiment": 0.23690476190476192,
+        "source": "Yahoo RSS"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Why An Income-Centric Approach Matters For Investing In Retirement",
+        "description": "Why An Income-Centric Approach Matters For Investing In Retirement",
+        "url": "https://finnhub.io/api/news?id=72f053fd0a24aa65f58557fc5dd46abd951bb955789caecf8b238d89dc26c5b9",
+        "sentiment": 0.2,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "Powell To Stay In The Best Interest Of The Institution",
+        "description": "Powell To Stay In The Best Interest Of The Institution",
+        "url": "https://finnhub.io/api/news?id=bc617ff0f75459512ba706cb68f309bfce52988cd9ff127ef1ec73294b74b902",
+        "sentiment": 0.2111111111111111,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "A Robot Economy: Who Gets Rich, Who Gets Left Behind",
+        "description": "A Robot Economy: Who Gets Rich, Who Gets Left Behind",
+        "url": "https://finnhub.io/api/news?id=27c20cf061fba1b32b8298ffb8d3ad0667cdae22b6e3fa63e28d1f90ce93ef9b",
+        "sentiment": 0.2125,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "U.S. Stocks: This Chart Indicator Signals A Sell Now",
+        "description": "U.S. Stocks: This Chart Indicator Signals A Sell Now",
+        "url": "https://finnhub.io/api/news?id=8bd9d5cc486b1aa3a2644944c14d2bc32cd06bcdab047dc43377a2a548aaeead",
+        "sentiment": -0.08333333333333333,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
+        "title": "It's All About The 2027 AI Capex - And It Doesn't Look Pretty",
+        "description": "It's All About The 2027 AI Capex - And It Doesn't Look Pretty",
+        "url": "https://finnhub.io/api/news?id=b262e4141e7caab6964603b746c38d2484bc830466712f72b5238248fe6aec10",
+        "sentiment": 0.075,
+        "source": "Finnhub"
+    },
+    {
+        "date": "2026-05-01",
         "title": "Fear & Greed: 26.0 (Fear)",
         "description": "Fear & Greed: 26.0 (Fear)",
         "url": "https://alternative.me/crypto/fear-and-greed-index/",
@@ -109,54 +157,6 @@
         "description": "Apple Q2 Preview: A New CEO, AI Doubts \u2014 Every Word Matters Now",
         "url": "https://finnhub.io/api/news?id=a7a2bcc9c5d3336627973d502942e994c716cb9ccaf7fdebface989a7986b597",
         "sentiment": 0.04545454545454545,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "After Q1 Tech Earnings, AI Is Boom Or Bust For Markets And Society Too",
-        "description": "After Q1 Tech Earnings, AI Is Boom Or Bust For Markets And Society Too",
-        "url": "https://finnhub.io/api/news?id=ce3f1c6e8425f075e6b6a5e899a085b6981f8b0ed259dd1722c65bfa7106ac0c",
-        "sentiment": 0.2,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "Why Macro Investing Is Pass\u00e9 After The FOMC Statement",
-        "description": "Why Macro Investing Is Pass\u00e9 After The FOMC Statement",
-        "url": "https://finnhub.io/api/news?id=d211973f7a94d926d504e93046375b7bf48f42b6ce446bf50cbc412b03f040bd",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "The Next Rotation (The Value Call Is Wrong)",
-        "description": "The Next Rotation (The Value Call Is Wrong)",
-        "url": "https://finnhub.io/api/news?id=1ee0c972a5af17cdbf6137e45bc90dc08ddf8059662eba920feeadd22190b641",
-        "sentiment": -0.24,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "Jamie Dimon Says Markets May Be Too Complacent As Deficits Rise, Warns A 'Bond Crisis' And Even Stagflation Could Be Coming",
-        "description": "Jamie Dimon Says Markets May Be Too Complacent As Deficits Rise, Warns A 'Bond Crisis' And Even Stagflation Could Be Coming",
-        "url": "https://finnhub.io/api/news?id=541b3e1331a4a29c118d9f7a3ba175d0433278fc315168eb21fd328842e1ffbf",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "Inflation Nears The 'Red Zone,' Odds Of The Fed Hikes Rise",
-        "description": "Inflation Nears The 'Red Zone,' Odds Of The Fed Hikes Rise",
-        "url": "https://finnhub.io/api/news?id=b68e8afc6bb4a8a61596c310da761ab4202ddc6991d12c0f068183989b300178",
-        "sentiment": 0.0,
-        "source": "Finnhub"
-    },
-    {
-        "date": "2026-04-30",
-        "title": "The AI Bubble Is Starting To Crack",
-        "description": "The AI Bubble Is Starting To Crack",
-        "url": "https://finnhub.io/api/news?id=996e5bbeda873d7f2c3dfc3835dbd565bad19335edd4ab361278f50abb7d2fcc",
-        "sentiment": 0.19238095238095237,
         "source": "Finnhub"
     }
 ]

@@ -24,10 +24,10 @@ class MultiAssetFetcher:
             'filename': 'data/btc_global_insights.csv'
         }
         
-        # Gold: 10 years (existing)
+        # Gold: 10 years — use start date (not period) to avoid yfinance cache returning stale data
         self.gold_config = {
             'ticker': 'GC=F',
-            'period': '10y',
+            'start_date': '2015-01-01',
             'filename': 'data/gold_global_insights.csv'
         }
         
@@ -52,7 +52,7 @@ class MultiAssetFetcher:
         }
         
         self.stock_config = {
-            'period': '10y',
+            'start_date': '2015-01-01',  # Explicit start date — avoids yfinance period cache returning stale data
             'filename_template': 'data/{ticker}_global_insights.csv'  # Unified naming
         }
     
@@ -108,8 +108,9 @@ class MultiAssetFetcher:
         
         try:
             data = yf.download(
-                self.gold_config['ticker'], 
-                period=self.gold_config['period'], 
+                self.gold_config['ticker'],
+                start=self.gold_config['start_date'],
+                # No 'end' parameter — forces yfinance to return absolute latest data
                 interval="1d",
                 progress=False
             )
@@ -237,8 +238,9 @@ class MultiAssetFetcher:
                 print(f"System: Fetching {tick}...")
                 
                 data = yf.download(
-                    tick, 
-                    period=self.stock_config['period'], 
+                    tick,
+                    start=self.stock_config['start_date'],
+                    # No 'end' parameter — forces yfinance to return absolute latest data
                     interval="1d",
                     progress=False
                 )
