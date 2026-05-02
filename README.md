@@ -32,7 +32,7 @@ Every model in the system is validated using a strict 80/20 chronological train-
 
 ## Monte Carlo Fan Charts (Uncertainty Visualization)
 
-Forecasts are visualized using Probabilistic Fan Charts based on Standard Deviation Diffusion. The spread of the fan is grounded in the AI's actual historical error (RMSE) for each specific asset, providing a realistic view of uncertainty.
+Forecasts are visualized using Institutional-Grade Probabilistic Fan Charts based on Geometric Brownian Motion (GBM). The spread of the fan is grounded in **Live Implied Volatility** (using Deribit DVOL proxies for crypto and CBOE VIX for equities) via a Black-Scholes framework, combined with 500-path Monte Carlo simulations, providing a highly realistic, market-driven view of uncertainty.
 
 ---
 
@@ -57,9 +57,11 @@ Market-Intelligence/
 ├── utils/
 │   ├── config.py                   # Centralized configuration
 │   ├── predictor.py                # 3-Layer inference engine
+│   ├── realtime_prices.py          # Live IV and Black-Scholes volatility fetcher
 │   └── llm_manager.py              # CEO Layer (Gemini Integration)
 ├── models/                         # Trained .keras model files
 ├── reports/                        # Validation charts and JSON metrics
+├── tests/                          # Automated testing and experimental scripts
 └── data/                           # Macro data warehouse (CSV)
 ```
 
