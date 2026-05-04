@@ -125,16 +125,18 @@ def integrate_sentiment(asset='gold'):
     asset_lower = asset.lower()
     
     # Determine file names based on asset type
+    # IMPORTANT: Read from *_global_insights.csv (the fresh, up-to-date file kept by data_fetcher_v2.py)
+    # Never read from *_macro_data.csv — those are legacy/stale files that are never updated.
     if asset_lower == 'gold':
-        macro_file = 'data/gold_macro_data.csv'
+        macro_file = 'data/gold_global_insights.csv'
         output_file = 'data/gold_global_insights.csv'
     elif asset_lower in ['btc', 'bitcoin']:
-        macro_file = 'data/btc_macro_data.csv'
+        macro_file = 'data/btc_global_insights.csv'
         output_file = 'data/btc_global_insights.csv'
     else:
         # Stock ticker
         ticker = asset.upper()
-        macro_file = f'data/{ticker}_macro_data.csv'
+        macro_file = f'data/{ticker}_global_insights.csv'
         output_file = f'data/{ticker}_global_insights.csv'
     
     # Check if macro data exists
