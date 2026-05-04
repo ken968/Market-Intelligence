@@ -148,9 +148,13 @@ def integrate_sentiment(asset='gold'):
     # Fetch sentiment (60 days for better coverage)
     sentiment_df = fetch_news_sentiment(asset)
     
-    # Merge with macro data
+    # Merge with base data
     macro_df = pd.read_csv(macro_file)
     macro_df['Date'] = pd.to_datetime(macro_df['Date']).dt.strftime('%Y-%m-%d')
+    
+    # Drop existing Sentiment column from global_insights.csv to prevent
+    # pandas creating Sentiment_x / Sentiment_y duplicates on merge
+    macro_df.drop(columns=['Sentiment'], errors='ignore', inplace=True)
     
     if sentiment_df.empty:
         print(f"Warning: No sentiment data found for {asset}.")
