@@ -1,10 +1,10 @@
 {
     "asset": "gold",
-    "hit_ratio_3layer": 41.83673469387755,
-    "hit_ratio_lstm": 41.83673469387755,
-    "rmse_3layer": 70.7329487468,
-    "rmse_lstm": 1725.9872383325048,
-    "test_samples": 491,
-    "start_test_date": "2024-05-06",
-    "end_test_date": "2026-04-17"
+    "hit_ratio_3layer": 41.21863799283154,
+    "hit_ratio_lstm": 41.21863799283154,
+    "rmse_3layer": 68.90824510539532,
+    "rmse_lstm": 1644.852227402253,
+    "test_samples": 559,
+    "start_test_date": "2024-02-16",
+    "end_test_date": "2026-05-07"
 }
