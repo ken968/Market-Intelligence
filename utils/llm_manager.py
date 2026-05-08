@@ -35,7 +35,7 @@ GEMINI_KEYS = [
 # ---------------------------------------------------------------------------
 # Staleness cutoff: news older than N hours are discarded
 # 7 days = 168 hours — captures full narrative arc for CEO analysis
-# Retail sentiment (Reddit) must be filtered to 24h separately at ingestion level
+
 # ---------------------------------------------------------------------------
 NEWS_STALENESS_HOURS = 168
 

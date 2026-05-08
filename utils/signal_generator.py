@@ -1,4 +1,4 @@
-﻿"""
+"""
 Trading Signal Generator
 Multi-factor analysis for entry/exit signals
 """
@@ -8,7 +8,6 @@ import numpy as np
 from utils.predictor import AssetPredictor
 from utils.config import get_asset_config, CONFIDENCE_SCORES
 from scripts.google_trends_fetcher import GoogleTrendsFetcher
-from scripts.reddit_sentiment_fetcher import RedditSentimentAnalyzer
 from scripts.fed_watch_fetcher import FedWatchFetcher
 
 class SignalGenerator:
@@ -27,7 +26,6 @@ class SignalGenerator:
         
         # Initialize alternative data fetchers
         self.trends_fetcher = GoogleTrendsFetcher()
-        self.sentiment_analyzer = RedditSentimentAnalyzer()
         self.fed_fetcher = FedWatchFetcher()
     
     def generate_signal(self):
@@ -172,30 +170,24 @@ class SignalGenerator:
         }
     
     def _analyze_sentiment(self):
-        """Analyze sentiment indicators"""
+        """Analyze sentiment indicators (Google Trends + Fear & Greed via aggregator pipeline)"""
         # Google Trends
         trends_signal = self.trends_fetcher.get_trend_signal(self.asset_key)
-        
-        # Reddit Sentiment
-        reddit_signal = self.sentiment_analyzer.get_sentiment_signal(self.asset_key)
-        
-        # Combine signals
+
+        # Combine signals (Fear & Greed is injected via sentiment_fetcher aggregator into CSV)
         trends_bullish = trends_signal['trend'] == 'rising' and trends_signal['current_interest'] > 60
-        reddit_bullish = reddit_signal['signal'] == 'bullish'
-        
         trends_bearish = trends_signal['trend'] == 'falling' and trends_signal['current_interest'] < 40
-        reddit_bearish = reddit_signal['signal'] == 'bearish'
-        
-        bullish = trends_bullish or reddit_bullish
-        bearish = trends_bearish or reddit_bearish
-        
+
+        bullish = trends_bullish
+        bearish = trends_bearish
+
         return {
             'bullish': bullish,
             'bearish': bearish,
             'score': 0.7 if bullish else (0.3 if bearish else 0.5),
             'weight': 0.2,
             'confidence': 0.60,
-            'detail': f"Trends: {trends_signal['trend']}, Reddit: {reddit_signal['sentiment_label']}"
+            'detail': f"Trends: {trends_signal['trend']} (Interest: {trends_signal['current_interest']})"
         }
     
     def _analyze_technical(self, latest):
