@@ -84,7 +84,7 @@ if not results:
 # METHODOLOGY EXPLAINER
 # ============================================================
 
-with st.expander("📖 How This Backtest Works (Walk-Forward Methodology)", expanded=False):
+with st.expander("How This Backtest Works (Walk-Forward Methodology)", expanded=False):
     st.markdown("""
     **This is NOT in-sample testing (which would be cheating).**
     
@@ -102,7 +102,7 @@ with st.expander("📖 How This Backtest Works (Walk-Forward Methodology)", expa
     - **Directional Hit Ratio:** % of days where the model correctly predicted UP vs DOWN. Random = 50%. >55% is good.
     - **RMSE:** Root Mean Square Error in price units. Lower = better. The 3-Level system's RMSE should be dramatically lower than raw LSTM.
     
-    > ⚠️ Past validation accuracy does not guarantee future performance. Markets change regimes.
+    > Past validation accuracy does not guarantee future performance. Markets change regimes.
     """)
 
 st.markdown("---")
@@ -111,7 +111,7 @@ st.markdown("---")
 # SUMMARY SCORECARD TABLE
 # ============================================================
 
-st.markdown("### 📊 Model Accuracy Scorecard")
+st.markdown("### Model Accuracy Scorecard")
 
 scorecard_rows = []
 for asset, r in sorted(results.items()):
@@ -137,7 +137,7 @@ st.dataframe(df_score, use_container_width=True, hide_index=True)
 # ============================================================
 
 st.markdown("---")
-st.markdown("### 🎯 Directional Hit Ratio — 3-Level System")
+st.markdown("### Directional Hit Ratio — 3-Level System")
 st.caption("How often did the model correctly predict the direction (UP/DOWN) of the next day's price? Baseline random = 50%.")
 
 assets_sorted = sorted(results.keys())
@@ -163,7 +163,7 @@ for i, asset in enumerate(assets_sorted):
 # ============================================================
 
 st.markdown("---")
-st.markdown("### 📉 RMSE Improvement: 3-Level vs Raw LSTM")
+st.markdown("### RMSE Improvement: 3-Level vs Raw LSTM")
 st.caption("How much did the Manager + CEO layers reduce prediction error vs the raw LSTM worker alone?")
 
 fig_rmse = go.Figure()
@@ -200,7 +200,7 @@ st.plotly_chart(fig_rmse, use_container_width=True)
 # ============================================================
 
 st.markdown("---")
-st.markdown("### 📈 Walk-Forward Backtest Charts")
+st.markdown("### Walk-Forward Backtest Charts")
 st.caption("Actual price vs 3-Level System prediction vs Raw LSTM — on completely unseen test data.")
 
 selected_asset = st.selectbox(
@@ -237,8 +237,8 @@ else:
 # ============================================================
 
 st.markdown("---")
-st.markdown("### ⚙️ Run New Backtest")
-st.warning("⏱️ Backtest trains a fresh isolated model — Gold/Stocks ~5-7 min, BTC ~10-15 min. Keep this page open.")
+st.markdown("### Run New Backtest")
+st.warning("⏱Backtest trains a fresh isolated model — Gold/Stocks ~5-7 min, BTC ~10-15 min. Keep this page open.")
 
 available_assets = list(ASSETS.keys())
 col_sel, col_btn = st.columns([2, 1])
@@ -273,11 +273,11 @@ if run_bt:
         process.wait()
 
         if process.returncode == 0:
-            status.update(label=f"✅ Backtest for {backtest_target} complete!", state="complete")
+            status.update(label=f"Backtest for {backtest_target} complete!", state="complete")
             st.success("Backtest finished. Refresh page to see updated scorecard.")
             st.rerun()
         else:
-            status.update(label="❌ Backtest failed", state="error")
+            status.update(label="Backtest failed", state="error")
 
 # ============================================================
 # FOOTER

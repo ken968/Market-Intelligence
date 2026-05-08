@@ -427,7 +427,7 @@ try:
 
     if news_headlines:
         st.caption(f"{len(news_headlines)} headlines loaded from news cache · Ready for CEO analysis")
-        if st.button("🔄 Run Gemini CEO Analysis", use_container_width=False, key="ceo_analysis_btn"):
+        if st.button("Run Gemini CEO Analysis", use_container_width=False, key="ceo_analysis_btn"):
             with st.spinner("Gemini reasoning through Causal Hierarchy..."):
                 result = analyze_news_context(
                     headlines=news_headlines,
@@ -437,7 +437,7 @@ try:
                 if result['is_fallback']:
                     st.warning("Gemini unavailable. System running on Statistical Baseline only.")
                 else:
-                    st.success(f"✅ Analysis complete · {result['headlines_used']} unique headlines processed")
+                    st.success(f"Analysis complete · {result['headlines_used']} unique headlines processed")
 
                     narr_col, score_col = st.columns([3, 2])
                     with narr_col:
