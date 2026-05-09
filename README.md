@@ -83,10 +83,13 @@ FINNHUB_API_KEY=your_finnhub_key_here
 Run these commands to pull the latest closing prices, FRED macro data, and news sentiment. This should be done daily to keep the Dashboard up to date.
 *(Alternatively, you can click "Synchronize Data" from the Streamlit Dashboard).*
 ```bash
-# Fetch prices and FRED Macro Data
+# 1. Fetch FRED Macro Economic Data (NFP, CPI, Rates)
+python scripts/fred_fetcher.py
+
+# 2. Fetch Market Prices (Gold, BTC, Stocks) and merge with Macro
 python scripts/data_fetcher_v2.py
 
-# Fetch Global News Sentiment
+# 3. Fetch Global News Sentiment & Alternative Data
 python scripts/sentiment_fetcher_v2.py all
 ```
 
