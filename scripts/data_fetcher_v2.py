@@ -154,6 +154,11 @@ class MultiAssetFetcher:
             df = self._preserve_sentiment(df, self.gold_config['filename'])
             
             df.to_csv(self.gold_config['filename'])
+            try:
+                from utils.counterfactual_logger import auto_resolve_all_outcomes
+                auto_resolve_all_outcomes('gold', df, 'Gold')
+            except Exception as e:
+                print(f"Warning: Failed to auto-resolve Gold outcomes: {e}")
             print(f"System: Success. {len(df)} Gold records saved to '{self.gold_config['filename']}'.")
             return True
             
@@ -216,6 +221,11 @@ class MultiAssetFetcher:
             df = self._preserve_sentiment(df, self.btc_config['filename'])
             
             df.to_csv(self.btc_config['filename'])
+            try:
+                from utils.counterfactual_logger import auto_resolve_all_outcomes
+                auto_resolve_all_outcomes('btc', df, 'BTC')
+            except Exception as e:
+                print(f"Warning: Failed to auto-resolve BTC outcomes: {e}")
             print(f"System: Success. {len(df)} BTC records saved (from {df.index[0].date()} to {df.index[-1].date()}).")
             return True
             
@@ -285,6 +295,11 @@ class MultiAssetFetcher:
                 df = self._preserve_sentiment(df, filename)
                 
                 df.to_csv(filename)
+                try:
+                    from utils.counterfactual_logger import auto_resolve_all_outcomes
+                    auto_resolve_all_outcomes(tick.lower(), df, tick)
+                except Exception as e:
+                    print(f"Warning: Failed to auto-resolve {tick} outcomes: {e}")
                 print(f"  -> {len(df)} records saved to '{filename}'")
                 success_count += 1
                 

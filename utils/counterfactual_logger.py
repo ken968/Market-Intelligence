@@ -1,12 +1,11 @@
-﻿"""
+"""
 Counterfactual Logger
 Saves parallel forecast records:
   - 'baseline'   : Pure LSTM output (Worker + Manager layers only)
   - 'contextual' : LSTM + LLM CEO bias injected
 
 Purpose: Prove (or disprove) whether the CEO Layer adds real value.
-After 30+ records, the BacktestEngine uses this log to compute Hit Ratio
-and Information Coefficient for the CEO Layer.
+After 1+ resolved records, the Dashboard shows the Hit Ratio Delta.
 
 Storage: JSON Lines format at data/counterfactual_log.jsonl
 """
@@ -14,7 +13,7 @@ Storage: JSON Lines format at data/counterfactual_log.jsonl
 import os
 import json
 from datetime import datetime, timezone
-
+import pandas as pd
 
 LOG_PATH = 'data/counterfactual_log.jsonl'
 
@@ -31,10 +30,11 @@ def log_forecast(
 ):
     """
     Save a parallel forecast record to the counterfactual log.
+    Includes robust duplicate prevention to handle Streamlit re-renders.
 
     Args:
         asset_key        : e.g. 'gold', 'btc', 'aapl'
-        forecast_date    : ISO date string when forecast was made
+        forecast_date    : ISO/string date format (YYYY-MM-DD) when forecast was made
         steps            : Number of forecast steps
         baseline_prices  : List of float — pure LSTM predictions
         contextual_prices: List of float — LSTM + CEO bias predictions
@@ -61,42 +61,92 @@ def log_forecast(
         'contextual_hit':     None,   # Filled later by resolve_outcome()
     }
 
-    with open(LOG_PATH, 'a', encoding='utf-8') as f:
-        f.write(json.dumps(record) + '\n')
+    # Duplicate checking
+    records = []
+    duplicate_idx = -1
+    if os.path.exists(LOG_PATH):
+        with open(LOG_PATH, 'r', encoding='utf-8') as f:
+            for idx, line in enumerate(f):
+                try:
+                    r = json.loads(line)
+                    records.append(r)
+                    if (r['asset'] == asset_key and 
+                        r['forecast_date'] == forecast_date and 
+                        r['steps'] == steps):
+                        duplicate_idx = idx
+                except Exception:
+                    pass
+
+    if duplicate_idx != -1:
+        # Overwrite to prevent multiple duplicate writes on page refreshes
+        records[duplicate_idx] = record
+        with open(LOG_PATH, 'w', encoding='utf-8') as f:
+            for r in records:
+                f.write(json.dumps(r) + '\n')
+        print(f"[CounterfactualLogger] Updated existing log for {asset_key} on {forecast_date} (steps={steps})")
+    else:
+        # Write new record
+        with open(LOG_PATH, 'a', encoding='utf-8') as f:
+            f.write(json.dumps(record) + '\n')
+        print(f"[CounterfactualLogger] Logged new forecast for {asset_key} on {forecast_date} (steps={steps})")
 
 
-def resolve_outcome(forecast_date: str, asset_key: str, actual_price: float):
+def auto_resolve_all_outcomes(asset_key: str, df: pd.DataFrame, price_col: str):
     """
-    Update historical records with the actual price outcome.
-    Computes directional accuracy (Hit = correct direction call).
-
-    Call this function daily via a cron/scheduler using the previous day's actual closing price.
+    Scan all unresolved forecasts in the log and automatically resolve them
+    if their target date (forecast_date index + steps) has occurred in the df.
+    Called automatically during daily data synchronization.
     """
-    if not os.path.exists(LOG_PATH):
+    if not os.path.exists(LOG_PATH) or df is None or df.empty:
         return
+
+    # Clean date formatting
+    df = df.copy()
+    if 'Date' not in df.columns:
+        df = df.reset_index()
+    df['Date'] = pd.to_datetime(df['Date']).dt.strftime('%Y-%m-%d')
+    
+    # Create mapping of Date to index
+    date_to_idx = {date: idx for idx, date in enumerate(df['Date'])}
 
     records = []
     with open(LOG_PATH, 'r', encoding='utf-8') as f:
         for line in f:
-            records.append(json.loads(line))
+            try:
+                records.append(json.loads(line))
+            except Exception:
+                pass
 
     updated = False
     for r in records:
-        if r['asset'] == asset_key and r['forecast_date'] == forecast_date and r['actual_price'] is None:
-            # Determine reference price from baseline_series[0] as the "current" at forecast time
-            baseline_series = r.get('baseline_series', [])
-            ref_price = baseline_series[0] if baseline_series else r['baseline_final']
+        if r['asset'] == asset_key and r.get('actual_price') is None:
+            forecast_date = r['forecast_date']
+            steps = r['steps']
 
-            if ref_price and ref_price > 0:
-                actual_dir = actual_price > ref_price
-                r['actual_price'] = actual_price
+            if forecast_date in date_to_idx:
+                start_idx = date_to_idx[forecast_date]
+                target_idx = start_idx + steps
 
-                if r['baseline_final']:
-                    r['baseline_hit'] = (r['baseline_final'] > ref_price) == actual_dir
-                if r['contextual_final']:
-                    r['contextual_hit'] = (r['contextual_final'] > ref_price) == actual_dir
+                # If target index exists in our historical dataset, we can resolve!
+                if target_idx < len(df):
+                    actual_price = float(df[price_col].iloc[target_idx])
+                    actual_date = df['Date'].iloc[target_idx]
+                    
+                    baseline_series = r.get('baseline_series', [])
+                    ref_price = baseline_series[0] if baseline_series else r['baseline_final']
 
-            updated = True
+                    if ref_price and ref_price > 0:
+                        actual_dir = actual_price > ref_price
+                        r['actual_price'] = actual_price
+                        r['resolved_at_date'] = actual_date
+
+                        if r.get('baseline_final'):
+                            r['baseline_hit'] = (r['baseline_final'] > ref_price) == actual_dir
+                        if r.get('contextual_final'):
+                            r['contextual_hit'] = (r['contextual_final'] > ref_price) == actual_dir
+                        
+                        updated = True
+                        print(f"[CounterfactualLogger] Auto-resolved {asset_key} (forecast from {forecast_date}): target={actual_date}, price={actual_price:.2f}")
 
     if updated:
         with open(LOG_PATH, 'w', encoding='utf-8') as f:
@@ -107,14 +157,6 @@ def resolve_outcome(forecast_date: str, asset_key: str, actual_price: float):
 def get_performance_summary(asset_key: str = None) -> dict:
     """
     Compute Hit Ratio comparison between Baseline and CEO-Injected forecasts.
-
-    Returns:
-        {
-            'total_resolved': int,
-            'baseline_hit_ratio': float,
-            'contextual_hit_ratio': float,
-            'ceo_delta': float          # Positive = CEO layer IMPROVES accuracy
-        }
     """
     if not os.path.exists(LOG_PATH):
         return {'error': 'No counterfactual log found. Run forecasts first.'}
@@ -122,13 +164,16 @@ def get_performance_summary(asset_key: str = None) -> dict:
     records = []
     with open(LOG_PATH, 'r', encoding='utf-8') as f:
         for line in f:
-            r = json.loads(line)
-            if r.get('actual_price') is not None:
-                if asset_key is None or r['asset'] == asset_key:
-                    records.append(r)
+            try:
+                r = json.loads(line)
+                if r.get('actual_price') is not None:
+                    if asset_key is None or r['asset'] == asset_key:
+                        records.append(r)
+            except Exception:
+                pass
 
     if not records:
-        return {'error': f'No resolved records yet{"for " + asset_key if asset_key else ""}. Waiting for outcomes.'}
+        return {'error': f'No resolved records yet. Waiting for outcomes.'}
 
     n = len(records)
     baseline_hits = sum(1 for r in records if r.get('baseline_hit') is True)
@@ -144,8 +189,3 @@ def get_performance_summary(asset_key: str = None) -> dict:
         'ceo_delta':            round(contextual_ratio - baseline_ratio, 3),
         'verdict':              '✅ CEO Layer adds value' if contextual_ratio > baseline_ratio else 'CEO Layer not improving accuracy yet',
     }
-
-
-if __name__ == '__main__':
-    summary = get_performance_summary()
-    print(json.dumps(summary, indent=2))

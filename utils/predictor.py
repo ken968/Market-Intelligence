@@ -384,6 +384,25 @@ class AssetPredictor:
             contextual = self.recursive_forecast(steps,
                                                   ceo_bias_vector=ceo_bias_vector,
                                                   ceo_drift_multiplier=ceo_drift_multiplier)
+            
+            # --- Counterfactual logging (CEO vs Baseline accuracy tracking) ---
+            if label == '1 Week' and LLM_AVAILABLE and headlines and not ceo_context.get('is_fallback', True):
+                try:
+                    from utils.counterfactual_logger import log_forecast
+                    df_temp = pd.read_csv(self.config['data_file'])
+                    forecast_date = df_temp['Date'].iloc[-1]
+                    log_forecast(
+                        asset_key=self.asset_key,
+                        forecast_date=forecast_date,
+                        steps=steps,
+                        baseline_prices=baseline,
+                        contextual_prices=contextual,
+                        llm_scores=analysis.get('scores', {}),
+                        llm_narrative=analysis.get('narrative', ''),
+                        macro_regime=macro_ctx
+                    )
+                except Exception as log_err:
+                    print(f"[CounterfactualLogger] Error logging forecast: {log_err}")
             confidence = get_confidence_score(
                 self.asset_key, label,
                 ceo_confidence=ceo_context.get('confidence', 0.0)
