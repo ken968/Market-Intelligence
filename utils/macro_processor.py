@@ -1,4 +1,4 @@
-﻿"""
+"""
 Macro Insights Processor
 Translates raw FRED macro data into actionable regime signals and risk scores.
 These outputs feed directly into the CEO Layer (LLM Manager) and Level 2 Anchor.
@@ -30,54 +30,37 @@ def load_macro_data(fred_path: str = 'data/fred_indicators.csv') -> pd.DataFrame
 
 def compute_recession_risk(df: pd.DataFrame) -> float:
     """
-    Compute a composite Recession Risk Score in [0.0, 1.0].
+    Compute a composite Recession Risk Score in [0.0, 1.0] using
+    ROLLING PERCENTILE instead of hard-coded thresholds.
+
+    This approach automatically adapts to any interest rate regime:
+    - Low rate era (2009-2021): flat curves are common, not alarming
+    - High rate era (2022+): any inversion is significant
 
     Factors (weighted):
-      - Yield Curve (T10Y2Y) inversion  : 50% weight
-      - 5Y5Y Breakeven elevation        : 25% weight (high = stagflation risk)
-      - M2 YoY collapse (<0%)           : 25% weight (monetary contraction)
+      - Yield Curve (T10Y2Y) inversion  : 50% weight — lower percentile = higher risk
+      - 5Y5Y Breakeven elevation        : 25% weight — higher percentile = higher risk
+      - M2 YoY collapse (<0%)           : 25% weight — lower percentile = higher risk
     """
-    score = 0.0
+    try:
+        from utils.feature_engineering import compute_dynamic_recession_risk
+        return compute_dynamic_recession_risk(df)
+    except Exception:
+        pass
+
+    # Fallback: simple heuristic if feature_engineering not available
+    if df.empty:
+        return 0.5
     latest = df.iloc[-1]
-
-    # --- Factor 1: Yield Curve (50%) ---
-    yc = latest.get('YieldCurve_10Y2Y', 0.0)
-    if yc < -0.5:
-        yc_risk = 1.0       # Deep inversion
-    elif yc < 0.0:
-        yc_risk = 0.7       # Mild inversion
-    elif yc < 0.8:
-        yc_risk = 0.3       # Flattening — early warning
-    else:
-        yc_risk = 0.0       # Steep/Normal
-    score += yc_risk * 0.50
-
-    # --- Factor 2: 5Y5Y Breakeven (25%) ---
+    score = 0.0
+    yc = latest.get('YieldCurve_10Y2Y', 0.5)
+    score += (0.5 if yc < 0 else 0.2 if yc < 0.5 else 0.0) * 0.50
     be = latest.get('Breakeven_5Y5Y', 2.3)
-    if be > 2.8:
-        be_risk = 1.0 
-    elif be > 2.5:
-        be_risk = 0.5
-    elif be > 2.2:
-        be_risk = 0.2       # Slight elevation
-    else:
-        be_risk = 0.0
-       # Anchored expectations
-    score += be_risk * 0.25
-
-    # --- Factor 3: M2 YoY contraction (25%) ---
-    m2_yoy = latest.get('M2_YoY', 5.0)
-    if m2_yoy < -2.0:
-        m2_risk = 1.0       # Sharp contraction — like 2022-2023 era
-    elif m2_yoy < 0.0:
-        m2_risk = 0.5       # Negative but mild
-    elif m2_yoy < 3.0:
-        m2_risk = 0.1       # Below trend
-    else:
-        m2_risk = 0.0       # Healthy growth
-    score += m2_risk * 0.25
-
+    score += (0.5 if be > 2.6 else 0.2 if be > 2.3 else 0.0) * 0.25
+    m2 = latest.get('M2_YoY', 5.0)
+    score += (0.5 if m2 < 0 else 0.1 if m2 < 3 else 0.0) * 0.25
     return round(min(max(score, 0.0), 1.0), 3)
+
 
 
 def detect_yield_regime(df: pd.DataFrame) -> str:

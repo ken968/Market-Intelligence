@@ -137,9 +137,18 @@ def get_top_macro_drivers(asset_key: str, lookback_days: int = 14, top_n: int = 
             continue
 
         current_val = float(series.iloc[-1])
-        recent_mean = float(series.iloc[-lookback_days:].mean())
-        hist_mean   = float(series.iloc[:-lookback_days].mean())
-        hist_std    = float(series.iloc[:-lookback_days].std())
+
+        # Use frequency-aware window: monthly indicators (CPI, NFP, etc.) need
+        # a longer lookback so their Z-score is not artificially 0.0
+        try:
+            from utils.feature_engineering import get_indicator_lookback
+            effective_lookback = get_indicator_lookback(feat)
+        except Exception:
+            effective_lookback = lookback_days
+
+        recent_mean = float(series.iloc[-effective_lookback:].mean())
+        hist_mean   = float(series.iloc[:-effective_lookback].mean())
+        hist_std    = float(series.iloc[:-effective_lookback].std())
 
         if hist_std < 1e-8:
             continue

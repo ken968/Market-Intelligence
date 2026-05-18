@@ -1,7 +1,9 @@
 import yfinance as yf
 import pandas as pd
+import numpy as np
 import os
 from datetime import datetime
+
 
 class MultiAssetFetcher:
     """
@@ -101,6 +103,31 @@ class MultiAssetFetcher:
         """Calculate Exponential Moving Average"""
         return data.ewm(span=window, adjust=False).mean()
 
+    def _extract_ohlcv(self, data: 'pd.DataFrame', price_col: str) -> 'pd.DataFrame':
+        """
+        Extract full OHLCV from yfinance download result.
+        Handles both flat columns and MultiIndex (multi-ticker download).
+        Always returns DataFrame with columns: [price_col, Open, High, Low, Volume]
+        """
+        cols_needed = ['Open', 'High', 'Low', 'Close', 'Volume']
+
+        if isinstance(data.columns, pd.MultiIndex):
+            # MultiIndex: (PriceType, Ticker) — flatten to single level
+            extracted = {}
+            for price_type in cols_needed:
+                if price_type in data.columns.get_level_values(0):
+                    extracted[price_type] = data[price_type].iloc[:, 0]
+            df = pd.DataFrame(extracted)
+        else:
+            available = [c for c in cols_needed if c in data.columns]
+            df = data[available].copy()
+
+        # Rename Close to the asset-specific name (e.g., 'Gold', 'BTC', 'SPY')
+        if 'Close' in df.columns:
+            df = df.rename(columns={'Close': price_col})
+
+        return df.ffill().dropna(subset=[price_col])
+
     def fetch_gold_data(self):
         """Fetch Gold data (existing logic)"""
         print("\n=== GOLD DATA ===")
@@ -119,19 +146,22 @@ class MultiAssetFetcher:
                 print("Error: No Gold data retrieved.")
                 return False
             
-            # Robust way to handle both single and MultiIndex from yfinance
-            if 'Close' in data.columns and isinstance(data.columns, pd.MultiIndex):
-                df = data['Close'].iloc[:, 0].to_frame(name='Gold')
-            elif 'Close' in data.columns:
-                df = data[['Close']].rename(columns={'Close': 'Gold'})
-            else:
-                # Fallback if structure is unexpected
-                df = data.iloc[:, 0].to_frame(name='Gold')
-                
-            df = df.ffill().dropna()
-            
+            # Extract full OHLCV (Open, High, Low, Close, Volume)
+            df = self._extract_ohlcv(data, 'Gold')
+
             # Add Technical Indicators
             df['EMA_90'] = self._calculate_ema(df['Gold'], 90)
+
+            # Garman-Klass Volatility (requires OHLCV)
+            try:
+                from utils.feature_engineering import compute_garman_klass_vol
+                df['GK_Vol_21d'] = compute_garman_klass_vol(
+                    df, open_col='Open', high_col='High',
+                    low_col='Low', close_col='Gold', window=21
+                )
+            except Exception as gk_err:
+                print(f"Warning: GK Vol skipped: {gk_err}")
+                df['GK_Vol_21d'] = 0.0
             
             # Merge with macro indicators
             if os.path.exists('data/macro_indicators.csv'):
@@ -150,8 +180,17 @@ class MultiAssetFetcher:
                     if col in df.columns:
                         df[col] = df[col].ffill().fillna(0)
             
+            # Lagged macro features & Sentiment_Std
+            try:
+                from utils.feature_engineering import add_lagged_macro_features
+                df = add_lagged_macro_features(df, lags_months=[3, 6])
+            except Exception as lag_err:
+                print(f"Warning: Lagged features skipped: {lag_err}")
+
             # Preserve or Initialize Sentiment Column
             df = self._preserve_sentiment(df, self.gold_config['filename'])
+            if 'Sentiment' in df.columns:
+                df['Sentiment_Std'] = df['Sentiment'].rolling(5, min_periods=1).std().fillna(0)
             
             df.to_csv(self.gold_config['filename'])
             try:
@@ -186,19 +225,23 @@ class MultiAssetFetcher:
                 print("Error: No Bitcoin data retrieved.")
                 return False
             
-            # Robust way to handle both single and MultiIndex from yfinance
-            if 'Close' in data.columns and isinstance(data.columns, pd.MultiIndex):
-                df = data['Close'].iloc[:, 0].to_frame(name='BTC')
-            elif 'Close' in data.columns:
-                df = data[['Close']].rename(columns={'Close': 'BTC'})
-            else:
-                df = data.iloc[:, 0].to_frame(name='BTC')
-                
-            df = df.ffill().dropna()
-            
+            # Extract full OHLCV (Open, High, Low, Close, Volume)
+            df = self._extract_ohlcv(data, 'BTC')
+
             # Add BTC-specific features & Indicators
             df['Halving_Cycle'] = self._calculate_halving_cycle(df.index)
             df['EMA_90'] = self._calculate_ema(df['BTC'], 90)
+
+            # Garman-Klass Volatility — especially relevant for BTC (high vol asset)
+            try:
+                from utils.feature_engineering import compute_garman_klass_vol
+                df['GK_Vol_21d'] = compute_garman_klass_vol(
+                    df, open_col='Open', high_col='High',
+                    low_col='Low', close_col='BTC', window=21
+                )
+            except Exception as gk_err:
+                print(f"Warning: GK Vol skipped: {gk_err}")
+                df['GK_Vol_21d'] = 0.0
             
             # Merge with macro indicators (only where dates overlap)
             if os.path.exists('data/macro_indicators.csv'):
@@ -217,8 +260,17 @@ class MultiAssetFetcher:
                     if col in df.columns:
                         df[col] = df[col].ffill().fillna(0)
             
+            # Lagged macro features & Sentiment_Std
+            try:
+                from utils.feature_engineering import add_lagged_macro_features
+                df = add_lagged_macro_features(df, lags_months=[3, 6])
+            except Exception as lag_err:
+                print(f"Warning: Lagged features skipped: {lag_err}")
+
             # Preserve or Initialize Sentiment Column
             df = self._preserve_sentiment(df, self.btc_config['filename'])
+            if 'Sentiment' in df.columns:
+                df['Sentiment_Std'] = df['Sentiment'].rolling(5, min_periods=1).std().fillna(0)
             
             df.to_csv(self.btc_config['filename'])
             try:
@@ -259,18 +311,21 @@ class MultiAssetFetcher:
                     print(f"Warning: No data for {tick}")
                     continue
                 
-                # Robust way to handle both single and MultiIndex from yfinance
-                if 'Close' in data.columns and isinstance(data.columns, pd.MultiIndex):
-                    df = data['Close'].iloc[:, 0].to_frame(name=tick)
-                elif 'Close' in data.columns:
-                    df = data[['Close']].rename(columns={'Close': tick})
-                else:
-                    df = data.iloc[:, 0].to_frame(name=tick)
-                    
-                df = df.ffill().dropna()
-                
+                # Extract full OHLCV
+                df = self._extract_ohlcv(data, tick)
+
                 # Add Technical Indicators
                 df['EMA_90'] = self._calculate_ema(df[tick], 90)
+
+                # Garman-Klass Volatility
+                try:
+                    from utils.feature_engineering import compute_garman_klass_vol
+                    df['GK_Vol_21d'] = compute_garman_klass_vol(
+                        df, open_col='Open', high_col='High',
+                        low_col='Low', close_col=tick, window=21
+                    )
+                except Exception as gk_err:
+                    df['GK_Vol_21d'] = 0.0
                 
                 # Merge with macro indicators
                 if os.path.exists('data/macro_indicators.csv'):
@@ -288,6 +343,15 @@ class MultiAssetFetcher:
                     for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']:
                         if col in df.columns:
                             df[col] = df[col].ffill().fillna(0)
+
+                # Lagged macro features & Sentiment_Std
+                try:
+                    from utils.feature_engineering import add_lagged_macro_features
+                    df = add_lagged_macro_features(df, lags_months=[3, 6])
+                except Exception as lag_err:
+                    pass
+                if 'Sentiment' in df.columns:
+                    df['Sentiment_Std'] = df['Sentiment'].rolling(5, min_periods=1).std().fillna(0)
                 
                 filename = self.stock_config['filename_template'].format(ticker=tick)
                 
