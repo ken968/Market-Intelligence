@@ -1,4 +1,4 @@
-﻿"""
+"""
 XAUUSD Multi-Asset Terminal - Global Configuration
 Centralized config for all assets, models, and UI settings
 """
@@ -122,36 +122,130 @@ FORECAST_RANGES = {
     '3 Months': 90
 }
 
-# Confidence scores for forecast reliability
-CONFIDENCE_SCORES = {
+# Confidence scores — FALLBACK VALUES ONLY.
+# These are conservative baselines used when no backtest data exists yet.
+# Actual confidence is computed dynamically from backtest hit_ratio JSON files.
+# Run: python scripts/backtest_engine.py [asset] to generate real scores.
+CONFIDENCE_SCORES_FALLBACK = {
     'gold': {
-        '1 Day': {'score': 0.80, 'label': 'High', 'color': 'success'},
-        '1 Week': {'score': 0.75, 'label': 'High', 'color': 'success'},
-        '2 Weeks': {'score': 0.70, 'label': 'Good', 'color': 'success'},
-        '1 Month': {'score': 0.65, 'label': 'Moderate', 'color': 'info'},
-        '3 Months': {'score': 0.55, 'label': 'Low', 'color': 'warning'}
+        '1 Day':    {'score': 0.65, 'label': 'Moderate', 'color': 'info'},
+        '1 Week':   {'score': 0.60, 'label': 'Moderate', 'color': 'info'},
+        '2 Weeks':  {'score': 0.55, 'label': 'Low',      'color': 'warning'},
+        '1 Month':  {'score': 0.50, 'label': 'Low',      'color': 'warning'},
+        '3 Months': {'score': 0.35, 'label': 'Speculative', 'color': 'error'}
     },
     'btc': {
-        '1 Day': {'score': 0.75, 'label': 'High', 'color': 'success'},
-        '1 Week': {'score': 0.70, 'label': 'Good', 'color': 'success'},
-        '2 Weeks': {'score': 0.60, 'label': 'Moderate', 'color': 'info'},
-        '1 Month': {'score': 0.50, 'label': 'Low', 'color': 'warning'},
-        '3 Months': {'score': 0.40, 'label': 'Very Low', 'color': 'error'}
+        '1 Day':    {'score': 0.60, 'label': 'Moderate', 'color': 'info'},
+        '1 Week':   {'score': 0.55, 'label': 'Moderate', 'color': 'info'},
+        '2 Weeks':  {'score': 0.50, 'label': 'Low',      'color': 'warning'},
+        '1 Month':  {'score': 0.45, 'label': 'Low',      'color': 'warning'},
+        '3 Months': {'score': 0.35, 'label': 'Speculative', 'color': 'error'}
     },
     'stocks': {
-        '1 Day': {'score': 0.70, 'label': 'Good', 'color': 'success'},
-        '1 Week': {'score': 0.65, 'label': 'Moderate', 'color': 'info'},
-        '2 Weeks': {'score': 0.55, 'label': 'Moderate', 'color': 'info'},
-        '1 Month': {'score': 0.50, 'label': 'Low', 'color': 'warning'},
-        '3 Months': {'score': 0.40, 'label': 'Very Low', 'color': 'error'}
+        '1 Day':    {'score': 0.60, 'label': 'Moderate', 'color': 'info'},
+        '1 Week':   {'score': 0.55, 'label': 'Moderate', 'color': 'info'},
+        '2 Weeks':  {'score': 0.50, 'label': 'Low',      'color': 'warning'},
+        '1 Month':  {'score': 0.45, 'label': 'Low',      'color': 'warning'},
+        '3 Months': {'score': 0.35, 'label': 'Speculative', 'color': 'error'}
     }
 }
 
+# Decay factors: longer horizon = raw hit_ratio is discounted further
+# because compounding error makes long-range confidence inherently lower
+_TIMEFRAME_DECAY = {
+    '1 Day':    1.00,
+    '1 Week':   0.92,
+    '2 Weeks':  0.84,
+    '1 Month':  0.75,
+    '3 Months': 0.55,
+}
+
+
+def _score_to_label(score: float) -> dict:
+    """Map a numeric score [0.0-1.0] to a display label and color."""
+    if score >= 0.75:
+        return {'score': round(score, 3), 'label': 'High',        'color': 'success'}
+    elif score >= 0.65:
+        return {'score': round(score, 3), 'label': 'Good',        'color': 'success'}
+    elif score >= 0.55:
+        return {'score': round(score, 3), 'label': 'Moderate',    'color': 'info'}
+    elif score >= 0.45:
+        return {'score': round(score, 3), 'label': 'Low',         'color': 'warning'}
+    else:
+        return {'score': round(score, 3), 'label': 'Speculative', 'color': 'error'}
+
+
+def get_dynamic_confidence(asset_key: str, timeframe: str) -> dict:
+    """
+    Load confidence score from the most recent backtest JSON.
+    The backtest engine (scripts/backtest_engine.py) saves:
+        reports/backtest_{asset_key}.json
+    with field 'hit_ratio_3layer' (e.g., 63.5 means 63.5% directional accuracy).
+
+    Converts hit_ratio → score:
+        score = hit_ratio_3layer / 100 * decay_factor
+
+    Falls back to CONFIDENCE_SCORES_FALLBACK if no backtest JSON found.
+
+    Args:
+        asset_key : e.g. 'gold', 'btc', 'spy'
+        timeframe : e.g. '1 Day', '1 Week', '3 Months'
+
+    Returns:
+        dict: {'score': float, 'label': str, 'color': str}
+    """
+    import json as _json
+    import os as _os
+
+    asset_type = 'gold' if asset_key == 'gold' else ('btc' if asset_key == 'btc' else 'stocks')
+    fallback = CONFIDENCE_SCORES_FALLBACK.get(asset_type, {}).get(
+        timeframe, {'score': 0.50, 'label': 'Unknown', 'color': 'info'}
+    ).copy()
+
+    # Try loading backtest JSON for this specific asset first
+    json_path = f'reports/backtest_{asset_key}.json'
+    if not _os.path.exists(json_path):
+        # Try asset_type grouping (e.g. 'stocks' covers all tickers)
+        json_path = f'reports/backtest_{asset_type}.json'
+
+    if not _os.path.exists(json_path):
+        return fallback
+
+    try:
+        with open(json_path, 'r') as fh:
+            data = _json.load(fh)
+
+        raw_hit_ratio = data.get('hit_ratio_3layer', None)
+        if raw_hit_ratio is None:
+            return fallback
+
+        # Convert percentage to [0, 1] and apply horizon decay
+        base_score   = raw_hit_ratio / 100.0
+        decay_factor = _TIMEFRAME_DECAY.get(timeframe, 0.70)
+        final_score  = base_score * decay_factor
+
+        result = _score_to_label(final_score)
+        # 3 Months is always Speculative regardless of score
+        if timeframe == '3 Months':
+            result['label'] = 'Speculative'
+            result['color'] = 'error'
+
+        return result
+
+    except Exception:
+        return fallback
+
+
 FORECAST_DISCLAIMER = """
-**Forecast Limitations**: AI predictions are based on historical patterns and current market conditions. 
-Actual results may vary significantly due to unforeseen events, policy changes, or market shocks. 
+**Forecast Limitations**: AI predictions are based on historical patterns and current market conditions.
+Actual results may vary significantly due to unforeseen events, policy changes, or market shocks.
 Use forecasts as directional guidance, not precise targets. Always combine with fundamental analysis.
+⚠️ Forecasts beyond 2 weeks are speculative due to compounding model error — treat as scenario analysis only.
 """
+
+# Legacy alias — kept for backward compatibility.
+# New code should call get_dynamic_confidence() directly.
+CONFIDENCE_SCORES = CONFIDENCE_SCORES_FALLBACK
 
 # ==================== HELPER FUNCTIONS ====================
 
