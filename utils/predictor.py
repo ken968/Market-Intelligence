@@ -760,12 +760,31 @@ class AssetPredictor:
         momentum_scale = min(12.0, momentum_scale) # Cap at ~3 months
         horizon_pct  = adjusted_7d_pct * momentum_scale
 
-        # ── Build smooth price path: linear interpolation to horizon target ───
+        # ── Build realistic price path: Warp the LSTM shape to hit our target ───
         target_price = current_price * (1.0 + horizon_pct)
-        prices = [
-            current_price + (target_price - current_price) * (i + 1) / steps
-            for i in range(steps)
-        ]
+        
+        # Get the "bumpy" daily shape from the raw LSTM
+        raw_shape = self.recursive_forecast(steps, ceo_drift_multiplier=1.0)
+        
+        if not raw_shape or len(raw_shape) != steps:
+            # Fallback to straight line if raw shape fails
+            prices = [
+                current_price + (target_price - current_price) * (i + 1) / steps
+                for i in range(steps)
+            ]
+            return prices
+            
+        # "Tilt" or "Warp" the raw shape so its final point perfectly hits our target_price
+        raw_end = raw_shape[-1]
+        drift_correction = target_price - raw_end
+        
+        prices = []
+        for i in range(steps):
+            # Linearly scale the correction so the start connects to current_price 
+            # and the end connects to target_price
+            correction_i = drift_correction * ((i + 1) / steps)
+            prices.append(raw_shape[i] + correction_i)
+            
         return prices
 
     def predict_tomorrow(self):
