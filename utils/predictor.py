@@ -6,6 +6,7 @@ Handles forecasting for Gold, Bitcoin, and all US Stocks
 import numpy as np
 import pandas as pd
 import pickle
+import json
 import os
 import sys
 from utils.config import get_asset_config, FORECAST_RANGES, CONFIDENCE_SCORES
@@ -501,16 +502,187 @@ class AssetPredictor:
         
         # First feature is always the price
         return df[self.config['features'][0]].iloc[-1]
-    
+
+    def ensemble_forecast(self) -> dict:
+        """
+        Generate 7-day % change forecast using Dual-Head Stacker (Ensemble Alpha Engine).
+
+        Architecture:
+            LSTM (momentum) + XGBoost (macro) predictions are fed into:
+            - Direction Head (LogisticRegressionCV) → probability of UP
+            - Magnitude Head (HuberRegressor)       → expected % change size
+
+            Combined output: direction_signal * |magnitude|
+            This gives both directional confidence AND magnitude estimate.
+
+        Returns:
+            dict with keys:
+                pct_change_7d    : float — final % change prediction (signed)
+                direction        : 'up' or 'down'
+                direction_prob   : float [0.5, 1.0] — confidence in direction
+                lstm_signal      : float — LSTM's raw % change prediction
+                xgb_signal       : float — XGBoost's raw % change prediction
+                predicted_price  : float — implied price after 7 days
+                model            : 'ensemble' or 'fallback'
+
+        Falls back to recursive_forecast if stacker files are not found.
+        """
+        dir_path = f'models/{self.asset_key}_stacker_direction.pkl'
+        mag_path = f'models/{self.asset_key}_stacker_magnitude.pkl'
+        scl_path = f'models/{self.asset_key}_stacker_meta_scaler.pkl'
+        current_price = self.get_latest_price()
+
+        # ── Check if stacker models exist ────────────────────────────────────
+        if not all(os.path.exists(p) for p in [dir_path, mag_path, scl_path]):
+            # Graceful fallback: use legacy recursive forecast, convert to pct
+            legacy = self.recursive_forecast(7)
+            if not legacy:
+                return {'pct_change_7d': 0.0, 'direction': 'flat',
+                        'direction_prob': 0.5, 'predicted_price': current_price,
+                        'model': 'fallback', 'lstm_signal': 0.0, 'xgb_signal': 0.0}
+            pred_price = legacy[-1]
+            pct = (pred_price - current_price) / current_price
+            return {
+                'pct_change_7d': float(pct),
+                'direction': 'up' if pct > 0 else 'down',
+                'direction_prob': 0.55,
+                'predicted_price': float(pred_price),
+                'model': 'fallback_lstm',
+                'lstm_signal': float(pct),
+                'xgb_signal': 0.0,
+            }
+
+        # ── Load stacker models ───────────────────────────────────────────────
+        try:
+            with open(dir_path, 'rb') as f: dir_head = pickle.load(f)
+            with open(mag_path, 'rb') as f: mag_head = pickle.load(f)
+            with open(scl_path, 'rb') as f: meta_scaler = pickle.load(f)
+        except Exception as e:
+            print(f"[Ensemble] Stacker load error: {e}")
+            return {'pct_change_7d': 0.0, 'direction': 'flat',
+                    'direction_prob': 0.5, 'predicted_price': current_price,
+                    'model': 'fallback', 'lstm_signal': 0.0, 'xgb_signal': 0.0}
+
+        # ── Get base model signals for the CURRENT day ────────────────────────
+        # Load last row of data as "test" point
+        df_full = pd.read_csv(self.config['data_file'], index_col=0, parse_dates=True)
+        df_full = df_full.sort_index()
+        df_last = df_full.iloc[[-1]]  # Last row as single-row DataFrame
+
+        # LSTM signal — use last sequence_length rows
+        try:
+            from tensorflow.keras.models import load_model as keras_load
+            feat_scaler_path   = self.config['scaler_file']
+            target_scaler_path = self.config['scaler_file'].replace('.pkl', '_target.pkl')
+
+            if all(os.path.exists(p) for p in [self.config['model_file'],
+                                                 feat_scaler_path, target_scaler_path]):
+                lstm_model = keras_load(self.config['model_file'])
+                with open(feat_scaler_path, 'rb') as f:
+                    feat_sc = pickle.load(f)
+                with open(target_scaler_path, 'rb') as f:
+                    tgt_sc = pickle.load(f)
+
+                seq_len  = self.config.get('sequence_length', 60)
+                features = [f for f in self.config['features'] if f in df_full.columns]
+                window   = df_full[features].ffill().fillna(0).iloc[-seq_len:].values
+                if window.shape[0] == seq_len:
+                    w_sc    = feat_sc.transform(window)
+                    p_sc    = lstm_model.predict(w_sc.reshape(1, seq_len, -1), verbose=0)[0, 0]
+                    lstm_signal = float(tgt_sc.inverse_transform([[p_sc]])[0, 0])
+                else:
+                    lstm_signal = 0.0
+            else:
+                lstm_signal = 0.0
+        except Exception:
+            lstm_signal = 0.0
+
+        # XGBoost signal
+        xgb_signal = 0.0
+        try:
+            import xgboost as xgb_lib
+            xgb_model_path  = f'models/{self.asset_key}_xgb_macro.json'
+            xgb_scaler_path = f'models/{self.asset_key}_xgb_scaler.pkl'
+            xgb_feat_path   = f'models/{self.asset_key}_xgb_features.json'
+            if all(os.path.exists(p) for p in [xgb_model_path, xgb_scaler_path, xgb_feat_path]):
+                xgb_m = xgb_lib.XGBRegressor()
+                xgb_m.load_model(xgb_model_path)
+                with open(xgb_scaler_path, 'rb') as f:
+                    xgb_sc = pickle.load(f)
+                with open(xgb_feat_path, 'r') as f:
+                    xgb_meta = json.load(f)
+                xgb_feats = [ft for ft in xgb_meta['features'] if ft in df_last.columns]
+                X_xgb = df_last[xgb_feats].fillna(0).values
+                xgb_signal = float(xgb_m.predict(xgb_sc.transform(X_xgb))[0])
+        except Exception:
+            xgb_signal = 0.0
+
+        # ── Context features ──────────────────────────────────────────────────
+        ctx_features = ['VIX', 'GK_Vol_21d', 'Sentiment', 'Sentiment_Std',
+                        'YieldCurve_10Y2Y', 'DXY']
+        ctx_values = {}
+        for f in ctx_features:
+            if f in df_last.columns:
+                ctx_values[f] = float(df_last[f].iloc[0])
+
+        # ── Build meta-feature vector ─────────────────────────────────────────
+        # Must match exact order from training (stored in stacker_meta.json)
+        meta_json_path = f'models/{self.asset_key}_stacker_meta.json'
+        if os.path.exists(meta_json_path):
+            with open(meta_json_path, 'r') as f:
+                stacker_meta = json.load(f)
+            feature_names = stacker_meta['feature_names']
+        else:
+            feature_names = ['lstm_pred', 'xgb_pred'] + list(ctx_values.keys())
+
+        row = {}
+        row['lstm_pred'] = lstm_signal
+        row['xgb_pred']  = xgb_signal
+        for f in ctx_features:
+            row[f] = ctx_values.get(f, 0.0)
+
+        meta_vec = np.array([[row.get(f, 0.0) for f in feature_names]])
+
+        # ── Dual-Head inference ───────────────────────────────────────────────
+        try:
+            meta_sc = meta_scaler.transform(meta_vec)
+            dir_prob  = float(dir_head.predict_proba(meta_sc)[0, 1])  # P(UP)
+            magnitude = float(mag_head.predict(meta_sc)[0])
+
+            # Combined signal: signed by direction confidence, scaled by magnitude
+            dir_signal  = (dir_prob - 0.5) * 2.0   # [-1, +1]
+            pct_change  = dir_signal * abs(magnitude)
+
+            direction    = 'up' if pct_change > 0 else 'down'
+            dir_conf     = max(dir_prob, 1 - dir_prob)  # confidence [0.5, 1.0]
+            pred_price   = current_price * (1 + pct_change)
+
+        except Exception as e:
+            print(f"[Ensemble] Inference error: {e}")
+            pct_change, direction, dir_prob, dir_conf = 0.0, 'flat', 0.5, 0.5
+            pred_price = current_price
+
+        return {
+            'pct_change_7d':   float(pct_change),
+            'direction':       direction,
+            'direction_prob':  float(dir_conf),
+            'predicted_price': float(pred_price),
+            'lstm_signal':     float(lstm_signal),
+            'xgb_signal':      float(xgb_signal),
+            'model':           'dual_head_ensemble',
+        }
+
+
     def predict_tomorrow(self):
         """
         Quick prediction for next day only
-        
+
         Returns:
             dict: {'current': float, 'predicted': float, 'change': float, 'pct_change': float}
         """
         current_price = self.get_latest_price()
         forecast = self.recursive_forecast(1)
+
         
         if not forecast:
             return {

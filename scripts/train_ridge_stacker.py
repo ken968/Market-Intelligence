@@ -1,39 +1,40 @@
 """
-Ridge Meta-Learner (Stacker) — Final Ensemble Layer
-=====================================================
-Role in the ensemble architecture:
-    Combines predictions from LSTM and XGBoost into a single, optimized
-    final prediction. The Ridge learns WHEN to trust each model more.
+Ridge Dual-Head Meta-Learner (Stacker) — Upgraded Ensemble Layer
+=================================================================
+Perubahan dari versi sebelumnya (Ridge tunggal):
 
-    [LSTM % change]  ─┐
-    [XGBoost % change]─┤──► Ridge Stacker ──► Final % change prediction
-    [VIX]            ─┤     (learns optimal
-    [GK_Vol_21d]     ─┤      weights per
-    [Sentiment]       ┘      market regime)
+    SEBELUM: 1 model Ridge → meminimalkan MSE (RMSE) saja
+    SEKARANG: 2 head secara bersamaan:
+        Head 1 - Direction Head (LogisticRegressionCV)
+            → Memprediksi ARAH (UP/DOWN), mengoptimasi Hit Ratio
+            → Menggunakan class_weight='balanced' untuk menangani imbalance
+        Head 2 - Magnitude Head (HuberRegressor)
+            → Memprediksi BESAR % CHANGE, tahan terhadap outlier
+            → Huber loss: tidak menghukum outlier berlebihan seperti MSE
 
-Why Ridge (not another neural net or XGBoost)?
-    - Ridge is a linear model: final_pred = w1*lstm + w2*xgb + w3*vix + ...
-    - It's interpretable: you can print the coefficients and understand
-      "in this data, LSTM was weighted 0.6x and XGBoost 0.4x"
-    - It's robust: linear combination of models reduces variance (ensemble effect)
-    - It won't overfit on 571 test samples (unlike a neural net would)
-    - L2 regularization (alpha) prevents any single model from dominating
+    Output akhir digabungkan:
+        final_signal = direction_prob * magnitude
+        Positif  → prediksi naik (dengan keyakinan direction_prob)
+        Negatif  → prediksi turun (dengan keyakinan 1-direction_prob)
 
-Training strategy:
-    - Uses the 20% TEST SET from LSTM and XGBoost backtests as Ridge training data
-    - Rationale: both models trained on 80%, so their predictions on the
-      remaining 20% are "out-of-sample" → no data leakage
-    - Ridge trains on these out-of-sample predictions → generalizes to future data
+    Keunggulan Dual-Head vs Ridge tunggal:
+        - Tidak ada trade-off antara Hit Ratio vs RMSE
+        - Direction head murni fokus ke akurasi arah
+        - Magnitude head tidak "takut" LSTM yang sesekali outlier
+        - Lebih robust di berbagai kondisi market
 
 Usage:
     python scripts/train_ridge_stacker.py gold
     python scripts/train_ridge_stacker.py btc
     python scripts/train_ridge_stacker.py spy
+    python scripts/train_ridge_stacker.py       ← train semua
 
 Output:
-    models/{asset}_ridge_stacker.pkl    <- stacker model
-    models/{asset}_ridge_meta.json      <- coefficients & feature names
-    reports/ridge_{asset}_backtest.json <- performance metrics
+    models/{asset}_stacker_direction.pkl   ← LogisticRegressionCV
+    models/{asset}_stacker_magnitude.pkl   ← HuberRegressor
+    models/{asset}_stacker_meta_scaler.pkl ← StandardScaler untuk meta-features
+    models/{asset}_stacker_meta.json       ← koefisien & metrics
+    reports/stacker_{asset}_backtest.json  ← perbandingan LSTM vs XGB vs Ensemble
 """
 
 import os
@@ -46,10 +47,9 @@ import pickle
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from sklearn.linear_model import RidgeCV
+from sklearn.linear_model import LogisticRegressionCV, HuberRegressor
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error
-
+from sklearn.metrics import mean_squared_error, accuracy_score
 import xgboost as xgb
 from utils.config import ASSETS
 
@@ -57,38 +57,24 @@ HORIZON_DAYS = 7
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STEP 1: Get LSTM predictions on test period
+# STEP 1: Get LSTM predictions (requires train_lstm_pct.py to have been run)
 # ─────────────────────────────────────────────────────────────────────────────
-
-def get_lstm_pct_change_predictions(asset_key: str, df_test: pd.DataFrame,
-                                     price_col: str) -> np.ndarray:
+def get_lstm_pct_predictions(asset_key: str, df_test: pd.DataFrame) -> np.ndarray:
     """
-    Load the trained LSTM (pct-change) model and generate 7-day % change predictions.
-
-    Requires models trained by train_lstm_pct.py, which saves:
-        - config['scaler_file']                     <- feature scaler (MinMaxScaler)
-        - config['scaler_file'].replace('.pkl','_target.pkl') <- target scaler (StandardScaler)
-
-    Steps:
-        1. Load feature_scaler and target_scaler
-        2. For each test row, build input sequence of last seq_len days
-        3. Predict scaled % change
-        4. Inverse transform with target_scaler → actual % change
+    Load LSTM pct-change model and predict 7D % change for each row in df_test.
+    Returns zeros if model not found (falls back gracefully).
     """
     config = ASSETS[asset_key]
-    seq_len = config.get('sequence_length', 60)
-
     feat_scaler_path   = config['scaler_file']
     target_scaler_path = config['scaler_file'].replace('.pkl', '_target.pkl')
     model_path         = config['model_file']
 
-    # Check if pct-change model exists
-    if not all(os.path.exists(p) for p in [model_path, feat_scaler_path, target_scaler_path]):
-        missing = [p for p in [model_path, feat_scaler_path, target_scaler_path]
-                   if not os.path.exists(p)]
-        print(f"  Info: LSTM pct-change files missing: {missing}")
-        print(f"  Run: python scripts/train_lstm_pct.py {asset_key}")
-        print(f"  Falling back to zeros for LSTM component.")
+    files_needed = [model_path, feat_scaler_path, target_scaler_path]
+    if not all(os.path.exists(p) for p in files_needed):
+        missing = [p for p in files_needed if not os.path.exists(p)]
+        print(f"  [LSTM] Files missing: {missing}")
+        print(f"  [LSTM] Run: python scripts/train_lstm_pct.py {asset_key}")
+        print(f"  [LSTM] Using zeros as fallback.")
         return np.zeros(len(df_test))
 
     try:
@@ -99,233 +85,271 @@ def get_lstm_pct_change_predictions(asset_key: str, df_test: pd.DataFrame,
         with open(target_scaler_path, 'rb') as f:
             target_scaler = pickle.load(f)
     except Exception as e:
-        print(f"  Warning: Could not load LSTM model: {e}")
+        print(f"  [LSTM] Load failed: {e}. Using zeros.")
         return np.zeros(len(df_test))
 
+    seq_len  = config.get('sequence_length', 60)
     features = [f for f in config['features'] if f in df_test.columns]
 
-    # Load full data for lookback sequences (need data BEFORE the test period)
-    full_data_file = config['data_file']
-    df_full = pd.read_csv(full_data_file, index_col=0, parse_dates=True).sort_index()
+    # Load full dataset for building lookback windows
+    df_full = pd.read_csv(config['data_file'], index_col=0, parse_dates=True).sort_index()
     df_full = df_full[[f for f in features if f in df_full.columns]].ffill().fillna(0)
 
-    predictions = []
-
+    preds = []
     for date in df_test.index:
         try:
             pos = df_full.index.get_loc(date)
         except KeyError:
-            predictions.append(0.0)
+            preds.append(0.0)
             continue
 
         if pos < seq_len:
-            predictions.append(0.0)
+            preds.append(0.0)
             continue
 
-        # Input: last seq_len rows of features, scaled
-        window = df_full.iloc[pos - seq_len: pos].values  # (seq_len, n_features)
+        window = df_full.iloc[pos - seq_len: pos].values
         if window.shape[0] < seq_len:
-            predictions.append(0.0)
+            preds.append(0.0)
             continue
 
         try:
-            window_scaled = feature_scaler.transform(window)
-            X = window_scaled.reshape(1, seq_len, -1)
-            pred_scaled = lstm_model.predict(X, verbose=0)[0, 0]
-
-            # Inverse transform: scaled % change → actual % change
-            pct_pred = target_scaler.inverse_transform([[pred_scaled]])[0, 0]
-            predictions.append(float(pct_pred))
-
+            w_scaled = feature_scaler.transform(window)
+            X = w_scaled.reshape(1, seq_len, -1)
+            p_scaled = lstm_model.predict(X, verbose=0)[0, 0]
+            pct = target_scaler.inverse_transform([[p_scaled]])[0, 0]
+            preds.append(float(pct))
         except Exception:
-            predictions.append(0.0)
+            preds.append(0.0)
 
-    return np.array(predictions)
-
+    return np.array(preds)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STEP 2: Get XGBoost predictions on test period
+# STEP 2: Get XGBoost predictions
 # ─────────────────────────────────────────────────────────────────────────────
-
-def get_xgb_pct_change_predictions(asset_key: str, df_test: pd.DataFrame) -> np.ndarray:
-    """
-    Load the trained XGBoost macro model and generate 7-day % change predictions.
-    """
-    model_path = f'models/{asset_key}_xgb_macro.json'
-    scaler_path = f'models/{asset_key}_xgb_scaler.pkl'
+def get_xgb_pct_predictions(asset_key: str, df_test: pd.DataFrame) -> np.ndarray:
+    """Load XGBoost macro model and predict 7D % change."""
+    model_path   = f'models/{asset_key}_xgb_macro.json'
+    scaler_path  = f'models/{asset_key}_xgb_scaler.pkl'
     feature_path = f'models/{asset_key}_xgb_features.json'
 
     if not all(os.path.exists(p) for p in [model_path, scaler_path, feature_path]):
-        print(f"  Warning: XGBoost model files for {asset_key} not found. Using zeros.")
+        print(f"  [XGB] Model files missing for {asset_key}. Using zeros.")
         return np.zeros(len(df_test))
 
     model = xgb.XGBRegressor()
     model.load_model(model_path)
-
     with open(scaler_path, 'rb') as f:
         scaler = pickle.load(f)
-
     with open(feature_path, 'r') as f:
         meta = json.load(f)
 
     features = [f for f in meta['features'] if f in df_test.columns]
     X = df_test[features].fillna(0).values
-    X_scaled = scaler.transform(X)
-
-    return model.predict(X_scaled)
+    return model.predict(scaler.transform(X))
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STEP 3: Build Ridge training matrix and train
+# STEP 3: Train Dual-Head Stacker
 # ─────────────────────────────────────────────────────────────────────────────
-
-def train_ridge_stacker(asset_key: str):
+def train_dual_head_stacker(asset_key: str) -> dict:
     asset_key = asset_key.lower()
     print(f"\n{'='*60}")
-    print(f" Ridge Meta-Learner — {asset_key.upper()}")
+    print(f" Dual-Head Stacker — {asset_key.upper()}")
     print(f"{'='*60}")
 
     if asset_key not in ASSETS:
-        print(f"Error: Unknown asset {asset_key}")
-        return
+        print(f"Error: Unknown asset '{asset_key}'")
+        return {}
 
     config = ASSETS[asset_key]
-    data_file = config['data_file']
-    price_col = [c for c in config['features'] if c in
-                 ['Gold', 'BTC', 'SPY', 'QQQ', 'DIA', 'AAPL', 'MSFT',
-                  'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA', 'TSM']][0]
+    price_col = None
+    for c in config['features']:
+        if c in ['Gold', 'BTC', 'SPY', 'QQQ', 'DIA', 'AAPL', 'MSFT',
+                 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA', 'TSM']:
+            price_col = c
+            break
+    if price_col is None:
+        price_col = config['features'][0]
 
-    df = pd.read_csv(data_file, index_col=0, parse_dates=True).sort_index()
+    # Load data, compute target
+    df = pd.read_csv(config['data_file'], index_col=0, parse_dates=True).sort_index()
+    df['_target'] = (df[price_col].shift(-HORIZON_DAYS) - df[price_col]) / df[price_col]
+    df = df.dropna(subset=['_target'])
 
-    # Compute 7-day forward % change (same target as XGBoost)
-    df['target_pct_7d'] = (
-        df[price_col].shift(-HORIZON_DAYS) - df[price_col]
-    ) / df[price_col]
-
-    # 80/20 split — Ridge trains on predictions from the 20% test portion
+    # 80% train | 20% test — stacker is trained/evaluated on the test split
     split_idx = int(len(df) * 0.80)
-    df_test = df.iloc[split_idx:].dropna(subset=['target_pct_7d'])
+    df_test   = df.iloc[split_idx:].copy()
 
-    print(f"Ridge training set: {len(df_test)} samples (the 20% unseen test period)")
-    print(f"Date range: {df_test.index[0].date()} to {df_test.index[-1].date()}")
+    print(f"Stacker data: {len(df_test)} samples (20% unseen test period)")
+    print(f"  {df_test.index[0].date()} to {df_test.index[-1].date()}")
 
-    # --- Get predictions from both base models ---
-    print("\nGenerating LSTM predictions on test period...")
-    lstm_preds = get_lstm_pct_change_predictions(asset_key, df_test, price_col)
+    # ── Get base model predictions ──────────────────────────────────────────
+    print("\nGenerating LSTM predictions...")
+    lstm_preds = get_lstm_pct_predictions(asset_key, df_test)
 
-    print("Generating XGBoost predictions on test period...")
-    xgb_preds = get_xgb_pct_change_predictions(asset_key, df_test)
+    print("Generating XGBoost predictions...")
+    xgb_preds  = get_xgb_pct_predictions(asset_key, df_test)
 
-    # --- Context features for regime-awareness ---
+    # ── Build meta-feature matrix ────────────────────────────────────────────
+    # Context features: regime indicators that help stacker decide WHEN to trust each model
     ctx_features = ['VIX', 'GK_Vol_21d', 'Sentiment', 'Sentiment_Std',
                     'YieldCurve_10Y2Y', 'DXY']
-    ctx_available = [f for f in ctx_features if f in df_test.columns]
+    ctx_avail = [f for f in ctx_features if f in df_test.columns]
 
-    # Build meta-feature matrix
-    meta_X = pd.DataFrame({
+    meta_df = pd.DataFrame({
         'lstm_pred': lstm_preds,
-        'xgb_pred': xgb_preds,
+        'xgb_pred':  xgb_preds,
     }, index=df_test.index)
+    for f in ctx_avail:
+        meta_df[f] = df_test[f].fillna(0).values
 
-    for feat in ctx_available:
-        meta_X[feat] = df_test[feat].fillna(0).values
+    y_pct = df_test['_target'].values
 
-    y = df_test['target_pct_7d'].values
+    # Direction labels: 1 = price goes UP, 0 = price goes DOWN
+    y_dir = (y_pct > 0).astype(int)
 
-    # --- Further 70/30 split within the test set for Ridge eval ---
-    # (70% to train Ridge, 30% to evaluate the full ensemble)
-    ridge_split = int(len(meta_X) * 0.70)
-    X_ridge_train = meta_X.iloc[:ridge_split].values
-    y_ridge_train = y[:ridge_split]
-    X_ridge_test  = meta_X.iloc[ridge_split:].values
-    y_ridge_test  = y[ridge_split:]
+    # ── 70% for stacker training, 30% for stacker evaluation ────────────────
+    split2 = int(len(meta_df) * 0.70)
+    X_tr, X_ev = meta_df.iloc[:split2].values,  meta_df.iloc[split2:].values
+    y_pct_tr, y_pct_ev = y_pct[:split2], y_pct[split2:]
+    y_dir_tr,  y_dir_ev  = y_dir[:split2],  y_dir[split2:]
 
-    print(f"\nRidge train: {len(X_ridge_train)} | Ridge eval: {len(X_ridge_test)}")
-
-    # StandardScaler for Ridge input
+    # ── StandardScaler for meta-features ────────────────────────────────────
     meta_scaler = StandardScaler()
-    X_train_scaled = meta_scaler.fit_transform(X_ridge_train)
-    X_test_scaled  = meta_scaler.transform(X_ridge_test)
+    X_tr_sc = meta_scaler.fit_transform(X_tr)
+    X_ev_sc = meta_scaler.transform(X_ev)
 
-    # RidgeCV: auto-selects best alpha from the list via cross-validation
-    # alpha controls L2 regularization strength
-    ridge = RidgeCV(alphas=[0.001, 0.01, 0.1, 1.0, 10.0, 100.0], cv=5)
-    ridge.fit(X_train_scaled, y_ridge_train)
+    # ════════════════════════════════════════════════════════════════════════
+    #  HEAD 1: Direction Head — LogisticRegressionCV
+    #  Optimizes for directional accuracy (hit ratio)
+    #  class_weight='balanced': compensates if UP/DOWN class is imbalanced
+    # ════════════════════════════════════════════════════════════════════════
+    dir_head = LogisticRegressionCV(
+        Cs=[0.01, 0.1, 1.0, 10.0, 100.0],
+        cv=5,
+        max_iter=500,
+        class_weight='balanced',   # key: handles UP/DOWN imbalance
+        scoring='accuracy',
+        random_state=42,
+    )
+    dir_head.fit(X_tr_sc, y_dir_tr)
 
-    # --- Evaluation ---
-    y_pred_train = ridge.predict(X_train_scaled)
-    y_pred_test  = ridge.predict(X_test_scaled)
+    # Probability of UP direction (class 1)
+    dir_prob_train = dir_head.predict_proba(X_tr_sc)[:, 1]
+    dir_prob_eval  = dir_head.predict_proba(X_ev_sc)[:, 1]
 
-    def hit_ratio(preds, actuals):
-        return float((np.sign(preds) == np.sign(actuals)).mean()) * 100.0
+    dir_pred_train = (dir_prob_train > 0.5).astype(int)
+    dir_pred_eval  = (dir_prob_eval  > 0.5).astype(int)
 
-    hr_train = hit_ratio(y_pred_train, y_ridge_train)
-    hr_test  = hit_ratio(y_pred_test,  y_ridge_test)
-    rmse_test = np.sqrt(mean_squared_error(y_ridge_test, y_pred_test))
+    hr_dir_train = accuracy_score(y_dir_tr, dir_pred_train) * 100
+    hr_dir_eval  = accuracy_score(y_dir_ev,  dir_pred_eval) * 100
 
-    # LSTM-only and XGBoost-only baselines on same eval period
-    hr_lstm_only = hit_ratio(X_ridge_test[:, 0], y_ridge_test)
-    hr_xgb_only  = hit_ratio(X_ridge_test[:, 1], y_ridge_test)
+    # ════════════════════════════════════════════════════════════════════════
+    #  HEAD 2: Magnitude Head — HuberRegressor
+    #  Optimizes for % change magnitude, robust to outliers
+    #  epsilon=1.35: outliers > 1.35 std get linear (not quadratic) penalty
+    # ════════════════════════════════════════════════════════════════════════
+    mag_head = HuberRegressor(
+        epsilon=1.35,   # Standard Huber threshold
+        alpha=0.001,    # L2 regularization
+        max_iter=500,
+    )
+    mag_head.fit(X_tr_sc, y_pct_tr)
 
+    mag_pred_train = mag_head.predict(X_tr_sc)
+    mag_pred_eval  = mag_head.predict(X_ev_sc)
+    rmse_mag_eval  = np.sqrt(mean_squared_error(y_pct_ev, mag_pred_eval))
+
+    # ════════════════════════════════════════════════════════════════════════
+    #  COMBINED OUTPUT: Direction × Magnitude
+    #  Convert direction probability to signed signal:
+    #    dir_prob > 0.5 → positive signal (bullish)
+    #    dir_prob < 0.5 → negative signal (bearish)
+    #  Multiply by magnitude for the final % change estimate
+    # ════════════════════════════════════════════════════════════════════════
+    def combine(dir_prob, mag_pred):
+        # dir_signal: 1.0 at fully bullish, -1.0 at fully bearish
+        dir_signal = (dir_prob - 0.5) * 2.0
+        # Use magnitude's absolute value with direction from logistic
+        return dir_signal * np.abs(mag_pred)
+
+    combined_train = combine(dir_prob_train, mag_pred_train)
+    combined_eval  = combine(dir_prob_eval,  mag_pred_eval)
+
+    hr_combined_train = float((np.sign(combined_train) == np.sign(y_pct_tr)).mean()) * 100
+    hr_combined_eval  = float((np.sign(combined_eval)  == np.sign(y_pct_ev)).mean()) * 100
+    rmse_combined     = np.sqrt(mean_squared_error(y_pct_ev, combined_eval))
+
+    # ── Baselines (individual models on eval period) ─────────────────────────
+    hr_lstm_only = float((np.sign(X_ev[:, 0]) == np.sign(y_pct_ev)).mean()) * 100
+    hr_xgb_only  = float((np.sign(X_ev[:, 1]) == np.sign(y_pct_ev)).mean()) * 100
+
+    # ── Print results ────────────────────────────────────────────────────────
+    feature_names = list(meta_df.columns)
     print(f"\n{'='*60}")
-    print(f" ENSEMBLE COMPARISON ({asset_key.upper()}, {HORIZON_DAYS}D horizon)")
+    print(f"  DUAL-HEAD ENSEMBLE — {asset_key.upper()} ({HORIZON_DAYS}D horizon)")
     print(f"{'='*60}")
-    print(f"  LSTM only       Hit Ratio: {hr_lstm_only:.1f}%")
-    print(f"  XGBoost only    Hit Ratio: {hr_xgb_only:.1f}%")
-    print(f"  Ridge Stacker   Hit Ratio: {hr_test:.1f}%  | RMSE: {rmse_test:.6f}")
-    print(f"  Best alpha: {ridge.alpha_}")
-
-    # Print coefficients
-    feature_names = list(meta_X.columns)
-    print(f"\n  Ridge Coefficients (model weights):")
-    for name, coef in zip(feature_names, ridge.coef_):
-        direction = "+" if coef > 0 else "-"
-        bar = '|' * min(int(abs(coef) * 200), 40)
+    print(f"  LSTM only           Hit Ratio: {hr_lstm_only:.1f}%")
+    print(f"  XGBoost only        Hit Ratio: {hr_xgb_only:.1f}%")
+    print(f"  Direction Head      Hit Ratio: {hr_dir_eval:.1f}%  (optimized for direction)")
+    print(f"  Magnitude Head      RMSE:      {rmse_mag_eval:.6f}  (optimized for magnitude)")
+    print(f"  Combined (D×M)      Hit Ratio: {hr_combined_eval:.1f}%  | RMSE: {rmse_combined:.6f}")
+    print(f"\n  Direction Head best_C: {dir_head.C_[0]:.4f}")
+    print(f"\n  Direction Head coefficients (what drives UP/DOWN call):")
+    for name, coef in zip(feature_names, dir_head.coef_[0]):
+        bar_len = min(int(abs(coef) * 10), 30)
+        bar = ('+' if coef > 0 else '-') * bar_len
         print(f"    {name:<22} {coef:+.4f}  {bar}")
 
-    # --- Save ---
+    # ── Save ─────────────────────────────────────────────────────────────────
     os.makedirs('models', exist_ok=True)
-    stacker_path = f'models/{asset_key}_ridge_stacker.pkl'
-    scaler_path  = f'models/{asset_key}_ridge_meta_scaler.pkl'
+    os.makedirs('reports', exist_ok=True)
 
-    with open(stacker_path, 'wb') as f:
-        pickle.dump(ridge, f)
-    with open(scaler_path, 'wb') as f:
-        pickle.dump(meta_scaler, f)
+    dir_path  = f'models/{asset_key}_stacker_direction.pkl'
+    mag_path  = f'models/{asset_key}_stacker_magnitude.pkl'
+    scl_path  = f'models/{asset_key}_stacker_meta_scaler.pkl'
+    meta_path = f'models/{asset_key}_stacker_meta.json'
+    rpt_path  = f'reports/stacker_{asset_key}_backtest.json'
 
-    meta_info = {
+    with open(dir_path, 'wb') as f: pickle.dump(dir_head, f)
+    with open(mag_path, 'wb') as f: pickle.dump(mag_head, f)
+    with open(scl_path, 'wb') as f: pickle.dump(meta_scaler, f)
+
+    result = {
         'asset': asset_key,
-        'feature_names': feature_names,
-        'coefficients': dict(zip(feature_names, ridge.coef_.tolist())),
-        'intercept': float(ridge.intercept_),
-        'best_alpha': float(ridge.alpha_),
         'horizon_days': HORIZON_DAYS,
+        'feature_names': feature_names,
         'hit_ratio_lstm': hr_lstm_only,
         'hit_ratio_xgb': hr_xgb_only,
-        'hit_ratio_ensemble': hr_test,
-        'rmse_test': rmse_test,
+        'hit_ratio_direction_head': hr_dir_eval,
+        'rmse_magnitude_head': rmse_mag_eval,
+        'hit_ratio_combined': hr_combined_eval,
+        'rmse_combined': rmse_combined,
+        'best_C_direction': float(dir_head.C_[0]),
+        'direction_coefs': dict(zip(feature_names, dir_head.coef_[0].tolist())),
     }
-    with open(f'models/{asset_key}_ridge_meta.json', 'w') as f:
-        json.dump(meta_info, f, indent=4)
 
-    os.makedirs('reports', exist_ok=True)
-    with open(f'reports/ridge_{asset_key}_backtest.json', 'w') as f:
-        json.dump(meta_info, f, indent=4)
+    with open(meta_path, 'w') as f: json.dump(result, f, indent=4)
+    with open(rpt_path,  'w') as f: json.dump(result, f, indent=4)
 
-    print(f"\n  Stacker saved: {stacker_path}")
-    print(f"  Meta info:     models/{asset_key}_ridge_meta.json")
-    return meta_info
+    print(f"\n  Direction model: {dir_path}")
+    print(f"  Magnitude model: {mag_path}")
+    print(f"  Meta scaler:     {scl_path}")
+    return result
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# ENTRY POINT
+# ─────────────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        train_ridge_stacker(sys.argv[1])
+        train_dual_head_stacker(sys.argv[1])
     else:
-        print("Training Ridge Stacker for Gold, BTC, and SPY...")
+        print("Training Dual-Head Stacker for Gold, BTC, and SPY...")
         for asset in ['gold', 'btc', 'spy']:
             try:
-                train_ridge_stacker(asset)
+                train_dual_head_stacker(asset)
             except Exception as e:
                 print(f"Error on {asset}: {e}")
                 import traceback; traceback.print_exc()
