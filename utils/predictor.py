@@ -799,30 +799,30 @@ class AssetPredictor:
         if lstm_pct_7d == 0.0 and xgb_pct_7d == 0.0:
             return self.recursive_forecast(steps, ceo_drift_multiplier=ceo_drift_multiplier)
 
-        # ── Blend daily drift: 60% LSTM, 40% XGBoost (modulated by CEO) ──────
-        # CEO multiplier > 1 = trust current momentum more = increase LSTM weight
-        # CEO multiplier < 1 = lean on macro anchor = increase XGBoost weight
-        dm = max(0.85, min(1.15, ceo_drift_multiplier))
-        w_lstm = 0.60 * dm
+        # ── Blend 7-day signals: 60% LSTM + 40% XGBoost (CEO-modulated) ──────
+        dm     = max(0.85, min(1.15, ceo_drift_multiplier))
+        w_lstm = min(0.80, 0.60 * dm)
         w_xgb  = 1.0 - w_lstm
+        blended_7d_pct = w_lstm * lstm_pct_7d + w_xgb * xgb_pct_7d
 
-        # 7-day total pct → daily drift (compounding)
-        daily_drift_lstm = (1.0 + lstm_pct_7d) ** (1.0 / 7.0) - 1.0
-        daily_drift_xgb  = (1.0 + xgb_pct_7d)  ** (1.0 / 7.0) - 1.0
-        blended_daily    = w_lstm * daily_drift_lstm + w_xgb * daily_drift_xgb
+        # ── √t-scaling: project blended 7D signal to any horizon ─────────────
+        # Financial rationale: under a random walk, expected cumulative drift
+        # scales with √t (same principle as volatility √t in Black-Scholes).
+        # steps=1  → scale=√(1/7)≈0.38  (1 day: small fraction of 7D signal)
+        # steps=7  → scale=1.00          (1 week: direct ensemble signal)
+        # steps=14 → scale=√(14/7)≈1.41 (2 weeks)
+        # steps=30 → scale=√(30/7)≈2.07 (1 month)
+        # steps=90 → scale=√(90/7)≈3.58 (3 months) — capped at 4x to prevent
+        #            unrealistic extrapolation beyond model reliability
+        sqrt_scale   = min(4.0, (steps / 7.0) ** 0.5)
+        horizon_pct  = blended_7d_pct * sqrt_scale
 
-        # ── Build price path with mean-reversion decay ────────────────────────
-        # Signal strength decays to ~5% at step 21 (LSTM reliable horizon)
-        # and converges to 0 drift (random walk) beyond that.
-        prices = []
-        price  = current_price
-        for i in range(steps):
-            # Decay: full weight for first 7 days, halved by day 21, minimal by day 60
-            decay = max(0.05, np.exp(-i / 20.0))
-            step_pct = blended_daily * decay
-            price = price * (1.0 + step_pct)
-            prices.append(float(price))
-
+        # ── Build smooth price path: linear interpolation to horizon target ───
+        target_price = current_price * (1.0 + horizon_pct)
+        prices = [
+            current_price + (target_price - current_price) * (i + 1) / steps
+            for i in range(steps)
+        ]
         return prices
 
     def predict_tomorrow(self):
