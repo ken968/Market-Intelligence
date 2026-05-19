@@ -393,30 +393,37 @@ class AssetPredictor:
             print(f"[Ensemble] ensemble_forecast failed, using recursive: {_e}")
 
         # -----------------------------------------------------------------------
-        # Level 1+2 — Run forecasts for all ranges with CEO multiplier injected
+        # Level 1+2 — Run forecasts for all ranges
+        # baseline  : old recursive_forecast (kept for comparison column in UI)
+        # contextual: new pct_chain_forecast (LSTM-pct + XGBoost, decayed)
+        #             For 1 Week the Dual-Head Ensemble final signal is used;
+        #             For longer horizons pct_chain naturally fades to flat.
         # -----------------------------------------------------------------------
         for label, steps in FORECAST_RANGES.items():
+            # Baseline: legacy absolute-price LSTM (shown as dashed in charts)
             baseline = self.recursive_forecast(steps, ceo_drift_multiplier=1.0)
-            contextual = self.recursive_forecast(steps,
-                                                  ceo_bias_vector=ceo_bias_vector,
-                                                  ceo_drift_multiplier=ceo_drift_multiplier)
 
-            # ── Override 1-Week series with Ensemble signal ─────────────────────
-            # Only when stacker produced a valid dual-head result (not fallback)
-            # Interpolate a smooth 7-step price path from current to ensemble target
+            # ── Primary contextual path: pct_chain (LSTM-pct × XGBoost) ─────
+            contextual = self.pct_chain_forecast(
+                steps, ceo_drift_multiplier=ceo_drift_multiplier
+            )
+
+            # ── For 1 Week: override endpoint with Dual-Head Stacker signal ──
+            # pct_chain gives the SHAPE of the path; ensemble corrects the target
             if (label == '1 Week'
                     and ensemble_result.get('model') == 'dual_head_ensemble'
                     and ensemble_result.get('pct_change_7d') is not None):
                 try:
                     pct_7d    = ensemble_result['pct_change_7d']
                     ens_price = current_price * (1.0 + pct_7d)
-                    # Smooth linear interpolation: avoids abrupt jump on chart
+                    # Smooth linear interpolation to ensemble target
                     contextual = [
                         current_price + (ens_price - current_price) * (i + 1) / steps
                         for i in range(steps)
                     ]
                 except Exception:
-                    pass  # keep recursive_forecast contextual if anything fails
+                    pass  # keep pct_chain contextual if anything fails
+
             
             # --- Counterfactual logging (CEO vs Baseline accuracy tracking) ---
             if label == '1 Week' and LLM_AVAILABLE and headlines and not ceo_context.get('is_fallback', True):
@@ -715,6 +722,108 @@ class AssetPredictor:
             'model':           'dual_head_ensemble',
         }
 
+
+    def pct_chain_forecast(self, steps: int, ceo_drift_multiplier: float = 1.0) -> list:
+        """
+        Build a realistic multi-step price path by compounding DAILY % change
+        predictions from the LSTM-pct model and XGBoost macro model.
+
+        Strategy per step i (0-indexed):
+          1. LSTM-pct gives a 7-day forward pct for the CURRENT window.
+             We treat 1/7 of that as the expected daily drift.
+          2. XGBoost gives a 7-day macro pct. Same 1/7 daily treatment.
+          3. Blend: 60% LSTM (momentum) + 40% XGBoost (macro), modulated by
+             CEO drift_multiplier.
+          4. Apply mean-reversion decay so signals fade to ~0 drift beyond
+             the model's reliable horizon (~21 days). This prevents runaway.
+          5. CEO multiplier shifts the blend toward momentum (>1) or
+             macro anchor (<1).
+
+        Falls back to recursive_forecast if LSTM-pct model files are missing.
+
+        Returns:
+            list[float]: Predicted price at each future step (same length as `steps`).
+        """
+        current_price = self.get_latest_price()
+
+        # ── Try loading LSTM pct-change model ───────────────────────────────
+        feat_scaler_path   = self.config.get('scaler_file', '')
+        target_scaler_path = feat_scaler_path.replace('.pkl', '_target.pkl') if feat_scaler_path else ''
+        model_path         = self.config.get('model_file', '')
+
+        lstm_pct_7d = 0.0
+        if (TF_AVAILABLE and feat_scaler_path and target_scaler_path
+                and all(os.path.exists(p) for p in [model_path, feat_scaler_path, target_scaler_path])):
+            try:
+                lstm_model = load_model(model_path)
+                with open(feat_scaler_path, 'rb') as f:
+                    feat_sc = pickle.load(f)
+                with open(target_scaler_path, 'rb') as f:
+                    tgt_sc = pickle.load(f)
+
+                if self.data is None:
+                    self.load_data()
+
+                seq_len  = self.config.get('sequence_length', 60)
+                n_feats  = feat_sc.n_features_in_ if hasattr(feat_sc, 'n_features_in_') else self.data.shape[1]
+                window   = self.data[-seq_len:, :n_feats]
+                if window.shape[0] == seq_len:
+                    w_sc = feat_sc.transform(window)
+                    p_sc = lstm_model.predict(w_sc.reshape(1, seq_len, -1), verbose=0)[0, 0]
+                    lstm_pct_7d = float(tgt_sc.inverse_transform([[p_sc]])[0, 0])
+            except Exception as e:
+                print(f"[PctChain] LSTM-pct load/infer error: {e}")
+                lstm_pct_7d = 0.0
+
+        # ── Try loading XGBoost macro signal ─────────────────────────────────
+        xgb_pct_7d = 0.0
+        try:
+            import xgboost as xgb_lib
+            xgb_model_path  = f'models/{self.asset_key}_xgb_macro.json'
+            xgb_scaler_path = f'models/{self.asset_key}_xgb_scaler.pkl'
+            xgb_feat_path   = f'models/{self.asset_key}_xgb_features.json'
+            if all(os.path.exists(p) for p in [xgb_model_path, xgb_scaler_path, xgb_feat_path]):
+                xgb_m = xgb_lib.XGBRegressor()
+                xgb_m.load_model(xgb_model_path)
+                with open(xgb_scaler_path, 'rb') as f:
+                    xgb_sc = pickle.load(f)
+                with open(xgb_feat_path, 'r') as f:
+                    xgb_meta = json.load(f)
+                df_last = pd.read_csv(self.config['data_file'], index_col=0, parse_dates=True).sort_index()
+                xgb_feats = [ft for ft in xgb_meta['features'] if ft in df_last.columns]
+                xgb_pct_7d = float(xgb_m.predict(xgb_sc.transform(df_last[xgb_feats].fillna(0).iloc[[-1]].values))[0])
+        except Exception:
+            xgb_pct_7d = 0.0
+
+        # ── If both signals are zero, fall back to recursive_forecast ─────────
+        if lstm_pct_7d == 0.0 and xgb_pct_7d == 0.0:
+            return self.recursive_forecast(steps, ceo_drift_multiplier=ceo_drift_multiplier)
+
+        # ── Blend daily drift: 60% LSTM, 40% XGBoost (modulated by CEO) ──────
+        # CEO multiplier > 1 = trust current momentum more = increase LSTM weight
+        # CEO multiplier < 1 = lean on macro anchor = increase XGBoost weight
+        dm = max(0.85, min(1.15, ceo_drift_multiplier))
+        w_lstm = 0.60 * dm
+        w_xgb  = 1.0 - w_lstm
+
+        # 7-day total pct → daily drift (compounding)
+        daily_drift_lstm = (1.0 + lstm_pct_7d) ** (1.0 / 7.0) - 1.0
+        daily_drift_xgb  = (1.0 + xgb_pct_7d)  ** (1.0 / 7.0) - 1.0
+        blended_daily    = w_lstm * daily_drift_lstm + w_xgb * daily_drift_xgb
+
+        # ── Build price path with mean-reversion decay ────────────────────────
+        # Signal strength decays to ~5% at step 21 (LSTM reliable horizon)
+        # and converges to 0 drift (random walk) beyond that.
+        prices = []
+        price  = current_price
+        for i in range(steps):
+            # Decay: full weight for first 7 days, halved by day 21, minimal by day 60
+            decay = max(0.05, np.exp(-i / 20.0))
+            step_pct = blended_daily * decay
+            price = price * (1.0 + step_pct)
+            prices.append(float(price))
+
+        return prices
 
     def predict_tomorrow(self):
         """
