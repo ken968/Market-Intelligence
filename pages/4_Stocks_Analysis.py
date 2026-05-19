@@ -1,4 +1,4 @@
-﻿"""
+"""
 US Stocks Analysis Page
 Multi-stock tracking for indices, Mag7, and semiconductors
 """
@@ -11,7 +11,8 @@ from utils.config import ASSETS, STOCK_TICKERS, get_all_stock_tickers
 from utils.ui_components import (
     inject_custom_css, render_page_header, render_metric_card,
     render_news_section, create_price_chart,
-    show_loading_message, show_error_message, render_prediction_table
+    show_loading_message, show_error_message, render_prediction_table,
+    render_alpha_engine_panel
 )
 from utils.predictor import AssetPredictor, batch_predict_tomorrow, batch_multi_range_forecast
 
@@ -531,8 +532,11 @@ else:
                         st.success(" Correlation enforcement applied - forecast aligned with SPY")
                 
                 render_prediction_table(forecasts, forecast_stock)
-                
-                # NEW: Add automated analysis for individual forecast
+
+                # Alpha Engine signal panel
+                render_alpha_engine_panel(forecasts, forecast_stock)
+
+                # Automated analysis for individual forecast
                 from utils.forecast_analyzer import ForecastAnalyzer
                 
                 analyzer = ForecastAnalyzer()

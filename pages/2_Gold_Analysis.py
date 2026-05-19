@@ -1,4 +1,4 @@
-﻿"""
+"""
 Gold (XAUUSD) Analysis Page
 Complete technical and fundamental analysis for precious metal
 """
@@ -10,7 +10,8 @@ from utils.config import ASSETS
 from utils.ui_components import (
     inject_custom_css, render_page_header, render_metric_card,
     render_news_section, create_price_chart, create_forecast_chart,
-    show_loading_message, show_error_message, render_prediction_table
+    show_loading_message, show_error_message, render_prediction_table,
+    render_alpha_engine_panel
 )
 from utils.predictor import AssetPredictor
 
@@ -245,8 +246,10 @@ else:
                     # Display table
                     st.markdown("####  Forecast Results")
                     render_prediction_table(forecasts, "Gold")
-                    
-                    # NEW: Add automated forecast analysis
+
+                    # Alpha Engine signal panel (only renders if ensemble models exist)
+                    render_alpha_engine_panel(forecasts, "Gold")
+
                     from utils.forecast_analyzer import ForecastAnalyzer
                     
                     analyzer = ForecastAnalyzer()

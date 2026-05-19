@@ -381,6 +381,18 @@ class AssetPredictor:
         results['ceo_context'] = ceo_context
 
         # -----------------------------------------------------------------------
+        # Ensemble Alpha Engine — called ONCE before the loop (expensive)
+        # Produces a 7-day directional signal from Dual-Head Stacker
+        # (Direction head: LogisticRegressionCV | Magnitude head: HuberRegressor)
+        # Cached here so '1 Week' range can use it without extra I/O
+        # -----------------------------------------------------------------------
+        try:
+            ensemble_result = self.ensemble_forecast()
+        except Exception as _e:
+            ensemble_result = {}
+            print(f"[Ensemble] ensemble_forecast failed, using recursive: {_e}")
+
+        # -----------------------------------------------------------------------
         # Level 1+2 — Run forecasts for all ranges with CEO multiplier injected
         # -----------------------------------------------------------------------
         for label, steps in FORECAST_RANGES.items():
@@ -388,6 +400,23 @@ class AssetPredictor:
             contextual = self.recursive_forecast(steps,
                                                   ceo_bias_vector=ceo_bias_vector,
                                                   ceo_drift_multiplier=ceo_drift_multiplier)
+
+            # ── Override 1-Week series with Ensemble signal ─────────────────────
+            # Only when stacker produced a valid dual-head result (not fallback)
+            # Interpolate a smooth 7-step price path from current to ensemble target
+            if (label == '1 Week'
+                    and ensemble_result.get('model') == 'dual_head_ensemble'
+                    and ensemble_result.get('pct_change_7d') is not None):
+                try:
+                    pct_7d    = ensemble_result['pct_change_7d']
+                    ens_price = current_price * (1.0 + pct_7d)
+                    # Smooth linear interpolation: avoids abrupt jump on chart
+                    contextual = [
+                        current_price + (ens_price - current_price) * (i + 1) / steps
+                        for i in range(steps)
+                    ]
+                except Exception:
+                    pass  # keep recursive_forecast contextual if anything fails
             
             # --- Counterfactual logging (CEO vs Baseline accuracy tracking) ---
             if label == '1 Week' and LLM_AVAILABLE and headlines and not ceo_context.get('is_fallback', True):
@@ -476,7 +505,7 @@ class AssetPredictor:
                 fan_p10 = np.percentile(paths, 10, axis=0).tolist()
                 fan_p90 = np.percentile(paths, 90, axis=0).tolist()
 
-            results[label] = {
+            result_entry = {
                 'price':            contextual[-1] if contextual else current_price,
                 'baseline_price':   baseline[-1]   if baseline   else current_price,
                 'confidence':       confidence,
@@ -485,6 +514,20 @@ class AssetPredictor:
                 'fan_p10':          fan_p10,
                 'fan_p90':          fan_p90,
             }
+
+            # ── Attach Alpha Engine metadata for 1-Week only ─────────────────
+            # Streamlit pages read 'ensemble_meta' key to render the signal panel
+            if label == '1 Week' and ensemble_result:
+                result_entry['ensemble_meta'] = {
+                    'pct_change_7d':  ensemble_result.get('pct_change_7d', 0.0),
+                    'direction':      ensemble_result.get('direction', 'flat'),
+                    'direction_prob': ensemble_result.get('direction_prob', 0.5),
+                    'lstm_signal':    ensemble_result.get('lstm_signal', 0.0),
+                    'xgb_signal':     ensemble_result.get('xgb_signal', 0.0),
+                    'model':          ensemble_result.get('model', 'fallback'),
+                }
+
+            results[label] = result_entry
 
         # Final type safety guard
         if not isinstance(results, dict):

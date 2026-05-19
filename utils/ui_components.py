@@ -524,3 +524,101 @@ def render_page_header(icon, title, subtitle):
             </div>
         </div>
         """, unsafe_allow_html=True)
+
+
+def render_alpha_engine_panel(forecasts: dict, asset_name: str = "Asset") -> None:
+    """
+    Render the Alpha Engine signal panel using ensemble_meta from get_multi_range_forecast.
+
+    Reads forecasts['1 Week']['ensemble_meta'] and displays:
+      - LSTM signal (momentum / micro direction)
+      - XGBoost signal (macro regime direction)
+      - Final ensemble decision (direction + confidence)
+      - Model architecture label
+
+    Args:
+        forecasts   : Result dict from predictor.get_multi_range_forecast()
+        asset_name  : Display name (e.g. "Gold", "Bitcoin", "SPY")
+
+    Returns nothing if ensemble_meta is missing (backward compatible).
+    """
+    week_data = forecasts.get('1 Week', {})
+    if not isinstance(week_data, dict):
+        return
+
+    meta = week_data.get('ensemble_meta')
+    if not meta:
+        return   # Old model without stacker — skip silently
+
+    pct_7d    = meta.get('pct_change_7d', 0.0) * 100   # convert to percent
+    direction = meta.get('direction', 'flat')
+    dir_prob  = meta.get('direction_prob', 0.5) * 100   # percent
+    lstm_sig  = meta.get('lstm_signal', 0.0) * 100
+    xgb_sig   = meta.get('xgb_signal', 0.0) * 100
+    model_lbl = meta.get('model', 'unknown')
+
+    # Colors
+    dir_color   = THEME.get('success', '#00FF88') if direction == 'up' else THEME.get('danger', '#FF4C4C')
+    dir_icon    = "▲" if direction == 'up' else "▼"
+    lstm_color  = THEME.get('success', '#00FF88') if lstm_sig >= 0 else THEME.get('danger', '#FF4C4C')
+    xgb_color   = THEME.get('success', '#00FF88') if xgb_sig  >= 0 else THEME.get('danger', '#FF4C4C')
+
+    st.markdown("---")
+    st.markdown(
+        f"<h4 style='margin-bottom:0.3rem;'>Alpha Engine &nbsp;"
+        f"<span style='font-size:0.75rem;font-weight:400;color:{THEME.get('text_secondary','#888')};'>"
+        f"Dual-Head Ensemble (LSTM + XGBoost)</span></h4>",
+        unsafe_allow_html=True,
+    )
+
+    col_lstm, col_xgb, col_final = st.columns(3)
+
+    with col_lstm:
+        st.markdown(
+            f"""<div style='background:{THEME.get("bg_surface","#1a1a2e")};border:1px solid {THEME.get("border","#333")};
+                border-radius:8px;padding:14px;text-align:center;'>
+                <div style='font-size:0.75rem;color:{THEME.get("text_secondary","#888")};margin-bottom:4px;'>
+                LSTM Signal</div>
+                <div style='font-size:0.8rem;color:{THEME.get("text_secondary","#888")};margin-bottom:6px;'>
+                Momentum / Micro</div>
+                <div style='font-size:1.5rem;font-weight:700;color:{lstm_color};'>
+                {lstm_sig:+.2f}%</div>
+            </div>""",
+            unsafe_allow_html=True,
+        )
+
+    with col_xgb:
+        st.markdown(
+            f"""<div style='background:{THEME.get("bg_surface","#1a1a2e")};border:1px solid {THEME.get("border","#333")};
+                border-radius:8px;padding:14px;text-align:center;'>
+                <div style='font-size:0.75rem;color:{THEME.get("text_secondary","#888")};margin-bottom:4px;'>
+                XGBoost Signal</div>
+                <div style='font-size:0.8rem;color:{THEME.get("text_secondary","#888")};margin-bottom:6px;'>
+                Macro / Regime</div>
+                <div style='font-size:1.5rem;font-weight:700;color:{xgb_color};'>
+                {xgb_sig:+.2f}%</div>
+            </div>""",
+            unsafe_allow_html=True,
+        )
+
+    with col_final:
+        st.markdown(
+            f"""<div style='background:{THEME.get("bg_surface","#1a1a2e")};border:2px solid {dir_color};
+                border-radius:8px;padding:14px;text-align:center;'>
+                <div style='font-size:0.75rem;color:{THEME.get("text_secondary","#888")};margin-bottom:4px;'>
+                Ensemble Decision</div>
+                <div style='font-size:0.8rem;color:{THEME.get("text_secondary","#888")};margin-bottom:6px;'>
+                7-Day Outlook</div>
+                <div style='font-size:1.6rem;font-weight:700;color:{dir_color};'>
+                {dir_icon} {pct_7d:+.2f}%</div>
+                <div style='font-size:0.75rem;color:{THEME.get("text_secondary","#888")};margin-top:4px;'>
+                Confidence {dir_prob:.0f}%</div>
+            </div>""",
+            unsafe_allow_html=True,
+        )
+
+    st.caption(
+        f"Model: `{model_lbl}` &nbsp;|&nbsp; "
+        f"Direction Head: LogisticRegressionCV &nbsp;|&nbsp; "
+        f"Magnitude Head: HuberRegressor (outlier-robust)"
+    )
