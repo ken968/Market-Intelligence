@@ -58,7 +58,7 @@ MACRO_FEATURES = [
     'Yield_10Y_Rate', 'Breakeven_5Y5Y',
     'M2_Liquidity_Spike', 'MacroEvent_Flag',
 
-    # Lagged features (monetary policy transmission lag)
+    # Lagged features — note: add_lagged_macro_features generates these names
     'CPI_MoM_lag3', 'CPI_MoM_lag6', 'NFP_Change_lag3',
 
     # Sentiment
@@ -68,11 +68,50 @@ MACRO_FEATURES = [
     'GK_Vol_21d',
 ]
 
+# Asset-specific hyperparameter profiles.
+# Gold and SPY have ~2800 samples and noisier macro-to-price relationship.
+# BTC is more macro-sensitive and has more data, so tighter regularization is fine.
+ASSET_PARAMS = {
+    'gold': {
+        'n_estimators': 300,
+        'max_depth': 5,          # Deeper trees allowed — more expressiveness
+        'learning_rate': 0.05,
+        'subsample': 0.85,
+        'colsample_bytree': 0.85,
+        'reg_alpha': 0.05,       # Lighter L1
+        'reg_lambda': 0.5,       # Lighter L2
+        'min_child_weight': 3,   # Allow splits with fewer samples
+        'gamma': 0.01,           # Very small gain threshold
+    },
+    'btc': {
+        'n_estimators': 500,
+        'max_depth': 4,
+        'learning_rate': 0.03,
+        'subsample': 0.8,
+        'colsample_bytree': 0.8,
+        'reg_alpha': 0.1,
+        'reg_lambda': 1.0,
+        'min_child_weight': 5,
+        'gamma': 0.1,
+    },
+    'default': {  # For stocks (SPY, QQQ, etc.)
+        'n_estimators': 300,
+        'max_depth': 5,
+        'learning_rate': 0.05,
+        'subsample': 0.85,
+        'colsample_bytree': 0.85,
+        'reg_alpha': 0.05,
+        'reg_lambda': 0.5,
+        'min_child_weight': 3,
+        'gamma': 0.01,
+    },
+}
+
 # Target horizon: 7-day forward % change
 HORIZON_DAYS = 7
 
-
 def load_and_prepare(asset_key: str):
+
     """
     Load CSV, compute target (7-day forward % change), select macro features.
 
@@ -147,32 +186,13 @@ def train_xgboost_macro(asset_key: str):
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled  = scaler.transform(X_test)
 
-    # ─────────────────────────────────────────────────────────────────────
-    # XGBoost Hyperparameters
-    # These are NOT arbitrary — each has a specific purpose:
-    #   n_estimators=500     : 500 sequential trees (more = better generalization)
-    #   max_depth=4          : Shallow trees (deep trees overfit noisy financial data)
-    #   learning_rate=0.03   : Very slow learning (ensemble of weak learners)
-    #   subsample=0.8        : Row sampling — each tree sees 80% of data
-    #   colsample_bytree=0.8 : Feature sampling — each tree sees 80% of features
-    #   reg_alpha=0.1        : L1 regularization (sparse features → small weights to 0)
-    #   reg_lambda=1.0       : L2 regularization (prevents large weights)
-    #   min_child_weight=5   : Min samples in leaf (prevents overfitting on outliers)
-    #   gamma=0.1            : Min gain to split (acts as tree pruning)
-    # ─────────────────────────────────────────────────────────────────────
+    # Asset-adaptive hyperparameters (see ASSET_PARAMS at top of file)
+    params = ASSET_PARAMS.get(asset_key, ASSET_PARAMS['default'])
     model = xgb.XGBRegressor(
-        n_estimators=500,
-        max_depth=4,
-        learning_rate=0.03,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        reg_alpha=0.1,
-        reg_lambda=1.0,
-        min_child_weight=5,
-        gamma=0.1,
-        objective='reg:squarederror',  # Minimize MSE (standard for regression)
+        **params,
+        objective='reg:squarederror',
         eval_metric='rmse',
-        early_stopping_rounds=50,      # Stop if no improvement after 50 rounds
+        early_stopping_rounds=40,
         random_state=42,
         verbosity=0
     )
