@@ -52,7 +52,6 @@ from sklearn.metrics import mean_squared_error
 
 import xgboost as xgb
 from utils.config import ASSETS
-from utils.predictor import AssetPredictor
 
 HORIZON_DAYS = 7
 
@@ -64,30 +63,55 @@ HORIZON_DAYS = 7
 def get_lstm_pct_change_predictions(asset_key: str, df_test: pd.DataFrame,
                                      price_col: str) -> np.ndarray:
     """
-    Load the trained LSTM model and generate 7-day % change predictions
-    for each row in df_test.
+    Load the trained LSTM (pct-change) model and generate 7-day % change predictions.
 
-    Strategy: Predict price for t+7 using the last (sequence_length) days,
-    then compute (predicted - actual_today) / actual_today.
+    Requires models trained by train_lstm_pct.py, which saves:
+        - config['scaler_file']                     <- feature scaler (MinMaxScaler)
+        - config['scaler_file'].replace('.pkl','_target.pkl') <- target scaler (StandardScaler)
+
+    Steps:
+        1. Load feature_scaler and target_scaler
+        2. For each test row, build input sequence of last seq_len days
+        3. Predict scaled % change
+        4. Inverse transform with target_scaler → actual % change
     """
-    predictor = AssetPredictor(asset_key)
-    if not predictor.load_model():
-        print(f"  Warning: LSTM model for {asset_key} could not be loaded. Using zeros.")
-        return np.zeros(len(df_test))
-
     config = ASSETS[asset_key]
     seq_len = config.get('sequence_length', 60)
+
+    feat_scaler_path   = config['scaler_file']
+    target_scaler_path = config['scaler_file'].replace('.pkl', '_target.pkl')
+    model_path         = config['model_file']
+
+    # Check if pct-change model exists
+    if not all(os.path.exists(p) for p in [model_path, feat_scaler_path, target_scaler_path]):
+        missing = [p for p in [model_path, feat_scaler_path, target_scaler_path]
+                   if not os.path.exists(p)]
+        print(f"  Info: LSTM pct-change files missing: {missing}")
+        print(f"  Run: python scripts/train_lstm_pct.py {asset_key}")
+        print(f"  Falling back to zeros for LSTM component.")
+        return np.zeros(len(df_test))
+
+    try:
+        from tensorflow.keras.models import load_model as keras_load
+        lstm_model = keras_load(model_path)
+        with open(feat_scaler_path, 'rb') as f:
+            feature_scaler = pickle.load(f)
+        with open(target_scaler_path, 'rb') as f:
+            target_scaler = pickle.load(f)
+    except Exception as e:
+        print(f"  Warning: Could not load LSTM model: {e}")
+        return np.zeros(len(df_test))
+
     features = [f for f in config['features'] if f in df_test.columns]
 
-    # We need the full dataframe (train + test) for lookback sequences
+    # Load full data for lookback sequences (need data BEFORE the test period)
     full_data_file = config['data_file']
     df_full = pd.read_csv(full_data_file, index_col=0, parse_dates=True).sort_index()
     df_full = df_full[[f for f in features if f in df_full.columns]].ffill().fillna(0)
 
     predictions = []
-    test_indices = df_test.index
 
-    for i, date in enumerate(test_indices):
+    for date in df_test.index:
         try:
             pos = df_full.index.get_loc(date)
         except KeyError:
@@ -98,31 +122,26 @@ def get_lstm_pct_change_predictions(asset_key: str, df_test: pd.DataFrame,
             predictions.append(0.0)
             continue
 
-        # Build input sequence: last seq_len rows before this date
-        window = df_full.iloc[pos - seq_len: pos]
-        if len(window) < seq_len:
+        # Input: last seq_len rows of features, scaled
+        window = df_full.iloc[pos - seq_len: pos].values  # (seq_len, n_features)
+        if window.shape[0] < seq_len:
             predictions.append(0.0)
             continue
 
-        # Use predictor's scaler to normalize
         try:
-            data_scaled = predictor.scaler.transform(window.values)
-            X = data_scaled.reshape(1, seq_len, -1)
-            pred_scaled = predictor.model.predict(X, verbose=0)[0, 0]
+            window_scaled = feature_scaler.transform(window)
+            X = window_scaled.reshape(1, seq_len, -1)
+            pred_scaled = lstm_model.predict(X, verbose=0)[0, 0]
 
-            # Inverse transform: predict_scaled → price
-            inv = np.zeros((1, len(features)))
-            inv[0, 0] = pred_scaled
-            pred_price = predictor.scaler.inverse_transform(inv)[0, 0]
-
-            current_price = float(df_full.iloc[pos][price_col])
-            pct_change = (pred_price - current_price) / current_price if current_price != 0 else 0.0
-            predictions.append(pct_change)
+            # Inverse transform: scaled % change → actual % change
+            pct_pred = target_scaler.inverse_transform([[pred_scaled]])[0, 0]
+            predictions.append(float(pct_pred))
 
         except Exception:
             predictions.append(0.0)
 
     return np.array(predictions)
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
