@@ -202,11 +202,19 @@ def get_dynamic_confidence(asset_key: str, timeframe: str) -> dict:
         timeframe, {'score': 0.50, 'label': 'Unknown', 'color': 'info'}
     ).copy()
 
-    # Try loading backtest JSON for this specific asset first
-    json_path = f'reports/backtest_{asset_key}.json'
+    # 1. Try loading Dual-Head Stacker JSON first (Ensemble)
+    json_path = f'reports/stacker_{asset_key}_backtest.json'
+    is_stacker = True
+    
     if not _os.path.exists(json_path):
-        # Try asset_type grouping (e.g. 'stocks' covers all tickers)
+        # 2. Try legacy LSTM backtest JSON for this specific asset
+        json_path = f'reports/backtest_{asset_key}.json'
+        is_stacker = False
+        
+    if not _os.path.exists(json_path):
+        # 3. Try legacy asset_type grouping (e.g. 'stocks')
         json_path = f'reports/backtest_{asset_type}.json'
+        is_stacker = False
 
     if not _os.path.exists(json_path):
         return fallback
@@ -215,7 +223,11 @@ def get_dynamic_confidence(asset_key: str, timeframe: str) -> dict:
         with open(json_path, 'r') as fh:
             data = _json.load(fh)
 
-        raw_hit_ratio = data.get('hit_ratio_3layer', None)
+        if is_stacker:
+            raw_hit_ratio = data.get('hit_ratio_combined', None)
+        else:
+            raw_hit_ratio = data.get('hit_ratio_3layer', None)
+            
         if raw_hit_ratio is None:
             return fallback
 
