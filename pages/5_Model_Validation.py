@@ -1,6 +1,6 @@
 """
 Model Validation & Backtest Scorecard
-Walk-forward backtesting results for 3-Level AI Architecture vs Pure LSTM baseline.
+Dual-Head Ensemble Intelligence vs Legacy 3-Level Architecture.
 """
 
 import streamlit as st
@@ -10,9 +10,7 @@ import os
 import sys
 import glob
 import plotly.graph_objects as go
-import plotly.express as px
 from PIL import Image
-from datetime import datetime
 
 from utils.ui_components import inject_custom_css, render_page_header
 from utils.config import ASSETS
@@ -27,18 +25,31 @@ inject_custom_css()
 render_page_header(
     icon="",
     title="Model Validation & Backtest Scorecard",
-    subtitle="Walk-forward out-of-sample validation: 3-Level AI Architecture vs Pure LSTM Baseline"
+    subtitle="Dual-Head Ensemble (LSTM-pct + XGBoost + Stacker) vs Legacy 3-Level Architecture"
 )
 
 # ============================================================
-# HELPER
+# HELPERS
 # ============================================================
 
-def load_all_backtest_results():
-    """Load all backtest JSON files from reports directory."""
+def load_stacker_results():
+    """Load Dual-Head Stacker backtest results from reports/stacker_*_backtest.json."""
     results = {}
-    json_files = glob.glob("reports/backtest_*.json")
-    for f in json_files:
+    for f in glob.glob("reports/stacker_*_backtest.json"):
+        try:
+            with open(f) as fp:
+                data = json.load(fp)
+            asset = data.get("asset", os.path.basename(f).replace("stacker_", "").replace("_backtest.json", ""))
+            results[asset] = data
+        except Exception:
+            continue
+    return results
+
+
+def load_all_backtest_results():
+    """Load legacy 3-Level backtest JSON files."""
+    results = {}
+    for f in glob.glob("reports/backtest_*.json"):
         try:
             with open(f) as fp:
                 data = json.load(fp)
@@ -48,236 +59,214 @@ def load_all_backtest_results():
             continue
     return results
 
+
 def get_grade(hit_ratio):
-    """Convert hit ratio to letter grade."""
-    if hit_ratio >= 60: return "A", "#00C49A"
-    if hit_ratio >= 55: return "B+", "#7EB8A4"
-    if hit_ratio >= 50: return "B", "#F0B429"
-    if hit_ratio >= 45: return "C+", "#FF8C00"
+    if hit_ratio >= 63: return "A",  "#00C49A"
+    if hit_ratio >= 58: return "B+", "#7EB8A4"
+    if hit_ratio >= 53: return "B",  "#F0B429"
+    if hit_ratio >= 48: return "C+", "#FF8C00"
     return "C", "#FF4444"
 
+
 def rmse_improvement(rmse_lstm, rmse_3lvl):
-    """Return % improvement of 3-level vs LSTM."""
-    if rmse_lstm == 0:
-        return 0
-    return ((rmse_lstm - rmse_3lvl) / rmse_lstm) * 100
+    return ((rmse_lstm - rmse_3lvl) / rmse_lstm * 100) if rmse_lstm else 0
+
+
+stacker_results = load_stacker_results()
+legacy_results  = load_all_backtest_results()
 
 # ============================================================
-# LOAD DATA
+# METHODOLOGY
 # ============================================================
 
-results = load_all_backtest_results()
+with st.expander("Architecture Overview (click to expand)", expanded=False):
+    st.markdown("""
+    ### Dual-Head Ensemble Intelligence
+    The current production system combines three models in a meta-learning stack:
 
-if not results:
+    | Layer | Model | Target | Metric |
+    |---|---|---|---|
+    | **Base 1** | LSTM (pct-change) | 7-day forward % | Momentum/Micro |
+    | **Base 2** | XGBoost (macro) | 7-day forward % | Macro/Regime |
+    | **Meta Head 1** | LogisticRegressionCV | Direction (UP/DOWN) | Hit Ratio |
+    | **Meta Head 2** | HuberRegressor | Magnitude (% size) | RMSE |
+
+    **Walk-Forward Validation:** 80% train / 20% unseen test, stacker trained on 70% of test,
+    evaluated on final 30% — triple hold-out. No data leakage.
+
+    > Past validation accuracy does not guarantee future performance.
+    """)
+
+st.markdown("---")
+
+# ============================================================
+# SECTION 1: DUAL-HEAD ENSEMBLE SCORECARD
+# ============================================================
+
+st.markdown("## Dual-Head Ensemble Scorecard")
+st.caption("Evaluated on completely unseen data (20% hold-out). Stacker meta-evaluation on final 30% of test period.")
+
+if stacker_results:
+    # --- Summary table ---
+    rows = []
+    for asset, r in sorted(stacker_results.items()):
+        grade_ens, _ = get_grade(r.get("hit_ratio_combined", 0))
+        rows.append({
+            "Asset":                 asset.upper(),
+            "LSTM Hit Ratio":        f"{r.get('hit_ratio_lstm', 0):.1f}%",
+            "XGBoost Hit Ratio":     f"{r.get('hit_ratio_xgb', 0):.1f}%",
+            "Direction Head HR":     f"{r.get('hit_ratio_direction_head', 0):.1f}%",
+            "Magnitude Head RMSE":   f"{r.get('rmse_magnitude_head', 0):.5f}",
+            "Ensemble Hit Ratio":    f"{r.get('hit_ratio_combined', 0):.1f}%",
+            "Ensemble RMSE":         f"{r.get('rmse_combined', 0):.5f}",
+            "Grade":                 grade_ens,
+        })
+    st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+
+    # --- Metric cards ---
+    st.markdown("---")
+    assets_s = sorted(stacker_results.keys())
+    cols_card = st.columns(len(assets_s))
+    for i, asset in enumerate(assets_s):
+        r = stacker_results[asset]
+        hr = r.get("hit_ratio_combined", 0)
+        grade, color = get_grade(hr)
+        with cols_card[i]:
+            st.markdown(f"""
+            <div style="background:#1a1d2e; border:1px solid {color}; border-radius:12px;
+                        padding:20px; text-align:center; margin-bottom:8px;">
+                <div style="font-size:13px; color:#aaa; margin-bottom:4px;">{asset.upper()} — Ensemble</div>
+                <div style="font-size:36px; font-weight:700; color:{color};">{hr:.1f}%</div>
+                <div style="font-size:18px; color:{color}; margin-top:4px;">Grade: {grade}</div>
+                <div style="font-size:11px; color:#666; margin-top:8px;">
+                  Dir. Head: {r.get('hit_ratio_direction_head',0):.1f}%&nbsp;|&nbsp;
+                  XGB: {r.get('hit_ratio_xgb',0):.1f}%
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    # --- Head-to-head bar chart ---
+    st.markdown("---")
+    st.markdown("### Head-to-Head: LSTM vs XGBoost vs Ensemble (Hit Ratio %)")
+    st.caption("Directional accuracy of each model on the unseen evaluation set.")
+
+    fig_h2h = go.Figure()
+    fig_h2h.add_trace(go.Bar(
+        name="LSTM (Momentum)",
+        x=[a.upper() for a in assets_s],
+        y=[stacker_results[a].get("hit_ratio_lstm", 0) for a in assets_s],
+        marker_color="#4A90D9",
+        text=[f"{stacker_results[a].get('hit_ratio_lstm', 0):.1f}%" for a in assets_s],
+        textposition="outside",
+    ))
+    fig_h2h.add_trace(go.Bar(
+        name="XGBoost (Macro)",
+        x=[a.upper() for a in assets_s],
+        y=[stacker_results[a].get("hit_ratio_xgb", 0) for a in assets_s],
+        marker_color="#F0B429",
+        text=[f"{stacker_results[a].get('hit_ratio_xgb', 0):.1f}%" for a in assets_s],
+        textposition="outside",
+    ))
+    fig_h2h.add_trace(go.Bar(
+        name="Ensemble (Dual-Head)",
+        x=[a.upper() for a in assets_s],
+        y=[stacker_results[a].get("hit_ratio_combined", 0) for a in assets_s],
+        marker_color="#00C49A",
+        text=[f"{stacker_results[a].get('hit_ratio_combined', 0):.1f}%" for a in assets_s],
+        textposition="outside",
+    ))
+    fig_h2h.add_hline(y=50, line_dash="dash", line_color="rgba(255,255,255,0.3)",
+                      annotation_text="Random (50%)", annotation_position="right")
+    fig_h2h.add_hline(y=55, line_dash="dot", line_color="rgba(0,196,154,0.4)",
+                      annotation_text="Target (55%)", annotation_position="right")
+    fig_h2h.update_layout(
+        template="plotly_dark",
+        barmode="group",
+        height=420,
+        yaxis_title="Hit Ratio (%)",
+        yaxis=dict(ticksuffix="%", range=[35, 80]),
+        legend=dict(orientation="h", y=1.12),
+        margin=dict(l=40, r=60, t=30, b=40),
+    )
+    st.plotly_chart(fig_h2h, use_container_width=True)
+
+    # --- Direction Head coefficients ---
+    st.markdown("---")
+    st.markdown("### Direction Head Feature Importance")
+    st.caption("LogisticRegressionCV coefficients — positive = bullish signal, negative = bearish signal.")
+
+    sel_asset = st.selectbox("Select asset", [a.upper() for a in assets_s], key="coef_asset")
+    r_sel = stacker_results[sel_asset.lower()]
+    coefs = r_sel.get("direction_coefs", {})
+
+    if coefs:
+        df_coef = pd.DataFrame({
+            "Feature":     list(coefs.keys()),
+            "Coefficient": list(coefs.values()),
+        }).sort_values("Coefficient", key=abs, ascending=True)
+
+        fig_coef = go.Figure(go.Bar(
+            x=df_coef["Coefficient"],
+            y=df_coef["Feature"],
+            orientation="h",
+            marker_color=["#00C49A" if v > 0 else "#FF4444" for v in df_coef["Coefficient"]],
+            text=[f"{v:+.4f}" for v in df_coef["Coefficient"]],
+            textposition="outside",
+        ))
+        fig_coef.add_vline(x=0, line_color="white", line_width=1)
+        fig_coef.update_layout(
+            template="plotly_dark",
+            height=max(280, len(df_coef) * 36),
+            xaxis_title="Coefficient (Direction Head — LogisticCV)",
+            margin=dict(l=10, r=80, t=20, b=30),
+        )
+        st.plotly_chart(fig_coef, use_container_width=True)
+    else:
+        st.info("No coefficient data. Re-run `py scripts/train_ridge_stacker.py`.")
+
+else:
     st.warning("""
-    **No backtest results found.**  
-    Run a backtest first from the **Settings** page or via terminal:
+    **No Ensemble backtest results found.**
+    Train the Dual-Head Stacker first:
     ```bash
-    .venv\\Scripts\\python.exe scripts/backtest_engine.py gold
-    .venv\\Scripts\\python.exe scripts/backtest_engine.py btc
-    .venv\\Scripts\\python.exe scripts/backtest_engine.py spy
+    py scripts/train_ridge_stacker.py
     ```
     """)
-    st.stop()
 
 # ============================================================
-# METHODOLOGY EXPLAINER
-# ============================================================
-
-with st.expander("How This Backtest Works (Walk-Forward Methodology)", expanded=False):
-    st.markdown("""
-    **This is NOT in-sample testing (which would be cheating).**
-    
-    The engine uses a rigorous **Walk-Forward Out-of-Sample** methodology:
-    
-    | Step | Detail |
-    |---|---|
-    | **1. Data Split** | 80% of historical data used for training, 20% held out as unseen test set |
-    | **2. Isolated Model** | A fresh model is trained ONLY on the 80% training set — it has never seen the test data |
-    | **3. Walk-Forward** | The model predicts one day at a time, then "walks forward" — mimicking real-world deployment |
-    | **4. 3-Level System** | The Manager (Anchoring) and CEO (Macro/Sentiment Bias) layers are applied on top of each step |
-    | **5. Baseline** | Pure LSTM (no macro layers) serves as the control group |
-    
-    **Key Metrics:**
-    - **Directional Hit Ratio:** % of days where the model correctly predicted UP vs DOWN. Random = 50%. >55% is good.
-    - **RMSE:** Root Mean Square Error in price units. Lower = better. The 3-Level system's RMSE should be dramatically lower than raw LSTM.
-    
-    > Past validation accuracy does not guarantee future performance. Markets change regimes.
-    """)
-
-st.markdown("---")
-
-# ============================================================
-# SUMMARY SCORECARD TABLE
-# ============================================================
-
-st.markdown("### Model Accuracy Scorecard")
-
-scorecard_rows = []
-for asset, r in sorted(results.items()):
-    grade, _ = get_grade(r["hit_ratio_3layer"])
-    rmse_imp = rmse_improvement(r["rmse_lstm"], r["rmse_3layer"])
-    scorecard_rows.append({
-        "Asset": asset.upper(),
-        "Test Period": f"{r['start_test_date']} → {r['end_test_date']}",
-        "Test Samples": r["test_samples"],
-        "Hit Ratio (3-Level)": f"{r['hit_ratio_3layer']:.1f}%",
-        "Hit Ratio (LSTM Only)": f"{r['hit_ratio_lstm']:.1f}%",
-        "RMSE (3-Level)": f"{r['rmse_3layer']:,.2f}",
-        "RMSE (LSTM Only)": f"{r['rmse_lstm']:,.2f}",
-        "RMSE Improvement": f"{rmse_imp:.1f}%",
-        "Grade": grade
-    })
-
-df_score = pd.DataFrame(scorecard_rows)
-st.dataframe(df_score, use_container_width=True, hide_index=True)
-
-# ============================================================
-# METRIC CARDS — HIT RATIO
+# SECTION 2: LEGACY 3-LEVEL (HISTORICAL REFERENCE)
 # ============================================================
 
 st.markdown("---")
-st.markdown("### Directional Hit Ratio — 3-Level System")
-st.caption("How often did the model correctly predict the direction (UP/DOWN) of the next day's price? Baseline random = 50%.")
+with st.expander("Legacy 3-Level Architecture Results (Historical Reference)", expanded=False):
+    if legacy_results:
+        st.markdown("### Legacy 3-Level Scorecard")
+        st.caption("Old absolute-price LSTM + Manager + CEO pipeline. Kept for historical comparison only.")
 
-assets_sorted = sorted(results.keys())
-cols = st.columns(len(assets_sorted))
+        legacy_rows = []
+        for asset, r in sorted(legacy_results.items()):
+            grade, _ = get_grade(r.get("hit_ratio_3layer", 0))
+            legacy_rows.append({
+                "Asset":              asset.upper(),
+                "Hit Ratio (3-Lvl)":  f"{r.get('hit_ratio_3layer', 0):.1f}%",
+                "Hit Ratio (LSTM)":   f"{r.get('hit_ratio_lstm', 0):.1f}%",
+                "RMSE (3-Lvl)":       f"{r.get('rmse_3layer', 0):,.2f}",
+                "RMSE (LSTM)":        f"{r.get('rmse_lstm', 0):,.2f}",
+                "RMSE Improvement":   f"{rmse_improvement(r.get('rmse_lstm',0), r.get('rmse_3layer',0)):.1f}%",
+                "Grade": grade
+            })
+        st.dataframe(pd.DataFrame(legacy_rows), use_container_width=True, hide_index=True)
 
-for i, asset in enumerate(assets_sorted):
-    r = results[asset]
-    hr = r["hit_ratio_3layer"]
-    grade, color = get_grade(hr)
-    with cols[i]:
-        st.markdown(f"""
-        <div style="background: #1a1d2e; border: 1px solid {color}; border-radius: 12px;
-                    padding: 20px; text-align: center; margin-bottom: 8px;">
-            <div style="font-size: 13px; color: #aaa; margin-bottom: 4px;">{asset.upper()}</div>
-            <div style="font-size: 36px; font-weight: 700; color: {color};">{hr:.1f}%</div>
-            <div style="font-size: 20px; color: {color}; margin-top: 4px;">Grade: {grade}</div>
-            <div style="font-size: 11px; color: #666; margin-top: 8px;">{r['test_samples']} samples</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-# ============================================================
-# RMSE IMPROVEMENT BAR CHART
-# ============================================================
-
-st.markdown("---")
-st.markdown("### RMSE Improvement: 3-Level vs Raw LSTM")
-st.caption("How much did the Manager + CEO layers reduce prediction error vs the raw LSTM worker alone?")
-
-fig_rmse = go.Figure()
-
-asset_labels = [a.upper() for a in assets_sorted]
-improvements = [rmse_improvement(results[a]["rmse_lstm"], results[a]["rmse_3layer"]) for a in assets_sorted]
-bar_colors = ["#00C49A" if v > 0 else "#FF4444" for v in improvements]
-
-fig_rmse.add_trace(go.Bar(
-    x=asset_labels,
-    y=improvements,
-    marker_color=bar_colors,
-    text=[f"{v:.1f}%" for v in improvements],
-    textposition="outside",
-    hovertemplate="<b>%{x}</b><br>RMSE Improvement: %{y:.1f}%<extra></extra>"
-))
-
-fig_rmse.add_hline(y=0, line_color="white", line_width=1)
-
-fig_rmse.update_layout(
-    template="plotly_dark",
-    height=380,
-    yaxis_title="RMSE Improvement (%)",
-    xaxis_title="Asset",
-    showlegend=False,
-    margin=dict(l=40, r=40, t=20, b=40),
-    yaxis=dict(ticksuffix="%")
-)
-
-st.plotly_chart(fig_rmse, use_container_width=True)
-
-# ============================================================
-# INDIVIDUAL ASSET BACKTEST CHARTS
-# ============================================================
-
-st.markdown("---")
-st.markdown("### Walk-Forward Backtest Charts")
-st.caption("Actual price vs 3-Level System prediction vs Raw LSTM — on completely unseen test data.")
-
-selected_asset = st.selectbox(
-    "Select asset to view backtest chart",
-    [a.upper() for a in assets_sorted],
-    index=0
-)
-
-asset_key = selected_asset.lower()
-chart_path = f"reports/backtest_{asset_key}.png"
-
-if os.path.exists(chart_path):
-    img = Image.open(chart_path)
-    st.image(img, use_container_width=True, caption=f"{selected_asset} Walk-Forward Backtest — Actual vs 3-Level vs LSTM")
-
-    # Show metrics for selected asset
-    r = results[asset_key]
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        st.metric("3-Level Hit Ratio", f"{r['hit_ratio_3layer']:.1f}%",
-                  delta=f"{r['hit_ratio_3layer'] - r['hit_ratio_lstm']:+.1f}% vs LSTM")
-    with c2:
-        st.metric("3-Level RMSE", f"{r['rmse_3layer']:,.2f}")
-    with c3:
-        st.metric("LSTM-Only RMSE", f"{r['rmse_lstm']:,.2f}")
-    with c4:
-        imp = rmse_improvement(r["rmse_lstm"], r["rmse_3layer"])
-        st.metric("RMSE Reduction", f"{imp:.1f}%", delta="better" if imp > 0 else "worse")
-else:
-    st.info(f"No chart found for {selected_asset}. Run: `.venv\\Scripts\\python.exe scripts/backtest_engine.py {asset_key}`")
-
-# ============================================================
-# RUN NEW BACKTEST SECTION
-# ============================================================
-
-st.markdown("---")
-st.markdown("### Run New Backtest")
-st.warning("⏱Backtest trains a fresh isolated model — Gold/Stocks ~5-7 min, BTC ~10-15 min. Keep this page open.")
-
-available_assets = list(ASSETS.keys())
-col_sel, col_btn = st.columns([2, 1])
-
-with col_sel:
-    backtest_target = st.selectbox("Select asset to backtest", [a.upper() for a in available_assets])
-
-with col_btn:
-    st.markdown("<br>", unsafe_allow_html=True)
-    run_bt = st.button(f"▶ Run Backtest for {backtest_target}", use_container_width=True, type="primary")
-
-if run_bt:
-    python_exe = sys.executable
-    import subprocess, re
-
-    def strip_ansi(text):
-        return re.sub(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', text)
-
-    with st.status(f"Running walk-forward backtest for {backtest_target}...", expanded=True) as status:
-        process = subprocess.Popen(
-            [python_exe, "scripts/backtest_engine.py", backtest_target.lower()],
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            text=True, bufsize=1
-        )
-        while True:
-            line = process.stdout.readline()
-            if not line:
-                break
-            clean = strip_ansi(line.strip())
-            if clean:
-                st.text(clean)
-        process.wait()
-
-        if process.returncode == 0:
-            status.update(label=f"Backtest for {backtest_target} complete!", state="complete")
-            st.success("Backtest finished. Refresh page to see updated scorecard.")
-            st.rerun()
+        assets_l = sorted(legacy_results.keys())
+        sel_l = st.selectbox("View backtest chart", [a.upper() for a in assets_l], key="legacy_chart")
+        chart_path = f"reports/backtest_{sel_l.lower()}.png"
+        if os.path.exists(chart_path):
+            st.image(chart_path, use_container_width=True,
+                     caption=f"{sel_l} Walk-Forward — 3-Level vs Pure LSTM")
         else:
-            status.update(label="Backtest failed", state="error")
+            st.info(f"No chart for {sel_l}. Run `py scripts/backtest_engine.py {sel_l.lower()}`")
+    else:
+        st.info("No legacy results. Run `py scripts/backtest_engine.py gold`.")
 
 # ============================================================
 # FOOTER
@@ -285,9 +274,10 @@ if run_bt:
 
 st.markdown("---")
 st.caption("""
-**Interpretation Guide:**  
-• **Hit Ratio > 55%** = Statistically meaningful directional edge  
-• **Hit Ratio 50-55%** = Marginal edge, use with macro confirmation  
-• **RMSE Improvement > 80%** = Manager layer successfully correcting raw LSTM overreaction  
-• These results are on completely unseen data (20% hold-out) using walk-forward methodology
+**Interpretation Guide:**
+- **Ensemble Hit Ratio > 55%** = Statistically meaningful directional edge
+- **Direction Head** optimizes *only* for directional accuracy (Hit Ratio)
+- **Magnitude Head** optimizes *only* for % change size (RMSE), outlier-robust
+- **Combined signal** = Direction x Magnitude — sign-weighted % change estimate
+- All results on completely unseen hold-out data — no data leakage
 """)

@@ -827,15 +827,19 @@ class AssetPredictor:
 
     def predict_tomorrow(self):
         """
-        Quick prediction for next day only
+        Quick prediction for next day only.
+        Uses pct_chain_forecast(1) for consistency with multi-range pipeline.
 
         Returns:
             dict: {'current': float, 'predicted': float, 'change': float, 'pct_change': float}
         """
         current_price = self.get_latest_price()
-        forecast = self.recursive_forecast(1)
+        forecast = self.pct_chain_forecast(1)
 
-        
+        if not forecast:
+            # Fallback to legacy recursive if pct_chain fails
+            forecast = self.recursive_forecast(1)
+
         if not forecast:
             return {
                 'current': current_price,
@@ -845,32 +849,53 @@ class AssetPredictor:
                 'direction': 'flat',
                 'error': 'AI Model Unavailable'
             }
-            
+
         predicted_price = forecast[0]
-        
         change = predicted_price - current_price
         pct_change = (change / current_price) * 100
-        
-        # Final guard: ensure we return a dict
-        res = {
+
+        return {
             'current': float(current_price),
             'predicted': float(predicted_price),
             'change': float(change),
             'pct_change': float(pct_change),
             'direction': 'up' if change > 0 else 'down'
         }
-        return res
     
     def predict_week(self):
         """
-        Quick prediction for 1 week (7 days) ahead
-        
+        Quick prediction for 1 week (7 days) ahead.
+        Uses ensemble_forecast() (Dual-Head Stacker) for accuracy,
+        falls back to pct_chain_forecast(7) if stacker not available.
+
         Returns:
             dict: {'current': float, 'predicted': float, 'change': float, 'pct_change': float}
         """
         current_price = self.get_latest_price()
-        forecast = self.recursive_forecast(7)
-        
+
+        # Try Dual-Head Stacker first (most accurate 7D signal)
+        try:
+            ens = self.ensemble_forecast()
+            if ens.get('model') == 'dual_head_ensemble' and ens.get('pct_change_7d') is not None:
+                predicted_price = float(ens['predicted_price'])
+                change = predicted_price - current_price
+                pct_change = (change / current_price) * 100
+                return {
+                    'current': float(current_price),
+                    'predicted': predicted_price,
+                    'change': float(change),
+                    'pct_change': float(pct_change),
+                    'direction': ens.get('direction', 'flat'),
+                    'direction_prob': ens.get('direction_prob', 0.5),
+                }
+        except Exception:
+            pass
+
+        # Fallback: pct_chain 7-step
+        forecast = self.pct_chain_forecast(7)
+        if not forecast:
+            forecast = self.recursive_forecast(7)
+
         if not forecast:
             return {
                 'current': current_price,
@@ -881,16 +906,15 @@ class AssetPredictor:
                 'error': 'AI Model Unavailable'
             }
 
-        predicted_price = forecast[-1]  # Take the 7th day prediction
-        
+        predicted_price = forecast[-1]
         change = predicted_price - current_price
         pct_change = (change / current_price) * 100
-        
+
         return {
-            'current': current_price,
-            'predicted': predicted_price,
-            'change': change,
-            'pct_change': pct_change,
+            'current': float(current_price),
+            'predicted': float(predicted_price),
+            'change': float(change),
+            'pct_change': float(pct_change),
             'direction': 'up' if change > 0 else 'down'
         }
 
