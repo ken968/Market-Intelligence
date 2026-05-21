@@ -46,6 +46,7 @@ import pickle
 
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['PYTHONHASHSEED'] = '42'
+os.environ['TF_DETERMINISTIC_OPS'] = '1'   # Force fully deterministic TF CPU ops
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # ── Reproducibility ──────────────────────────────────────────────────────────
