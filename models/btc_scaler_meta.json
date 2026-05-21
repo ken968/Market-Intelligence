@@ -26,9 +26,9 @@
     "horizon_days": 7,
     "sequence_length": 90,
     "target_type": "pct_change_7d",
-    "hit_ratio_test": 49.280575539568346,
-    "rmse_test": 0.06980667878334483,
-    "n_train": 3333,
+    "hit_ratio_test": 54.43645083932853,
+    "rmse_test": 0.06276371258482258,
+    "n_train": 3334,
     "n_test": 834,
     "target_scaler_path": "models/btc_scaler_target.pkl"
 }
