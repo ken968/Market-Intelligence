@@ -533,6 +533,15 @@ else:
                 
                 render_prediction_table(forecasts, forecast_stock)
 
+                # Speculative warning for long-horizon forecasts
+                st.warning(
+                    "**1 Month & 3 Months forecasts are SPECULATIVE.**  \n"
+                    "Individual stock forecasts degrade rapidly beyond 14 days due to recursive "
+                    "error compounding and earnings event uncertainty. "
+                    "Use 1 Day & 1 Week predictions for actual signal — "
+                    "longer horizons show **directional bias only**."
+                )
+
                 # Alpha Engine signal panel
                 render_alpha_engine_panel(forecasts, forecast_stock)
 

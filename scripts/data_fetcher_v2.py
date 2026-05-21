@@ -176,7 +176,7 @@ class MultiAssetFetcher:
             if os.path.exists('data/fred_indicators.csv'):
                 fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
                 df = df.join(fred, how='left')
-                for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']:
+                for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'Credit_Spread', 'Credit_Stress_Flag']:
                     if col in df.columns:
                         df[col] = df[col].ffill().fillna(0)
             

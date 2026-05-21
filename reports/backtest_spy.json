@@ -1,10 +1,10 @@
 {
     "asset": "spy",
-    "hit_ratio_3layer": 42.831541218637994,
-    "hit_ratio_lstm": 42.831541218637994,
-    "rmse_3layer": 7.663311517509226,
-    "rmse_lstm": 163.94104464884228,
-    "test_samples": 559,
-    "start_test_date": "2024-02-14",
-    "end_test_date": "2026-05-07"
+    "hit_ratio_3layer": 42.93381037567084,
+    "hit_ratio_lstm": 42.93381037567084,
+    "rmse_3layer": 7.730947930252409,
+    "rmse_lstm": 164.02471026226067,
+    "test_samples": 560,
+    "start_test_date": "2024-02-23",
+    "end_test_date": "2026-05-18"
 }

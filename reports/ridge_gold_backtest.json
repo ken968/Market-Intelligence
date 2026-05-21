@@ -1,0 +1,30 @@
+{
+    "asset": "gold",
+    "feature_names": [
+        "lstm_pred",
+        "xgb_pred",
+        "VIX",
+        "GK_Vol_21d",
+        "Sentiment",
+        "Sentiment_Std",
+        "YieldCurve_10Y2Y",
+        "DXY"
+    ],
+    "coefficients": {
+        "lstm_pred": -0.002188548084899202,
+        "xgb_pred": -0.0007093993379040299,
+        "VIX": 0.003773496664966042,
+        "GK_Vol_21d": 0.0,
+        "Sentiment": 0.0,
+        "Sentiment_Std": 0.0,
+        "YieldCurve_10Y2Y": -0.001054825087902322,
+        "DXY": 0.0022347980373378764
+    },
+    "intercept": 0.010946468905959189,
+    "best_alpha": 100.0,
+    "horizon_days": 7,
+    "hit_ratio_lstm": 36.470588235294116,
+    "hit_ratio_xgb": 62.94117647058823,
+    "hit_ratio_ensemble": 62.94117647058823,
+    "rmse_test": 0.047142783760681956
+}

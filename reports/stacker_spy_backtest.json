@@ -1,0 +1,29 @@
+{
+    "asset": "spy",
+    "horizon_days": 7,
+    "feature_names": [
+        "lstm_pred",
+        "xgb_pred",
+        "VIX",
+        "GK_Vol_21d",
+        "Sentiment",
+        "YieldCurve_10Y2Y",
+        "DXY"
+    ],
+    "hit_ratio_lstm": 61.627906976744185,
+    "hit_ratio_xgb": 61.627906976744185,
+    "hit_ratio_direction_head": 61.04651162790697,
+    "rmse_magnitude_head": 0.02153966718241045,
+    "hit_ratio_combined": 61.04651162790697,
+    "rmse_combined": 0.02108299815866998,
+    "best_C_direction": 1.0,
+    "direction_coefs": {
+        "lstm_pred": 0.07167821707597691,
+        "xgb_pred": 0.7078190517697754,
+        "VIX": 0.1409257314744941,
+        "GK_Vol_21d": 0.0,
+        "Sentiment": 0.0,
+        "YieldCurve_10Y2Y": -0.46598975061773373,
+        "DXY": -0.7365093895633826
+    }
+}

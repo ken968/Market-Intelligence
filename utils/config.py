@@ -47,10 +47,13 @@ ASSETS = {
         'news_file': 'data/latest_news_gold.json',
         'features': ['Gold', 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
                      'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
-                     'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate', 
+                     'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate',
                      'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'MacroEvent_Flag',
+                     'Credit_Spread',
                      'Sentiment', 'EMA_90'],
         'sequence_length': 60,
+        # Per-asset LSTM architecture: Gold is stable → smaller, less dropout
+        'model_arch': {'units': [64, 32], 'dropout': 0.2, 'attention': False},
         'description': 'Precious Metal & Safe Haven Asset'
     },
     'btc': {
@@ -64,10 +67,13 @@ ASSETS = {
         'news_file': 'data/latest_news_btc.json',
         'features': ['BTC', 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
                      'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
-                     'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate', 
+                     'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate',
                      'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'MacroEvent_Flag',
+                     'Credit_Spread',
                      'Sentiment', 'Halving_Cycle', 'EMA_90'],
         'sequence_length': 90,
+        # Per-asset LSTM architecture: BTC is highly volatile → deeper + more dropout
+        'model_arch': {'units': [128, 64, 32], 'dropout': 0.3, 'attention': True},
         'description': 'Digital Gold & Cryptocurrency Leader'
     }
 }
@@ -92,8 +98,22 @@ STOCK_TICKERS = {
     'TSM': {'name': 'Taiwan Semiconductor', 'sector': 'Technology', 'color': '#E60012'}
 }
 
+# Volatile stocks need deeper LSTM + higher dropout + attention
+# Stable indices need smaller, less prone to overfitting
+VOLATILE_STOCKS = {'NVDA', 'TSLA', 'META', 'AMZN'}  # High β, sensitive to macro
+STABLE_INDICES  = {'SPY', 'DIA', 'QQQ'}              # Low β, broad market
+
 # Add stock configs to ASSETS
 for ticker, info in STOCK_TICKERS.items():
+    is_volatile = ticker in VOLATILE_STOCKS
+    is_index    = ticker in STABLE_INDICES
+    if is_volatile:
+        arch = {'units': [128, 64], 'dropout': 0.35, 'attention': True}
+    elif is_index:
+        arch = {'units': [64, 32],  'dropout': 0.20, 'attention': False}
+    else:
+        arch = {'units': [100, 50], 'dropout': 0.25, 'attention': False}  # default Mag7
+
     ASSETS[ticker.lower()] = {
         'name': info['name'],
         'ticker': ticker,
@@ -105,10 +125,12 @@ for ticker, info in STOCK_TICKERS.items():
         'news_file': f'data/latest_news_{ticker.lower()}.json',
         'features': [ticker, 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
                      'CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
-                     'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate', 
+                     'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate',
                      'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'MacroEvent_Flag',
+                     'Credit_Spread',
                      'Sentiment', 'EMA_90'],
         'sequence_length': 60,
+        'model_arch': arch,
         'description': f"{info['sector']} - {info['name']}"
     }
 

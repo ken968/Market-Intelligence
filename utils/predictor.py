@@ -426,7 +426,8 @@ class AssetPredictor:
 
             
             # --- Counterfactual logging (CEO vs Baseline accuracy tracking) ---
-            if label == '1 Week' and LLM_AVAILABLE and headlines and not ceo_context.get('is_fallback', True):
+            # Log ALL timeframes (not just 1 Week) to track accuracy across all horizons
+            if LLM_AVAILABLE and headlines and not ceo_context.get('is_fallback', True):
                 try:
                     from utils.counterfactual_logger import log_forecast
                     df_temp = pd.read_csv(self.config['data_file'])

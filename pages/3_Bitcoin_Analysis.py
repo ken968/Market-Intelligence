@@ -340,6 +340,14 @@ else:
                     st.markdown("####  Multi-Range Forecast")
                     render_prediction_table(forecasts, "Bitcoin")
 
+                    # Speculative warning for long-horizon forecasts
+                    st.warning(
+                        "**1 Month & 3 Months forecasts are SPECULATIVE.**  \n"
+                        "BTC's high volatility makes error compounding especially severe beyond 14 days. "
+                        "These horizons should be interpreted as directional scenarios only — "
+                        "**not as price targets**. The Monte Carlo cloud shows the realistic range of outcomes."
+                    )
+
                     # Alpha Engine signal panel
                     render_alpha_engine_panel(forecasts, "Bitcoin")
 

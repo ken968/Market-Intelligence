@@ -200,7 +200,8 @@ def integrate_sentiment(asset='gold'):
     fred_file = 'data/fred_indicators.csv'
     FRED_COLS = ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
                  'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag',
-                 'M2_YoY', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']
+                 'M2_YoY', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike',
+                 'Credit_Spread', 'Credit_Stress_Flag']
     if os.path.exists(fred_file):
         fred_df = pd.read_csv(fred_file, index_col=0, parse_dates=True)
         fred_df.index = fred_df.index.strftime('%Y-%m-%d')

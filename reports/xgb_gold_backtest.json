@@ -1,0 +1,53 @@
+{
+    "asset": "gold",
+    "model_type": "xgboost_macro",
+    "horizon_days": 7,
+    "hit_ratio_train": 54.338299737072745,
+    "hit_ratio_test": 66.54991243432575,
+    "rmse_train": 0.02340005452709823,
+    "rmse_test": 0.03459097997355466,
+    "n_features": 21,
+    "best_iteration": 2,
+    "top_features": [
+        {
+            "feature": "CPI_MoM",
+            "importance": 0.08707109838724136
+        },
+        {
+            "feature": "DXY",
+            "importance": 0.0807262435555458
+        },
+        {
+            "feature": "NFP_Change",
+            "importance": 0.07974935322999954
+        },
+        {
+            "feature": "CPI_MoM_lag6",
+            "importance": 0.07840205729007721
+        },
+        {
+            "feature": "PPI_MoM",
+            "importance": 0.07062234729528427
+        },
+        {
+            "feature": "NFP_Change_lag3",
+            "importance": 0.06713501363992691
+        },
+        {
+            "feature": "Breakeven_5Y5Y",
+            "importance": 0.0662631243467331
+        },
+        {
+            "feature": "M2_MoM",
+            "importance": 0.06572732329368591
+        },
+        {
+            "feature": "VIX",
+            "importance": 0.062202177941799164
+        },
+        {
+            "feature": "Oil_Price",
+            "importance": 0.06196632236242294
+        }
+    ]
+}

@@ -1,0 +1,593 @@
+# Market Intelligence Terminal — Final System Audit & Upgrade Roadmap
+# Tanggal: 2026-05-18
+# Status: FINAL — Post-discussion. Siap eksekusi.
+
+================================================================================
+BAGIAN 1 — PENILAIAN JUJUR: ARSITEKTUR YANG DIUSULKAN
+================================================================================
+
+ARSITEKTUR 4-TIER YANG DIUSULKAN:
+[ Data Lakehouse ] ──> [ Feature Store ] ──> [ Signal/Alpha Engine ] ──> [ Risk/Execution ]
+   (DuckDB/Parquet)       (Faktorisasi)         (Ensemble: ML/DL)          (Portfolio Optim)
+
+Penilaian per-tier:
+
+  TIER 1 — Data Lakehouse (DuckDB/Parquet): ✅ VALID & FEASIBLE
+    - DuckDB tidak butuh server. File tunggal .db, in-process.
+    - Parquet lebih efisien dari CSV untuk data besar.
+    - CSV tetap dipertahankan sebagai export/backup — ini keputusan benar.
+    - CATATAN: Migrasi ini adalah perubahan infrastruktur, bukan fitur baru.
+      Semua data_fetcher, predictor, dan backtest_engine harus diupdate.
+      Estimasi: 4-5 hari kerja penuh.
+
+  TIER 2 — Feature Store (Faktorisasi): ⚠️ PERLU KLARIFIKASI
+    - Kalau faktorisasi = feature engineering (lagged macro, Garman-Klass vol,
+      Sentiment_Std, Credit Spread, COT) → INI REALISTIS dan harus dikerjakan.
+    - Kalau faktorisasi = Fama-French factor model (Value, Size, Momentum)
+      untuk saham → ini membutuhkan data earnings & book value yang TIDAK
+      tersedia di yfinance free tier secara clean.
+    - KEPUTUSAN: Fokus ke feature engineering dulu. Fama-French di-skip.
+
+  TIER 3 — Signal/Alpha Engine (Ensemble ML/DL): ✅ VALID, ARSITEKTURNYA SOLID
+    - Meta-Learner approach (LSTM + XGBoost + Ridge sebagai stacker) adalah
+      teknik STACKING yang diakui di industri. Ini bukan hype.
+    - Tapi ada satu masalah kritis yang perlu diklarifikasi — lihat Bagian 2.
+
+  TIER 4 — Risk/Execution (Portfolio Optimization): ❌ OVERSTRETCHED untuk sekarang
+    - Portfolio optimization = Kelly Criterion, Sharpe Ratio optimization,
+      position sizing, drawdown limits, correlation-aware allocation.
+    - Ini adalah SISTEM TERSENDIRI, bukan fitur tambahan.
+    - Modul kita saat ini adalah Intelligence Terminal (prediksi + analisis),
+      BUKAN trading execution system.
+    - KEPUTUSAN: Skip Tier 4. Fokus Tier 1-3 dulu. Tier 4 adalah projek 6 bulan.
+
+
+================================================================================
+BAGIAN 2 — PENILAIAN JUJUR: SARAN DARI LLM (GEMINI)
+================================================================================
+
+  SARAN 1 — "Prediksi Alpha, bukan harga" (volatility & order flow):
+  ─────────────────────────────────────────────────────────────────
+  Secara filosofi: ✅ BENAR. Di hedge fund, prediksi arah harga memang naif.
+  Secara praktis: ⚠️ SETENGAH VALID untuk data kita.
+
+  KOMPONEN YANG BISA LANGSUNG DILAKUKAN:
+    → Garman-Klass Volatility: bisa dihitung dari data OHLCV yfinance (Open, High, Low, Close)
+      Formula: GK_Vol = sqrt(0.5*(ln(H/L))^2 - (2*ln2-1)*(ln(C/O))^2)
+      Kita sudah punya OHLCV dari yfinance. INI BISA LANGSUNG DIKERJAKAN.
+    → Volatility regime prediction (High/Low vol) sebagai tambahan output.
+
+  KOMPONEN YANG TIDAK BISA DENGAN DATA KITA:
+    → Order Flow Imbalance: butuh data Level 2 order book (bid/ask per tick).
+      Data ini BERBAYAR ($500-$5000/bulan untuk crypto/equity).
+      Yfinance hanya memberikan daily OHLCV, tidak ada tick/order book.
+      KESIMPULAN: Ini saran yang bagus tapi infrastruktur datanya tidak ada.
+      Jangan diimplementasikan dulu sebelum ada data source yang tepat.
+
+  SARAN 2 — Meta-Learner Ensemble (XGBoost macro + LSTM momentum + Ridge stacker):
+  ──────────────────────────────────────────────────────────────────────────────
+  ✅ INI VALID DAN BISA DIKERJAKAN. Teknik ini disebut "Model Stacking".
+
+  TAPI ada satu masalah desain yang perlu dipikirkan dulu:
+    - XGBoost "membaca makro" → outputnya adalah prediksi harga? arah? volatilitas?
+    - LSTM "membaca momentum" → outputnya prediksi harga? persentase change?
+    - Ridge Meta-Learner perlu input yang KONSISTEN dari kedua model di atas.
+    Jika XGBoost output = probability(naik) dan LSTM output = prediksi harga,
+    Ridge tidak bisa menggabungkan keduanya dengan benar.
+
+  KEPUTUSAN DESAIN YANG DIPERLUKAN:
+    Semua model harus memprediksi hal yang SAMA:
+    Opsi A: Semua prediksi % change (paling mudah dan konsisten)
+    Opsi B: Semua prediksi probability(arah naik) → output binary probabilistik
+    Opsi C: Semua prediksi Garman-Klass volatility untuk horizon tertentu
+    → Rekomendasiku: Opsi A dulu. Paling feasible, paling mudah divalidasi.
+
+  SARAN 3 — TFT sebagai R&D Sandbox (Shadow Modelling):
+  ────────────────────────────────────────────────────
+  ✅ STRATEGINYA BENAR. Di hedge fund memang begini caranya.
+  Tapi keraguan kamu perlu dijawab jujur:
+
+  RISIKO TFT SANDBOX:
+    1. Stack conflict: TFT butuh PyTorch, sistem kita pakai TensorFlow.
+       Keduanya bisa diinstall bersamaan tapi berat (RAM 8GB minimum).
+       Di mesin yang sama, bisa konflik versi CUDA jika ada GPU.
+    2. Kompleksitas: TFT memerlukan format data khusus (TimeSeriesDataSet
+       dari library pytorch-forecasting). Bukan hal yang bisa dikerjakan
+       dalam sehari — butuh 1-2 minggu riset murni.
+    3. Overfitting risk: TFT punya lebih banyak parameter dari LSTM,
+       butuh data lebih banyak untuk generalisasi yang baik.
+       Data kita (2015-2026) mungkin cukup untuk Gold/BTC, tapi pas-pasan.
+    4. Hasil tidak terjamin: "delayed correlation JPY intervention → BTC"
+       yang disebutkan adalah contoh yang theoretically valid, tapi
+       secara statistik sangat sulit dibuktikan dengan data 10 tahun.
+
+  RISIKO TERBESARNYA BUKAN LAMBAT:
+    Risiko terbesar adalah Opportunity Cost — waktu yang dipakai untuk
+    riset TFT adalah waktu yang tidak dipakai untuk memperbaiki sistem
+    utama (Quick Wins yang high-impact). Hedge fund mengalokasikan tim
+    R&D khusus yang TERPISAH dari tim production. Kita satu orang.
+    SOLUSI: Jalankan TFT hanya setelah Tier 1-3 selesai dan stabil.
+
+
+================================================================================
+BAGIAN 3 — KEPUTUSAN FINAL (POST-DISKUSI)
+================================================================================
+
+  D1. FORECAST: Direct Multi-Step + Short-term Fix
+  ──────────────────────────────────────────────────
+  Short-term (SEGERA):
+    - Tambah disclaimer eksplisit di UI: "Forecast > 14 hari = Speculative"
+    - Turunkan confidence label '3 Months' ke 'Speculative' di config.py
+    - Tambahkan Garman-Klass Volatility sebagai output tambahan (bisa dari OHLCV)
+
+  Long-term (Minggu 2-3):
+    - Ganti recursive ke Direct Multi-Step:
+      Buat 5 model terpisah per aset (target: 1D, 7D, 14D, 30D, 90D)
+      Setiap model dilatih langsung untuk memprediksi H-hari ke depan,
+      tanpa propagasi error rekursif.
+    - Output target: % change (bukan harga absolut), lebih robust.
+
+  D2. ENSEMBLE: Optimasi LSTM Dulu → Lalu Tambah Stacking
+  ─────────────────────────────────────────────────────────
+  Phase 1 — Optimasi LSTM yang ada (Minggu 1-2):
+    - Tambah Self-Attention layer setelah LSTM pertama (sambil tunggu TFT matang)
+    - Hyperparameter tuning per-aset (units, dropout, batch_size)
+    - Tambah Garman-Klass Volatility sebagai feature input baru
+    - Pastikan lagged macro features (CPI_lag3, NFP_lag3) sudah masuk
+
+  Phase 2 — Build Meta-Learner Ensemble (Minggu 3-4):
+    - XGBoost Macro Model: input = semua FRED indicators → output = % change 7D
+    - LSTM Price Model: input = price sequence + EMA → output = % change 7D
+    - Ridge Meta-Learner (Stacker): input = [XGBoost_pred, LSTM_pred, VIX, Sentiment]
+                                    output = final % change prediction
+    - Semua model prediksi DALAM SATUAN YANG SAMA: % change
+    - Validation: jalankan backtest di masing-masing model dan bandingkan RMSE
+
+  D3. DATABASE: DuckDB + CSV Export
+  ──────────────────────────────────
+  - DuckDB tidak butuh server. File .db tunggal.
+  - CSV tetap ada sebagai export untuk backup dan kompatibilitas.
+  - Migrasi bertahap:
+    Step 1: Buat data/market_intelligence.db
+    Step 2: Load semua CSV ke tabel DuckDB (satu kali)
+    Step 3: Modifikasi data_fetcher_v2.py untuk menulis ke DuckDB DAN CSV
+    Step 4: Modifikasi predictor.py untuk baca dari DuckDB
+    Step 5: Hapus ketergantungan CSV dari inference pipeline
+  - Estimasi: 4-5 hari
+
+  D4. TFT SHADOW MODELLING: R&D Terpisah, Setelah Core Stabil
+  ──────────────────────────────────────────────────────────────
+  - TIDAK DIJALANKAN BERSAMAAN dengan core development.
+  - Jadwal: mulai setelah D1, D2 Phase 1, D3 selesai dan stabil.
+  - Buat folder research/ terpisah dari production code.
+  - Stack: pytorch-forecasting (bisa diinstall di venv terpisah)
+  - Target awal: validasi apakah TFT memberikan RMSE lebih baik dari
+    LSTM pada Gold dengan data 2015-2026 menggunakan 80/20 split.
+  - Jika terbukti lebih baik: masukkan prediksi TFT sebagai input ke
+    Ridge Meta-Learner (menjadi stacker ke-4)
+
+
+================================================================================
+BAGIAN 4 — RENCANA EKSEKUSI PRIORITAS
+================================================================================
+
+MINGGU 1 — Quick Wins (no architecture change):
+  □ 1. Fix Z-Score window per frekuensi: monthly FRED pakai 30-hari
+  □ 2. Fix confidence score: baca dari backtest JSON, bukan hard-coded
+  □ 3. Fix Recession Risk Score: ganti threshold ke rolling percentile
+  □ 4. Tambah lagged features: CPI_lag3, CPI_lag6, NFP_lag3 di data pipeline
+  □ 5. Tambah Sentiment_Std sebagai uncertainty signal
+  □ 6. Tambah disclaimer '3 Months = Speculative' di UI
+  □ 7. Tambah Garman-Klass Volatility sebagai computed feature
+  □ 8. Log semua timeframe di counterfactual_logger
+  □ 9. Credit Spread via FRED: BAMLH0A0HYM2EY (1 hari)
+
+MINGGU 2 — LSTM Upgrade (core model):
+  □ 10. Tambah Self-Attention setelah LSTM layer pertama
+  □ 11. Per-asset hyperparameter config di config.py
+  □ 12. Retrain semua model dengan feature set baru
+  □ 13. Refactor predictor.py → 3 file layer
+
+MINGGU 3 — Meta-Learner Ensemble:
+  □ 14. Build scripts/train_xgboost_macro.py
+  □ 15. Build scripts/train_ridge_stacker.py
+  □ 16. Integrasikan ke predictor.py (final output = Ridge stacker)
+  □ 17. Backtest ensemble vs LSTM saja
+
+MINGGU 4 — Infrastructure:
+  □ 18. DuckDB migration (bertahap)
+  □ 19. Direct Multi-Step Forecast (replace recursive)
+  □ 20. Minimal pytest test suite
+  □ 21. Model health monitor (alert jika hit_ratio < 40%)
+
+POST-STABILISASI — R&D:
+  □ 22. TFT Shadow Model di folder research/
+  □ 23. Validasi TFT vs LSTM pada Gold 80/20 split
+  □ 24. Jika valid: masukkan TFT ke Meta-Learner sebagai stacker ke-4
+
+
+================================================================================
+BAGIAN 5 — PERTANYAAN YANG MASIH PERLU DIJAWAB
+================================================================================
+
+  Q1. OUTPUT SATUAN ENSEMBLE:
+      Kita sepakat semua model output = % change.
+      Tapi % change dari titik mana?
+        a) Dari harga hari ini (T+0) ke T+7 hari?
+        b) Dari rata-rata 3 hari terakhir ke T+7?
+      → Rekomendasiku: opsi (a) lebih simpel dan standar.
+      Konfirmasi?
+
+  Q2. GARMAN-KLASS OHLCV:
+      Data fetcher kita saat ini hanya menyimpan Close price, bukan Open/High/Low.
+      Untuk menghitung GK Volatility, kita perlu ubah data_fetcher_v2.py
+      untuk menyimpan kolom Open, High, Low juga.
+      Apakah mau ditambahkan?
+
+  Q3. PRIORITAS MINGGU INI:
+      Dari daftar Minggu 1 (9 item), mana yang paling ingin dikerjakan duluan?
+      Semua bisa dikerjakan paralel oleh saya, tapi perlu tahu prioritas
+      dari sisimu untuk ordering commit dan testing.
+
+================================================================================
+Dibuat: 2026-05-18 | Status: FINAL — Ready for execution
+================================================================================
+
+# Tanggal: 2026-05-18
+# Status: DRAFT — Pending discussion & confirmation
+
+================================================================================
+BAGIAN 1 — PENILAIAN REALISTIS: BISA SELESAI 1 MINGGU?
+================================================================================
+
+Jawaban jujur: TIDAK semua bisa selesai dalam 1 minggu. Tapi bisa dibagi 3 tier:
+
+  TIER 1 — BISA DIKERJAKAN SEKARANG (1-3 hari, no discussion needed):
+  ────────────────────────────────────────────────────────────────────
+  - Fix confidence score: hitung dari backtest hit_ratio, bukan hard-coded
+  - Fix Z-Score monthly FRED data (CPI/NFP): tambah deteksi frekuensi data,
+    gunakan window lebih panjang untuk data bulanan (30 hari, bukan 14)
+  - log_forecast: perluas tracking dari hanya "1 Week" ke semua timeframe
+  - Tambah lagged features untuk CPI/NFP (12-bulan lag) di data pipeline
+  - CorrelationEnforcer: verifikasi apakah benar-benar aktif dipanggil
+
+  TIER 2 — PERLU DESAIN DULU (3-7 hari, need discussion):
+  ─────────────────────────────────────────────────────────
+  - Credit Spread (HYG-LQD): perlu cari free data source
+  - COT Report integration (CFTC data): perlu parse format CFTC
+  - Revisi Recession Risk Score: ganti threshold hard-coded
+    dengan threshold dinamis berbasis rolling percentile
+  - Ensemble model: desain agregasi 3 model (LSTM + Ridge + XGBoost)
+
+  TIER 3 — PROYEK BESAR (2-4 minggu, major architecture change):
+  ───────────────────────────────────────────────────────────────
+  - Ganti LSTM ke Temporal Fusion Transformer (TFT)
+    atau LSTM + Self-Attention hybrid
+  - Migrasi dari CSV ke SQLite/DuckDB
+  - Automated feedback loop & retraining trigger
+  - Multi-source credibility weighting di news
+
+
+================================================================================
+BAGIAN 2 — CELAH & PROBLEM SOLVE (HASIL AUDIT)
+================================================================================
+
+────────────────────────────────────────────────────────────────────
+CLUSTER A: STATISTIKA & MATEMATIKA
+────────────────────────────────────────────────────────────────────
+
+CELAH A1: Confidence Score di config.py adalah opini, bukan data
+  Status: Hard-coded (0.80, 0.75, dll)
+  Dampak: User diberi rasa aman palsu. "High confidence" tidak dibuktikan.
+  Problem Solve:
+    - Setelah setiap backtest_engine.py dijalankan, simpan hit_ratio
+      ke reports/backtest_{asset}.json
+    - Buat fungsi di config.py: get_dynamic_confidence(asset, timeframe)
+      yang membaca dari JSON tersebut, fallback ke hard-coded jika tidak ada
+  Perlu Diskusi: Tidak. Bisa langsung dikerjakan.
+  Estimasi: 1 hari
+
+CELAH A2: Z-Score tidak valid untuk data bulanan (CPI, NFP, PCE, PPI)
+  Status: Semua indikator dihitung dengan window 14 hari, padahal
+          CPI/NFP hanya update sekali sebulan → 14 baris terakhir
+          isinya nilai yang sama → Z-score artifisial 0.0
+  Dampak: Indikator FRED paling penting (CPI, NFP) selalu hilang dari
+          Top Macro Drivers padahal seharusnya sangat berpengaruh
+  Problem Solve:
+    - Di xai_explainer.py, tambahkan deteksi frekuensi:
+      jika std dari 14 baris terakhir < 1e-6 (artinya tidak berubah),
+      gunakan window 30 hari (monthly) bukan 14 hari
+    - Atau: buat dict INDICATOR_FREQUENCY = {'CPI_MoM': 30, 'NFP': 30, ...}
+      dan gunakan per-indicator lookback
+  Perlu Diskusi: Tidak. Logika sudah jelas.
+  Estimasi: 0.5 hari
+
+CELAH A3: Recursive forecast 90 langkah dari model 60-hari lookback
+  Status: Model dilatih dengan input window 60 hari, tapi diprediksi
+          sampai 90 langkah ke depan secara rekursif. Error compounding
+          eksponensial setiap langkah.
+  Dampak: PENYEBAB UTAMA prediksi 3 bulan sangat bearish/tidak valid
+  Problem Solve (Short-term):
+    - Batasi display confidence "3 Months" ke level "Speculative Only"
+      dengan disclaimer eksplisit. Ini jujur kepada user.
+    - Tambah warning di halaman ketika timeframe > 14 hari
+  Problem Solve (Long-term):
+    - Ganti recursive ke Direct Multi-Step Forecast:
+      latih 5 model terpisah (1D, 1W, 2W, 1M, 3M), setiap model
+      memprediksi langsung tanpa rekursi
+    - Atau gunakan Sequence-to-Sequence (Seq2Seq) architecture
+  Perlu Diskusi: Ya, soal mana yang diprioritaskan dulu
+  Estimasi Short-term: 0.5 hari | Long-term: 5-7 hari
+
+CELAH A4: Semua aset pakai arsitektur LSTM identik
+  Status: Gold, BTC, SPY, NVDA — semua pakai LSTM(100) → LSTM(50) → Dense(25)
+  Dampak: Underfitting untuk aset volatile (NVDA/TSLA),
+          overfitting untuk aset stabil (SPY/DIA)
+  Problem Solve:
+    - Buat config arsitektur per-asset di config.py:
+      'model_arch': {'units': [128, 64], 'dropout': 0.4}  ← untuk BTC
+      'model_arch': {'units': [64, 32], 'dropout': 0.2}   ← untuk SPY
+    - Modifikasi train_*.py untuk membaca config tersebut
+  Perlu Diskusi: Ya, perlu tentukan profil per-aset
+  Estimasi: 2-3 hari
+
+────────────────────────────────────────────────────────────────────
+CLUSTER B: MAKRO EKONOMI
+────────────────────────────────────────────────────────────────────
+
+CELAH B1: Tidak ada transmission lag kebijakan moneter
+  Status: CPI hari ini langsung dipakai sebagai input. Padahal
+          Fed Rate → ekonomi riil butuh 12-18 bulan
+  Dampak: Model memperlakukan data sebagai instan, padahal lagging indicator
+  Problem Solve:
+    - Tambah kolom lagged features di data_fetcher_v2.py:
+      df['CPI_MoM_lag3'] = df['CPI_MoM'].shift(3)   ← 3 bulan lalu
+      df['CPI_MoM_lag6'] = df['CPI_MoM'].shift(6)   ← 6 bulan lalu
+      df['NFP_lag3']     = df['NFP_Change'].shift(3)
+    - Tambahkan lag features ke daftar features di config.py
+    - Retrain semua model setelah menambahkan feature baru
+  Perlu Diskusi: Tidak. Tapi butuh retrain penuh.
+  Estimasi: 1 hari kode + waktu training
+
+CELAH B2: Tidak ada Credit Spread
+  Status: HYG-LQD spread (High Yield - Investment Grade) dan TED spread
+          tidak ada dalam feature set. Ini leading indicator terbaik
+          untuk credit stress / systemic risk.
+  Dampak: Sistem buta terhadap sinyal kredit — indicator paling prediktif
+          untuk crash besar (2008, 2020, 2022)
+  Problem Solve:
+    - Tambah di data_fetcher_v2.py via yfinance:
+      HYG (iShares High Yield Bond) dan LQD (Investment Grade Bond)
+      Credit_Spread = HYG_yield - LQD_yield (proxy via price ratio)
+    - Atau fetch langsung dari FRED: BAMLH0A0HYM2EY (HY spread, free)
+    - Tambahkan 'Credit_Spread' sebagai feature di semua aset
+  Perlu Diskusi: Sedikit — tentukan source yang paling reliable
+  Estimasi: 1 hari
+
+CELAH B3: Tidak ada COT Report (Commitments of Traders — CFTC)
+  Status: Posisi beli/jual institusional (Commercial, Non-Commercial)
+          di futures Gold dan BTC tidak ditracking
+  Dampak: Tidak tahu apakah smart money sedang akumulasi atau distribusi
+  Problem Solve:
+    - CFTC rilis COT setiap Jumat gratis di cftc.gov
+    - Tambah script scripts/cot_fetcher.py untuk parse CSV CFTC
+    - Fokus: Gold futures (GC) dan BTC (jika tersedia)
+    - Feature: 'Net_Commercial_Long' (posisi hedger) sebagai sinyal
+  Perlu Diskusi: Ya — parsing format CFTC cukup kompleks
+  Estimasi: 2-3 hari
+
+CELAH B4: Recession Risk Score pakai threshold hard-coded
+  Status: if yc < -0.5: risk = 1.0 — ini tidak valid di era zero-rate
+  Dampak: Di era 2009-2021 (suku bunga rendah), yield curve sering flat
+          tanpa berarti resesi, tapi model score-nya tinggi
+  Problem Solve:
+    - Ganti threshold dengan rolling percentile:
+      yc_percentile = df['YieldCurve_10Y2Y'].rank(pct=True).iloc[-1]
+      yc_risk = 1.0 - yc_percentile  ← makin rendah percentile = makin berisiko
+    - Ini otomatis menyesuaikan diri dengan rezim suku bunga apapun
+  Perlu Diskusi: Tidak.
+  Estimasi: 0.5 hari
+
+────────────────────────────────────────────────────────────────────
+CLUSTER C: NEWS & SENTIMENT
+────────────────────────────────────────────────────────────────────
+
+CELAH C1: Semua headline diberi bobot sama
+  Status: Ucapan Fed Powell = bobot sama dengan blog finansial kecil
+  Dampak: Sinyal CEO Layer terdilusi oleh noise
+  Problem Solve:
+    - Tambah source_credibility_score di sentiment_fetcher_v2.py:
+      CREDIBILITY = {
+        'federalreserve.gov': 1.0,
+        'reuters.com': 0.9,
+        'bloomberg.com': 0.9,
+        'wsj.com': 0.8,
+        ...default: 0.5
+      }
+    - Gunakan weighted average di llm_manager.py saat menyusun prompt
+  Perlu Diskusi: Ya — perlu tentukan daftar source dan bobotnya
+  Estimasi: 1 hari
+
+CELAH C2: Sentimen di-average menjadi scalar tunggal per hari
+  Status: Hari yang sama bisa ada berita sangat bullish dan sangat bearish.
+          Avg menjadi ~0 (netral), padahal situasi sebenarnya: HIGH VOLATILITY
+  Dampak: Uncertainty signal hilang. Model tidak tahu kapan ada divergensi besar
+  Problem Solve:
+    - Simpan dua kolom: 'Sentiment_Mean' dan 'Sentiment_Std'
+    - High Sentiment_Std = high uncertainty = perlebar Monte Carlo fan chart
+    - Tambahkan 'Sentiment_Std' sebagai feature di predictor
+  Perlu Diskusi: Tidak.
+  Estimasi: 1 hari
+
+────────────────────────────────────────────────────────────────────
+CLUSTER D: BACKEND & SOFTWARE ENGINEERING
+────────────────────────────────────────────────────────────────────
+
+CELAH D1: Semua data disimpan sebagai CSV (fragile)
+  Status: Tidak ada database. Jika CSV korup saat penulisan = data hilang.
+  Dampak: Tidak scalable, tidak ada transaction safety
+  Problem Solve:
+    - Migrasi ke DuckDB (in-process SQL, sangat cepat, satu file .db)
+    - DuckDB bisa query CSV langsung sebagai migrasi bertahap
+    - Tidak perlu server (cocok untuk lokal/personal project)
+  Perlu Diskusi: Ya — ini perubahan besar, perlu rencanakan migrasi
+  Estimasi: 3-5 hari
+
+CELAH D2: predictor.py sudah ~690 baris dalam satu file
+  Status: Level 1 (LSTM), Level 2 (Anchoring), Level 3 (CEO) semua campur
+  Dampak: Sulit debug, sulit test, coupling terlalu tinggi
+  Problem Solve:
+    - Refactor menjadi:
+      utils/layers/worker_lstm.py   ← Level 1
+      utils/layers/manager_anchor.py ← Level 2
+      utils/layers/ceo_layer.py     ← Level 3 (sudah ada di llm_manager.py)
+      utils/predictor.py            ← Orchestrator saja, panggil ke-3 layer
+  Perlu Diskusi: Tidak, strukturnya sudah jelas.
+  Estimasi: 2 hari
+
+CELAH D3: Tidak ada automated testing pipeline
+  Status: Folder tests/ ada tapi tidak dijalankan otomatis
+  Dampak: Perubahan kode bisa break system tanpa ketahuan
+  Problem Solve:
+    - Buat minimal pytest tests untuk:
+      - test_predictor.py: pastikan predictor return valid price range
+      - test_zscore.py: pastikan Z-score terhitung benar
+      - test_data_integrity.py: pastikan CSV tidak kosong dan kolom komplit
+    - Jalankan manual sebelum push ke GitHub
+  Perlu Diskusi: Tidak.
+  Estimasi: 1.5 hari
+
+────────────────────────────────────────────────────────────────────
+CLUSTER E: MODEL ML / AI ARCHITECTURE
+────────────────────────────────────────────────────────────────────
+
+CELAH E1: Tidak ada Ensemble
+  Status: 1 model per aset. Variance tinggi.
+  Problem Solve:
+    - Tambah 2 model "lightweight" per aset:
+      Model A: LSTM (existing — deep learning, non-linear patterns)
+      Model B: Ridge Regression (linear baseline, very fast to train)
+      Model C: XGBoost (tree-based, handles tabular macro features well)
+    - Final prediction = weighted average:
+      0.5 * LSTM + 0.3 * XGBoost + 0.2 * Ridge
+    - Buat scripts/train_ensemble.py
+  Perlu Diskusi: Ya — perlu tentukan bobot ensemble dan cara validasinya
+  Estimasi: 4-6 hari
+
+CELAH E2: Tidak ada Attention Mechanism di LSTM
+  Status: LSTM vanilla tidak tahu "mana yang lebih penting"
+  Problem Solve:
+    - Tambah Self-Attention layer setelah LSTM pertama:
+      from tensorflow.keras.layers import MultiHeadAttention
+      Ini memungkinkan model belajar "NFP bulan lalu lebih penting
+      dari DXY kemarin" secara otomatis
+    - Atau ganti total ke Temporal Fusion Transformer (TFT)
+      yang merupakan state-of-the-art untuk time series + covariates
+  Perlu Diskusi: Ya — TFT butuh library pytorch-forecasting yang berbeda stack
+  Estimasi Attention LSTM: 2 hari | Estimasi TFT: 1-2 minggu
+
+CELAH E3: Tidak ada automated retraining trigger
+  Status: Retrain manual sepenuhnya oleh user
+  Problem Solve:
+    - Tambah scripts/model_monitor.py yang dijalankan mingguan:
+      Jika hit_ratio dari counterfactual_log < 40% selama 20 record = ALERT
+      Jika hit_ratio < 35% = AUTO-TRIGGER retrain (jalankan train_*.py)
+    - Integrasikan dengan Dashboard: tampilkan "Model Health: DEGRADED"
+  Perlu Diskusi: Ya — threshold alert dan auto-trigger perlu disepakati
+  Estimasi: 2 hari
+
+
+================================================================================
+BAGIAN 3 — UPGRADE PATH: DARI "LOWER UPPER" KE "MIDDLE UPPER"
+================================================================================
+
+ANALOGI KELAS SOSIAL YANG KAMU PAKAI:
+
+  Lower Upper (posisi sekarang):
+  ├── Punya LSTM custom → tapi satu arsitektur untuk semua
+  ├── Punya CEO Layer (Gemini) → tapi belum ada feedback loop
+  ├── Punya Z-Score & Macro → tapi window tidak disesuaikan per frekuensi data
+  ├── Punya Monte Carlo → tapi confidence score belum berbasis data
+  └── Data dari sumber terpercaya → tapi tidak ada kredit weighting
+
+  Middle Upper (target realistic 4-6 minggu):
+  ├── Ensemble model (LSTM + XGBoost + Ridge) → variance berkurang
+  ├── Direct Multi-Step Forecast → mengganti recursive compounding error
+  ├── Dynamic confidence dari backtest hit_ratio → honest to user
+  ├── Credit Spread & COT Report sebagai features baru
+  ├── Lagged macro features (6, 12 bulan)
+  ├── Sentiment_Std untuk uncertainty signal
+  ├── Source credibility weighting di news
+  ├── Rolling percentile untuk Recession Risk Score
+  ├── Per-asset LSTM architecture (tuned hyperparameters)
+  └── Minimal test suite (pytest)
+
+  High Class / Institutional Grade (target 3-6 bulan):
+  ├── Temporal Fusion Transformer (TFT) — state-of-the-art
+  ├── DuckDB database migrasi dari CSV
+  ├── Automated model health monitoring & retraining
+  ├── Factor Model (Fama-French style) untuk saham
+  ├── Options flow / Gamma exposure data
+  ├── Real-time streaming data (WebSocket)
+  └── Backtesting framework dengan Sharpe Ratio, Max Drawdown, Calmar Ratio
+
+
+================================================================================
+BAGIAN 4 — PRIORITAS EKSEKUSI (YANG BISA LANGSUNG DIKERJAKAN)
+================================================================================
+
+Minggu 1 — Quick Wins (no architecture change, high impact):
+  1. Fix Z-Score window per frekuensi data (FRED monthly vs daily)
+  2. Fix confidence score → baca dari backtest JSON
+  3. Tambah Sentiment_Std di data pipeline
+  4. Fix Recession Risk Score → rolling percentile
+  5. Tambah lagged macro features (CPI lag3, lag6; NFP lag3)
+  6. Tambah disclaimer eksplisit untuk forecast > 14 hari
+  7. Log semua timeframe di counterfactual_logger (bukan hanya 1 Week)
+
+Minggu 2 — Structural Improvements:
+  1. Credit Spread integration (FRED: BAMLH0A0HYM2EY)
+  2. Refactor predictor.py menjadi 3 layer files
+  3. Per-asset LSTM architecture config
+  4. Source credibility weighting di news
+  5. Buat pytest minimal test suite
+
+Minggu 3-4 — Major Upgrades (perlu diskusi terlebih dahulu):
+  1. Ensemble model (LSTM + XGBoost)
+  2. Direct Multi-Step Forecast (ganti recursive)
+  3. DuckDB migrasi dari CSV (opsional, kompleks)
+  4. Model health monitor & alert system
+
+
+================================================================================
+BAGIAN 5 — PERTANYAAN UNTUK DISKUSI (sebelum lanjut eksekusi)
+================================================================================
+
+D1. RECURSIVE vs DIRECT FORECAST:
+    Kita sepakat bahwa recursive 90 langkah dari 60-day model itu invalid.
+    Pilihan:
+      a) Ganti ke Direct: latih 5 model terpisah (banyak training time)
+      b) Ganti ke Seq2Seq: satu model, output langsung 5 timeframe
+      c) Short-term fix: tambah disclaimer + batasi display
+    Mana yang kamu prioritaskan?
+
+D2. ENSEMBLE:
+    Untuk mencapai middle upper, ensemble adalah upgrade terbesar.
+    Tapi butuh 3-5 hari dan semua model harus diretrain.
+    Apakah mau dikerjakan di session berikutnya?
+
+D3. DATABASE MIGRATION:
+    Apakah mau migrasi ke DuckDB? Ini perubahan struktural besar.
+    Benefit: data tidak bisa korup, bisa query SQL, lebih cepat.
+    Risk: semua data_fetcher dan predictor harus diupdate.
+    Atau: tetap CSV tapi tambah backup otomatis?
+
+D4. TFT (Temporal Fusion Transformer):
+    Ini adalah "high class" upgrade yang paling signifikan.
+    Butuh library pytorch-forecasting, beda stack dari TensorFlow yang sekarang.
+    Apakah mau invest waktu belajar PyTorch stack untuk ini?
+
+================================================================================
+STATUS DOKUMEN: DRAFT — Tunggu jawaban diskusi sebelum eksekusi Tier 2 & 3
+Dibuat: 2026-05-18 | Penulis: Antigravity AI
+================================================================================

@@ -1,7 +1,8 @@
 """
 FRED Macro Indicators Fetcher
 Uses direct FRED REST API via requests (no fredapi package needed).
-Fetches: CPI, PPI, PCE, NFP, GDP, Yield Curve (10Y-2Y), M2 Money Supply
+Fetches: CPI, PPI, PCE, NFP, GDP, Yield Curve (10Y-2Y), M2 Money Supply,
+         Breakeven Inflation, Credit Spread (HY OAS)
 """
 
 import requests
@@ -30,15 +31,18 @@ FRED_API_KEYS = [k for k in FRED_API_KEYS if k]
 # FRED Series to fetch
 # ---------------------------------------------------------------------------
 FRED_SERIES = {
-    'CPI':         'CPIAUCSL',   # CPI All Urban (monthly)
-    'PPI':         'PPIACO',     # PPI All Commodities (monthly)
-    'PCE':         'PCEPI',      # PCE Price Index (monthly)
-    'NFP':         'PAYEMS',     # Non-Farm Payrolls (monthly)
-    'GDP':         'GDP',        # Nominal GDP (quarterly)
-    'YieldCurve':  'T10Y2Y',     # 10Y minus 2Y spread (daily)
-    'Yield_10Y':   'DGS10',      # 10Y Treasury Constant Maturity Rate (daily) — Cost of Capital
-    'M2':          'M2SL',       # M2 Money Supply (monthly)
-    'Breakeven5Y5Y': 'T5YIFR',   # 5Y,5Y Forward Inflation Expectation Rate (daily) — Fed Credibility
+    'CPI':           'CPIAUCSL',      # CPI All Urban (monthly)
+    'PPI':           'PPIACO',        # PPI All Commodities (monthly)
+    'PCE':           'PCEPI',         # PCE Price Index (monthly)
+    'NFP':           'PAYEMS',        # Non-Farm Payrolls (monthly)
+    'GDP':           'GDP',           # Nominal GDP (quarterly)
+    'YieldCurve':    'T10Y2Y',        # 10Y minus 2Y spread (daily)
+    'Yield_10Y':     'DGS10',         # 10Y Treasury Constant Maturity Rate (daily)
+    'M2':            'M2SL',          # M2 Money Supply (monthly)
+    'Breakeven5Y5Y': 'T5YIFR',        # 5Y,5Y Forward Inflation Expectation Rate (daily)
+    'CreditSpread':  'BAMLH0A0HYM2EY', # ICE BofA HY OAS Credit Spread (daily)
+                                      # Leading indicator: widening = systemic stress
+                                      # Best predictor for 2008, 2020, 2022 crashes
 }
 
 FRED_BASE = "https://api.stlouisfed.org/fred/series/observations"
@@ -161,6 +165,15 @@ def fetch_fred_data(start_date='2009-01-01'):
     if raw['Breakeven5Y5Y'] is not None:
         be_daily = raw['Breakeven5Y5Y'].reindex(daily_index).ffill()
         daily_df['Breakeven_5Y5Y'] = be_daily
+
+    # Add Credit Spread (BAMLH0A0HYM2EY) — ICE BofA HY OAS spread
+    # Widening spread = credit stress / systemic risk (leading indicator)
+    # Baseline: ~300-400bps normal | >600bps = distress | >1000bps = crisis
+    if raw.get('CreditSpread') is not None:
+        cs_daily = raw['CreditSpread'].reindex(daily_index).ffill()
+        daily_df['Credit_Spread'] = cs_daily
+        # Credit Spread regime flag: >500bps = stress, >800bps = crisis
+        daily_df['Credit_Stress_Flag'] = (daily_df['Credit_Spread'] > 500).astype(int)
 
     # M2 Liquidity Spike Flag — detects sudden MoM acceleration (>0.5% = potential bailout/stimulus)
     if 'M2_MoM' in daily_df.columns:

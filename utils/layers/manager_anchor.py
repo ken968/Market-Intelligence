@@ -1,0 +1,207 @@
+"""
+Manager Layer (Level 2) — Ensemble Alpha Engine & Anchoring
+============================================================
+Responsible for:
+  - Dual-Head Stacker inference (Direction Head + Magnitude Head)
+  - LSTM + XGBoost signal extraction for meta-feature vector
+  - pct_chain_forecast: converts 7D stacker signal → any horizon price path
+  - Correlation enforcement via CorrelationEnforcer
+
+This module contains the pure logic; state management lives in AssetPredictor.
+Import from utils.predictor (orchestrator) for end-to-end usage.
+"""
+
+import os
+import json
+import pickle
+import numpy as np
+import pandas as pd
+
+
+def load_stacker_models(asset_key: str):
+    """
+    Load Dual-Head Stacker files for a given asset.
+
+    Returns:
+        (dir_head, mag_head, meta_scaler, stacker_meta) or None if not found
+    """
+    dir_path  = f'models/{asset_key}_stacker_direction.pkl'
+    mag_path  = f'models/{asset_key}_stacker_magnitude.pkl'
+    scl_path  = f'models/{asset_key}_stacker_meta_scaler.pkl'
+    meta_path = f'models/{asset_key}_stacker_meta.json'
+
+    if not all(os.path.exists(p) for p in [dir_path, mag_path, scl_path]):
+        return None
+
+    try:
+        with open(dir_path,  'rb') as fh: dir_head     = pickle.load(fh)
+        with open(mag_path,  'rb') as fh: mag_head     = pickle.load(fh)
+        with open(scl_path,  'rb') as fh: meta_scaler  = pickle.load(fh)
+        stacker_meta = None
+        if os.path.exists(meta_path):
+            with open(meta_path, 'r') as fh:
+                stacker_meta = json.load(fh)
+        return dir_head, mag_head, meta_scaler, stacker_meta
+    except Exception as e:
+        print(f"[manager_anchor] Stacker load error: {e}")
+        return None
+
+
+def get_lstm_signal(asset_key: str, config: dict, df_full: pd.DataFrame) -> float:
+    """
+    Extract LSTM 7-day % change prediction from the trained LSTM model.
+
+    Uses the _target scaler (% change target) if available.
+    Falls back to 0.0 on any failure.
+    """
+    try:
+        from tensorflow.keras.models import load_model as keras_load
+        feat_scaler_path   = config['scaler_file']
+        target_scaler_path = config['scaler_file'].replace('.pkl', '_target.pkl')
+
+        if not all(os.path.exists(p) for p in [config['model_file'],
+                                                feat_scaler_path,
+                                                target_scaler_path]):
+            return 0.0
+
+        lstm_model = keras_load(config['model_file'])
+        with open(feat_scaler_path, 'rb') as fh:  feat_sc = pickle.load(fh)
+        with open(target_scaler_path, 'rb') as fh: tgt_sc  = pickle.load(fh)
+
+        seq_len  = config.get('sequence_length', 60)
+        features = [f for f in config['features'] if f in df_full.columns]
+        window   = df_full[features].ffill().fillna(0).iloc[-seq_len:].values
+
+        if window.shape[0] != seq_len:
+            return 0.0
+
+        w_sc = feat_sc.transform(window)
+        p_sc = lstm_model.predict(w_sc.reshape(1, seq_len, -1), verbose=0)[0, 0]
+        return float(tgt_sc.inverse_transform([[p_sc]])[0, 0])
+
+    except Exception:
+        return 0.0
+
+
+def get_xgb_signal(asset_key: str, df_last: pd.DataFrame) -> float:
+    """
+    Extract XGBoost macro model 7-day % change prediction.
+    Falls back to 0.0 on any failure.
+    """
+    try:
+        import xgboost as xgb_lib
+        xgb_model_path  = f'models/{asset_key}_xgb_macro.json'
+        xgb_scaler_path = f'models/{asset_key}_xgb_scaler.pkl'
+        xgb_feat_path   = f'models/{asset_key}_xgb_features.json'
+
+        if not all(os.path.exists(p) for p in [xgb_model_path,
+                                                xgb_scaler_path,
+                                                xgb_feat_path]):
+            return 0.0
+
+        xgb_m = xgb_lib.XGBRegressor()
+        xgb_m.load_model(xgb_model_path)
+        with open(xgb_scaler_path, 'rb') as fh: xgb_sc = pickle.load(fh)
+        with open(xgb_feat_path,   'r')  as fh: xgb_meta = json.load(fh)
+
+        xgb_feats = [ft for ft in xgb_meta['features'] if ft in df_last.columns]
+        X_xgb     = df_last[xgb_feats].fillna(0).values
+        return float(xgb_m.predict(xgb_sc.transform(X_xgb))[0])
+
+    except Exception:
+        return 0.0
+
+
+def run_dual_head_inference(
+    dir_head,
+    mag_head,
+    meta_scaler,
+    stacker_meta,
+    lstm_signal: float,
+    xgb_signal: float,
+    ctx_values: dict,
+    current_price: float,
+) -> dict:
+    """
+    Run Dual-Head Stacker inference given pre-computed signals.
+
+    Returns:
+        dict with pct_change_7d, direction, direction_prob, predicted_price, etc.
+    """
+    CTX_FEATURES = ['VIX', 'GK_Vol_21d', 'Sentiment', 'Sentiment_Std',
+                    'YieldCurve_10Y2Y', 'DXY']
+
+    if stacker_meta and 'feature_names' in stacker_meta:
+        feature_names = stacker_meta['feature_names']
+    else:
+        feature_names = ['lstm_pred', 'xgb_pred'] + CTX_FEATURES
+
+    row = {'lstm_pred': lstm_signal, 'xgb_pred': xgb_signal}
+    row.update({f: ctx_values.get(f, 0.0) for f in CTX_FEATURES})
+
+    meta_vec = np.array([[row.get(f, 0.0) for f in feature_names]])
+
+    try:
+        meta_sc    = meta_scaler.transform(meta_vec)
+        dir_prob   = float(dir_head.predict_proba(meta_sc)[0, 1])
+        magnitude  = float(mag_head.predict(meta_sc)[0])
+
+        dir_signal  = (dir_prob - 0.5) * 2.0      # [-1, +1]
+        pct_change  = dir_signal * abs(magnitude)
+        direction   = 'up' if pct_change > 0 else 'down'
+        dir_conf    = max(dir_prob, 1 - dir_prob)
+        pred_price  = current_price * (1 + pct_change)
+
+    except Exception as e:
+        print(f"[manager_anchor] Inference error: {e}")
+        pct_change = 0.0
+        direction  = 'flat'
+        dir_prob   = 0.5
+        dir_conf   = 0.5
+        pred_price = current_price
+
+    return {
+        'pct_change_7d':   float(pct_change),
+        'direction':       direction,
+        'direction_prob':  float(dir_conf),
+        'predicted_price': float(pred_price),
+        'lstm_signal':     float(lstm_signal),
+        'xgb_signal':      float(xgb_signal),
+        'model':           'dual_head_ensemble',
+    }
+
+
+def pct_chain_forecast(
+    current_price: float,
+    ensemble_7d_pct: float,
+    steps: int,
+    ceo_drift_multiplier: float = 1.0,
+) -> list:
+    """
+    Convert a 7-day % change signal from the Stacker → smooth price path of `steps` length.
+
+    Strategy:
+      - Linearly scales 7D signal (cap at 12× = ~3 months)
+      - CEO multiplier modulates magnitude
+      - Returns linear interpolation from current → target price
+
+    Args:
+        current_price        : latest actual price
+        ensemble_7d_pct      : Dual-Head Stacker's 7-day % change prediction
+        steps                : number of price points to generate
+        ceo_drift_multiplier : [0.85, 1.15] — CEO Layer direction bias
+
+    Returns:
+        list of float prices (length = steps)
+    """
+    dm              = max(0.85, min(1.15, ceo_drift_multiplier))
+    adjusted_7d_pct = ensemble_7d_pct * dm
+
+    momentum_scale  = min(12.0, steps / 7.0)
+    horizon_pct     = adjusted_7d_pct * momentum_scale
+    target_price    = current_price * (1.0 + horizon_pct)
+
+    return [
+        current_price + (target_price - current_price) * (i + 1) / steps
+        for i in range(steps)
+    ]

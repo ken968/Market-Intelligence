@@ -247,6 +247,15 @@ else:
                     st.markdown("####  Forecast Results")
                     render_prediction_table(forecasts, "Gold")
 
+                    # Speculative warning for long-horizon forecasts
+                    st.warning(
+                        "**1 Month & 3 Months forecasts are SPECULATIVE.**  \n"
+                        "These horizons use recursive compounding from a 60-day trained model, "
+                        "which introduces exponential error growth. The recursive error compounds "
+                        "with each step, making forecasts beyond 14 days unreliable as price targets. "
+                        "Use these only as directional scenario analysis — **not as price targets**."
+                    )
+
                     # Alpha Engine signal panel (only renders if ensemble models exist)
                     render_alpha_engine_panel(forecasts, "Gold")
 

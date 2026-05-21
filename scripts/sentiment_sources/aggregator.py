@@ -23,6 +23,45 @@ from sentiment_sources.geopolitical_fetcher import GeopoliticalFetcher
 
 class SentimentAggregator:
     """Aggregate sentiment from multiple sources"""
+
+    # Domain-level credibility scores.
+    # Final weight = source_type_weight (macro=2.5x etc) × domain_credibility
+    # Tier 1 (1.0): Institutional/official sources
+    # Tier 2 (0.9-0.8): Major financial press
+    # Tier 3 (0.7-0.6): Established financial media
+    # Tier 4 (0.5-0.4): Crypto/niche/social media
+    SOURCE_CREDIBILITY = {
+        # Official / Institutional
+        'federalreserve.gov':   1.0,
+        'treasury.gov':         1.0,
+        'bis.org':              1.0,
+        'imf.org':              1.0,
+        # Tier 1 Financial Press
+        'reuters.com':          1.0,
+        'bloomberg.com':        1.0,
+        'ft.com':               0.95,
+        'wsj.com':              0.9,
+        'economist.com':        0.9,
+        # Tier 2 Financial Media
+        'cnbc.com':             0.75,
+        'marketwatch.com':      0.75,
+        'businessinsider.com':  0.70,
+        'forbes.com':           0.70,
+        'barrons.com':          0.80,
+        'finance.yahoo.com':    0.70,
+        'investing.com':        0.65,
+        # Crypto-specific
+        'coindesk.com':         0.65,
+        'cointelegraph.com':    0.60,
+        'decrypt.co':           0.55,
+        'theblock.co':          0.65,
+        # Social / Low credibility
+        'reddit.com':           0.40,
+        'twitter.com':          0.40,
+        'x.com':                0.40,
+    }
+    DEFAULT_CREDIBILITY = 0.55  # Unknown sources get 55%
+
     
     def __init__(self):
         """Initialize all available sentiment sources"""
@@ -75,19 +114,31 @@ class SentimentAggregator:
         for source in self.sources:
             try:
                 articles = source.fetch_news(asset, days)
-                
-                # Apply structural weighting to solve "Sama Rata" Anomaly
-                weight = 1.0
+
+                # Source-type weight (structural)
+                type_weight = 1.0
                 if isinstance(source, (GeopoliticalFetcher, MacroNewsFetcher)):
-                    weight = 2.5  # Critical Macro/Geo news gets 2.5x weight
+                    type_weight = 2.5  # Critical Macro/Geo news gets 2.5x weight
                 elif isinstance(source, OnChainFetcher):
-                    weight = 1.5  # Fundamental data gets 1.5x weight
+                    type_weight = 1.5  # Fundamental data gets 1.5x weight
                 elif isinstance(source, TwitterSentimentFetcher):
-                    weight = 0.8  # Social noise reduced slightly
-                
+                    type_weight = 0.8  # Social noise reduced slightly
+
                 for a in articles:
-                    a['weight'] = weight
-                    
+                    # Domain-level credibility multiplier
+                    url = a.get('url', '') or ''
+                    domain = ''
+                    if url:
+                        try:
+                            from urllib.parse import urlparse
+                            domain = urlparse(url).netloc.lower().replace('www.', '')
+                        except Exception:
+                            pass
+                    cred = self.SOURCE_CREDIBILITY.get(domain, self.DEFAULT_CREDIBILITY)
+                    a['weight'] = type_weight * cred
+                    a['domain'] = domain
+                    a['credibility'] = cred
+
                 all_articles.extend(articles)
             except Exception as e:
                 print(f"  {source.source_name}: Failed - {e}")

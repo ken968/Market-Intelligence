@@ -163,6 +163,8 @@ def build_macro_context(fred_path: str = 'data/fred_indicators.csv') -> dict:
         'CPI_MoM':          round(latest.get('CPI_MoM', 0), 2),
         'PCE_MoM':          round(latest.get('PCE_MoM', 0), 2),
         'PPI_MoM':          round(latest.get('PPI_MoM', 0), 2),
+        'Credit_Spread':    round(latest.get('Credit_Spread', 0), 2),
+        'Credit_Stress':    bool(latest.get('Credit_Stress_Flag', 0)),
     }
 
     # Human-readable summary injected into LLM system prompt
@@ -174,6 +176,8 @@ def build_macro_context(fred_path: str = 'data/fred_indicators.csv') -> dict:
         f"- M2 Money Supply: YoY {latest_values['M2_YoY']:+.1f}% / MoM {latest_values['M2_MoM']:+.2f}% → {m2_bias.upper()}"
         + (" ⚡ LIQUIDITY SPIKE DETECTED" if m2_liquidity_event else "") + "\n"
         f"- Inflation Pipeline: CPI {latest_values['CPI_MoM']:+.2f}% | PPI {latest_values['PPI_MoM']:+.2f}% | PCE {latest_values['PCE_MoM']:+.2f}% (MoM)\n"
+        f"- Credit Spread (HY OAS): {latest_values['Credit_Spread']:.0f}bps"
+        + (" 🚨 CREDIT STRESS" if latest_values['Credit_Stress'] else " (Normal)") + "\n"
         f"- Composite Recession Risk Score: {recession_risk:.2f}/1.00\n"
     )
 

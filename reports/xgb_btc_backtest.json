@@ -1,0 +1,53 @@
+{
+    "asset": "btc",
+    "model_type": "xgboost_macro",
+    "horizon_days": 7,
+    "hit_ratio_train": 59.37132784958872,
+    "hit_ratio_test": 56.874265569917746,
+    "rmse_train": 0.09483007560223256,
+    "rmse_test": 0.06300195211226157,
+    "n_features": 21,
+    "best_iteration": 15,
+    "top_features": [
+        {
+            "feature": "Breakeven_5Y5Y",
+            "importance": 0.08111640065908432
+        },
+        {
+            "feature": "Yield_10Y",
+            "importance": 0.07917485386133194
+        },
+        {
+            "feature": "VIX",
+            "importance": 0.07232031971216202
+        },
+        {
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.07210305333137512
+        },
+        {
+            "feature": "Yield_10Y_Rate",
+            "importance": 0.06640788912773132
+        },
+        {
+            "feature": "M2_YoY",
+            "importance": 0.06607592850923538
+        },
+        {
+            "feature": "DXY",
+            "importance": 0.06534024327993393
+        },
+        {
+            "feature": "PPI_MoM",
+            "importance": 0.05823405086994171
+        },
+        {
+            "feature": "Oil_Price",
+            "importance": 0.057349640876054764
+        },
+        {
+            "feature": "CPI_MoM",
+            "importance": 0.05702538043260574
+        }
+    ]
+}
