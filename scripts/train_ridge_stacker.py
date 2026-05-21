@@ -45,7 +45,14 @@ import pandas as pd
 import pickle
 
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['PYTHONHASHSEED'] = '42'
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# ── Reproducibility ──────────────────────────────────────────────────────────
+import random as _random
+_random.seed(42)
+import numpy as np
+np.random.seed(42)
 
 from sklearn.linear_model import LogisticRegressionCV, HuberRegressor
 from sklearn.preprocessing import StandardScaler

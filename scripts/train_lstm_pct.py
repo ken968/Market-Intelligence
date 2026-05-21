@@ -37,7 +37,16 @@ import numpy as np
 import pandas as pd
 
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['PYTHONHASHSEED'] = '42'
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# ── Reproducibility: fix all random seeds ──────────────────────────────────
+import random
+random.seed(42)
+import numpy as np
+np.random.seed(42)
+import tensorflow as tf
+tf.random.set_seed(42)
 
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.metrics import mean_squared_error

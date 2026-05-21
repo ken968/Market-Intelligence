@@ -25,8 +25,8 @@
     "horizon_days": 7,
     "sequence_length": 60,
     "target_type": "pct_change_7d",
-    "hit_ratio_test": 55.81395348837209,
-    "rmse_test": 0.035367405184469985,
+    "hit_ratio_test": 47.58497316636851,
+    "rmse_test": 0.03554083913844097,
     "n_train": 2236,
     "n_test": 559,
     "target_scaler_path": "models/scaler_target.pkl"
