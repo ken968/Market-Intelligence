@@ -128,7 +128,14 @@ def get_lstm_pct_predictions(asset_key: str, df_test: pd.DataFrame) -> np.ndarra
 # STEP 2: Get XGBoost predictions
 # ─────────────────────────────────────────────────────────────────────────────
 def get_xgb_pct_predictions(asset_key: str, df_test: pd.DataFrame) -> np.ndarray:
-    """Load XGBoost macro model and predict 7D % change."""
+    """
+    Load XGBoost macro model and predict 7D % change.
+
+    Auto-generates lagged features (e.g. CPI_MoM_lag3) on-the-fly if they are
+    required by the saved model but missing from df_test. This ensures backward
+    compatibility when the XGBoost model was trained with lag features that are
+    not persisted in the CSV.
+    """
     model_path   = f'models/{asset_key}_xgb_macro.json'
     scaler_path  = f'models/{asset_key}_xgb_scaler.pkl'
     feature_path = f'models/{asset_key}_xgb_features.json'
@@ -144,8 +151,47 @@ def get_xgb_pct_predictions(asset_key: str, df_test: pd.DataFrame) -> np.ndarray
     with open(feature_path, 'r') as f:
         meta = json.load(f)
 
-    features = [f for f in meta['features'] if f in df_test.columns]
-    X = df_test[features].fillna(0).values
+    required_features = meta['features']
+
+    # ── Auto-generate lag features missing from df_test ──────────────────────
+    # Detect pattern: <base_col>_lag<N>  (e.g. CPI_MoM_lag3, NFP_Change_lag6)
+    import re
+    df_work = df_test.copy()
+    for feat in required_features:
+        if feat not in df_work.columns:
+            match = re.match(r'^(.+)_lag(\d+)$', feat)
+            if match:
+                base_col, lag_n = match.group(1), int(match.group(2))
+                if base_col in df_work.columns:
+                    df_work[feat] = df_work[base_col].shift(lag_n).fillna(0)
+                    print(f"  [XGB] Auto-generated lag feature: {feat} from {base_col} (lag={lag_n})")
+                else:
+                    df_work[feat] = 0.0
+                    print(f"  [XGB] Lag base col '{base_col}' not in data — filling {feat} with 0")
+            else:
+                df_work[feat] = 0.0
+                print(f"  [XGB] Feature '{feat}' not in data — filling with 0")
+
+    # Now all required features should be present
+    missing_still = [f for f in required_features if f not in df_work.columns]
+    if missing_still:
+        print(f"  [XGB] WARNING: still missing {missing_still} — filling with 0")
+        for f in missing_still:
+            df_work[f] = 0.0
+
+    X = df_work[required_features].fillna(0).values
+
+    # Final safety check against scaler's expected feature count
+    if hasattr(scaler, 'n_features_in_') and X.shape[1] != scaler.n_features_in_:
+        print(f"  [XGB] Feature count mismatch: data={X.shape[1]}, scaler={scaler.n_features_in_}")
+        print(f"  [XGB] Retrain XGBoost to fix permanently: python scripts/train_xgboost_macro.py {asset_key}")
+        # Pad or truncate to match
+        if X.shape[1] < scaler.n_features_in_:
+            pad = np.zeros((X.shape[0], scaler.n_features_in_ - X.shape[1]))
+            X   = np.hstack([X, pad])
+        else:
+            X = X[:, :scaler.n_features_in_]
+
     return model.predict(scaler.transform(X))
 
 

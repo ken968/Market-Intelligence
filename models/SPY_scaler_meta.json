@@ -18,15 +18,16 @@
         "Breakeven_5Y5Y",
         "M2_Liquidity_Spike",
         "MacroEvent_Flag",
+        "Credit_Spread",
         "Sentiment",
         "EMA_90"
     ],
     "horizon_days": 7,
     "sequence_length": 60,
     "target_type": "pct_change_7d",
-    "hit_ratio_test": 63.50626118067979,
-    "rmse_test": 0.024365972451951625,
-    "n_train": 2234,
+    "hit_ratio_test": 53.48837209302325,
+    "rmse_test": 0.02482398157311962,
+    "n_train": 2236,
     "n_test": 559,
     "target_scaler_path": "models/SPY_scaler_target.pkl"
 }

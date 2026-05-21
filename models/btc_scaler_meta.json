@@ -18,6 +18,7 @@
         "Breakeven_5Y5Y",
         "M2_Liquidity_Spike",
         "MacroEvent_Flag",
+        "Credit_Spread",
         "Sentiment",
         "Halving_Cycle",
         "EMA_90"
@@ -25,9 +26,9 @@
     "horizon_days": 7,
     "sequence_length": 90,
     "target_type": "pct_change_7d",
-    "hit_ratio_test": 53.9015606242497,
-    "rmse_test": 0.06313607926424593,
-    "n_train": 3332,
-    "n_test": 833,
+    "hit_ratio_test": 49.280575539568346,
+    "rmse_test": 0.06980667878334483,
+    "n_train": 3333,
+    "n_test": 834,
     "target_scaler_path": "models/btc_scaler_target.pkl"
 }

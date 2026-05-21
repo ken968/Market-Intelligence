@@ -70,32 +70,53 @@ def hit_ratio(y_pred: np.ndarray, y_true: np.ndarray) -> float:
 # ─────────────────────────────────────────────────────────────────────────────
 def build_model(seq_len: int, n_features: int, asset_key: str) -> tf.keras.Model:
     """
-    Build LSTM model. BTC gets deeper architecture (more data, more volatility).
+    Build LSTM model from config['model_arch'] (per-asset architecture from Minggu 2).
+
+    Architecture profiles (set in utils/config.py):
+        Gold (stable):       units=[64, 32],    dropout=0.20, attention=False
+        BTC (volatile):      units=[128,64,32], dropout=0.30, attention=True
+        NVDA/TSLA (high β):  units=[128, 64],   dropout=0.35, attention=True
+        SPY/DIA (index):     units=[64, 32],    dropout=0.20, attention=False
+
     Output: 1 neuron (unnormalized % change — StandardScaler handles scaling)
     """
-    if asset_key == 'btc':
-        model = Sequential([
-            Input(shape=(seq_len, n_features)),
-            LSTM(128, return_sequences=True, kernel_regularizer=l2(0.001)),
-            Dropout(0.3),
-            LSTM(64, return_sequences=True, kernel_regularizer=l2(0.001)),
-            Dropout(0.3),
-            LSTM(32, return_sequences=False, kernel_regularizer=l2(0.001)),
-            Dropout(0.25),
-            Dense(16, kernel_regularizer=l2(0.001)),
-            Dense(1)
-        ])
-    else:
-        model = Sequential([
-            Input(shape=(seq_len, n_features)),
-            LSTM(100, return_sequences=True, kernel_regularizer=l2(0.001)),
-            Dropout(0.3),
-            LSTM(50, return_sequences=False, kernel_regularizer=l2(0.001)),
-            Dropout(0.3),
-            Dense(25, kernel_regularizer=l2(0.001)),
-            Dense(1)
-        ])
+    from tensorflow.keras.models import Model
+    from tensorflow.keras.layers import (
+        Input as KInput, LSTM, Dense, Dropout,
+        MultiHeadAttention, LayerNormalization, Flatten
+    )
+    from tensorflow.keras.regularizers import l2 as keras_l2
 
+    # Read from config; fall back to safe defaults if key missing
+    asset_cfg = ASSETS.get(asset_key, {})
+    arch      = asset_cfg.get('model_arch', {'units': [100, 50], 'dropout': 0.3, 'attention': False})
+    units     = arch.get('units',    [100, 50])
+    dropout   = arch.get('dropout',  0.3)
+    use_attn  = arch.get('attention', False)
+
+    print(f"  Model arch: units={units}, dropout={dropout}, attention={use_attn}")
+
+    inp = KInput(shape=(seq_len, n_features))
+    x   = inp
+
+    for i, u in enumerate(units):
+        is_last    = (i == len(units) - 1)
+        return_seq = (not is_last) or use_attn   # keep sequence for attention or next LSTM
+        x = LSTM(u, return_sequences=return_seq, kernel_regularizer=keras_l2(0.001))(x)
+        x = Dropout(dropout)(x)
+
+        # Self-Attention after first LSTM layer (if enabled)
+        if use_attn and i == 0:
+            attn_out = MultiHeadAttention(num_heads=4, key_dim=max(1, u // 4))(x, x)
+            attn_out = LayerNormalization()(attn_out + x)   # residual
+            x = attn_out if not is_last else Flatten()(attn_out)
+        elif is_last and use_attn:
+            x = Flatten()(x)   # flatten sequence dim after last attended LSTM
+
+    x   = Dense(max(16, units[-1] // 2), kernel_regularizer=keras_l2(0.001))(x)
+    out = Dense(1)(x)
+
+    model = Model(inputs=inp, outputs=out)
     model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
     return model
 
