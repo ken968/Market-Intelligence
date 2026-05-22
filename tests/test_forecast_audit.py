@@ -41,7 +41,7 @@ def test_asset(key, name):
         current = f['Current']
         print(f"\nMulti-Range Forecast (from ${current:,.2f}):")
         for k, v in f.items():
-            if k == 'Current':
+            if k not in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']:
                 continue
             price = v['price']
             change = ((price - current) / current) * 100
@@ -59,14 +59,14 @@ def test_asset(key, name):
             issues.append(f"WARNING: 1-week prediction {w['pct_change']:+.2f}% exceeds 15% weekly limit")
         
         for k, v in f.items():
-            if k == 'Current':
+            if k not in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']:
                 continue
             change_pct = ((v['price'] - current) / current) * 100
             if abs(change_pct) > 100:
                 issues.append(f"WARNING: {k} prediction {change_pct:+.1f}% exceeds 100% change")
         
         for k, v in f.items():
-            if k == 'Current':
+            if k not in ['1 Day', '1 Week', '2 Weeks', '1 Month', '3 Months']:
                 continue
             if v['price'] <= 0:
                 issues.append(f"BUG: {k} prediction is ${v['price']:,.2f} (negative/zero!)")

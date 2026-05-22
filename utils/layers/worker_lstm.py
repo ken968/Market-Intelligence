@@ -139,23 +139,78 @@ def recursive_forecast(
     n_scaled_features = scaled_data.shape[1]
     current_batch     = scaled_data[-seq_len:].reshape(1, seq_len, n_scaled_features)
 
-    predictions = []
+    # ── Load target scaler (StandardScaler fitted on 7-day pct change) ────────
+    import pickle
+    target_scaler_path = config['scaler_file'].replace('.pkl', '_target.pkl')
+    target_scaler = None
+    if os.path.exists(target_scaler_path):
+        try:
+            with open(target_scaler_path, 'rb') as fh:
+                target_scaler = pickle.load(fh)
+        except Exception as e:
+            print(f"[worker_lstm] Error loading target scaler: {e}")
+
+    # Extract price MinMaxScaler params (feature 0)
+    if hasattr(scaler, 'scale_') and len(scaler.scale_) > 0:
+        scale_price = scaler.scale_[0]
+        min_price = scaler.min_[0]
+    else:
+        # Extreme fallback
+        scale_price = 1.0
+        min_price = 0.0
+
+    predictions_unscaled = []
     temp_data   = current_batch.copy()
     features    = config['features']
+
+    # Unscaled starting price
+    start_price_sc = current_batch[0, -1, 0]
+    start_price_unscaled = (start_price_sc - min_price) / scale_price
 
     for i in range(steps):
         pred_scaled    = predict_next_step(model, scaler, temp_data)
         prev_frame     = temp_data[0, -1, :].copy()
         prev_price_sc  = prev_frame[0]
-        start_price_sc = current_batch[0, -1, 0]
+        prev_price_unscaled = (prev_price_sc - min_price) / scale_price
 
-        # Adaptive damping
-        ai_delta     = np.clip(pred_scaled - prev_price_sc, -0.008, 0.008)
+        # Inverse transform standardized pred_scaled to get actual 7-day percent change
+        if target_scaler is not None:
+            pred_pct = float(target_scaler.inverse_transform([[pred_scaled]])[0, 0])
+        else:
+            # Fallback mean and scale based on asset type
+            if asset_key == 'btc':
+                mean_f = 0.01301992
+                scale_f = 0.09447334
+            else:
+                mean_f = 0.00361131
+                scale_f = 0.02633123
+            pred_pct = pred_scaled * scale_f + mean_f
+
+        # Daily return is predicted 7-day change / 7
+        pred_daily_ret = pred_pct / 7.0
+
+        # Dynamic daily return clipping to prevent wild compounding swings
+        max_daily_ret = 0.06 if asset_key == 'btc' else 0.015
+        daily_ret_clipped = np.clip(pred_daily_ret, -max_daily_ret, max_daily_ret)
+
+        # Trust factor and decay
         trust_factor = max(0.05, 1.0 - (i / 365.0))
         decay        = 0.99 if asset_key != 'btc' else 0.97
-        ai_movement  = ai_delta * decay * trust_factor
-        anchor_pull  = (start_price_sc - prev_price_sc) * (1.0 - trust_factor) * 0.01
-        new_price_sc = prev_price_sc + ai_movement + anchor_pull
+        ai_movement  = daily_ret_clipped * decay * trust_factor
+
+        # Anchor pull in unscaled space to prevent drift away from start price
+        anchor_pull_pct = ((start_price_unscaled - prev_price_unscaled) / start_price_unscaled) * (1.0 - trust_factor) * 0.005
+        
+        # Calculate new unscaled price
+        step_return = ai_movement + anchor_pull_pct
+        new_price_unscaled = prev_price_unscaled * (1.0 + step_return)
+
+        # Price floor: 20% of starting price
+        new_price_unscaled = max(new_price_unscaled, start_price_unscaled * 0.2)
+        predictions_unscaled.append(new_price_unscaled)
+
+        # Scale the new price back to MinMaxScaler space for the next recursive step
+        new_price_sc = new_price_unscaled * scale_price + min_price
 
         last_frame    = prev_frame.copy()
         last_frame[0] = new_price_sc
@@ -175,16 +230,6 @@ def recursive_forecast(
                 last_frame[f_idx] += (scaled_means[f_idx] - last_frame[f_idx]) * drift_rate
 
         temp_data = np.append(temp_data[:, 1:, :], [[last_frame]], axis=1)
-        predictions.append(new_price_sc)
 
-    # Inverse transform
-    n_features = scaler.n_features_in_ if hasattr(scaler, 'n_features_in_') else len(features)
-    dummy         = np.zeros((len(predictions), n_features))
-    dummy[:, 0]   = predictions
-    preds_orig    = scaler.inverse_transform(dummy)[:, 0]
+    return predictions_unscaled
 
-    # Price floor: no price below 20% of start price
-    start_price = scaler.inverse_transform(current_batch[0, -1, :].reshape(1, -1))[0, 0]
-    preds_orig  = np.maximum(preds_orig, start_price * 0.2)
-
-    return preds_orig.tolist()

@@ -192,29 +192,82 @@ class AssetPredictor:
             ensemble_result = {}
             print(f"[Ensemble] ensemble_forecast failed, using recursive: {_e}")
 
-        # Run forecasts for all ranges
+        # Generate a single 90-day trajectory
+        max_steps = 90
+        baseline_90 = self.recursive_forecast(max_steps, ceo_drift_multiplier=1.0)
+        if not baseline_90:
+            baseline_90 = [current_price] * max_steps
+
+        contextual_90 = self.pct_chain_forecast(
+            max_steps,
+            ceo_drift_multiplier=ceo_drift_multiplier,
+            ensemble_7d_pct=ensemble_result.get('pct_change_7d')
+        )
+        if not contextual_90:
+            contextual_90 = list(baseline_90)
+
+        # For 1 Week: override endpoint with Dual-Head Stacker signal (applied on the single 90-day trajectory)
+        if (ensemble_result.get('model') == 'dual_head_ensemble'
+                and ensemble_result.get('pct_change_7d') is not None):
+            try:
+                pct_7d    = ensemble_result['pct_change_7d']
+                ens_price = current_price * (1.0 + pct_7d)
+                # Override the first 7 days with a linear interpolation
+                for i in range(7):
+                    contextual_90[i] = current_price + (ens_price - current_price) * (i + 1) / 7.0
+            except Exception as e:
+                print(f"Warning: Failed to apply Stacker override to 90-day trajectory: {e}")
+
+        # Run Monte Carlo simulation ONCE for the 90-day trajectory
+        fan_p10_90, fan_p90_90 = [], []
+        if contextual_90:
+            try:
+                from utils.realtime_prices import get_live_dvol, get_live_vix, iv_to_daily_vol
+
+                if self.asset_key == 'btc':
+                    iv_annual = get_live_dvol(fallback=60.0)
+                    print(f"[Monte Carlo] BTC DVOL (Deribit): {iv_annual:.1f}% annualized")
+                else:
+                    iv_annual = get_live_vix(fallback=20.0)
+                    print(f"[Monte Carlo] VIX (yfinance): {iv_annual:.1f}% annualized")
+
+                vol = iv_to_daily_vol(iv_annual)
+
+                if self.asset_key == 'btc':
+                    vol = max(0.010, min(0.12, vol))
+                elif self.asset_key == 'gold':
+                    vol = max(0.003, min(0.04, vol))
+                else:
+                    vol = max(0.004, min(0.06, vol))
+
+                print(f"[Monte Carlo] Daily IV vol = {vol:.4f} ({vol*100:.2f}%/day)")
+
+            except Exception as e:
+                print(f"[Monte Carlo] IV fetch failed: {e}. Using historical fallback.")
+                vol = 0.035 if self.asset_key == 'btc' else (0.010 if self.asset_key == 'gold' else 0.012)
+
+            ceo_conf = ceo_context.get('confidence', 0.0)
+            if ceo_conf > 0.0:
+                ceo_narrow = 1.0 - (ceo_conf * 0.40)
+                vol = vol * max(0.50, ceo_narrow)
+                print(f"[Monte Carlo] After CEO confidence ({ceo_conf:.2f}) adjustment: vol={vol:.4f}")
+
+            n_paths = 500
+            paths = np.zeros((n_paths, max_steps))
+            for i in range(n_paths):
+                noises = np.random.normal(0, vol, max_steps)
+                cum_noise = np.exp(np.cumsum(noises) - 0.5 * vol**2 * np.arange(1, max_steps + 1))
+                paths[i] = np.array(contextual_90) * cum_noise
+
+            fan_p10_90 = np.percentile(paths, 10, axis=0).tolist()
+            fan_p90_90 = np.percentile(paths, 90, axis=0).tolist()
+
+        # Slice forecasts for all ranges
         for label, steps in FORECAST_RANGES.items():
-            baseline = self.recursive_forecast(steps, ceo_drift_multiplier=1.0)
-
-            contextual = self.pct_chain_forecast(
-                steps, 
-                ceo_drift_multiplier=ceo_drift_multiplier,
-                ensemble_7d_pct=ensemble_result.get('pct_change_7d')
-            )
-
-            # For 1 Week: override endpoint with Dual-Head Stacker signal
-            if (label == '1 Week'
-                    and ensemble_result.get('model') == 'dual_head_ensemble'
-                    and ensemble_result.get('pct_change_7d') is not None):
-                try:
-                    pct_7d    = ensemble_result['pct_change_7d']
-                    ens_price = current_price * (1.0 + pct_7d)
-                    contextual = [
-                        current_price + (ens_price - current_price) * (i + 1) / steps
-                        for i in range(steps)
-                    ]
-                except Exception:
-                    pass
+            baseline = baseline_90[:steps]
+            contextual = contextual_90[:steps]
+            fan_p10 = fan_p10_90[:steps] if fan_p10_90 else []
+            fan_p90 = fan_p90_90[:steps] if fan_p90_90 else []
 
             if LLM_AVAILABLE and headlines and not ceo_context.get('is_fallback', True):
                 try:
@@ -238,49 +291,6 @@ class AssetPredictor:
                 self.asset_key, label,
                 ceo_confidence=ceo_context.get('confidence', 0.0)
             )
-
-            fan_p10, fan_p90 = [], []
-            if contextual:
-                try:
-                    from utils.realtime_prices import get_live_dvol, get_live_vix, iv_to_daily_vol
-
-                    if self.asset_key == 'btc':
-                        iv_annual = get_live_dvol(fallback=60.0)
-                        print(f"[Monte Carlo] BTC DVOL (Deribit): {iv_annual:.1f}% annualized")
-                    else:
-                        iv_annual = get_live_vix(fallback=20.0)
-                        print(f"[Monte Carlo] VIX (yfinance): {iv_annual:.1f}% annualized")
-
-                    vol = iv_to_daily_vol(iv_annual)
-
-                    if self.asset_key == 'btc':
-                        vol = max(0.010, min(0.12, vol))
-                    elif self.asset_key == 'gold':
-                        vol = max(0.003, min(0.04, vol))
-                    else:
-                        vol = max(0.004, min(0.06, vol))
-
-                    print(f"[Monte Carlo] Daily IV vol = {vol:.4f} ({vol*100:.2f}%/day)")
-
-                except Exception as e:
-                    print(f"[Monte Carlo] IV fetch failed: {e}. Using historical fallback.")
-                    vol = 0.035 if self.asset_key == 'btc' else (0.010 if self.asset_key == 'gold' else 0.012)
-
-                ceo_conf = ceo_context.get('confidence', 0.0)
-                if ceo_conf > 0.0:
-                    ceo_narrow = 1.0 - (ceo_conf * 0.40)
-                    vol = vol * max(0.50, ceo_narrow)
-                    print(f"[Monte Carlo] After CEO confidence ({ceo_conf:.2f}) adjustment: vol={vol:.4f}")
-
-                n_paths = 500
-                paths = np.zeros((n_paths, steps))
-                for i in range(n_paths):
-                    noises = np.random.normal(0, vol, steps)
-                    cum_noise = np.exp(np.cumsum(noises) - 0.5 * vol**2 * np.arange(1, steps + 1))
-                    paths[i] = np.array(contextual) * cum_noise
-
-                fan_p10 = np.percentile(paths, 10, axis=0).tolist()
-                fan_p90 = np.percentile(paths, 90, axis=0).tolist()
 
             result_entry = {
                 'price':            contextual[-1] if contextual else current_price,
