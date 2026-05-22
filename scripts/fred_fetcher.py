@@ -202,8 +202,15 @@ def fetch_fred_data(start_date='2009-01-01'):
     return daily_df, gdp_df, calendar_df
 
 
+import sys
+# Ensure project root is in sys.path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from utils.data_store import MarketDataStore
+
+
 def save_fred_data():
-    """Main entry: fetch and save all FRED data to CSVs."""
+    """Main entry: fetch and save all FRED data to DuckDB and CSVs."""
     print("=" * 55)
     print(" FRED MACRO DATA SYNC")
     print("=" * 55)
@@ -216,24 +223,26 @@ def save_fred_data():
         print(f"Error fetching FRED data: {e}")
         return False
 
-    daily_df.to_csv('data/fred_indicators.csv')
-    print(f"\nSystem: fred_indicators.csv saved - {len(daily_df)} daily rows.")
+    store = MarketDataStore()
+
+    # Write daily indicators to DuckDB & CSV
+    store.write_table('fred_indicators', daily_df.reset_index(), 'data/fred_indicators.csv')
+    print(f"\nSystem: fred_indicators saved to DuckDB & CSV - {len(daily_df)} daily rows.")
     print(f"  Columns: {list(daily_df.columns)}")
 
     if gdp_df is not None:
-        gdp_df.to_csv('data/gdp_series.csv')
-        print(f"System: gdp_series.csv saved - {len(gdp_df)} daily rows.")
+        store.write_table('gdp_series', gdp_df.reset_index(), 'data/gdp_series.csv')
+        print(f"System: gdp_series saved to DuckDB & CSV - {len(gdp_df)} daily rows.")
 
     if not calendar_df.empty:
-        calendar_df.to_csv('data/macro_calendar.csv', index=False)
-        print(f"System: macro_calendar.csv saved - {len(calendar_df)} events.")
+        store.write_table('macro_calendar', calendar_df, 'data/macro_calendar.csv')
+        print(f"System: macro_calendar saved to DuckDB & CSV - {len(calendar_df)} events.")
 
     print("\nSystem: FRED sync complete.")
     return True
 
 
 if __name__ == '__main__':
-    import sys
     success = save_fred_data()
     if not success:
         sys.exit(1)

@@ -64,6 +64,27 @@ from utils.config import ASSETS
 HORIZON_DAYS = 7
 
 
+def load_asset_data(asset_key: str, config: dict) -> pd.DataFrame:
+    """
+    Load data for asset from DuckDB, falling back to CSV.
+    """
+    table_name = f"{asset_key.lower()}_global_insights"
+    try:
+        from utils.data_store import MarketDataStore
+        store = MarketDataStore()
+        df = store.read_table(table_name, format='pandas')
+        if 'Date' in df.columns:
+            df['Date'] = pd.to_datetime(df['Date'])
+            df.set_index('Date', inplace=True)
+        df = df.sort_index()
+        return df
+    except Exception as e:
+        print(f"  [Data] DuckDB read failed for '{table_name}' ({e}). Falling back to CSV.")
+        df = pd.read_csv(config['data_file'], index_col=0, parse_dates=True)
+        return df.sort_index()
+
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # STEP 1: Get LSTM predictions (requires train_lstm_pct.py to have been run)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -100,7 +121,7 @@ def get_lstm_pct_predictions(asset_key: str, df_test: pd.DataFrame) -> np.ndarra
     features = [f for f in config['features'] if f in df_test.columns]
 
     # Load full dataset for building lookback windows
-    df_full = pd.read_csv(config['data_file'], index_col=0, parse_dates=True).sort_index()
+    df_full = load_asset_data(asset_key, config)
     df_full = df_full[[f for f in features if f in df_full.columns]].ffill().fillna(0)
 
     preds = []
@@ -227,7 +248,7 @@ def train_dual_head_stacker(asset_key: str) -> dict:
         price_col = config['features'][0]
 
     # Load data, compute target
-    df = pd.read_csv(config['data_file'], index_col=0, parse_dates=True).sort_index()
+    df = load_asset_data(asset_key, config)
     df['_target'] = (df[price_col].shift(-HORIZON_DAYS) - df[price_col]) / df[price_col]
     df = df.dropna(subset=['_target'])
 

@@ -44,7 +44,14 @@ class SignalGenerator:
             }
         """
         # Load latest data
-        df = pd.read_csv(self.config['data_file'])
+        data_path = self.config['data_file']
+        table_name = os.path.splitext(os.path.basename(data_path))[0].lower()
+        from utils.data_store import MarketDataStore
+        store = MarketDataStore()
+        try:
+            df = store.read_table(table_name, format='pandas')
+        except Exception as e:
+            df = pd.read_csv(data_path)
         latest = df.iloc[-1]
         current_price = latest[self.config['features'][0]]
         

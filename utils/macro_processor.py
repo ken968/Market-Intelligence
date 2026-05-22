@@ -21,7 +21,20 @@ load_dotenv()
 
 
 def load_macro_data(fred_path: str = 'data/fred_indicators.csv') -> pd.DataFrame:
-    """Load FRED indicator CSV and return as dated DataFrame."""
+    """Load FRED indicators from DuckDB with fallback to CSV."""
+    from utils.data_store import MarketDataStore
+    store = MarketDataStore()
+    
+    df = None
+    if os.path.basename(fred_path) == 'fred_indicators.csv':
+        try:
+            df = store.read_table('fred_indicators', format='pandas')
+            df['Date'] = pd.to_datetime(df['Date'])
+            df.set_index('Date', inplace=True)
+            return df
+        except Exception as e:
+            print(f"Warning: Could not read 'fred_indicators' from DuckDB: {e}. Falling back to CSV.")
+            
     if not os.path.exists(fred_path):
         raise FileNotFoundError(f"FRED data not found at: {fred_path}. Run fred_fetcher.py first.")
     df = pd.read_csv(fred_path, index_col='Date', parse_dates=True)

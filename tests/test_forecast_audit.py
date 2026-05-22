@@ -2,8 +2,6 @@
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# Redirect output to file
-log_file = open('test_forecast_results.txt', 'w', encoding='utf-8')
 class Tee:
     def __init__(self, *files):
         self.files = files
@@ -14,12 +12,9 @@ class Tee:
     def flush(self):
         for f in self.files:
             f.flush()
-sys.stdout = Tee(sys.stdout, log_file)
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-from utils.predictor import AssetPredictor
-
-def test_asset(key, name):
+def run_forecast_audit_for_asset(key, name):
+    from utils.predictor import AssetPredictor
     print(f"\n{'='*50}")
     print(f" {name} FORECAST TEST")
     print(f"{'='*50}")
@@ -82,10 +77,17 @@ def test_asset(key, name):
         import traceback
         traceback.print_exc()
 
-test_asset('gold', 'GOLD')
-test_asset('btc', 'BITCOIN')
-test_asset('spy', 'SPY (S&P 500)')
+if __name__ == "__main__":
+    # Redirect output to file
+    log_file = open('test_forecast_results.txt', 'w', encoding='utf-8')
+    sys.stdout = Tee(sys.stdout, log_file)
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+    
+    run_forecast_audit_for_asset('gold', 'GOLD')
+    run_forecast_audit_for_asset('btc', 'BITCOIN')
+    run_forecast_audit_for_asset('spy', 'SPY (S&P 500)')
+    
+    print(f"\n{'='*50}")
+    print(" AUDIT COMPLETE")
+    print(f"{'='*50}")
 
-print(f"\n{'='*50}")
-print(" AUDIT COMPLETE")
-print(f"{'='*50}")

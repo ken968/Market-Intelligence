@@ -114,6 +114,9 @@ def fetch_news_sentiment(asset='gold', max_articles=15):
         return pd.DataFrame()
 
 
+from utils.data_store import MarketDataStore
+
+
 def integrate_sentiment(asset='gold'):
     """
     Integrate sentiment data with macro data.
@@ -121,106 +124,90 @@ def integrate_sentiment(asset='gold'):
     Args:
         asset (str): 'gold', 'btc', or stock ticker
     """
-    
     asset_lower = asset.lower()
+    store = MarketDataStore()
     
-    # Determine file names based on asset type
-    # IMPORTANT: Read from *_global_insights.csv (the fresh, up-to-date file kept by data_fetcher_v2.py)
-    # Never read from *_macro_data.csv — those are legacy/stale files that are never updated.
+    # Determine table name and CSV path based on asset type
     if asset_lower == 'gold':
-        macro_file = 'data/gold_global_insights.csv'
-        output_file = 'data/gold_global_insights.csv'
+        table_name = 'gold_global_insights'
+        csv_file = 'data/gold_global_insights.csv'
     elif asset_lower in ['btc', 'bitcoin']:
-        macro_file = 'data/btc_global_insights.csv'
-        output_file = 'data/btc_global_insights.csv'
+        table_name = 'btc_global_insights'
+        csv_file = 'data/btc_global_insights.csv'
     else:
-        # Stock ticker
         ticker = asset.upper()
-        macro_file = f'data/{ticker}_global_insights.csv'
-        output_file = f'data/{ticker}_global_insights.csv'
+        table_name = f"{ticker.lower()}_global_insights"
+        csv_file = f"data/{ticker}_global_insights.csv"
     
-    # Check if macro data exists
-    if not os.path.exists(macro_file):
-        print(f"Error: '{macro_file}' missing.")
+    # Try reading base table from DuckDB, fallback to CSV
+    macro_df = None
+    try:
+        macro_df = store.read_table(table_name, format='pandas')
+        print(f"System: Loaded '{table_name}' from DuckDB.")
+    except Exception as e:
+        print(f"Warning: Could not read '{table_name}' from DuckDB: {e}. Falling back to CSV.")
+        if os.path.exists(csv_file):
+            macro_df = pd.read_csv(csv_file)
+            
+    if macro_df is None:
+        print(f"Error: Could not load data for {asset} from DuckDB or CSV.")
         print(f"Run: python data_fetcher_v2.py {asset_lower}")
         return False
     
-    # Fetch sentiment (60 days for better coverage)
+    # Fetch sentiment (30 days)
     sentiment_df = fetch_news_sentiment(asset)
     
-    # Merge with base data
-    macro_df = pd.read_csv(macro_file)
+    # Ensure Date is string in standard format
     macro_df['Date'] = pd.to_datetime(macro_df['Date']).dt.strftime('%Y-%m-%d')
     
-    # Drop existing Sentiment column from global_insights.csv to prevent
-    # pandas creating Sentiment_x / Sentiment_y duplicates on merge
+    # Drop existing Sentiment column from df to prevent duplicates on merge
     macro_df.drop(columns=['Sentiment'], errors='ignore', inplace=True)
     
-    if sentiment_df.empty:
-        print(f"Warning: No sentiment data found for {asset}.")
-        # Keep existing sentiment if available, else use 0
-        if os.path.exists(output_file):
-            existing = pd.read_csv(output_file)
-            if 'Sentiment' in existing.columns and existing['Sentiment'].ne(0).any():
-                print(f"Keeping existing sentiment data.")
-                # Still update FRED columns if missing or stale
-                fred_file = 'data/fred_indicators.csv'
-                FRED_COLS = ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
-                             'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag',
-                             'M2_YoY', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']
-                needs_update = True  # Forced update to include M2_YoY, Yield_10Y_Rate, Breakeven_5Y5Y
-                if needs_update:
-                    fred_df = pd.read_csv(fred_file, index_col=0, parse_dates=True)
-                    fred_df.index = fred_df.index.strftime('%Y-%m-%d')
-                    fred_df.index.name = 'Date'
-                    fred_df = fred_df.reset_index()
-                    # Drop old/duplicate FRED cols before merging
-                    drop_cols = [c for c in existing.columns
-                                 if any(c.startswith(f) for f in FRED_COLS) or
-                                    c.endswith('_x') or c.endswith('_y')]
-                    existing.drop(columns=drop_cols, inplace=True, errors='ignore')
-                    existing = pd.merge(existing, fred_df, on='Date', how='left')
-                    for col in FRED_COLS:
-                        if col in existing.columns:
-                            existing[col] = existing[col].ffill().fillna(0)
-                    existing.to_csv(output_file, index=False)
-                    print(f"System: FRED indicators patched into existing '{output_file}'.")
-                return True
-        macro_df['Sentiment'] = 0
-        macro_df.to_csv(output_file, index=False)
-        return True
-    
-    final_df = pd.merge(macro_df, sentiment_df, on='Date', how='left')
-    
-    # FIX: Use ffill+bfill so ALL historical rows get non-zero sentiment
-    # This spreads the fetched sentiment backwards/forwards to fill gaps
-    final_df['Sentiment'] = final_df['Sentiment'].ffill().bfill().fillna(0)
-    
-    # Merge FRED Tier 1 indicators (CPI, PPI, PCE, NFP, YieldCurve, M2) if available
-    fred_file = 'data/fred_indicators.csv'
+    # Define FRED columns to merge
     FRED_COLS = ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
                  'YieldCurve_10Y2Y', 'M2_MoM', 'MacroEvent_Flag',
                  'M2_YoY', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike',
                  'Credit_Spread', 'Credit_Stress_Flag']
-    if os.path.exists(fred_file):
-        fred_df = pd.read_csv(fred_file, index_col=0, parse_dates=True)
-        fred_df.index = fred_df.index.strftime('%Y-%m-%d')
-        fred_df.index.name = 'Date'
-        fred_df = fred_df.reset_index()
+                 
+    # Try reading fred indicators from DuckDB, fallback to CSV
+    fred_df = None
+    try:
+        fred_df = store.read_table('fred_indicators', format='pandas')
+        print("System: Loaded 'fred_indicators' from DuckDB.")
+    except Exception as e:
+        print(f"Warning: Could not read 'fred_indicators' from DuckDB: {e}. Falling back to CSV.")
+        if os.path.exists('data/fred_indicators.csv'):
+            fred_df = pd.read_csv('data/fred_indicators.csv')
+
+    if sentiment_df.empty:
+        print(f"Warning: No sentiment data found for {asset}.")
+        # Initialize Sentiment to 0 if not present, otherwise keep existing
+        if 'Sentiment' not in macro_df.columns:
+            macro_df['Sentiment'] = 0.0
+        final_df = macro_df
+    else:
+        final_df = pd.merge(macro_df, sentiment_df, on='Date', how='left')
+        final_df['Sentiment'] = final_df['Sentiment'].ffill().bfill().fillna(0)
+    
+    # Merge FRED indicators
+    if fred_df is not None:
+        fred_df['Date'] = pd.to_datetime(fred_df['Date']).dt.strftime('%Y-%m-%d')
         # Drop any pre-existing FRED cols (including _x/_y suffixes) to prevent duplicates
         drop_cols = [c for c in final_df.columns
                      if any(c.startswith(f) for f in FRED_COLS) or
                         c.endswith('_x') or c.endswith('_y')]
         final_df.drop(columns=drop_cols, inplace=True, errors='ignore')
-        final_df = pd.merge(final_df, fred_df, on='Date', how='left')
+        
+        final_df = pd.merge(final_df, fred_df[['Date'] + [c for c in FRED_COLS if c in fred_df.columns]], on='Date', how='left')
         for col in FRED_COLS:
             if col in final_df.columns:
                 final_df[col] = final_df[col].ffill().fillna(0)
-        print(f"System: FRED indicators merged into '{output_file}'.")
-    
-    final_df.to_csv(output_file, index=False)
+        print(f"System: FRED indicators merged into '{table_name}'.")
+        
+    # Write back to DuckDB and CSV backup
+    store.write_table(table_name, final_df, csv_file)
     non_zero = final_df['Sentiment'].ne(0).sum()
-    print(f"System: '{output_file}' updated successfully.")
+    print(f"System: '{table_name}' table and CSV backup updated successfully.")
     print(f"        Total records: {len(final_df)}, With sentiment: {non_zero} ({100*non_zero//len(final_df)}%)")
     
     return True

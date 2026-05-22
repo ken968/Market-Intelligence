@@ -134,33 +134,15 @@ class LSTMTrainer:
         model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
         return model
 
-    def train(self) -> dict:
-        print(f"\n{'='*60}")
-        print(f" LSTM Pct-Change Training — {self.asset_key.upper()}")
-        print(f"{'='*60}")
-
+    def train_horizon(self, df_base: pd.DataFrame, horizon_days: int) -> dict:
+        print(f"\n  --- Horizon: {horizon_days} Days ---")
         price_col = self._get_price_col()
-
-        # ── Load data ────────────────────────────────────────────────────────────
-        if not os.path.exists(self.data_file):
-            print(f"Error: Data file not found: {self.data_file}")
-            return {}
-
-        df = pd.read_csv(self.data_file, index_col=0, parse_dates=True)
-        df = df.sort_index()
-
-        for feat in self.config['features']:
-            if feat not in df.columns:
-                print(f"  Warning: '{feat}' missing, filling with 0")
-                df[feat] = 0
-
         features = self.config['features']
-        print(f"  Dataset: {len(df)} samples | {len(features)} features")
-        print(f"  Price column: {price_col} | Sequence: {self.seq_len} days | Horizon: {HORIZON_DAYS} days")
 
-    # ── Compute target: 7-day forward % change ───────────────────────────────
+        df = df_base.copy()
+        # Compute target: horizon_days forward % change
         df['_pct_target'] = (
-            df[price_col].shift(-HORIZON_DAYS) - df[price_col]
+            df[price_col].shift(-horizon_days) - df[price_col]
         ) / df[price_col]
 
         df = df.dropna(subset=['_pct_target'])
@@ -186,25 +168,24 @@ class LSTMTrainer:
         X_train, X_test = X_all[:split_idx], X_all[split_idx:]
         y_train, y_test = y_all[:split_idx], y_all[split_idx:]
 
-        print(f"\n  Train: {len(X_train)} | Test: {len(X_test)}")
+        print(f"  Train: {len(X_train)} | Test: {len(X_test)}")
 
         model = self.build_model(self.seq_len, X_train.shape[2])
 
         callbacks = [
             EarlyStopping(monitor='val_loss', patience=15,
-                          restore_best_weights=True, verbose=1),
+                          restore_best_weights=True, verbose=0),
             ReduceLROnPlateau(monitor='val_loss', factor=0.5,
-                              patience=7, min_lr=1e-6, verbose=1),
+                              patience=7, min_lr=1e-6, verbose=0),
         ]
 
-        print("\n  Training...")
         model.fit(
             X_train, y_train,
             epochs=100,
             batch_size=32,
             validation_split=0.1,
             callbacks=callbacks,
-            verbose=2,
+            verbose=0,
         )
 
         y_pred_scaled = model.predict(X_test, verbose=0).flatten()
@@ -215,23 +196,20 @@ class LSTMTrainer:
         hr     = hit_ratio(y_pred_pct, y_true_pct)
         rmse   = np.sqrt(mean_squared_error(y_true_pct, y_pred_pct))
 
-        print(f"\n{'='*60}")
-        print(f"  [RESULT] {self.asset_key.upper()} LSTM Pct-Change Model")
-        print(f"{'='*60}")
         print(f"  Test Hit Ratio : {hr:.1f}%")
         print(f"  Test RMSE      : {rmse:.6f}  (in % change units)")
-        print(f"  Mean pred      : {y_pred_pct.mean():.4f}  True mean: {y_true_pct.mean():.4f}")
 
         os.makedirs('models', exist_ok=True)
 
-        model_path = self.config['model_file']
+        # ── Save files for this specific horizon ─────────────────────────────────
+        model_path = f"models/{self.asset_key}_model_{horizon_days}d.keras"
         model.save(model_path)
 
-        feat_scaler_path = self.config['scaler_file']
+        feat_scaler_path = f"models/{self.asset_key}_scaler_{horizon_days}d.pkl"
         with open(feat_scaler_path, 'wb') as f:
             pickle.dump(feature_scaler, f)
 
-        target_scaler_path = self.config['scaler_file'].replace('.pkl', '_target.pkl')
+        target_scaler_path = f"models/{self.asset_key}_scaler_{horizon_days}d_target.pkl"
         with open(target_scaler_path, 'wb') as f:
             pickle.dump(target_scaler, f)
 
@@ -239,25 +217,84 @@ class LSTMTrainer:
             'asset': self.asset_key,
             'price_col': price_col,
             'features': features,
-            'horizon_days': HORIZON_DAYS,
+            'horizon_days': horizon_days,
             'sequence_length': self.seq_len,
-            'target_type': 'pct_change_7d',
+            'target_type': f'pct_change_{horizon_days}d',
             'hit_ratio_test': hr,
             'rmse_test': rmse,
             'n_train': len(X_train),
             'n_test': len(X_test),
             'target_scaler_path': target_scaler_path,
         }
-        meta_path = self.config['scaler_file'].replace('.pkl', '_meta.json')
+        meta_path = f"models/{self.asset_key}_scaler_{horizon_days}d_meta.json"
         with open(meta_path, 'w') as f:
             json.dump(meta, f, indent=4)
 
-        print(f"\n  Model:          {model_path}")
-        print(f"  Feature scaler: {feat_scaler_path}")
-        print(f"  Target scaler:  {target_scaler_path}")
-        print(f"  Metadata:       {meta_path}")
+        # ── Save legacy files if this is the 7-day model ─────────────────────────
+        if horizon_days == 7:
+            legacy_model_path = self.config['model_file']
+            model.save(legacy_model_path)
+            
+            legacy_feat_scaler_path = self.config['scaler_file']
+            with open(legacy_feat_scaler_path, 'wb') as f:
+                pickle.dump(feature_scaler, f)
+                
+            legacy_target_scaler_path = self.config['scaler_file'].replace('.pkl', '_target.pkl')
+            with open(legacy_target_scaler_path, 'wb') as f:
+                pickle.dump(target_scaler, f)
+                
+            legacy_meta_path = self.config['scaler_file'].replace('.pkl', '_meta.json')
+            with open(legacy_meta_path, 'w') as f:
+                json.dump(meta, f, indent=4)
 
         return meta
+
+    def train(self) -> dict:
+        print(f"\n{'='*60}")
+        print(f" LSTM Multi-Horizon Training — {self.asset_key.upper()}")
+        print(f"{'='*60}")
+
+        # ── Load data using MarketDataStore with CSV fallback ────────────────────
+        from utils.data_store import MarketDataStore
+        store = MarketDataStore()
+        data_path = self.config['data_file']
+        table_name = os.path.splitext(os.path.basename(data_path))[0].lower()
+        
+        df = None
+        try:
+            df = store.read_table(table_name, format='pandas')
+            if 'Date' in df.columns:
+                df['Date'] = pd.to_datetime(df['Date'])
+                df.set_index('Date', inplace=True)
+            df = df.sort_index()
+            print(f"  Loaded data from DuckDB table '{table_name}'")
+        except Exception as e:
+            print(f"  Warning: Could not read table '{table_name}' from DuckDB: {e}. Falling back to CSV.")
+            if not os.path.exists(data_path):
+                print(f"Error: Data file not found: {data_path}")
+                return {}
+            df = pd.read_csv(data_path, index_col=0, parse_dates=True)
+            df = df.sort_index()
+
+        for feat in self.config['features']:
+            if feat not in df.columns:
+                print(f"  Warning: '{feat}' missing, filling with 0")
+                df[feat] = 0
+
+        features = self.config['features']
+        print(f"  Dataset: {len(df)} samples | {len(features)} features")
+        
+        horizons = [1, 7, 14, 30, 90]
+        results = {}
+        for h in horizons:
+            try:
+                meta = self.train_horizon(df, h)
+                results[h] = meta
+            except Exception as e:
+                print(f"  [ERROR] Horizon {h}d failed: {e}")
+                
+        return results.get(7, {})
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────

@@ -110,6 +110,15 @@ ASSET_PARAMS = {
 # Target horizon: 7-day forward % change
 HORIZON_DAYS = 7
 
+
+def get_hit_ratio(y_pred: np.ndarray, y_true: np.ndarray) -> float:
+    """Directional accuracy: % of predictions with correct sign."""
+    if len(y_pred) < 2:
+        return 0.0
+    correct = np.sign(y_pred) == np.sign(y_true)
+    return float(correct.mean()) * 100.0
+
+
 class XGBoostTrainer:
     def __init__(self, asset_key: str):
         self.asset_key = asset_key.lower()
@@ -123,11 +132,22 @@ class XGBoostTrainer:
 
     def load_and_prepare(self) -> tuple:
         """
-        Load CSV, compute target (7-day forward % change), select macro features.
+        Load data from DuckDB (falling back to CSV), compute target (7-day forward % change), select macro features.
         """
-        print(f"Loading data from: {self.data_file}")
-        df = pd.read_csv(self.data_file, index_col=0, parse_dates=True)
-        df = df.sort_index()
+        table_name = f"{self.asset_key}_global_insights"
+        try:
+            from utils.data_store import MarketDataStore
+            store = MarketDataStore()
+            print(f"Loading data from DuckDB table: {table_name}")
+            df = store.read_table(table_name, format='pandas')
+            if 'Date' in df.columns:
+                df['Date'] = pd.to_datetime(df['Date'])
+                df.set_index('Date', inplace=True)
+            df = df.sort_index()
+        except Exception as e:
+            print(f"  [XGB] DuckDB read failed for '{table_name}' ({e}). Falling back to CSV: {self.data_file}")
+            df = pd.read_csv(self.data_file, index_col=0, parse_dates=True)
+            df = df.sort_index()
 
         df['target_pct_change'] = (
             df[self.price_col].shift(-HORIZON_DAYS) - df[self.price_col]
@@ -145,15 +165,6 @@ class XGBoostTrainer:
         print(f"  Date range: {df.index[0].date()} to {df.index[-1].date()}")
 
         return df, available
-
-
-def get_hit_ratio(y_pred: np.ndarray, y_true: np.ndarray) -> float:
-    """Directional accuracy: % of predictions with correct sign."""
-    if len(y_pred) < 2:
-        return 0.0
-    correct = np.sign(y_pred) == np.sign(y_true)
-    return float(correct.mean()) * 100.0
-
 
     def train(self) -> dict:
         print(f"\n{'='*60}")

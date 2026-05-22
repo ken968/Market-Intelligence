@@ -1,0 +1,33 @@
+{
+    "asset": "googl",
+    "price_col": "GOOGL",
+    "features": [
+        "GOOGL",
+        "DXY",
+        "VIX",
+        "Yield_10Y",
+        "Oil_Price",
+        "CPI_MoM",
+        "PPI_MoM",
+        "PCE_MoM",
+        "NFP_Change",
+        "YieldCurve_10Y2Y",
+        "M2_MoM",
+        "M2_YoY",
+        "Yield_10Y_Rate",
+        "Breakeven_5Y5Y",
+        "M2_Liquidity_Spike",
+        "MacroEvent_Flag",
+        "Credit_Spread",
+        "Sentiment",
+        "EMA_90"
+    ],
+    "horizon_days": 1,
+    "sequence_length": 60,
+    "target_type": "pct_change_1d",
+    "hit_ratio_test": 55.080213903743314,
+    "rmse_test": 0.019261838910599967,
+    "n_train": 2240,
+    "n_test": 561,
+    "target_scaler_path": "models/googl_scaler_1d_target.pkl"
+}

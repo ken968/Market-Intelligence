@@ -1,0 +1,33 @@
+{
+    "asset": "msft",
+    "price_col": "MSFT",
+    "features": [
+        "MSFT",
+        "DXY",
+        "VIX",
+        "Yield_10Y",
+        "Oil_Price",
+        "CPI_MoM",
+        "PPI_MoM",
+        "PCE_MoM",
+        "NFP_Change",
+        "YieldCurve_10Y2Y",
+        "M2_MoM",
+        "M2_YoY",
+        "Yield_10Y_Rate",
+        "Breakeven_5Y5Y",
+        "M2_Liquidity_Spike",
+        "MacroEvent_Flag",
+        "Credit_Spread",
+        "Sentiment",
+        "EMA_90"
+    ],
+    "horizon_days": 14,
+    "sequence_length": 60,
+    "target_type": "pct_change_14d",
+    "hit_ratio_test": 55.91397849462365,
+    "rmse_test": 0.06090935362670007,
+    "n_train": 2230,
+    "n_test": 558,
+    "target_scaler_path": "models/msft_scaler_14d_target.pkl"
+}

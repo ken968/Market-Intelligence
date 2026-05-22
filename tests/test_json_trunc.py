@@ -21,10 +21,12 @@ OUTPUT FORMAT — respond ONLY with valid JSON, no extra text:
 }
 """
 
-print("Test 1: Normal")
-resp1 = model.generate_content(prompt)
-print(repr(resp1.text))
+if __name__ == "__main__":
+    print("Test 1: Normal")
+    resp1 = model.generate_content(prompt)
+    print(repr(resp1.text))
 
-print("\nTest 2: With config")
-resp2 = model.generate_content(prompt, generation_config={"temperature": 0.1, "max_output_tokens": 512, "response_mime_type": "application/json"})
-print(repr(resp2.text))
+    print("\nTest 2: With config")
+    resp2 = model.generate_content(prompt, generation_config={"temperature": 0.1, "max_output_tokens": 512, "response_mime_type": "application/json"})
+    print(repr(resp2.text))
+

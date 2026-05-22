@@ -104,10 +104,18 @@ def get_top_macro_drivers(asset_key: str, lookback_days: int = 14, top_n: int = 
         return []
 
     data_path = config['data_file']
-    if not os.path.exists(data_path):
-        return []
-
-    df = pd.read_csv(data_path)
+    table_name = os.path.splitext(os.path.basename(data_path))[0].lower()
+    from utils.data_store import MarketDataStore
+    store = MarketDataStore()
+    
+    df = None
+    try:
+        df = store.read_table(table_name, format='pandas')
+    except Exception as e:
+        if not os.path.exists(data_path):
+            return []
+        df = pd.read_csv(data_path)
+        
     features = [f for f in config['features'] if f in df.columns]
 
     # Exclude price column and non-numeric/binary flags

@@ -233,3 +233,60 @@ def recursive_forecast(
 
     return predictions_unscaled
 
+
+def predict_direct_horizon(
+    model,
+    feature_scaler,
+    target_scaler,
+    data: np.ndarray,
+    config: dict,
+) -> float:
+    """
+    Predict the direct percent change for a target horizon.
+
+    Args:
+        model: Loaded Keras model
+        feature_scaler: MinMaxScaler for input features
+        target_scaler: StandardScaler for target returns
+        data: Full history feature array (n_rows × n_features)
+        config: Asset config dict
+
+    Returns:
+        float: predicted percent change return (unscaled)
+    """
+    if model is None or feature_scaler is None:
+        return 0.0
+
+    seq_len = config['sequence_length']
+    n_features = data.shape[1]
+
+    # Aligned feature check
+    if hasattr(feature_scaler, 'n_features_in_'):
+        expected_n = feature_scaler.n_features_in_
+        if n_features != expected_n:
+            data = data[:, :expected_n]
+
+    # Transform input window
+    window = data[-seq_len:]
+    if len(window) < seq_len:
+        # Pad with first row if history is too short
+        pad_size = seq_len - len(window)
+        pad = np.repeat(window[[0]], pad_size, axis=0)
+        window = np.vstack([pad, window])
+
+    scaled_window = feature_scaler.transform(window)
+    inp = scaled_window.reshape(1, seq_len, -1)
+
+    # Predict
+    pred_scaled = predict_next_step(model, feature_scaler, inp)
+
+    # Inverse transform to get actual return
+    if target_scaler is not None:
+        pred_pct = float(target_scaler.inverse_transform([[pred_scaled]])[0, 0])
+    else:
+        # Extreme fallback
+        pred_pct = pred_scaled * 0.05
+    
+    return pred_pct
+
+

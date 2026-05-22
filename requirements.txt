@@ -16,3 +16,6 @@ fredapi
 tensorflow
 python-dotenv
 google-generativeai
+duckdb
+polars
+pyarrow

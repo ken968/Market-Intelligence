@@ -305,3 +305,246 @@ class TestMacroProcessor:
         ctx = build_macro_context()
         assert isinstance(ctx.get('macro_summary', ''), str), "macro_summary must be str"
         assert len(ctx.get('macro_summary', '')) > 50, "macro_summary is too short"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DUCKDB + POLARS DATA STORE TESTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+class TestMarketDataStore:
+    """Validate DuckDB data store operations and Polars/Pandas integration."""
+
+    def test_store_initialization(self, tmp_path):
+        pytest.importorskip("duckdb")
+        from utils.data_store import MarketDataStore
+        db_file = tmp_path / "test_market.db"
+        store = MarketDataStore(db_path=str(db_file))
+        assert store.db_path == os.path.abspath(str(db_file))
+
+    def test_write_and_read_pandas(self, tmp_path):
+        pytest.importorskip("duckdb")
+        from utils.data_store import MarketDataStore
+        db_file = tmp_path / "test_market.db"
+        csv_file = tmp_path / "test_backup.csv"
+        store = MarketDataStore(db_path=str(db_file))
+
+        # Create dummy df
+        df = pd.DataFrame({
+            'Date': ['2026-01-01', '2026-01-02'],
+            'Price': [100.5, 101.2]
+        })
+
+        # Write to db and CSV
+        store.write_table('test_table_pd', df, csv_backup_path=str(csv_file))
+
+        # Check DB table exists and can be read
+        df_read = store.read_table('test_table_pd', format='pandas')
+        assert len(df_read) == 2
+        assert list(df_read.columns) == ['Date', 'Price']
+        assert df_read['Price'].iloc[0] == 100.5
+
+        # Check CSV backup exists
+        assert os.path.exists(csv_file)
+        df_csv = pd.read_csv(csv_file)
+        assert len(df_csv) == 2
+        assert df_csv['Price'].iloc[1] == 101.2
+
+    def test_write_and_read_polars(self, tmp_path):
+        pytest.importorskip("duckdb")
+        pytest.importorskip("polars")
+        from utils.data_store import MarketDataStore
+        import polars as pl
+        db_file = tmp_path / "test_market.db"
+        csv_file = tmp_path / "test_backup.csv"
+        store = MarketDataStore(db_path=str(db_file))
+
+        # Create dummy pl df
+        df = pl.DataFrame({
+            'Date': ['2026-01-01', '2026-01-02'],
+            'Price': [100.5, 101.2]
+        })
+
+        # Write to db and CSV
+        store.write_table('test_table_pl', df, csv_backup_path=str(csv_file))
+
+        # Check DB table can be read as Polars
+        df_read = store.read_table('test_table_pl', format='polars')
+        assert isinstance(df_read, pl.DataFrame)
+        assert df_read.shape == (2, 2)
+        assert df_read['Price'][0] == 100.5
+
+        # Check CSV backup exists
+        assert os.path.exists(csv_file)
+        df_csv = pl.read_csv(csv_file)
+        assert df_csv.shape == (2, 2)
+
+    def test_migrate_csvs(self, tmp_path):
+        pytest.importorskip("duckdb")
+        from utils.data_store import MarketDataStore
+        db_file = tmp_path / "data" / "market_intelligence.db"
+        csv_file = tmp_path / "data" / "gold_global_insights.csv"
+        
+        # Ensure directories exist
+        os.makedirs(os.path.dirname(db_file), exist_ok=True)
+        
+        # Write dummy CSV
+        df = pd.DataFrame({
+            'Date': ['2026-01-01'],
+            'Gold': [2000.0]
+        })
+        df.to_csv(csv_file, index=False)
+        
+        # Run migration
+        store = MarketDataStore(db_path=str(db_file))
+        migrated = store.migrate_all_csvs()
+        assert migrated >= 1
+        
+        # Verify read
+        df_read = store.read_table('gold_global_insights', format='pandas')
+        assert len(df_read) == 1
+        assert df_read['Gold'].iloc[0] == 2000.0
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MULTI-HORIZON DIRECT FORECAST TESTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+class TestMultiHorizonForecast:
+    """Validate direct multi-horizon forecasting, fallback scaling, and interpolation."""
+
+    class MockModel:
+        def predict(self, x, verbose=0):
+            return np.array([[1.0]])
+
+    class MockScaler:
+        def __init__(self, target_value=0.05):
+            self.target_value = target_value
+            self.n_features_in_ = 5
+        def transform(self, x):
+            return x
+        def inverse_transform(self, x):
+            return np.array([[self.target_value]])
+
+    class MockDataHandler:
+        def __init__(self):
+            self.data = np.zeros((100, 5))
+        def load_data(self):
+            pass
+        def get_latest_price(self):
+            return 100.0
+
+    class MockFile:
+        def __enter__(self):
+            return self
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            pass
+
+    def test_load_horizon_model_mock(self, monkeypatch):
+        from utils.predictor_engine import ForecastEngine
+        
+        engine = ForecastEngine('gold', {'model_file': 'm', 'scaler_file': 's', 'sequence_length': 60}, self.MockDataHandler())
+        
+        # Mock load_model and file check
+        monkeypatch.setattr(os.path, 'exists', lambda path: True)
+        
+        # Mock worker_layer.load_lstm_model
+        import utils.layers.worker_lstm as worker_layer
+        monkeypatch.setattr(worker_layer, 'load_lstm_model', lambda m_p, s_p: (self.MockModel(), self.MockScaler()))
+        
+        # Mock keras load_model in predictor_engine
+        import utils.predictor_engine as pe_module
+        monkeypatch.setattr(pe_module, 'load_model', lambda path: self.MockModel())
+        
+        # Mock builtins open to avoid missing files error
+        import builtins
+        original_open = builtins.open
+        def mock_open_func(file, *args, **kwargs):
+            if "models/" in str(file) or "m" in str(file) or "s" in str(file):
+                return self.MockFile()
+            return original_open(file, *args, **kwargs)
+        monkeypatch.setattr(builtins, "open", mock_open_func)
+        
+        # Mock pickle load
+        import pickle
+        monkeypatch.setattr(pickle, 'load', lambda fh: self.MockScaler())
+        
+        # Test loading a specific horizon
+        success = engine.load_horizon_model(30)
+        assert success is True
+        assert 30 in engine.models
+        assert 30 in engine.scalers
+
+    def test_predict_horizon_power_law_fallback(self, monkeypatch):
+        from utils.predictor_engine import ForecastEngine
+        
+        engine = ForecastEngine('gold', {'model_file': 'm', 'scaler_file': 's', 'sequence_length': 60}, self.MockDataHandler())
+        
+        # Mock load_horizon_model to return False for 14D but True for 7D
+        def mock_load_horizon(horizon_days):
+            if horizon_days == 7:
+                engine.models[7] = self.MockModel()
+                engine.scalers[7] = (self.MockScaler(), self.MockScaler(target_value=0.10)) # 10% change for 7D
+                return True
+            return False
+            
+        monkeypatch.setattr(engine, 'load_horizon_model', mock_load_horizon)
+        
+        # For 14D prediction, it should fallback to 7D scaled by power-law:
+        # pct_14 = pct_7 * ((14 / 7.0) ** 0.65) = 0.10 * (2.0 ** 0.65)
+        pct_14 = engine.predict_horizon(14)
+        expected_pct = 0.10 * (2.0 ** 0.65)
+        assert pytest.approx(pct_14, rel=1e-5) == expected_pct
+
+    def test_trajectory_interpolation(self, monkeypatch):
+        from utils.predictor_engine import ForecastEngine
+        
+        engine = ForecastEngine('gold', {'model_file': 'm', 'scaler_file': 's', 'sequence_length': 60}, self.MockDataHandler())
+        
+        # Mock ensemble_forecast
+        monkeypatch.setattr(engine, 'ensemble_forecast', lambda: {})
+        
+        # Mock predict_horizon to return a fixed percent change per horizon
+        # 1D: 1%, 7D: 7%, 14D: 14%, 30D: 30%, 90D: 90%
+        horizon_returns = {1: 0.01, 7: 0.07, 14: 0.14, 30: 0.30, 90: 0.90}
+        monkeypatch.setattr(engine, 'predict_horizon', lambda h: horizon_returns[h])
+        
+        # Call get_multi_range_forecast
+        forecasts = engine.get_multi_range_forecast()
+        
+        # Assert structure of output
+        assert 'Current' in forecasts
+        assert '1 Day' in forecasts
+        assert '1 Week' in forecasts
+        assert '2 Weeks' in forecasts
+        assert '1 Month' in forecasts
+        assert '3 Months' in forecasts
+        
+        # Current price is 100.0 (from MockDataHandler)
+        assert forecasts['Current'] == 100.0
+        
+        # Verify specific contextual prices
+        # Day 1: 100.0 * 1.01 = 101.0
+        # Day 7: 100.0 * 1.07 = 107.0
+        # Day 14: 100.0 * 1.14 = 114.0
+        # Day 30: 100.0 * 1.30 = 130.0
+        # Day 90: 100.0 * 1.90 = 190.0
+        assert pytest.approx(forecasts['1 Day']['price']) == 101.0
+        assert pytest.approx(forecasts['1 Week']['price']) == 107.0
+        assert pytest.approx(forecasts['2 Weeks']['price']) == 114.0
+        assert pytest.approx(forecasts['1 Month']['price']) == 130.0
+        assert pytest.approx(forecasts['3 Months']['price']) == 190.0
+        
+        # Verify trajectories series length is correct
+        series_3m = forecasts['3 Months']['series']
+        assert len(series_3m) == 90
+        
+        # Verify correct endpoints and values in series
+        assert pytest.approx(series_3m[0]) == 101.0  # Day 1
+        assert pytest.approx(series_3m[6]) == 107.0  # Day 7
+        assert pytest.approx(series_3m[13]) == 114.0 # Day 14
+        assert pytest.approx(series_3m[29]) == 130.0 # Day 30
+        assert pytest.approx(series_3m[89]) == 190.0 # Day 90
+        
+        # Verify linear interpolation between Day 1 and Day 7
+        # Day 4 should be exactly halfway: 104.0
+        assert pytest.approx(series_3m[3]) == 104.0

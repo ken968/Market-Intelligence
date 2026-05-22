@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from datetime import datetime
+from utils.data_store import MarketDataStore
 
 
 class MultiAssetFetcher:
@@ -12,6 +13,7 @@ class MultiAssetFetcher:
     """
     
     def __init__(self):
+        self.store = MarketDataStore()
         self.macro_tickers = {
             'USD_Index': 'DX-Y.NYB',
             'VIX': '^VIX',
@@ -91,7 +93,7 @@ class MultiAssetFetcher:
             df = df[['DXY', 'VIX', 'Yield_10Y', 'Oil_Price']]
             df = df.dropna()
             
-            df.to_csv('data/macro_indicators.csv')
+            self.store.write_table('macro_indicators', df, 'data/macro_indicators.csv')
             print(f"System: {len(df)} macro records saved.")
             return df
             
@@ -164,8 +166,17 @@ class MultiAssetFetcher:
                 df['GK_Vol_21d'] = 0.0
             
             # Merge with macro indicators
-            if os.path.exists('data/macro_indicators.csv'):
-                macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
+            macro = None
+            try:
+                macro = self.store.read_table('macro_indicators', format='pandas')
+                if 'Date' in macro.columns:
+                    macro = macro.set_index('Date')
+                    macro.index = pd.to_datetime(macro.index)
+            except Exception:
+                if os.path.exists('data/macro_indicators.csv'):
+                    macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
+            
+            if macro is not None:
                 df = df.join(macro, how='left')
                 df['DXY'] = df['DXY'].ffill().bfill()
                 df['VIX'] = df['VIX'].ffill().bfill()
@@ -173,8 +184,17 @@ class MultiAssetFetcher:
                 df['Oil_Price'] = df['Oil_Price'].ffill().bfill()
             
             # Merge FRED indicators (CPI, PPI, PCE, NFP)
-            if os.path.exists('data/fred_indicators.csv'):
-                fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+            fred = None
+            try:
+                fred = self.store.read_table('fred_indicators', format='pandas')
+                if 'Date' in fred.columns:
+                    fred = fred.set_index('Date')
+                    fred.index = pd.to_datetime(fred.index)
+            except Exception:
+                if os.path.exists('data/fred_indicators.csv'):
+                    fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+            
+            if fred is not None:
                 df = df.join(fred, how='left')
                 for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'Credit_Spread', 'Credit_Stress_Flag']:
                     if col in df.columns:
@@ -192,7 +212,8 @@ class MultiAssetFetcher:
             if 'Sentiment' in df.columns:
                 df['Sentiment_Std'] = df['Sentiment'].rolling(5, min_periods=1).std().fillna(0)
             
-            df.to_csv(self.gold_config['filename'])
+            df_to_save = df.reset_index()
+            self.store.write_table('gold_global_insights', df_to_save, self.gold_config['filename'])
             try:
                 from utils.counterfactual_logger import auto_resolve_all_outcomes
                 auto_resolve_all_outcomes('gold', df, 'Gold')
@@ -244,8 +265,17 @@ class MultiAssetFetcher:
                 df['GK_Vol_21d'] = 0.0
             
             # Merge with macro indicators (only where dates overlap)
-            if os.path.exists('data/macro_indicators.csv'):
-                macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
+            macro = None
+            try:
+                macro = self.store.read_table('macro_indicators', format='pandas')
+                if 'Date' in macro.columns:
+                    macro = macro.set_index('Date')
+                    macro.index = pd.to_datetime(macro.index)
+            except Exception:
+                if os.path.exists('data/macro_indicators.csv'):
+                    macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
+            
+            if macro is not None:
                 df = df.join(macro, how='left')
                 df['DXY'] = df['DXY'].ffill().bfill()
                 df['VIX'] = df['VIX'].ffill().bfill()
@@ -253,8 +283,17 @@ class MultiAssetFetcher:
                 df['Oil_Price'] = df['Oil_Price'].ffill().bfill()
             
             # Merge FRED indicators (CPI, PPI, PCE, NFP)
-            if os.path.exists('data/fred_indicators.csv'):
-                fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+            fred = None
+            try:
+                fred = self.store.read_table('fred_indicators', format='pandas')
+                if 'Date' in fred.columns:
+                    fred = fred.set_index('Date')
+                    fred.index = pd.to_datetime(fred.index)
+            except Exception:
+                if os.path.exists('data/fred_indicators.csv'):
+                    fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+            
+            if fred is not None:
                 df = df.join(fred, how='left')
                 for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']:
                     if col in df.columns:
@@ -272,7 +311,8 @@ class MultiAssetFetcher:
             if 'Sentiment' in df.columns:
                 df['Sentiment_Std'] = df['Sentiment'].rolling(5, min_periods=1).std().fillna(0)
             
-            df.to_csv(self.btc_config['filename'])
+            df_to_save = df.reset_index()
+            self.store.write_table('btc_global_insights', df_to_save, self.btc_config['filename'])
             try:
                 from utils.counterfactual_logger import auto_resolve_all_outcomes
                 auto_resolve_all_outcomes('btc', df, 'BTC')
@@ -328,8 +368,17 @@ class MultiAssetFetcher:
                     df['GK_Vol_21d'] = 0.0
                 
                 # Merge with macro indicators
-                if os.path.exists('data/macro_indicators.csv'):
-                    macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
+                macro = None
+                try:
+                    macro = self.store.read_table('macro_indicators', format='pandas')
+                    if 'Date' in macro.columns:
+                        macro = macro.set_index('Date')
+                        macro.index = pd.to_datetime(macro.index)
+                except Exception:
+                    if os.path.exists('data/macro_indicators.csv'):
+                        macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
+                
+                if macro is not None:
                     df = df.join(macro, how='left')
                     df['DXY'] = df['DXY'].ffill().bfill()
                     df['VIX'] = df['VIX'].ffill().bfill()
@@ -337,8 +386,17 @@ class MultiAssetFetcher:
                     df['Oil_Price'] = df['Oil_Price'].ffill().bfill()
                 
                 # Merge FRED indicators (CPI, PPI, PCE, NFP)
-                if os.path.exists('data/fred_indicators.csv'):
-                    fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+                fred = None
+                try:
+                    fred = self.store.read_table('fred_indicators', format='pandas')
+                    if 'Date' in fred.columns:
+                        fred = fred.set_index('Date')
+                        fred.index = pd.to_datetime(fred.index)
+                except Exception:
+                    if os.path.exists('data/fred_indicators.csv'):
+                        fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+                
+                if fred is not None:
                     df = df.join(fred, how='left')
                     for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']:
                         if col in df.columns:
@@ -358,7 +416,9 @@ class MultiAssetFetcher:
                 # Preserve or Initialize Sentiment Column
                 df = self._preserve_sentiment(df, filename)
                 
-                df.to_csv(filename)
+                df_to_save = df.reset_index()
+                table_name = f"{tick.lower()}_global_insights"
+                self.store.write_table(table_name, df_to_save, filename)
                 try:
                     from utils.counterfactual_logger import auto_resolve_all_outcomes
                     auto_resolve_all_outcomes(tick.lower(), df, tick)
@@ -382,19 +442,28 @@ class MultiAssetFetcher:
         Retains 'Sentiment' column from existing file if available,
         otherwise initializes with 0.
         """
-        if os.path.exists(filename):
+        table_name = os.path.splitext(os.path.basename(filename))[0].lower()
+        old_df = None
+        try:
+            old_df = self.store.read_table(table_name, format='pandas')
+        except Exception:
+            if os.path.exists(filename):
+                try:
+                    old_df = pd.read_csv(filename)
+                except Exception:
+                    pass
+        
+        if old_df is not None and 'Sentiment' in old_df.columns:
             try:
-                old_df = pd.read_csv(filename)
-                if 'Sentiment' in old_df.columns:
-                    # Merge based on Date (assuming index is date in new_df)
-                    old_df['Date'] = pd.to_datetime(old_df['Date'])
-                    old_sentiment = old_df[['Date', 'Sentiment']].set_index('Date')
-                    
-                    # Align dates and join
-                    new_df = new_df.join(old_sentiment, how='left')
-                    # Fill gaps in sentiment (new dates) with 0 or ffill
-                    new_df['Sentiment'] = new_df['Sentiment'].ffill().fillna(0)
-                    return new_df
+                # Merge based on Date (assuming index is date in new_df)
+                old_df['Date'] = pd.to_datetime(old_df['Date'])
+                old_sentiment = old_df[['Date', 'Sentiment']].set_index('Date')
+                
+                # Align dates and join
+                new_df = new_df.join(old_sentiment, how='left')
+                # Fill gaps in sentiment (new dates) with 0 or ffill
+                new_df['Sentiment'] = new_df['Sentiment'].ffill().fillna(0)
+                return new_df
             except Exception as e:
                 print(f"Warning: Could not preserve sentiment: {e}")
         
