@@ -300,9 +300,10 @@ def train_lstm_pct(asset_key: str) -> dict:
 # ─────────────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("Usage: python scripts/train_lstm_pct.py [asset | all]")
+        print("Usage: python scripts/train_lstm_pct.py [asset | all | stocks]")
         print("       asset: gold, btc, spy, qqq, aapl, msft, ...")
         print("       all  : train all assets sequentially")
+        print("       stocks: train all stock assets sequentially")
         sys.exit(1)
 
     arg = sys.argv[1].lower()
@@ -320,6 +321,25 @@ if __name__ == '__main__':
 
         print(f"\n{'='*60}")
         print(" SUMMARY")
+        print(f"{'='*60}")
+        for a, hr_val in results.items():
+            status = f"{hr_val:.1f}%" if hr_val is not None else "FAILED"
+            print(f"  {a:<12} Hit Ratio: {status}")
+
+    elif arg == 'stocks':
+        stock_assets = [t.lower() for t in STOCK_TICKERS.keys()]
+        print(f"Training {len(stock_assets)} stock assets: {stock_assets}")
+        results = {}
+        for a in stock_assets:
+            try:
+                r = train_lstm_pct(a)
+                results[a] = r.get('hit_ratio_test', 0)
+            except Exception as e:
+                print(f"Error on {a}: {e}")
+                results[a] = None
+
+        print(f"\n{'='*60}")
+        print(" STOCK SUMMARY")
         print(f"{'='*60}")
         for a, hr_val in results.items():
             status = f"{hr_val:.1f}%" if hr_val is not None else "FAILED"

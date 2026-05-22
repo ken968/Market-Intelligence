@@ -1,4 +1,4 @@
-﻿"""
+"""
 Settings & Control Panel
 Data synchronization and model training interface
 """
@@ -266,25 +266,31 @@ tab1, tab2, tab3 = st.tabs(["Quick Train", "Individual Assets", "Batch Training"
 
 with tab1:
     st.markdown("####  Quick Train Core Assets")
-    st.info("Train Gold, Bitcoin, and SPY (S&P 500 index)")
+    st.info("Train Gold, Bitcoin, and SPY (S&P 500 index) along with their XGBoost and Stacker components")
     
     if st.button("Train Core Assets (Gold + BTC + SPY)", use_container_width=True):
         python_exe = sys.executable
         
-        # Gold
-        run_command([python_exe, "scripts/train_ultimate.py"], "Training Gold model...")
+        # Gold Pipeline
+        run_command([python_exe, "scripts/train_lstm_pct.py", "gold"], "Training Gold LSTM Model...")
+        run_command([python_exe, "scripts/train_xgboost_macro.py", "gold"], "Training Gold XGBoost Model...")
+        run_command([python_exe, "scripts/train_ridge_stacker.py", "gold"], "Training Gold Stacker Model...")
         
-        # Bitcoin
-        run_command([python_exe, "scripts/train_btc.py"], "Training Bitcoin model...")
+        # Bitcoin Pipeline
+        run_command([python_exe, "scripts/train_lstm_pct.py", "btc"], "Training Bitcoin LSTM Model...")
+        run_command([python_exe, "scripts/train_xgboost_macro.py", "btc"], "Training Bitcoin XGBoost Model...")
+        run_command([python_exe, "scripts/train_ridge_stacker.py", "btc"], "Training Bitcoin Stacker Model...")
         
-        # SPY
-        run_command([python_exe, "scripts/train_stocks.py", "SPY"], "Training SPY model...")
+        # SPY Pipeline
+        run_command([python_exe, "scripts/train_lstm_pct.py", "spy"], "Training SPY LSTM Model...")
+        run_command([python_exe, "scripts/train_xgboost_macro.py", "spy"], "Training SPY XGBoost Model...")
+        run_command([python_exe, "scripts/train_ridge_stacker.py", "spy"], "Training SPY Stacker Model...")
         
-        show_success_message("Core assets trained successfully!")
+        show_success_message("Core assets pipeline trained successfully!")
         st.rerun()
 
 with tab2:
-    st.markdown("####  Train Individual Asset")
+    st.markdown("####  Train Individual Asset Pipeline")
     
     col1, col2 = st.columns(2)
     
@@ -294,12 +300,11 @@ with tab2:
                 show_error_message("Gold data not available. Sync data first!")
             else:
                 python_exe = sys.executable
-                success = run_command(
-                    [python_exe, "scripts/train_ultimate.py"],
-                    "Training Gold AI model..."
-                )
-                if success:
-                    show_success_message("Gold model trained!")
+                success1 = run_command([python_exe, "scripts/train_lstm_pct.py", "gold"], "Training Gold LSTM Model...")
+                success2 = run_command([python_exe, "scripts/train_xgboost_macro.py", "gold"], "Training Gold XGBoost Model...")
+                success3 = run_command([python_exe, "scripts/train_ridge_stacker.py", "gold"], "Training Gold Stacker Model...")
+                if success1 and success2 and success3:
+                    show_success_message("Gold pipeline fully trained!")
                     st.rerun()
     
     with col2:
@@ -308,16 +313,15 @@ with tab2:
                 show_error_message("Bitcoin data not available. Sync data first!")
             else:
                 python_exe = sys.executable
-                success = run_command(
-                    [python_exe, "scripts/train_btc.py"],
-                    "Training Bitcoin AI model..."
-                )
-                if success:
-                    show_success_message("Bitcoin model trained!")
+                success1 = run_command([python_exe, "scripts/train_lstm_pct.py", "btc"], "Training Bitcoin LSTM Model...")
+                success2 = run_command([python_exe, "scripts/train_xgboost_macro.py", "btc"], "Training Bitcoin XGBoost Model...")
+                success3 = run_command([python_exe, "scripts/train_ridge_stacker.py", "btc"], "Training Bitcoin Stacker Model...")
+                if success1 and success2 and success3:
+                    show_success_message("Bitcoin pipeline fully trained!")
                     st.rerun()
     
     st.markdown("---")
-    st.markdown("####  Train Individual Stock")
+    st.markdown("####  Train Individual Stock Pipeline")
     
     stock_tickers = get_all_stock_tickers()
     selected_stock = st.selectbox("Select stock to train", stock_tickers)
@@ -327,12 +331,11 @@ with tab2:
             show_error_message(f"{selected_stock} data not available. Sync data first!")
         else:
             python_exe = sys.executable
-            success = run_command(
-                [python_exe, "scripts/train_stocks.py", selected_stock],
-                f"Training {selected_stock} AI model..."
-            )
-            if success:
-                show_success_message(f"{selected_stock} model trained!")
+            success1 = run_command([python_exe, "scripts/train_lstm_pct.py", selected_stock.lower()], f"Training {selected_stock} LSTM Model...")
+            success2 = run_command([python_exe, "scripts/train_xgboost_macro.py", selected_stock.lower()], f"Training {selected_stock} XGBoost Model...")
+            success3 = run_command([python_exe, "scripts/train_ridge_stacker.py", selected_stock.lower()], f"Training {selected_stock} Stacker Model...")
+            if success1 and success2 and success3:
+                show_success_message(f"{selected_stock} pipeline fully trained!")
                 st.rerun()
 
 with tab3:
@@ -351,11 +354,16 @@ with tab3:
         else:
             python_exe = sys.executable
             success = run_command(
-                [python_exe, "scripts/train_stocks.py", "ALL"],
-                "Batch training all stock models (this will take a while)..."
+                [python_exe, "scripts/train_lstm_pct.py", "stocks"],
+                "Batch training all stock LSTM models..."
             )
             
             if success:
+                # Loop through stock_list to train their XGBoost and Stacker models
+                for stock in stock_list:
+                    run_command([python_exe, "scripts/train_xgboost_macro.py", stock.lower()], f"Training {stock} XGBoost model...")
+                    run_command([python_exe, "scripts/train_ridge_stacker.py", stock.lower()], f"Training {stock} Stacker model...")
+                
                 show_success_message("All stock models trained successfully! 🎉")
                 st.rerun()
 

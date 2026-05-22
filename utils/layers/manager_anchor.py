@@ -90,6 +90,9 @@ def get_xgb_signal(asset_key: str, df_last: pd.DataFrame) -> float:
     """
     try:
         import xgboost as xgb_lib
+        import re
+        from utils.config import get_asset_config
+
         xgb_model_path  = f'models/{asset_key}_xgb_macro.json'
         xgb_scaler_path = f'models/{asset_key}_xgb_scaler.pkl'
         xgb_feat_path   = f'models/{asset_key}_xgb_features.json'
@@ -104,11 +107,51 @@ def get_xgb_signal(asset_key: str, df_last: pd.DataFrame) -> float:
         with open(xgb_scaler_path, 'rb') as fh: xgb_sc = pickle.load(fh)
         with open(xgb_feat_path,   'r')  as fh: xgb_meta = json.load(fh)
 
-        xgb_feats = [ft for ft in xgb_meta['features'] if ft in df_last.columns]
-        X_xgb     = df_last[xgb_feats].fillna(0).values
+        # ── Fetch full data for robust lag computation ──
+        config = get_asset_config(asset_key)
+        if config and os.path.exists(config['data_file']):
+            df_full = pd.read_csv(config['data_file'], index_col=0, parse_dates=True).sort_index()
+        else:
+            df_full = df_last
+
+        # ── Auto-generate missing lag features on df_full ──
+        df_work = df_full.copy()
+        required_features = xgb_meta['features']
+        for feat in required_features:
+            if feat not in df_work.columns:
+                match = re.match(r'^(.+)_lag(\d+)$', feat)
+                if match:
+                    base_col, lag_n = match.group(1), int(match.group(2))
+                    if base_col in df_work.columns:
+                        trading_days_per_month = 21
+                        lag_days = lag_n * trading_days_per_month
+                        df_work[feat] = df_work[base_col].shift(lag_days)
+                        df_work[feat] = df_work[feat].ffill().fillna(0)
+                    else:
+                        df_work[feat] = 0.0
+                else:
+                    df_work[feat] = 0.0
+
+        # Extract last row aligned to required features
+        df_last_aligned = df_work[required_features].iloc[[-1]].fillna(0)
+        X_xgb = df_last_aligned.values
+
+        # Feature count safety check (pad/truncate to match StandardScaler size)
+        n_expected = getattr(xgb_sc, 'n_features_in_', None)
+        if n_expected is None and hasattr(xgb_sc, 'mean_'):
+            n_expected = len(xgb_sc.mean_)
+
+        if n_expected is not None and X_xgb.shape[1] != n_expected:
+            if X_xgb.shape[1] < n_expected:
+                pad = np.zeros((X_xgb.shape[0], n_expected - X_xgb.shape[1]))
+                X_xgb = np.hstack([X_xgb, pad])
+            else:
+                X_xgb = X_xgb[:, :n_expected]
+
         return float(xgb_m.predict(xgb_sc.transform(X_xgb))[0])
 
-    except Exception:
+    except Exception as e:
+        print(f"[manager_anchor] XGBoost predict error: {e}")
         return 0.0
 
 
@@ -178,12 +221,12 @@ def pct_chain_forecast(
     ceo_drift_multiplier: float = 1.0,
 ) -> list:
     """
-    Convert a 7-day % change signal from the Stacker → smooth price path of `steps` length.
+    Convert a 7-day % change signal from the Stacker → curved price path of `steps` length.
 
     Strategy:
-      - Linearly scales 7D signal (cap at 12× = ~3 months)
+      - Scales 7D signal using a power-law momentum decay curve (t/7)^0.65
       - CEO multiplier modulates magnitude
-      - Returns linear interpolation from current → target price
+      - Returns curved path from current → target price
 
     Args:
         current_price        : latest actual price
@@ -197,11 +240,9 @@ def pct_chain_forecast(
     dm              = max(0.85, min(1.15, ceo_drift_multiplier))
     adjusted_7d_pct = ensemble_7d_pct * dm
 
-    momentum_scale  = min(12.0, steps / 7.0)
-    horizon_pct     = adjusted_7d_pct * momentum_scale
-    target_price    = current_price * (1.0 + horizon_pct)
-
-    return [
-        current_price + (target_price - current_price) * (i + 1) / steps
-        for i in range(steps)
-    ]
+    alpha = 0.65  # power-law decay exponent for return projection
+    prices = []
+    for i in range(1, steps + 1):
+        horizon_pct = adjusted_7d_pct * ((i / 7.0) ** alpha)
+        prices.append(current_price * (1.0 + horizon_pct))
+    return prices

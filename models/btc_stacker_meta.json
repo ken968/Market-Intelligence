@@ -11,21 +11,21 @@
         "YieldCurve_10Y2Y",
         "DXY"
     ],
-    "hit_ratio_lstm": 52.734375,
+    "hit_ratio_lstm": 51.171875,
     "hit_ratio_xgb": 47.265625,
-    "hit_ratio_direction_head": 51.5625,
-    "rmse_magnitude_head": 0.06060065542426391,
-    "hit_ratio_combined": 51.5625,
-    "rmse_combined": 0.0571515511114149,
+    "hit_ratio_direction_head": 52.734375,
+    "rmse_magnitude_head": 0.057301030905026515,
+    "hit_ratio_combined": 52.734375,
+    "rmse_combined": 0.05677118389366074,
     "best_C_direction": 0.1,
     "direction_coefs": {
-        "lstm_pred": 0.6610692953150203,
-        "xgb_pred": 0.11926311147358308,
-        "VIX": 0.2970083508870077,
+        "lstm_pred": 0.2169779438218134,
+        "xgb_pred": 0.16692727585524667,
+        "VIX": 0.30525116418045606,
         "GK_Vol_21d": 0.0,
         "Sentiment": 0.0,
         "Sentiment_Std": 0.0,
-        "YieldCurve_10Y2Y": 0.3810647537286966,
-        "DXY": -0.09916893933448838
+        "YieldCurve_10Y2Y": -0.01966490574374514,
+        "DXY": -0.17742620194249667
     }
 }

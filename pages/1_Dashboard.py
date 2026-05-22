@@ -1,4 +1,4 @@
-﻿"""
+"""
 Dashboard Overview Page
 Multi-asset performance tracking and portfolio insights
 """
@@ -321,26 +321,46 @@ else:
         with st.spinner("AI analyzing patterns..."):
             try:
                 predictions = batch_predict_week(assets_with_models)
-                
-                # Create results table
+
+                # Build results table — include Alpha Engine columns when available
                 results = []
+                has_any_ensemble = False
+
                 for asset_key in assets_with_models:
                     pred = predictions[asset_key]
                     config = ASSETS[asset_key]
-                    
+
                     if 'error' not in pred:
+                        has_ens = pred.get('has_ensemble', False)
+                        if has_ens:
+                            has_any_ensemble = True
+
+                        lstm_sig  = pred.get('lstm_signal', 0.0) * 100   # convert to %
+                        xgb_sig   = pred.get('xgb_signal',  0.0) * 100
+                        dir_prob  = pred.get('direction_prob', 0.5) * 100
+                        direction = pred.get('direction', 'flat')
+
                         results.append({
-                            'Asset': config['name'],
-                            'Current': f"${pred['current']:,.2f}",
-                            'Predicted': f"${pred['predicted']:,.2f}",
-                            'Change': f"${pred['change']:+,.2f}",
-                            'Change %': f"{pred['pct_change']:+.2f}%",
-                            'Direction': 'UP' if pred['direction'] == 'up' else 'DOWN'
+                            'Asset':       config['name'],
+                            'Current':     f"${pred['current']:,.2f}",
+                            'Predicted':   f"${pred['predicted']:,.2f}",
+                            'Change':      f"${pred['change']:+,.2f}",
+                            'Change %':    f"{pred['pct_change']:+.2f}%",
+                            'Direction':   ('▲ UP' if direction == 'up' else '▼ DOWN') if direction != 'flat' else '— FLAT',
+                            'LSTM Signal': f"{lstm_sig:+.2f}%" if has_ens else '—',
+                            'XGB Signal':  f"{xgb_sig:+.2f}%"  if has_ens else '—',
+                            'Confidence':  f"{dir_prob:.0f}%"   if has_ens else '—',
                         })
-                
-                st.markdown("#### Forecast Results")
+
+                st.markdown("#### Forecast Results — 1 Week Ahead")
+                if has_any_ensemble:
+                    st.caption(
+                        "Alpha Engine Active: LSTM Signal = momentum/micro, "
+                        "XGB Signal = macro/regime. "
+                        "Confidence = directional certainty of Dual-Head Stacker."
+                    )
                 st.dataframe(pd.DataFrame(results), use_container_width=True, hide_index=True)
-                
+
             except Exception as e:
                 show_error_message(f"Prediction error: {e}")
 

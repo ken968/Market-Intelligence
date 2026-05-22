@@ -652,6 +652,7 @@ class AssetPredictor:
         xgb_signal = 0.0
         try:
             import xgboost as xgb_lib
+            import re
             xgb_model_path  = f'models/{self.asset_key}_xgb_macro.json'
             xgb_scaler_path = f'models/{self.asset_key}_xgb_scaler.pkl'
             xgb_feat_path   = f'models/{self.asset_key}_xgb_features.json'
@@ -662,10 +663,44 @@ class AssetPredictor:
                     xgb_sc = pickle.load(f)
                 with open(xgb_feat_path, 'r') as f:
                     xgb_meta = json.load(f)
-                xgb_feats = [ft for ft in xgb_meta['features'] if ft in df_last.columns]
-                X_xgb = df_last[xgb_feats].fillna(0).values
+
+                # Auto-generate missing lag features on df_full
+                df_work = df_full.copy()
+                required_features = xgb_meta['features']
+                for feat in required_features:
+                    if feat not in df_work.columns:
+                        match = re.match(r'^(.+)_lag(\d+)$', feat)
+                        if match:
+                            base_col, lag_n = match.group(1), int(match.group(2))
+                            if base_col in df_work.columns:
+                                trading_days_per_month = 21
+                                lag_days = lag_n * trading_days_per_month
+                                df_work[feat] = df_work[base_col].shift(lag_days)
+                                df_work[feat] = df_work[feat].ffill().fillna(0)
+                            else:
+                                df_work[feat] = 0.0
+                        else:
+                            df_work[feat] = 0.0
+
+                # Settle on the last row
+                df_last_aligned = df_work[required_features].iloc[[-1]].fillna(0)
+                X_xgb = df_last_aligned.values
+
+                # Feature count safety check (pad/truncate to match StandardScaler size)
+                n_expected = getattr(xgb_sc, 'n_features_in_', None)
+                if n_expected is None and hasattr(xgb_sc, 'mean_'):
+                    n_expected = len(xgb_sc.mean_)
+
+                if n_expected is not None and X_xgb.shape[1] != n_expected:
+                    if X_xgb.shape[1] < n_expected:
+                        pad = np.zeros((X_xgb.shape[0], n_expected - X_xgb.shape[1]))
+                        X_xgb = np.hstack([X_xgb, pad])
+                    else:
+                        X_xgb = X_xgb[:, :n_expected]
+
                 xgb_signal = float(xgb_m.predict(xgb_sc.transform(X_xgb))[0])
-        except Exception:
+        except Exception as e:
+            print(f"[predictor] XGBoost prediction error for {self.asset_key}: {e}")
             xgb_signal = 0.0
 
         # ── Context features ──────────────────────────────────────────────────
@@ -706,39 +741,46 @@ class AssetPredictor:
 
             direction    = 'up' if pct_change > 0 else 'down'
             dir_conf     = max(dir_prob, 1 - dir_prob)  # confidence [0.5, 1.0]
-            pred_price   = current_price * (1 + pct_change)
-
+            pred_price = current_price * (1.0 + pct_change)
+            return {
+                'pct_change_7d': float(pct_change),
+                'direction': direction,
+                'direction_prob': float(dir_conf),
+                'predicted_price': float(pred_price),
+                'model': 'dual_head_ensemble',
+                'lstm_signal': float(lstm_signal),
+                'xgb_signal': float(xgb_signal),
+            }
         except Exception as e:
             print(f"[Ensemble] Inference error: {e}")
             pct_change, direction, dir_prob, dir_conf = 0.0, 'flat', 0.5, 0.5
             pred_price = current_price
-
-        return {
-            'pct_change_7d':   float(pct_change),
-            'direction':       direction,
-            'direction_prob':  float(dir_conf),
-            'predicted_price': float(pred_price),
-            'lstm_signal':     float(lstm_signal),
-            'xgb_signal':      float(xgb_signal),
-            'model':           'dual_head_ensemble',
-        }
-
+            return {
+                'pct_change_7d': float(pct_change),
+                'direction': direction,
+                'direction_prob': float(dir_conf),
+                'predicted_price': float(pred_price),
+                'model': 'fallback',
+                'lstm_signal': float(lstm_signal),
+                'xgb_signal': float(xgb_signal),
+            }
 
     def pct_chain_forecast(self, steps: int, ceo_drift_multiplier: float = 1.0, ensemble_7d_pct: float = None) -> list:
         """
-        Build a realistic multi-step price path using sqrt(t) scaling of the 
-        canonical Dual-Head Stacker's 7-day prediction.
+        Build a realistic multi-step price path using the canonical Dual-Head Stacker's
+        7-day prediction to scale the non-linear curvature of the LSTM recursive forecast.
         
         Strategy:
           1. Retrieve the 7-day pct change target from the Stacker.
           2. Modulate slightly by CEO drift multiplier.
-          3. Apply sqrt(t) scaling to project to 1-Day, 2-Weeks, 3-Months, etc.
-          4. Interpolate a smooth price path.
+          3. Generate the non-linear LSTM recursive rollout for the full steps.
+          4. Scale the LSTM trajectory percent changes so that the endpoint matches
+             the Stacker's projected target price for the given horizon.
+          5. Fall back to power-law decay curve if LSTM is flat or fails.
         """
         current_price = self.get_latest_price()
 
         if ensemble_7d_pct is None:
-            # If not provided (e.g. called from predict_tomorrow), fetch it
             try:
                 ens = self.ensemble_forecast()
                 ensemble_7d_pct = ens.get('pct_change_7d', 0.0)
@@ -753,23 +795,43 @@ class AssetPredictor:
         dm = max(0.85, min(1.15, ceo_drift_multiplier))
         adjusted_7d_pct = ensemble_7d_pct * dm
 
-        # ── Momentum-scaling: project 7D signal to any horizon ─────────────
-        # Instead of conservative √t scaling (which looks like a flat line for long horizons),
-        # we scale linearly. This reflects the premise that macro regimes (inflation, etc)
-        # persist. If the ensemble predicts a trend, we project that trend confidently.
-        momentum_scale = (steps / 7.0) 
-        momentum_scale = min(12.0, momentum_scale) # Cap at ~3 months
-        horizon_pct  = adjusted_7d_pct * momentum_scale
+        # ── Project target change for the full horizon (steps) based on adjusted_7d_pct ──
+        momentum_scale = min(12.0, steps / 7.0)
+        target_horizon_pct = adjusted_7d_pct * momentum_scale
+        target_price = current_price * (1.0 + target_horizon_pct)
 
-        # ── Honest Expected Value Path ───
-        # A true quantitative model predicting long-term drift produces a smooth trajectory 
-        # representing the Expected Value (mean), while the Monte Carlo cloud represents the variance.
-        # We do not artificially add "noise" to make it look real; we show the pure math output.
-        target_price = current_price * (1.0 + horizon_pct)
-        prices = [
-            current_price + (target_price - current_price) * (i + 1) / steps
-            for i in range(steps)
-        ]
+        # ── Generate base LSTM recursive forecast for curvature ──
+        lstm_path = self.recursive_forecast(steps, ceo_drift_multiplier=ceo_drift_multiplier)
+        if not lstm_path or len(lstm_path) < steps:
+            # Fallback to curved power-law trajectory if LSTM path unavailable
+            prices = []
+            for i in range(1, steps + 1):
+                t_ratio = i / 7.0
+                horizon_pct = adjusted_7d_pct * (t_ratio ** 0.75)
+                prices.append(current_price * (1.0 + horizon_pct))
+            return prices
+
+        # LSTM predicted full horizon change
+        lstm_horizon_pct = (lstm_path[-1] - current_price) / current_price
+
+        # Adjust the path: scale each step's pct change to match the target endpoint
+        prices = []
+        if abs(lstm_horizon_pct) > 1e-5:
+            scale_factor = target_horizon_pct / lstm_horizon_pct
+            # Clamp scale factor to avoid extreme artifacts
+            if 0.1 <= abs(scale_factor) <= 10.0:
+                for price in lstm_path:
+                    step_pct = (price - current_price) / current_price
+                    adj_step_pct = step_pct * scale_factor
+                    prices.append(current_price * (1.0 + adj_step_pct))
+                return prices
+
+        # Stable fallback: shift the LSTM path smoothly to the target price
+        lstm_target_price = lstm_path[-1]
+        for i, price in enumerate(lstm_path):
+            t_ratio = (i + 1) / steps
+            adj_price = price + (target_price - lstm_target_price) * t_ratio
+            prices.append(adj_price)
         return prices
 
     def predict_tomorrow(self):
@@ -816,7 +878,16 @@ class AssetPredictor:
         falls back to pct_chain_forecast(7) if stacker not available.
 
         Returns:
-            dict: {'current': float, 'predicted': float, 'change': float, 'pct_change': float}
+            dict with keys:
+                current        : float — current asset price
+                predicted      : float — 7-day price target
+                change         : float — absolute change
+                pct_change     : float — percentage change
+                direction      : 'up' | 'down' | 'flat'
+                direction_prob : float [0.5, 1.0] — directional confidence
+                lstm_signal    : float — LSTM momentum signal (% change, may be 0.0 if model unavailable)
+                xgb_signal     : float — XGBoost macro signal (% change, may be 0.0 if model unavailable)
+                has_ensemble   : bool — True if dual_head_ensemble was used
         """
         current_price = self.get_latest_price()
 
@@ -828,12 +899,15 @@ class AssetPredictor:
                 change = predicted_price - current_price
                 pct_change = (change / current_price) * 100
                 return {
-                    'current': float(current_price),
-                    'predicted': predicted_price,
-                    'change': float(change),
-                    'pct_change': float(pct_change),
-                    'direction': ens.get('direction', 'flat'),
+                    'current':        float(current_price),
+                    'predicted':      predicted_price,
+                    'change':         float(change),
+                    'pct_change':     float(pct_change),
+                    'direction':      ens.get('direction', 'flat'),
                     'direction_prob': ens.get('direction_prob', 0.5),
+                    'lstm_signal':    ens.get('lstm_signal', 0.0),   # raw LSTM 7D % change
+                    'xgb_signal':     ens.get('xgb_signal', 0.0),    # raw XGBoost 7D % change
+                    'has_ensemble':   True,
                 }
         except Exception:
             pass
@@ -845,12 +919,15 @@ class AssetPredictor:
 
         if not forecast:
             return {
-                'current': current_price,
-                'predicted': current_price,
-                'change': 0.0,
-                'pct_change': 0.0,
-                'direction': 'flat',
-                'error': 'AI Model Unavailable'
+                'current':      current_price,
+                'predicted':    current_price,
+                'change':       0.0,
+                'pct_change':   0.0,
+                'direction':    'flat',
+                'lstm_signal':  0.0,
+                'xgb_signal':   0.0,
+                'has_ensemble': False,
+                'error':        'AI Model Unavailable'
             }
 
         predicted_price = forecast[-1]
@@ -858,11 +935,15 @@ class AssetPredictor:
         pct_change = (change / current_price) * 100
 
         return {
-            'current': float(current_price),
-            'predicted': float(predicted_price),
-            'change': float(change),
-            'pct_change': float(pct_change),
-            'direction': 'up' if change > 0 else 'down'
+            'current':        float(current_price),
+            'predicted':      float(predicted_price),
+            'change':         float(change),
+            'pct_change':     float(pct_change),
+            'direction':      'up' if change > 0 else 'down',
+            'direction_prob': 0.5,
+            'lstm_signal':    0.0,
+            'xgb_signal':     0.0,
+            'has_ensemble':   False,
         }
 
 
