@@ -1,62 +1,29 @@
-﻿"""
-XAUUSD Multi-Asset Terminal - Utilities Package
-Shared components for prediction, UI, and configuration
+"""
+Market Intelligence Utils Package
 """
 
-__version__ = "2.0.0"
-__author__ = "Ken968"
-
 from .config import (
+    THEME,
     ASSETS,
     STOCK_TICKERS,
-    THEME,
-    FORECAST_RANGES,
     get_asset_config,
     get_all_stock_tickers,
-    check_model_exists,
-    check_data_exists,
-    get_asset_status
+    get_asset_status,
+    FORECAST_RANGES,
+    get_dynamic_confidence
 )
-
-from .predictor import AssetPredictor, batch_predict_tomorrow, get_forecast_dataframe
-
-from .ui_components import (
-    inject_custom_css,
-    render_metric_card,
-    render_news_section,
-    render_status_badge,
-    create_price_chart,
-    create_multi_asset_comparison,
-    create_forecast_chart,
-    render_prediction_table,
-    render_page_header
-)
+from .predictor import AssetPredictor
+from .confidence_engine import get_confidence_score
 
 __all__ = [
-    # Config
+    'THEME',
     'ASSETS',
     'STOCK_TICKERS',
-    'THEME',
-    'FORECAST_RANGES',
     'get_asset_config',
     'get_all_stock_tickers',
-    'check_model_exists',
-    'check_data_exists',
     'get_asset_status',
-    
-    # Predictor
+    'FORECAST_RANGES',
+    'get_dynamic_confidence',
+    'get_confidence_score',
     'AssetPredictor',
-    'batch_predict_tomorrow',
-    'get_forecast_dataframe',
-    
-    # UI Components
-    'inject_custom_css',
-    'render_metric_card',
-    'render_news_section',
-    'render_status_badge',
-    'create_price_chart',
-    'create_multi_asset_comparison',
-    'create_forecast_chart',
-    'render_prediction_table',
-    'render_page_header'
 ]
