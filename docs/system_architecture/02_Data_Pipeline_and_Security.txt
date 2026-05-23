@@ -1,28 +1,18 @@
-MARKET INTELLIGENCE SYSTEM - KITAB ARSITEKTUR
-BAGIAN 2: ALUR DATA DAN PENGAMANAN KEBOCORAN (DATA LEAKAGE)
+MARKET INTELLIGENCE SYSTEM: COMPREHENSIVE ARCHITECTURE & RESEARCH WHITEPAPER
+PART 2: DATA ENGINEERING & LOOK-AHEAD BIAS MITIGATION
 
-1. ARSITEKTUR DUCKDB & POLARS
-Sistem ini menggunakan DuckDB, sebuah database SQL analitik (Serverless/In-process). Berbeda dengan database tradisional (MySQL/Postgres) yang membutuhkan server berjalan terpisah, DuckDB berada di dalam aplikasi itu sendiri (seperti SQLite) namun diformat sangat optimal untuk membaca jutaan baris data finansial (OLAP).
-Keunggulan:
-- Memori efisien dan kompresi tinggi (ukuran file jauh lebih kecil dari CSV).
-- Terintegrasi langsung dengan Polars (pustaka pemrosesan data mutakhir dengan bahasa Rust) untuk manipulasi data secepat kilat.
+1. IN-PROCESS COLUMNAR ANALYTICS (DUCKDB + POLARS)
+To handle the memory overhead and multi-threading bottlenecks inherent in pandas-based CSV parsing within a Streamlit environment, the system utilizes DuckDB. DuckDB is a serverless, embedded RDBMS optimized for Online Analytical Processing (OLAP).
+- Vectorized Query Execution: DuckDB processes data in columnar vectors, maximizing CPU cache locality and drastically reducing query latency compared to row-based iteration.
+- Zero-Copy Integration: Through Apache Arrow memory mapping, the system transitions data from DuckDB relations directly into Polars DataFrames (`rel.pl()`). Polars, written in Rust, provides multi-threaded lazy evaluation, allowing complex aggregations to occur with virtually zero memory copying overhead.
 
-2. MEKANISME DUAL-WRITE & FAIL-SAFE
-Sistem tidak pernah bergantung pada satu titik kegagalan (Single Point of Failure).
-- Saat data baru ditarik, sistem menyimpan data tersebut ke file DuckDB (market_intelligence.db).
-- Pada detik yang sama, sistem juga mem-backup data tersebut ke format .csv standar.
-- Jika suatu hari database DuckDB mengalami "Locking" (terkunci karena sedang dibaca oleh user lain di dashboard), skrip prediksi tidak akan crash. Ia akan mengalihkan jalurnya dan membaca dari file .csv cadangan secara otomatis (Auto-Fallback).
+2. ATOMICITY AND DUAL-WRITE FAIL-SAFE MECHANISMS
+Financial terminals cannot afford silent failures during data ingestion. The `MarketDataStore` class implements a Dual-Write architecture simulating Pseudo-ACID properties.
+- Concurrency Control: Read operations are strictly executed with `read_only=True` to prevent blocking the UI during background data ingestion.
+- Fallback Redundancy: Write operations execute `CREATE OR REPLACE TABLE` in DuckDB while simultaneously exporting a `.csv` backup. If an OS-level file lock prevents the DuckDB write, the Exception is caught, the CSV is updated, and the system gracefully degrades to reading the CSV, ensuring zero downtime. (Note: Phase 6 SRE roadmaps include timestamp-based auto-healing to resynchronize the DB from the CSV post-lock).
 
-3. PENGAMANAN KEBOCORAN DATA (LOOK-AHEAD BIAS PREVENTION)
-Ini adalah masalah paling mematikan dalam pembuatan model Machine Learning di dunia finansial. Kebocoran data terjadi jika sistem tidak sengaja "mengintip" data masa depan saat berlatih di data masa lalu.
-Cara kita menanganinya:
-- Forward Fill (ffill) yang Ketat: Data yang rilis seminggu sekali (seperti Laporan CFTC yang rilis hari Jumat), TIDAK BOLEH diletakkan di hari Senin minggu tersebut (walau data tersebut merangkum posisi hari Senin-Selasa). Data tersebut dikunci dan baru dimasukkan ke baris hari Jumat, lalu diduplikat (forward fill) ke hari Sabtu, Minggu, Senin, dst. Ini memastikan model hanya melihat data "yang sudah rilis ke publik" pada hari yang bersangkutan.
-- Lagging Otomatis: Data makro (seperti Suku Bunga dan Inflasi) secara otomatis digeser (lagged) sejauh beberapa bulan untuk mensimulasikan kapan laporan tersebut benar-benar diterbitkan oleh pemerintah (biasanya telat 1 bulan).
-
-4. SINKRONISASI ALUR (WORKFLOW PENGAMBILAN DATA)
-Setiap malam atau sesuai jadwal, sistem akan menjalankan skrip Fetcher (Pengambil Data):
-- yfinance_fetcher.py: Harga penutupan harian.
-- fred_fetcher.py: Data makroekonomi bulanan/harian dari Bank Sentral AS.
-- cot_fetcher.py: Posisi perdagangan dari regulator AS.
-- onchain_fetcher.py: Arus keluar-masuk bursa Kripto.
-Seluruh skrip ini akan mengirimkan strukturnya ke `MarketDataStore` untuk disatukan dalam database DuckDB.
+3. CAUSAL INTEGRITY & LOOK-AHEAD BIAS PREVENTION
+In quantitative finance, Look-Ahead Bias (Data Leakage) is the most pervasive flaw, occurring when a model inadvertently trains on data that was not publicly available at the theoretical time of prediction.
+- Strict Forward-Filling (ffill): Consider the CFTC COT report, which aggregates data as of Tuesday but is not released to the public until Friday evening. The pipeline rigidly indices this data to the Friday release date. The values are then propagated forward (`ffill()`) to Saturday, Sunday, and the subsequent week.
+- Prohibition of Interpolation: Linear interpolation between data points is strictly prohibited in the pipeline. Interpolating between a Tuesday and a Friday essentially "leaks" the Friday trajectory into Wednesday and Thursday, violating temporal causality.
+- Macroeconomic Lagging: Economic indicators (e.g., CPI, NFP) are subjected to automated lagging ($t-3$, $t-6$ months) within the XGBoost feature generation step to simulate the reality of delayed government reporting schedules and retrospective revisions.

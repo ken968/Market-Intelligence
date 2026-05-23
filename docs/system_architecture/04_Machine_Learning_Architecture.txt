@@ -1,25 +1,24 @@
-MARKET INTELLIGENCE SYSTEM - KITAB ARSITEKTUR
-BAGIAN 4: ARSITEKTUR MACHINE LEARNING (PREDIKSI DAN ENSEMBLE)
+MARKET INTELLIGENCE SYSTEM: COMPREHENSIVE ARCHITECTURE & RESEARCH WHITEPAPER
+PART 4: MACHINE LEARNING ENSEMBLE & DUAL-HEAD STACKER ARCHITECTURE
 
-1. MENGATASI KUTUKAN "FLATLINE" (DIRECT MULTI-STEP FORECAST)
-Banyak sistem prediksi yang gagal saat menebak masa depan yang panjang (misalnya 90 hari) karena mereka menggunakan metode rekursif: menebak Hari ke-1, lalu menggunakan hasil tebakan itu untuk menebak Hari ke-2, dst. Kesalahan kecil akan bertumpuk secara eksponensial hingga akhirnya model menyerah dan menarik garis lurus (Flatline Forecast).
-Sistem kita mengatasi ini dengan cara melatih tebakan "Langsung" ke masa depan tanpa iterasi, menggunakan satu penjangkar yang kuat (7D Anchor) untuk kemudian diekstrapolasi menggunakan rumus matematika fisika (Power-Law Decay).
+1. ERADICATING RECURSIVE ERROR ACCUMULATION
+Legacy time-series architectures frequently rely on Recursive Rollout models (predicting $t+1$, feeding the prediction back to predict $t+2$, etc.). In highly stochastic environments like financial markets, recursive prediction yields exponential error accumulation, inevitably resulting in a "flatline" forecast due to variance loss converging to the mean.
+The system implements a Direct Multi-Step Forecasting paradigm. However, rather than training 5 independent monolithic models which introduce inter-horizon decoherence, the architecture utilizes a Single Anchor (7-Day Expected Return) augmented by a Dual-Head Stacker.
 
-2. ARSITEKTUR LAYER 1: BASE MODELS
-A. LSTM (Deep Learning)
-- Tugas: Mengamati riwayat harga murni (Sequences) sepanjang 90 hari ke belakang.
-- Arsitektur: Dilengkapi dengan Layer "Attention" sehingga model bisa memusatkan perhatian pada hari-hari tertentu yang paling krusial.
-- Target Prediksi: Mencari "Expected Percentage Change" (Ekspektasi Perubahan Persentase) dalam 7 Hari. Kita tidak menyuruh model menebak harga absolut dalam Dolar karena rentan terhadap efek tren palsu (Non-Stationary).
+2. BASE LEARNER INDEPENDENCE
+To ensure feature diversity and mitigate multicollinearity, the base learners are structurally isolated:
+- LSTM (Base Learner 1): Optimizes for sequential price action and momentum. It utilizes 90-day rolling windows transformed via independent Feature Scalers. Crucially, the Loss Function targets `Expected % Change` rather than nominal price, normalizing non-stationary price drifts across assets.
+- XGBoost (Base Learner 2): Optimizes for macro-fundamental tree-splits. It intrinsically handles non-linear macro interactions and utilizes dynamically generated automated lags ($t-3$, $t-6$ months) to model delayed economic ripples.
 
-B. XGBoost (Gradient Boosting Tree)
-- Tugas: Mengamati riwayat indikator fundamental, suku bunga, dan sentimen institusi (COT).
-- Fitur Lagging: XGBoost secara otomatis menggeser data bulanan untuk menghindari kebocoran data.
+3. THE DUAL-HEAD STACKER META-LEARNER
+Averaging the output of two base models is mathematically naive in regime-shifting markets. The system utilizes a Meta-Learner (Stacker) that ingests the Base Learner signals alongside instantaneous contextual features (e.g., VIX, GK Volatility, Yield Curve, DXY).
+To resolve the "Hesitation Bias" (where conflicting base models cause the ensemble to output a timid near-zero prediction), the Stacker utilizes a Dual-Head Output Architecture:
+- Head 1 (Directional Classifier): A Logistic Regression model optimizing for Binary Cross-Entropy. It outputs the raw probability that the 7-day return will be positive ($P(R_t > 0)$).
+- Head 2 (Magnitude Regressor): A Ridge Regression model (L2 penalized) optimizing for Mean Squared Error on the absolute value of the return ($|R_t|$).
 
-3. ARSITEKTUR LAYER 2: DUAL-HEAD STACKER ENSEMBLE
-Ini adalah otak utama yang mengambil kesimpulan akhir. Ia menerima masukan dari LSTM, XGBoost, dan kondisi ketidakpastian pasar (VIX, dll). Mengapa "Dual-Head"?
-- Head 1 (Direction Head): Adalah model Klasifikasi (Logistic Regression) yang khusus ditugaskan hanya untuk menjawab: "Apakah 7 hari ke depan akan NAIK atau TURUN?" Ia menghasilkan probabilitas (misal: 66% yakin Naik).
-- Head 2 (Magnitude Head): Adalah model Regresi (Ridge Regression) yang khusus ditugaskan untuk menjawab: "Terlepas dari arahnya, seberapa liar pergerakan harganya nanti?" (Volatilitas).
-- Penggabungan: Tebakan Akhir = Arah (Positif/Negatif) * Besaran Magnitude. Metode ini menghilangkan bias "Tebakan Ragu-Ragu" yang sering menimpa model AI tunggal.
+The final mathematically coherent prediction is synthesized as:
+$$ \text{Final\_Signal} = (2 \times P(R_t > 0) - 1) \times \text{Expected\_Magnitude} $$
+This forces the system to definitively pick a direction with high conviction, scaled by historical volatility expectations.
 
-4. TARGET SCALERS MANDIRI
-Setiap model dipasangkan dengan Scaler Fitur dan Scaler Target-nya masing-masing. Ini menjaga agar variabel harga antar aset (misal Emas di $2000 vs BTC di $60000) bisa dibaca oleh otak AI menggunakan satu standar bahasa yang sama (persentase normalisasi).
+4. INDEPENDENT TARGET SCALERS
+To prevent target leakage and scale discrepancies across assets of vastly different nominal values (e.g., Gold vs BTC), every model utilizes paired robust scalers. The `meta_scaler` normalizes the outputs of the base models before they enter the Stacker, ensuring that the Ridge regression coefficients remain stable regardless of the underlying asset's native volatility profile.

@@ -1,28 +1,27 @@
-MARKET INTELLIGENCE SYSTEM - KITAB ARSITEKTUR
-BAGIAN 5: ALUR KERJA (WORKFLOW) DAN MESIN INFERENSI HARIAN
+MARKET INTELLIGENCE SYSTEM: COMPREHENSIVE ARCHITECTURE & RESEARCH WHITEPAPER
+PART 5: INFERENCE WORKFLOW, TRAJECTORY GENERATION, & RISK LAYER ROADMAP
 
-1. SIKLUS HIDUP HARIAN (DAILY PREDICTION CYCLE)
-Setiap kali sistem dijalankan, orkestrator (utils/predictor_engine.py) akan memimpin alur kerja:
-Langkah 1: Menarik data penutupan harga terbaru dan mengkalkulasi indikator teknikal murni.
-Langkah 2: Menarik file DuckDB untuk membaca rilis data makroekonomi dan posisi COT terakhir.
-Langkah 3: Mengkalkulasi indikator turunan harian (seperti Garman-Klass Volatility dari High-Low-Open-Close) secara live.
-Langkah 4: Melakukan sinkronisasi panjang baris (Padding/Truncation) agar format tabel persis dengan apa yang dimengerti oleh StandardScaler (alat penerjemah AI).
+1. DAILY INFERENCE EXECUTION PIPELINE
+The daily stochastic inference loop is orchestrated by `utils/predictor_engine.py` and `utils/layers/manager_anchor.py`. The execution path follows strict state-machine logic:
+- State 1 (Ingestion): Fetch $t=0$ closing prices and calculate deterministic technical indicators.
+- State 2 (Macro Sync): Pull current state from DuckDB OLAP tables, calculating synthetic divergence metrics (e.g., Smart Money Gap) on the full historical dataset to guarantee valid `.rolling()` window evaluations before extracting the $t=0$ row.
+- State 3 (Base Inference): Execute LSTM forward pass on the scaled 90-day feature window; execute XGBoost forward pass on the single macro vector.
+- State 4 (Meta Inference): Feed Base Learner outputs + Real-time Context (VIX, DXY, GK Volatility) into the Dual-Head Stacker.
 
-2. KALKULASI DUAL-HEAD (MANAGER ANCHOR)
-Skrip utama yang bekerja untuk menghasilkan angka adalah utils/layers/manager_anchor.py.
-Di sini, sinyal dari LSTM dan XGBoost dipertemukan dengan kondisi pasar seketika (seperti indeks ketakutan VIX). Ketiga elemen ini diramu menjadi "Meta-Features".
-Model meta (Stacker) kemudian mengambil alih kemudi dan memberikan keputusan final berupa "Anchor 7 Hari" (Sinyal Probabilitas Arah dan Sinyal Besaran Jarak).
+2. TRAJECTORY GENERATION: POWER-LAW MOMENTUM DECAY
+The system must generate a 90-day forward price curve from a single 7-Day Anchor target. Extrapolating a 7-day return linearly to 90 days would violate the Efficient Market Hypothesis (EMH) and mean-reverting properties of speculative assets.
+Instead, the system utilizes a Power-Law Momentum Decay equation:
+$$ R_i = R_{\text{anchor}} \times \left( \frac{i}{7.0} \right)^\alpha $$
+Where:
+- $R_i$ = Projected cumulative percentage return at day $i$.
+- $R_{\text{anchor}}$ = The 7-day expected return from the Dual-Head Stacker.
+- $\alpha = 0.65$ = The decay exponent.
+Because $\alpha < 1$, the trajectory exhibits momentum clustering in the short term (rapid initial movement) but experiences asymptotic decay in the long term, simulating the exhaustion of directional buying/selling pressure. This ensures mathematical coherence between the tabular data projection and the graphical UI representation.
 
-3. PEMBENTUKAN KURVA MASA DEPAN (POWER-LAW MOMENTUM DECAY)
-Setelah mendapatkan satu angka tebakan untuk 7 hari ke depan (misalnya: Harga akan naik 3%), bagaimana cara menggambar kurva yang mulus dari Hari ke-1 hingga Hari ke-90 di grafik?
-- Sistem menggunakan rumus peluruhan inersia (Decay Curve):
-  Persentase_Hari_ke_i = Target_7_Hari * (( i / 7.0 ) ^ 0.65)
-- Fungsi pangkat 0.65 menyebabkan kurva tersebut melengkung perlahan, meniru hukum gravitasi pasar: harga bergerak kuat di awal, namun perlahan kehabisan momentum saat mendekati batas akhir siklus prediksi.
+3. RETRAINING CYCLE & CONCEPT DRIFT MITIGATION
+To mitigate Concept Drift (the statistical degradation of a model's predictive power as macroeconomic regimes shift), the system mandates a periodic retraining protocol. Given that the dominant Institutional Smart Money variable (CFTC COT) operates on a weekly cadence (Friday release), daily retraining introduces unnecessary computational overhead and risks stochastic overfitting. The retraining cycle is strictly scheduled post-COT ingestion.
 
-4. RENCANA PELATIHAN ULANG (RETRAINING CYCLE)
-Karena fondasi utama dari kecerdasan sistem ini adalah data Smart Money (COT Report) yang dirilis seminggu sekali (setiap Jumat waktu Amerika), sistem tidak perlu dilatih ulang setiap hari.
-Jadwal ideal:
-Setiap hari Sabtu pagi, skrip train_xgboost_macro.py dan train_lstm_pct.py dijalankan untuk mengukir ulang jalur-jalur saraf otak AI menggunakan data 1 minggu terakhir, menjaga ingatan model tetap segar namun mencegah overfitting.
-
-5. LAYER RISIKO (ROADMAP MASA DEPAN)
-Mesin inferensi ini memiliki fondasi yang kuat untuk dikembangkan menuju Risk Management Layer. Data Probabilitas (Confidence) dari Stacker siap dihubungkan ke rumus Kelly Criterion (untuk menghitung berapa lot optimal yang harus dibeli). Dan data Volatilitas (Magnitude) siap digunakan untuk membangun pita batas toleransi risiko (Dynamic Stop-Loss Bands).
+4. PHASE 7 ROADMAP: EXECUTION & RISK LAYER INTEGRATION
+The ultimate maturation of the Market Intelligence Terminal lies in its transition to a probabilistic risk manager.
+- Dynamic Kelly Sizing: The `direction_prob` output from the Directional Head directly feeds the probability variable ($P$) in the Kelly Criterion formula: $f^* = P - \frac{1-P}{B}$. This transitions the system from providing "Buy/Sell" signals to providing mathematically optimal portfolio exposure sizing.
+- Volatility-Adjusted Confidence Bands: Integrating `GK_Vol_21d` to dynamically widen or tighten projection confidence intervals, allowing users to set dynamic Stop-Loss thresholds that breathe with current market liquidity rather than static percentage assumptions.

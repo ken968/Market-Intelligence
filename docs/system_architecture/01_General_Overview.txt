@@ -1,25 +1,27 @@
-MARKET INTELLIGENCE SYSTEM - KITAB ARSITEKTUR
-BAGIAN 1: GAMBARAN UMUM DAN FILOSOFI SISTEM
+MARKET INTELLIGENCE SYSTEM: COMPREHENSIVE ARCHITECTURE & RESEARCH WHITEPAPER
+PART 1: SYSTEM ONTOLOGY AND HIGH-LEVEL ARCHITECTURE
 
-1. TUJUAN DAN VISI
-Sistem ini dirancang bukan sebagai bot trading otomatis yang terhubung ke broker, melainkan sebagai "Market Intelligence Terminal" (Otak Makro). Fungsinya adalah untuk mengolah ribuan titik data historis, makroekonomi, dan sentimen institusional menjadi satu kesimpulan probabilitas arah harga. Sistem ini memberikan proyeksi matematis kepada analis manusia untuk memandu keputusan investasi, identifikasi risiko, dan pemetaan siklus pasar.
+1. ABSTRACT & SYSTEM ONTOLOGY
+This document outlines the architectural framework of the Market Intelligence Terminal, a hybrid quantitative-macroeconomic forecasting system. Unlike high-frequency trading (HFT) execution bots or simple rules-based algorithmic trading systems, this terminal functions as a Macro Intelligence Brain. Its primary ontology is to synthesize high-dimensional, asynchronous datasets—ranging from microsecond-level on-chain network flows to lagging macroeconomic indicators—into a singular, probabilistically weighted directional forecast. The system is designed for intermediate-to-senior quantitative analysts seeking algorithmic augmentation for discretionary portfolio management.
 
-2. STRUKTUR ARSITEKTUR TINGKAT TINGGI
-Sistem ini dibagi menjadi empat lapisan (layer) utama yang beroperasi secara sekuensial:
+2. ARCHITECTURAL PARADIGMS
+The system relies on a decoupled, four-tier architecture designed to enforce strict separation of concerns, ensuring that data ingestion anomalies do not corrupt the inference engine.
 
-A. Layer Data (Data Ingestion & Storage)
-Mengambil data mentah dari berbagai sumber (API Publik, Yahoo Finance, FRED, CFTC) dan menyimpannya ke dalam database sentral berbasis DuckDB. Lapisan ini bertugas membersihkan data dan membuang anomali.
+A. Ingestion and Storage Layer (Data Layer)
+This layer manages asynchronous fetching from diverse APIs (FRED, CFTC, Yahoo Finance, Alternative.me) handling mixed frequencies (daily, weekly, monthly). The storage engine eschews traditional row-based RDBMS in favor of an embedded columnar analytical database (DuckDB) paired with an in-memory DataFrame execution engine (Polars).
 
-B. Layer Pembelajaran Mesin (Machine Learning Core)
-Berisi dua mesin utama yang bekerja berdampingan:
-- LSTM (Long Short-Term Memory): Spesialis membaca pola pergerakan harga beruntun (Price Action) dari masa lalu.
-- XGBoost (Extreme Gradient Boosting): Spesialis membaca kondisi fundamental, makroekonomi, dan posisi institusi.
+B. Base-Learner Modeling Layer (ML Core)
+The system employs a bifurcated machine learning approach to capture two distinct market dimensions:
+- Temporal Dependency (Price Action): Managed by a Long Short-Term Memory (LSTM) network with attention mechanisms, optimized to detect autoregressive patterns and momentum clusters over a 90-day sequence.
+- Cross-Sectional & Fundamental Dependency: Managed by an Extreme Gradient Boosting (XGBoost) regressor, which evaluates non-linear interactions between macroeconomic regimes, interest rate spreads, and institutional positioning.
 
-C. Layer Penggabungan (Ensemble / Stacker)
-Lapisan yang bertugas "mendengarkan" pendapat dari LSTM dan XGBoost, lalu mengambil keputusan final. Ini disebut "Dual-Head Stacker" karena memiliki dua kepala: satu memprediksi "Arah" (Naik/Turun), dan satu memprediksi "Kekuatan" (Berapa Persen).
+C. Meta-Ensemble Layer (Dual-Head Stacker)
+The terminal diverges from simple averaging ensembles by utilizing a Dual-Head Stacker architecture. It ingests the raw continuous outputs from the Base Learners and contextualizes them using current market volatility. The Stacker bifurcates the prediction into two mathematically independent heads:
+- Directional Head: A probabilistic classifier (Logistic Regression) determining the sign of the expected return.
+- Magnitude Head: An L2-regularized regressor (Ridge) determining the absolute variance of the expected return.
 
-D. Layer Antarmuka (User Interface)
-Dashboard berbasis Streamlit yang bertugas menampilkan kurva proyeksi masa depan, metrik volatilitas, dan narasi teks dari Model Bahasa Besar (LLM/Gemini) yang menjelaskan mengapa sistem memprediksi arah tersebut.
+D. Interpretation and Presentation Layer (UI & LLM)
+Forecasts are projected across a 90-day forward trajectory using a non-linear power-law decay function. Furthermore, the terminal integrates an LLM (Gemini) operating via Gram-Schmidt Orthogonalization prompts to provide human-readable narratives, explaining the causal hierarchy of the macroeconomic variables driving the current prediction.
 
-3. PRINSIP KERJA
-Sistem tidak berusaha meramalkan masa depan secara magis. Ia menghitung "Expected Value" (Nilai Harapan Matematis) berdasarkan probabilitas historis. Jika di masa lalu setiap kali kondisi A, B, dan C terjadi, pasar naik 60% dari waktu tersebut, maka sistem akan mencetak probabilitas kenaikan 60%. Semua output adalah probabilitas, bukan kepastian.
+3. DESIGN PHILOSOPHY
+The core philosophy is grounded in Expected Value (EV) theory rather than absolute certainty. By shifting the objective function from predicting absolute nominal prices (which suffer from non-stationarity and geometric compounding errors) to predicting Expected Percentage Change, the system aligns with modern portfolio theory and risk-adjusted return metrics.
