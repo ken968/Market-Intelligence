@@ -124,6 +124,24 @@ def get_xgb_signal(asset_key: str, df_last: pd.DataFrame) -> float:
                 for col in ['Net_Commercial', 'Net_NonCommercial', 'Net_Commercial_Long']:
                     if col in df_full.columns:
                         df_full[col] = df_full[col].ffill()
+                        
+                # Default fillna for early dates
+                df_full['Net_Commercial'] = df_full.get('Net_Commercial', pd.Series(0, index=df_full.index)).fillna(0)
+                df_full['Net_NonCommercial'] = df_full.get('Net_NonCommercial', pd.Series(0, index=df_full.index)).fillna(0)
+                df_full['Net_Commercial_Long'] = df_full.get('Net_Commercial_Long', pd.Series(0.5, index=df_full.index)).fillna(0.5)
+                
+                # Synthetic Divergence Feature 1: Spot Sentiment vs Futures Positioning
+                if 'Sentiment' in df_full.columns:
+                    df_full['Inst_Sentiment_Ratio'] = df_full['Sentiment'] / df_full['Net_Commercial'].replace(0, 1e-5)
+                    
+                # Synthetic Divergence Feature 2: Retail Fear/Greed vs Smart Money
+                if 'Fear_Greed' in df_full.columns:
+                    window = 756
+                    rolling_min = df_full['Net_Commercial'].rolling(window=window, min_periods=1).min()
+                    rolling_max = df_full['Net_Commercial'].rolling(window=window, min_periods=1).max()
+                    cot_index = (df_full['Net_Commercial'] - rolling_min) / (rolling_max - rolling_min).replace(0, 1) * 100
+                    df_full['Smart_Money_Sentiment_Gap'] = df_full['Fear_Greed'] - cot_index
+                    
             except Exception as e:
                 print(f"[manager_anchor] Error loading COT: {e}")
 
