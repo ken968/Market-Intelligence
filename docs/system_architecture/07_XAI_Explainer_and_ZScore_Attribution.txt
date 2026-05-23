@@ -1,0 +1,60 @@
+MARKET INTELLIGENCE SYSTEM: COMPREHENSIVE ARCHITECTURE & RESEARCH WHITEPAPER
+PART 7: EXPLAINABLE AI, FREQUENCY-AWARE Z-SCORE, & LLM ATTRIBUTION
+
+1. EXPLAINABLE AI (XAI) IN QUANTITATIVE SYSTEMS
+Black-box machine learning systems that output predictions without attribution are unsuitable for institutional decision support. A quantitative strategist or portfolio manager must understand *why* a model expects a trend to occur. If a model predicts a sharp rally, the user must know whether the signal is driven by monetary easing, credit expansion, dollar depreciation, or safe-haven flows. 
+
+The system implements the `xai_explainer.py` module to extract the macroeconomic drivers behind every prediction, mapping quantitative features to real-world economic rationales.
+
+2. FREQUENCY-AWARE Z-SCORE FORMULATION
+To identify which macroeconomic features are exhibiting unusual behavior, the system calculates the statistical deviation of each indicator from its historical norm. However, traditional rolling Z-scores fail when applied to mixed-frequency datasets:
+- Daily indicators (e.g., VIX, DXY) fluctuate constantly. A 14-day rolling window is appropriate to capture their recent trend.
+- Monthly indicators (e.g., CPI, Non-Farm Payrolls) only update once every thirty days. If a 14-day window is used, the last 14 rows contain the identical value, resulting in a rolling standard deviation of zero and an artificial Z-score of zero.
+
+To resolve this, the system implements a Frequency-Aware Z-Score lookup, utilizing the `INDICATOR_LOOKBACK` dictionary to adjust the lookback window based on the indicator's release schedule:
+- Monthly Indicators (CPI_MoM, PPI_MoM, PCE_MoM, NFP_Change, M2_MoM, M2_YoY): Lookback window L = 30 days.
+- Quarterly Indicators (Breakeven_5Y5Y): Lookback window L = 63 days.
+- Daily Market Indicators (DXY, VIX, Yield_10Y, Oil_Price, YieldCurve_10Y2Y): Lookback window L = 14 days.
+
+The Z-score for feature X on day t is computed as:
+Z_t = ( Mean(X_{t-L:t}) - Mean(X_{0:t-L}) ) / Std(X_{0:t-L})
+
+This compares the recent average value (the last L trading days) against the historical baseline prior to that window, capturing the true statistical shift. The macro indicators are then ranked by the absolute value of their Z-scores, selecting the top three features with the most extreme deviations as the "Primary Macro Drivers".
+
+3. DYNAMIC DIRECTIONAL IMPACT MAPPING
+Once the top macro drivers are extracted, they are mapped to their known economic impact on the specific asset class (Gold, Bitcoin, or Equities). The system utilizes a hard-coded mapping matrix, `ASSET_IMPACT_MAP`, derived from standard economic relationships:
+
+A. Gold Impact Mapping
+- US Dollar Index (DXY) rising = BEARISH (Gold is priced in USD; a stronger dollar makes it more expensive for foreign buyers).
+- Volatility Index (VIX) rising = BULLISH (Fear increases safe-haven demand).
+- 10Y Treasury Yield rising = BEARISH (Gold yields nothing; higher interest rates increase the opportunity cost of holding non-yielding assets).
+- M2 Money Supply expansion = BULLISH (Currency debasement hedge).
+
+B. Bitcoin Impact Mapping
+- DXY rising = BEARISH (Risk-off capital flight).
+- VIX rising = BEARISH (Crypto is treated as a high-beta risk asset and is sold off during volatility spikes).
+- M2 Money Supply expansion = BULLISH (Excess liquidity flows into speculative risk assets).
+
+C. Equities / Stocks Impact Mapping
+- VIX rising = BEARISH (Broad market correction indicator).
+- 10Y Treasury Yield rising = BEARISH (Compresses equity multiples by increasing the discount rate in DCF models).
+- NFP Change rising = BULLISH (Reflects robust labor market and consumer demand, driving corporate earnings).
+
+D. Dynamic Sign Inversion
+If the ranked Z-score for an indicator is negative (Z < 0), indicating that the factor is falling relative to its history, the system dynamically inverts the impact label. For example, if DXY's impact on Gold is mapped as "BEARISH", but DXY is currently falling (Z = -2.1), the net impact is converted to "BULLISH". This dynamic alignment represents the true macroeconomic force acting on the asset.
+
+4. LLM-POWERED ATTRIBUTION SYNTHESIS
+The structured driver data is sent to the LLM (Gemini) to generate a concise, institutional-style narrative. The prompt contains:
+- The target asset name and predicted return direction.
+- The top three ranked macro drivers, their current values, Z-score deviations, and mapped directional impacts.
+- Live supplementary macro context.
+
+The LLM is restricted by strict prompt guidelines to prevent AI hallucination:
+- No emojis or markdown icons.
+- Must use an objective, factual, institutional strategist tone.
+- Must categorize the output into three structured sections:
+  1. TAILWINDS: specific macro factors supporting the forecast direction.
+  2. HEADWINDS: factors working against the forecast direction.
+  3. SUMMARY: a 2-3 sentence overview of the structural thesis.
+
+This results in a clean, explainable macro-attribution block presented on the dashboard.

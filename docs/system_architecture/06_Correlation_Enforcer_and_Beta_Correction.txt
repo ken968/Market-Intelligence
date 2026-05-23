@@ -1,0 +1,59 @@
+MARKET INTELLIGENCE SYSTEM: COMPREHENSIVE ARCHITECTURE & RESEARCH WHITEPAPER
+PART 6: INTER-ASSET CORRELATION & BETA-ADJUSTED FORECAST CORRECTOR
+
+1. THE NEED FOR INTER-ASSET CORRELATION ENFORCEMENT
+In a multi-asset forecasting system, running independent machine learning models for separate tickers can result in mathematically impossible joint trajectories. For example, the LSTM and XGBoost models for the S&P 500 ETF (SPY) might predict a minor contraction (e.g., -1%), while the models for the Nasdaq 100 ETF (QQQ) predict a catastrophic decline (e.g., -50%) over the same horizon. 
+
+In real-world financial markets, these assets exhibit tight structural co-movements governed by common discount factors, interest rate dynamics, and risk regimes. Allowing independent models to project unconstrained, non-synchronized trajectories introduces systemic noise and degrades portfolio-level decision support.
+
+The system implements the `CorrelationEnforcer` class to correct these issues during the post-processing phase. It treats a highly liquid, stable reference index (default: SPY) as the anchor asset and applies beta-adjusted corrections to downstream asset forecasts, ensuring they conform to historical covariance boundaries.
+
+2. ESTIMATING HISTORICAL BETA AND CORRELATION COEFFICIENTS
+The system dynamically computes the historical relationships between the anchor asset and all downstream stock tickers. The calculation pipeline runs on a rolling 252-trading-day window (equivalent to one calendar year of financial data) to capture the current market regime:
+
+A. Percentage Return Calculation
+Let P_{t, ref} be the daily close price of the reference asset, and P_{t, asset} be the close price of the target asset. The daily percentage returns R_{t, ref} and R_{t, asset} are computed as:
+R_{t, ref} = ( P_{t, ref} - P_{t-1, ref} ) / P_{t-1, ref}
+R_{t, asset} = ( P_{t, asset} - P_{t-1, asset} ) / P_{t-1, asset}
+
+B. Correlation Coefficient (rho)
+The rolling correlation rho is defined as:
+rho = Cov( R_{ref}, R_{asset} ) / ( sigma_{ref} * sigma_{asset} )
+Where:
+- Cov( R_{ref}, R_{asset} ) is the covariance of the returns.
+- sigma_{ref} and sigma_{asset} are the standard deviations of the returns.
+
+C. Beta Coefficient (beta)
+The beta coefficient represents the systematic risk or sensitivity of the target asset's returns relative to the reference asset. It is formulated as:
+beta = Cov( R_{asset}, R_{ref} ) / Var( R_{ref} )
+Where Var( R_{ref} ) is the variance of the reference asset returns. A beta > 1.0 indicates that the asset is more volatile than the market, whereas a beta < 1.0 indicates lower relative systematic volatility.
+
+3. RETURN BLENDING AND PRICE PATH RECONSTRUCTION
+During the daily inference workflow, the engine generates raw expected price trajectories for all assets. The `CorrelationEnforcer` intercepts these trajectories and adjusts them using a three-step mathematical correction:
+
+A. Extract Raw Returns
+The enforcer converts the raw price trajectories into daily expected returns:
+R_{raw, t} = ( P_{raw, t} - P_{raw, t-1} ) / P_{raw, t-1}   for t = 1 to H
+
+B. Compute Beta-Adjusted Expected Return
+Using the reference asset's daily return trajectory (R_{ref, t}), the enforcer calculates the expected return based on the asset's historical beta:
+R_{expected, t} = beta * R_{ref, t}
+
+C. Blend Returns and Reconstruct Prices
+The enforcer blends the raw and expected returns using an adjustment strength parameter, gamma (default: 0.7):
+R_{blended, t} = ( 1 - gamma ) * R_{raw, t} + gamma * R_{expected, t}
+
+Setting gamma = 0.7 allows the model to preserve 30% of the asset's individual predicted return dynamics (alpha) while forcing 70% to align with the systematic market beta. 
+
+Finally, the adjusted daily price trajectory is reconstructed starting from the initial price forecast (P_0):
+P_{adjusted, 0} = P_0
+P_{adjusted, t} = P_{adjusted, t-1} * ( 1 + R_{blended, t} )   for t = 1 to H
+
+This ensures that all asset price paths remain consistent with the broader equity market index, preventing impossible divergences.
+
+4. VALIDATION METRICS
+To confirm that the correlation enforcer is working correctly, the system runs a validation check on the adjusted price series:
+- Realized Prediction Correlation: It calculates the correlation coefficient between the adjusted asset returns and the reference returns over the forecast horizon.
+- Sign Alignment: It verifies if the sign of the cumulative return matches:
+  Sign( R_{adjusted, cumulative} * R_{ref, cumulative} ) > 0
+This validation data is exposed in the system logs and diagnostics panels.

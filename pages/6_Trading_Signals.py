@@ -1,4 +1,4 @@
-﻿"""
+"""
 Trading Signals Page
 Display entry/exit signals based on multi-factor analysis
 """
@@ -53,14 +53,16 @@ if st.button("Generate Trading Signals", use_container_width=True, type="primary
             summary_data = []
             for asset, signal in signals.items():
                 if 'error' not in signal:
+                    display_signal = 'HOLD (OOD) 🔴' if signal.get('ood_active') else signal['signal']
                     summary_data.append({
                         'Asset': asset.upper(),
-                        'Signal': signal['signal'],
+                        'Signal': display_signal,
                         'Confidence': f"{signal['confidence']:.0%}",
                         'Entry': f"${signal['entry_price']:,.2f}",
                         'Target': f"${signal['target_price']:,.2f}",
                         'Stop Loss': f"${signal['stop_loss']:,.2f}",
-                        'R/R': f"{signal['risk_reward']:.2f}"
+                        'R/R': f"{signal['risk_reward']:.2f}",
+                        'Kelly Alloc': f"{signal.get('recommended_allocation', 0.0):.1%}"
                     })
             
             if summary_data:
@@ -68,7 +70,9 @@ if st.button("Generate Trading Signals", use_container_width=True, type="primary
                 
                 # Color code signals
                 def highlight_signal(row):
-                    if row['Signal'] == 'BUY':
+                    if 'OOD' in row['Signal']:
+                        return ['background-color: rgba(255, 165, 0, 0.15)'] * len(row)
+                    elif row['Signal'] == 'BUY':
                         return ['background-color: rgba(0, 255, 0, 0.1)'] * len(row)
                     elif row['Signal'] == 'SELL':
                         return ['background-color: rgba(255, 0, 0, 0.1)'] * len(row)
@@ -87,18 +91,23 @@ if st.button("Generate Trading Signals", use_container_width=True, type="primary
                 
                 for asset, signal in signals.items():
                     if 'error' not in signal:
-                        with st.expander(f"{asset.upper()} - {signal['signal']} Signal"):
+                        display_title = f"{asset.upper()} - HOLD (OOD Circuit Breaker Active)" if signal.get('ood_active') else f"{asset.upper()} - {signal['signal']} Signal"
+                        with st.expander(display_title):
                             col1, col2 = st.columns([2, 1])
                             
                             with col1:
+                                if signal.get('ood_active'):
+                                    st.error("⚠️ **OUT-OF-DISTRIBUTION (OOD) CIRCUIT BREAKER ACTIVE**  \nMacro indicators are in an extreme tail regime or market implied volatility is too high. Quantitative model predictions are suspended and trading recommendations are forced to HOLD to preserve capital.")
+                                
                                 st.markdown("#### Signal Details")
                                 
                                 # Signal metrics
                                 metric_cols = st.columns(4)
                                 
                                 with metric_cols[0]:
-                                    signal_color = "🟢" if signal['signal'] == 'BUY' else "🔴" if signal['signal'] == 'SELL' else "🟡"
-                                    st.metric("Signal", f"{signal_color} {signal['signal']}")
+                                    signal_color = "🔴" if signal.get('ood_active') else ("🟢" if signal['signal'] == 'BUY' else "🔴" if signal['signal'] == 'SELL' else "🟡")
+                                    display_sig = "HOLD (OOD)" if signal.get('ood_active') else signal['signal']
+                                    st.metric("Signal", f"{signal_color} {display_sig}")
                                 
                                 with metric_cols[1]:
                                     st.metric("Confidence", f"{signal['confidence']:.0%}")
@@ -109,25 +118,36 @@ if st.button("Generate Trading Signals", use_container_width=True, type="primary
                                 with metric_cols[3]:
                                     st.metric("Bearish Score", f"{signal['bearish_score']:.2f}")
                                 
-                                # Price targets
-                                st.markdown("#### Price Targets")
+                                # Price targets & Kelly
+                                st.markdown("#### Risk & Capital Allocation (Kelly Criterion)")
                                 
-                                price_cols = st.columns(4)
+                                risk_cols = st.columns(4)
                                 
-                                with price_cols[0]:
+                                with risk_cols[0]:
                                     st.metric("Entry Price", f"${signal['entry_price']:,.2f}")
                                 
-                                with price_cols[1]:
+                                with risk_cols[1]:
                                     change = signal['target_price'] - signal['entry_price']
                                     pct = (change / signal['entry_price']) * 100
                                     st.metric("Target Price", f"${signal['target_price']:,.2f}", 
                                              delta=f"{pct:+.1f}%")
                                 
-                                with price_cols[2]:
-                                    st.metric("Stop Loss", f"${signal['stop_loss']:,.2f}")
+                                with risk_cols[2]:
+                                    st.metric("Stop Loss (GK Vol-adjusted)", f"${signal['stop_loss']:,.2f}")
                                 
-                                with price_cols[3]:
+                                with risk_cols[3]:
                                     st.metric("Risk/Reward", f"{signal['risk_reward']:.2f}x")
+
+                                kelly_cols = st.columns(3)
+                                
+                                with kelly_cols[0]:
+                                    st.metric("Full Kelly Size", f"{signal.get('kelly_fraction', 0.0):.1%}")
+                                
+                                with kelly_cols[1]:
+                                    st.metric("Recommended Size (Half-Kelly)", f"{signal.get('recommended_allocation', 0.0):.1%}")
+                                
+                                with kelly_cols[2]:
+                                    st.metric("OOD Circuit Breaker", "ACTIVE 🔴" if signal.get('ood_active') else "INACTIVE 🟢")
                                 
                                 # Reasons
                                 st.markdown("#### Analysis Factors")

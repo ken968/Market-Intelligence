@@ -43,6 +43,9 @@ class SignalGenerator:
                 'stop_loss': float
             }
         """
+        import os
+        from utils.xai_explainer import get_top_macro_drivers
+
         # Load latest data
         data_path = self.config['data_file']
         table_name = os.path.splitext(os.path.basename(data_path))[0].lower()
@@ -53,16 +56,72 @@ class SignalGenerator:
         except Exception as e:
             df = pd.read_csv(data_path)
         latest = df.iloc[-1]
-        current_price = latest[self.config['features'][0]]
+        current_price = latest.get(self.config['features'][0], 0.0)
+        
+        # ── Data Integrity Check ──
+        if latest.isnull().any():
+            return {
+                'signal': 'HOLD',
+                'confidence': 0.0,
+                'reasons': ['DATA INTEGRITY ERROR: Null values detected in latest data row. Trading suspended.'],
+                'factors': {},
+                'bullish_score': 0.0,
+                'bearish_score': 0.0,
+                'entry_price': current_price,
+                'target_price': current_price,
+                'stop_loss': current_price,
+                'risk_reward': 0.0,
+                'kelly_fraction': 0.0,
+                'recommended_allocation': 0.0,
+                'ood_active': False,
+                'cbm': 0
+            }
         
         # Get forecast
         forecast_1w = self.predictor.predict_week()
         
+        # ── Out-of-Distribution (OOD) Circuit Breaker Check ──
+        cbm = 0
+        try:
+            all_drivers = get_top_macro_drivers(self.asset_key, lookback_days=14, top_n=20)
+            for d in all_drivers:
+                if abs(d['z_score']) >= 3.0:
+                    cbm += 1
+        except Exception as e:
+            print(f"[SignalGenerator] Error computing Z-scores for OOD: {e}")
+
+        vix = latest.get('VIX', 15.0)
+        gk_vol = latest.get('GK_Vol_21d', 0.15)
+        if pd.isna(gk_vol) or gk_vol <= 0:
+            gk_vol = 0.15
+            
+        # ── Garman-Klass Volatility Safety Bounding ──
+        # Clamp between 1% (min vol) and 100% (max vol) to prevent irrational stop-losses
+        gk_vol = max(0.01, min(1.0, gk_vol))
+
+        vol_flag = False
+        if vix > 35.0:
+            vol_flag = True
+        if self.asset_key == 'btc' and gk_vol > 0.80:
+            vol_flag = True
+        elif self.asset_key == 'gold' and gk_vol > 0.30:
+            vol_flag = True
+        elif self.asset_key != 'btc' and self.asset_key != 'gold' and gk_vol > 0.40:
+            vol_flag = True
+
+        ood_active = (cbm >= 3) or vol_flag
+        ood_data = {
+            'active': ood_active,
+            'cbm': cbm,
+            'vix': vix,
+            'gk_vol': gk_vol
+        }
+
         # Analyze all factors
         factors = self._analyze_factors(latest, forecast_1w)
         
         # Calculate signal
-        signal_data = self._calculate_signal(factors, current_price, forecast_1w)
+        signal_data = self._calculate_signal(factors, current_price, forecast_1w, ood_data)
         
         return signal_data
     
@@ -180,14 +239,14 @@ class SignalGenerator:
         """Analyze sentiment indicators (Google Trends + Fear & Greed via aggregator pipeline)"""
         # Google Trends
         trends_signal = self.trends_fetcher.get_trend_signal(self.asset_key)
-
+ 
         # Combine signals (Fear & Greed is injected via sentiment_fetcher aggregator into CSV)
         trends_bullish = trends_signal['trend'] == 'rising' and trends_signal['current_interest'] > 60
         trends_bearish = trends_signal['trend'] == 'falling' and trends_signal['current_interest'] < 40
-
+ 
         bullish = trends_bullish
         bearish = trends_bearish
-
+ 
         return {
             'bullish': bullish,
             'bearish': bearish,
@@ -214,8 +273,8 @@ class SignalGenerator:
             'detail': f"Price vs EMA90: {((price/ema_90 - 1) * 100):+.1f}%"
         }
     
-    def _calculate_signal(self, factors, current_price, forecast):
-        """Calculate final signal from all factors"""
+    def _calculate_signal(self, factors, current_price, forecast, ood_data=None):
+        """Calculate final signal from all factors with volatility and risk adjustment"""
         bullish_score = 0
         bearish_score = 0
         reasons = []
@@ -229,23 +288,70 @@ class SignalGenerator:
                 bearish_score += factor['weight']
                 reasons.append(f"{factor_name.title()}: {factor['detail']}")
         
-        # Determine signal
-        if bullish_score > 0.55:
+        # Default stop-loss values
+        target_price = current_price
+        stop_loss = current_price
+        
+        # ── Check Out-of-Distribution Anomaly Gate ──
+        if ood_data and ood_data.get('active', False):
+            signal = 'HOLD'
+            confidence = 0.0
+            target_price = current_price
+            stop_loss = current_price
+            reasons = [f"OOD CIRCUIT BREAKER ACTIVE: Macro anomalies (CBM={ood_data['cbm']}, VIX={ood_data['vix']:.1f}, GK_Vol={ood_data['gk_vol']:.1%}) exceed historical 99th percentile. Trading suspended to protect capital."]
+        elif bullish_score > 0.55:
             signal = 'BUY'
             confidence = min(bullish_score, 1.0)
             target_price = forecast['predicted']
-            stop_loss = current_price * 0.95  # 5% stop loss
+            
+            # Volatility-adjusted stop-loss from Garman-Klass Volatility
+            gk_vol = ood_data.get('gk_vol', 0.15) if ood_data else 0.15
+            vol_7d = gk_vol * np.sqrt(7 / 252)
+            stop_loss_pct = 1.5 * vol_7d
+            stop_loss = current_price * (1.0 - stop_loss_pct)
         elif bearish_score > 0.55:
             signal = 'SELL'
             confidence = min(bearish_score, 1.0)
             target_price = forecast['predicted']
-            stop_loss = current_price * 1.05  # 5% stop loss (for shorts)
+            
+            # Volatility-adjusted stop-loss from Garman-Klass Volatility
+            gk_vol = ood_data.get('gk_vol', 0.15) if ood_data else 0.15
+            vol_7d = gk_vol * np.sqrt(7 / 252)
+            stop_loss_pct = 1.5 * vol_7d
+            stop_loss = current_price * (1.0 + stop_loss_pct)
         else:
             signal = 'HOLD'
             confidence = 1 - abs(bullish_score - bearish_score)
             target_price = current_price
             stop_loss = current_price
+            
+        # Calculate Risk/Reward and Kelly sizing
+        risk_reward = 0.0
+        kelly_fraction = 0.0
+        recommended_allocation = 0.0
         
+        if signal in ['BUY', 'SELL'] and stop_loss != current_price:
+            risk_reward = abs(target_price - current_price) / abs(stop_loss - current_price)
+            
+            # P = winning probability (directional probability from Stacker)
+            P = forecast.get('direction_prob', 0.5)
+            Q = 1.0 - P
+            B = risk_reward
+            
+            if B > 0:
+                # ── Kelly Math Safety ──
+                # Clamp Risk/Reward (B) between 1.0 and 5.0 to prevent negative/irrational f_star
+                B = max(1.0, min(5.0, B))
+                
+                # Kelly Criterion formula: f* = P - Q/B
+                f_star = P - (Q / B)
+                # Apply Half-Kelly multiplier for conservative sizing
+                recommended_alloc = f_star * 0.5
+                
+                # Clamp sizing values
+                kelly_fraction = max(0.0, min(1.0, f_star))
+                recommended_allocation = max(0.0, min(1.0, recommended_alloc))
+                
         return {
             'signal': signal,
             'confidence': confidence,
@@ -256,7 +362,11 @@ class SignalGenerator:
             'entry_price': current_price,
             'target_price': target_price,
             'stop_loss': stop_loss,
-            'risk_reward': abs(target_price - current_price) / abs(stop_loss - current_price) if stop_loss != current_price else 0
+            'risk_reward': risk_reward,
+            'kelly_fraction': kelly_fraction,
+            'recommended_allocation': recommended_allocation,
+            'ood_active': ood_data.get('active', False) if ood_data else False,
+            'cbm': ood_data.get('cbm', 0) if ood_data else 0
         }
 
 
