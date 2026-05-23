@@ -1,4 +1,4 @@
-﻿"""
+"""
 Model Operations & Validation Room
 Centralized view for model health, backtest metrics, and retraining operations
 """
@@ -43,6 +43,52 @@ def load_backtest_metrics():
     return metrics
 
 metrics_data = load_backtest_metrics()
+
+# ==================== HEALTH MONITOR ====================
+st.markdown("### Model Health & Alerts")
+
+def get_health_status():
+    health_file = "data/model_health.json"
+    if not os.path.exists(health_file):
+        subprocess.run([sys.executable, "scripts/model_monitor.py"], capture_output=True)
+    
+    if os.path.exists(health_file):
+        try:
+            with open(health_file, 'r') as f:
+                return json.load(f)
+        except Exception:
+            return None
+    return None
+
+health_data = get_health_status()
+
+if health_data and 'assets' in health_data:
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.write(f"Last checked: {health_data.get('last_checked', 'Unknown')}")
+    with col2:
+        if st.button("🔄 Run Health Check Now", use_container_width=True):
+            with st.spinner("Checking counterfactual logs..."):
+                subprocess.run([sys.executable, "scripts/model_monitor.py"])
+            st.rerun()
+
+    for asset, info in health_data['assets'].items():
+        status = info['status']
+        if status == 'HEALTHY':
+            st.success(f"**{asset.upper()}**: HEALTHY 🟢 - {info['message']}")
+        elif status == 'WARNING':
+            st.warning(f"**{asset.upper()}**: WARNING 🟠 - {info['message']}")
+            st.info(f"To retrain, run: `.venv\\Scripts\\python scripts/train_lstm_pct.py {asset}`")
+        elif status == 'DEGRADED':
+            st.error(f"**{asset.upper()}**: DEGRADED 🔴 - {info['message']}")
+            st.error(f"⚠️ Immediate retraining recommended!\n\nRun:\n`.venv\\Scripts\\python scripts/train_lstm_pct.py {asset}`\n`.venv\\Scripts\\python scripts/train_ridge_stacker.py {asset}`")
+        else:
+            st.info(f"**{asset.upper()}**: {status} ⚪ - {info['message']}")
+
+else:
+    st.info("Model Health Monitor has not collected enough data yet. Requires resolved 7-day forecasts.")
+
+st.markdown("---")
 
 # ==================== METRICS DISPLAY ====================
 st.markdown("### Structural Validation & Health")
