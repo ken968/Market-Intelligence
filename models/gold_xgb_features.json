@@ -15,12 +15,15 @@
     "Breakeven_5Y5Y",
     "M2_Liquidity_Spike",
     "MacroEvent_Flag",
-    "CPI_MoM_lag3",
-    "CPI_MoM_lag6",
-    "NFP_Change_lag3",
     "Sentiment",
     "Sentiment_Std",
-    "GK_Vol_21d"
+    "Fear_Greed",
+    "Net_Commercial",
+    "Net_NonCommercial",
+    "Net_Commercial_Long",
+    "GK_Vol_21d",
+    "Inst_Sentiment_Ratio",
+    "Smart_Money_Sentiment_Gap"
   ],
   "horizon_days": 7
 }

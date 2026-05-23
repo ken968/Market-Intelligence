@@ -2,52 +2,52 @@
     "asset": "gold",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 64.71103327495622,
+    "hit_ratio_train": 54.42206654991243,
     "hit_ratio_test": 66.54991243432575,
-    "rmse_train": 0.022618557682947186,
-    "rmse_test": 0.03450380084127711,
-    "n_features": 21,
-    "best_iteration": 11,
+    "rmse_train": 0.023638424320441238,
+    "rmse_test": 0.03472993537441416,
+    "n_features": 24,
+    "best_iteration": 0,
     "top_features": [
         {
-            "feature": "CPI_MoM",
-            "importance": 0.09377796202898026
-        },
-        {
             "feature": "DXY",
-            "importance": 0.08768421411514282
+            "importance": 0.08377949893474579
         },
         {
-            "feature": "NFP_Change_lag3",
-            "importance": 0.07549747079610825
+            "feature": "Smart_Money_Sentiment_Gap",
+            "importance": 0.07613565027713776
         },
         {
-            "feature": "CPI_MoM_lag6",
-            "importance": 0.07466381788253784
+            "feature": "CPI_MoM",
+            "importance": 0.07194085419178009
         },
         {
-            "feature": "M2_MoM",
-            "importance": 0.07234586030244827
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.07150834798812866
+        },
+        {
+            "feature": "PCE_MoM",
+            "importance": 0.06890673190355301
+        },
+        {
+            "feature": "Net_Commercial_Long",
+            "importance": 0.06806841492652893
         },
         {
             "feature": "Breakeven_5Y5Y",
-            "importance": 0.07195457071065903
+            "importance": 0.06773839890956879
+        },
+        {
+            "feature": "Net_Commercial",
+            "importance": 0.06751427799463272
+        },
+        {
+            "feature": "Yield_10Y",
+            "importance": 0.0631517842411995
         },
         {
             "feature": "NFP_Change",
-            "importance": 0.07184641808271408
-        },
-        {
-            "feature": "PPI_MoM",
-            "importance": 0.06955679506063461
-        },
-        {
-            "feature": "CPI_MoM_lag3",
-            "importance": 0.06940943002700806
-        },
-        {
-            "feature": "Oil_Price",
-            "importance": 0.06690826267004013
+            "importance": 0.059557270258665085
         }
     ]
 }

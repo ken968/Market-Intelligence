@@ -160,8 +160,8 @@ def integrate_sentiment(asset='gold'):
     # Ensure Date is string in standard format
     macro_df['Date'] = pd.to_datetime(macro_df['Date']).dt.strftime('%Y-%m-%d')
     
-    # Drop existing Sentiment column from df to prevent duplicates on merge
-    macro_df.drop(columns=['Sentiment'], errors='ignore', inplace=True)
+    # Drop existing Sentiment columns from df to prevent duplicates on merge
+    macro_df.drop(columns=['Sentiment', 'Sentiment_Std', 'Fear_Greed'], errors='ignore', inplace=True)
     
     # Define FRED columns to merge
     FRED_COLS = ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change',
@@ -181,13 +181,19 @@ def integrate_sentiment(asset='gold'):
 
     if sentiment_df.empty:
         print(f"Warning: No sentiment data found for {asset}.")
-        # Initialize Sentiment to 0 if not present, otherwise keep existing
+        # Initialize columns to 0 if not present
         if 'Sentiment' not in macro_df.columns:
             macro_df['Sentiment'] = 0.0
+            macro_df['Sentiment_Std'] = 0.0
+            macro_df['Fear_Greed'] = 0.0
         final_df = macro_df
     else:
         final_df = pd.merge(macro_df, sentiment_df, on='Date', how='left')
         final_df['Sentiment'] = final_df['Sentiment'].ffill().bfill().fillna(0)
+        if 'Sentiment_Std' in final_df.columns:
+            final_df['Sentiment_Std'] = final_df['Sentiment_Std'].ffill().bfill().fillna(0)
+        if 'Fear_Greed' in final_df.columns:
+            final_df['Fear_Greed'] = final_df['Fear_Greed'].ffill().bfill().fillna(0)
     
     # Merge FRED indicators
     if fred_df is not None:

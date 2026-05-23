@@ -114,6 +114,19 @@ def get_xgb_signal(asset_key: str, df_last: pd.DataFrame) -> float:
         else:
             df_full = df_last
 
+        # ── Merge COT data for robust inference ──
+        cot_file = f"data/cot_{asset_key}.csv"
+        if os.path.exists(cot_file):
+            try:
+                cot_df = pd.read_csv(cot_file, parse_dates=['Date'])
+                cot_df.set_index('Date', inplace=True)
+                df_full = df_full.join(cot_df, how='left')
+                for col in ['Net_Commercial', 'Net_NonCommercial', 'Net_Commercial_Long']:
+                    if col in df_full.columns:
+                        df_full[col] = df_full[col].ffill()
+            except Exception as e:
+                print(f"[manager_anchor] Error loading COT: {e}")
+
         # ── Auto-generate missing lag features on df_full ──
         df_work = df_full.copy()
         required_features = xgb_meta['features']

@@ -2,52 +2,52 @@
     "asset": "btc",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 59.30710510863183,
-    "hit_ratio_test": 55.516431924882625,
-    "rmse_train": 0.09493841294447321,
-    "rmse_test": 0.06301751267261216,
-    "n_features": 21,
-    "best_iteration": 15,
+    "hit_ratio_train": 56.928948913681744,
+    "hit_ratio_test": 55.39906103286385,
+    "rmse_train": 0.09659252683864929,
+    "rmse_test": 0.06312369382941257,
+    "n_features": 24,
+    "best_iteration": 9,
     "top_features": [
         {
-            "feature": "Breakeven_5Y5Y",
-            "importance": 0.08346711844205856
+            "feature": "Net_Commercial",
+            "importance": 0.07633206248283386
         },
         {
             "feature": "Yield_10Y",
-            "importance": 0.07878860086202621
+            "importance": 0.0732000395655632
         },
         {
-            "feature": "Yield_10Y_Rate",
-            "importance": 0.07073608785867691
-        },
-        {
-            "feature": "VIX",
-            "importance": 0.07072726637125015
+            "feature": "Breakeven_5Y5Y",
+            "importance": 0.07124779373407364
         },
         {
             "feature": "DXY",
-            "importance": 0.06599996984004974
+            "importance": 0.06365735083818436
+        },
+        {
+            "feature": "VIX",
+            "importance": 0.058372143656015396
+        },
+        {
+            "feature": "Yield_10Y_Rate",
+            "importance": 0.05668514594435692
+        },
+        {
+            "feature": "Inst_Sentiment_Ratio",
+            "importance": 0.05421793460845947
         },
         {
             "feature": "M2_YoY",
-            "importance": 0.0646013468503952
-        },
-        {
-            "feature": "YieldCurve_10Y2Y",
-            "importance": 0.06459987163543701
-        },
-        {
-            "feature": "CPI_MoM_lag3",
-            "importance": 0.06177813559770584
-        },
-        {
-            "feature": "CPI_MoM",
-            "importance": 0.0579395554959774
+            "importance": 0.05395617336034775
         },
         {
             "feature": "PPI_MoM",
-            "importance": 0.057902995496988297
+            "importance": 0.05275653675198555
+        },
+        {
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.052564848214387894
         }
     ]
 }

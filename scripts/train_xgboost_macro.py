@@ -61,11 +61,18 @@ MACRO_FEATURES = [
     # Lagged features — note: add_lagged_macro_features generates these names
     'CPI_MoM_lag3', 'CPI_MoM_lag6', 'NFP_Change_lag3',
 
-    # Sentiment
-    'Sentiment', 'Sentiment_Std',
+    # Sentiment & Fear/Greed
+    'Sentiment', 'Sentiment_Std', 'Fear_Greed',
+
+    # COT Report (Smart Money Positioning)
+    'Net_Commercial', 'Net_NonCommercial', 'Net_Commercial_Long',
 
     # GK Volatility regime
     'GK_Vol_21d',
+    
+    # Synthetic Features
+    'Inst_Sentiment_Ratio',
+    'Smart_Money_Sentiment_Gap',
 ]
 
 # Asset-specific hyperparameter profiles.
@@ -148,6 +155,46 @@ class XGBoostTrainer:
             print(f"  [XGB] DuckDB read failed for '{table_name}' ({e}). Falling back to CSV: {self.data_file}")
             df = pd.read_csv(self.data_file, index_col=0, parse_dates=True)
             df = df.sort_index()
+
+        # Merge COT Data
+        try:
+            cot_file = f"data/cot_{self.asset_key}.csv"
+            if os.path.exists(cot_file):
+                cot_df = pd.read_csv(cot_file, parse_dates=['Date'])
+                cot_df.set_index('Date', inplace=True)
+                df = df.join(cot_df, how='left')
+                # Forward fill weekly COT data to daily
+                for col in ['Net_Commercial', 'Net_NonCommercial', 'Net_Commercial_Long']:
+                    if col in df.columns:
+                        df[col] = df[col].ffill()
+                        
+                df['Net_Commercial'] = df.get('Net_Commercial', pd.Series(0, index=df.index)).fillna(0)
+                df['Net_NonCommercial'] = df.get('Net_NonCommercial', pd.Series(0, index=df.index)).fillna(0)
+                df['Net_Commercial_Long'] = df.get('Net_Commercial_Long', pd.Series(0.5, index=df.index)).fillna(0.5)
+                
+                # Synthetic Divergence Feature 1: Spot Sentiment vs Futures Positioning
+                if 'Sentiment' in df.columns:
+                    df['Inst_Sentiment_Ratio'] = df['Sentiment'] / df['Net_Commercial'].replace(0, 1e-5)
+                    
+                # Synthetic Divergence Feature 2: Retail Fear/Greed vs Smart Money
+                if 'Fear_Greed' in df.columns:
+                    # Implement Institutional COT Index (Rolling Min-Max Scaling)
+                    # Use a 3-year rolling window (approx 756 trading days)
+                    window = 756
+                    rolling_min = df['Net_Commercial'].rolling(window=window, min_periods=1).min()
+                    rolling_max = df['Net_Commercial'].rolling(window=window, min_periods=1).max()
+                    
+                    # Min-Max Scaling ke range 0-100
+                    cot_index = (df['Net_Commercial'] - rolling_min) / (rolling_max - rolling_min).replace(0, 1) * 100
+                    
+                    # Gap = Retail Sentiment (0-100) - Institutional COT Index (0-100)
+                    df['Smart_Money_Sentiment_Gap'] = df['Fear_Greed'] - cot_index
+                    
+                print(f"  [XGB] COT data merged for {self.asset_key}.")
+            else:
+                print(f"  [XGB] COT file not found: {cot_file}")
+        except Exception as e:
+            print(f"  [XGB] Error merging COT: {e}")
 
         df['target_pct_change'] = (
             df[self.price_col].shift(-HORIZON_DAYS) - df[self.price_col]

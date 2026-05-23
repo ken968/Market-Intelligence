@@ -2,52 +2,52 @@
     "asset": "spy",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 69.48336252189142,
-    "hit_ratio_test": 62.6970227670753,
-    "rmse_train": 0.023053831041330516,
-    "rmse_test": 0.023308068364814794,
-    "n_features": 20,
-    "best_iteration": 25,
+    "hit_ratio_train": 68.43257443082311,
+    "hit_ratio_test": 61.12084063047285,
+    "rmse_train": 0.023296434744120485,
+    "rmse_test": 0.02360577387440165,
+    "n_features": 24,
+    "best_iteration": 18,
     "top_features": [
         {
             "feature": "NFP_Change",
-            "importance": 0.16434656083583832
+            "importance": 0.12853465974330902
         },
         {
-            "feature": "PPI_MoM",
-            "importance": 0.0761653408408165
-        },
-        {
-            "feature": "DXY",
-            "importance": 0.07424136251211166
-        },
-        {
-            "feature": "Yield_10Y",
-            "importance": 0.07353169471025467
-        },
-        {
-            "feature": "M2_MoM",
-            "importance": 0.07264172285795212
+            "feature": "M2_YoY",
+            "importance": 0.08882258832454681
         },
         {
             "feature": "YieldCurve_10Y2Y",
-            "importance": 0.06774955242872238
+            "importance": 0.07703647017478943
+        },
+        {
+            "feature": "Yield_10Y",
+            "importance": 0.07331208884716034
+        },
+        {
+            "feature": "Net_NonCommercial",
+            "importance": 0.06628734618425369
         },
         {
             "feature": "Oil_Price",
-            "importance": 0.06256965547800064
-        },
-        {
-            "feature": "CPI_MoM_lag6",
-            "importance": 0.06139342114329338
-        },
-        {
-            "feature": "CPI_MoM_lag3",
-            "importance": 0.058043643832206726
+            "importance": 0.0578826405107975
         },
         {
             "feature": "Breakeven_5Y5Y",
-            "importance": 0.05781245976686478
+            "importance": 0.05321571230888367
+        },
+        {
+            "feature": "DXY",
+            "importance": 0.05273959040641785
+        },
+        {
+            "feature": "PCE_MoM",
+            "importance": 0.05114675685763359
+        },
+        {
+            "feature": "PPI_MoM",
+            "importance": 0.048559460788965225
         }
     ]
 }

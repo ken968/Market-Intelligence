@@ -183,18 +183,41 @@ class SentimentAggregator:
         df['weight'] = df.get('weight', 1.0)
         df['weighted_sentiment'] = df['sentiment'] * df['weight']
         
-        # Aggregate sentiment by date (weighted average across all articles)
+        # Extract Fear & Greed Index (if any)
+        fear_greed_df = df[df['source'] == 'Fear & Greed Index'].copy()
+        if not fear_greed_df.empty:
+            # Drop duplicates by date just in case
+            fear_greed_df = fear_greed_df.drop_duplicates(subset=['date'], keep='first')
+            fear_greed_df = fear_greed_df[['date', 'sentiment']].rename(columns={'sentiment': 'Fear_Greed'})
+        else:
+            fear_greed_df = pd.DataFrame(columns=['date', 'Fear_Greed'])
+            
+        # Aggregate sentiment by date
+        # 1. Weighted Mean
         daily_sum = df.groupby('date')[['weighted_sentiment', 'weight']].sum().reset_index()
         daily_sum['Sentiment'] = (daily_sum['weighted_sentiment'] / daily_sum['weight']).clip(-1.0, 1.0)
+        
+        # 2. Standard Deviation of raw sentiment (Uncertainty Signal)
+        daily_std = df.groupby('date')['sentiment'].std().reset_index(name='Sentiment_Std')
+        # Fill NaN std (when only 1 article) with 0
+        daily_std['Sentiment_Std'] = daily_std['Sentiment_Std'].fillna(0.0)
         
         # Also get article count
         article_counts = df.groupby('date').size().reset_index(name='ArticleCount')
         
         # Merge
-        daily_sentiment = pd.merge(daily_sum[['date', 'Sentiment']], article_counts, on='date')
+        daily_sentiment = pd.merge(daily_sum[['date', 'Sentiment']], daily_std, on='date')
+        daily_sentiment = pd.merge(daily_sentiment, article_counts, on='date')
+        daily_sentiment = pd.merge(daily_sentiment, fear_greed_df, on='date', how='left')
         
         # Sort chronologically for decay processing
         daily_sentiment = daily_sentiment.sort_values('date')
+        
+        # Forward fill Fear_Greed if there are missing days (since it's a daily index)
+        if 'Fear_Greed' in daily_sentiment.columns:
+            daily_sentiment['Fear_Greed'] = daily_sentiment['Fear_Greed'].ffill().bfill().fillna(0.0)
+        else:
+            daily_sentiment['Fear_Greed'] = 0.0
         
         # ==========================================
         # FLAW #3 FIX: Sentiment Decay (Memory)
@@ -213,7 +236,7 @@ class SentimentAggregator:
         print(f"  Non-zero sentiment: {(daily_sentiment['Sentiment'] != 0).sum()} days")
         print(f"  Mean sentiment: {daily_sentiment['Sentiment'].mean():+.4f}")
         
-        return daily_sentiment[['Date', 'Sentiment']]
+        return daily_sentiment[['Date', 'Sentiment', 'Sentiment_Std', 'Fear_Greed']]
     
     def get_source_names(self) -> List[str]:
         """Get list of active source names"""
