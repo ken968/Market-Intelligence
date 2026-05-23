@@ -1,0 +1,25 @@
+MARKET INTELLIGENCE SYSTEM - KITAB ARSITEKTUR
+BAGIAN 4: ARSITEKTUR MACHINE LEARNING (PREDIKSI DAN ENSEMBLE)
+
+1. MENGATASI KUTUKAN "FLATLINE" (DIRECT MULTI-STEP FORECAST)
+Banyak sistem prediksi yang gagal saat menebak masa depan yang panjang (misalnya 90 hari) karena mereka menggunakan metode rekursif: menebak Hari ke-1, lalu menggunakan hasil tebakan itu untuk menebak Hari ke-2, dst. Kesalahan kecil akan bertumpuk secara eksponensial hingga akhirnya model menyerah dan menarik garis lurus (Flatline Forecast).
+Sistem kita mengatasi ini dengan cara melatih tebakan "Langsung" ke masa depan tanpa iterasi, menggunakan satu penjangkar yang kuat (7D Anchor) untuk kemudian diekstrapolasi menggunakan rumus matematika fisika (Power-Law Decay).
+
+2. ARSITEKTUR LAYER 1: BASE MODELS
+A. LSTM (Deep Learning)
+- Tugas: Mengamati riwayat harga murni (Sequences) sepanjang 90 hari ke belakang.
+- Arsitektur: Dilengkapi dengan Layer "Attention" sehingga model bisa memusatkan perhatian pada hari-hari tertentu yang paling krusial.
+- Target Prediksi: Mencari "Expected Percentage Change" (Ekspektasi Perubahan Persentase) dalam 7 Hari. Kita tidak menyuruh model menebak harga absolut dalam Dolar karena rentan terhadap efek tren palsu (Non-Stationary).
+
+B. XGBoost (Gradient Boosting Tree)
+- Tugas: Mengamati riwayat indikator fundamental, suku bunga, dan sentimen institusi (COT).
+- Fitur Lagging: XGBoost secara otomatis menggeser data bulanan untuk menghindari kebocoran data.
+
+3. ARSITEKTUR LAYER 2: DUAL-HEAD STACKER ENSEMBLE
+Ini adalah otak utama yang mengambil kesimpulan akhir. Ia menerima masukan dari LSTM, XGBoost, dan kondisi ketidakpastian pasar (VIX, dll). Mengapa "Dual-Head"?
+- Head 1 (Direction Head): Adalah model Klasifikasi (Logistic Regression) yang khusus ditugaskan hanya untuk menjawab: "Apakah 7 hari ke depan akan NAIK atau TURUN?" Ia menghasilkan probabilitas (misal: 66% yakin Naik).
+- Head 2 (Magnitude Head): Adalah model Regresi (Ridge Regression) yang khusus ditugaskan untuk menjawab: "Terlepas dari arahnya, seberapa liar pergerakan harganya nanti?" (Volatilitas).
+- Penggabungan: Tebakan Akhir = Arah (Positif/Negatif) * Besaran Magnitude. Metode ini menghilangkan bias "Tebakan Ragu-Ragu" yang sering menimpa model AI tunggal.
+
+4. TARGET SCALERS MANDIRI
+Setiap model dipasangkan dengan Scaler Fitur dan Scaler Target-nya masing-masing. Ini menjaga agar variabel harga antar aset (misal Emas di $2000 vs BTC di $60000) bisa dibaca oleh otak AI menggunakan satu standar bahasa yang sama (persentase normalisasi).

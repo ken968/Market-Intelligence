@@ -1,0 +1,25 @@
+MARKET INTELLIGENCE SYSTEM - KITAB ARSITEKTUR
+BAGIAN 1: GAMBARAN UMUM DAN FILOSOFI SISTEM
+
+1. TUJUAN DAN VISI
+Sistem ini dirancang bukan sebagai bot trading otomatis yang terhubung ke broker, melainkan sebagai "Market Intelligence Terminal" (Otak Makro). Fungsinya adalah untuk mengolah ribuan titik data historis, makroekonomi, dan sentimen institusional menjadi satu kesimpulan probabilitas arah harga. Sistem ini memberikan proyeksi matematis kepada analis manusia untuk memandu keputusan investasi, identifikasi risiko, dan pemetaan siklus pasar.
+
+2. STRUKTUR ARSITEKTUR TINGKAT TINGGI
+Sistem ini dibagi menjadi empat lapisan (layer) utama yang beroperasi secara sekuensial:
+
+A. Layer Data (Data Ingestion & Storage)
+Mengambil data mentah dari berbagai sumber (API Publik, Yahoo Finance, FRED, CFTC) dan menyimpannya ke dalam database sentral berbasis DuckDB. Lapisan ini bertugas membersihkan data dan membuang anomali.
+
+B. Layer Pembelajaran Mesin (Machine Learning Core)
+Berisi dua mesin utama yang bekerja berdampingan:
+- LSTM (Long Short-Term Memory): Spesialis membaca pola pergerakan harga beruntun (Price Action) dari masa lalu.
+- XGBoost (Extreme Gradient Boosting): Spesialis membaca kondisi fundamental, makroekonomi, dan posisi institusi.
+
+C. Layer Penggabungan (Ensemble / Stacker)
+Lapisan yang bertugas "mendengarkan" pendapat dari LSTM dan XGBoost, lalu mengambil keputusan final. Ini disebut "Dual-Head Stacker" karena memiliki dua kepala: satu memprediksi "Arah" (Naik/Turun), dan satu memprediksi "Kekuatan" (Berapa Persen).
+
+D. Layer Antarmuka (User Interface)
+Dashboard berbasis Streamlit yang bertugas menampilkan kurva proyeksi masa depan, metrik volatilitas, dan narasi teks dari Model Bahasa Besar (LLM/Gemini) yang menjelaskan mengapa sistem memprediksi arah tersebut.
+
+3. PRINSIP KERJA
+Sistem tidak berusaha meramalkan masa depan secara magis. Ia menghitung "Expected Value" (Nilai Harapan Matematis) berdasarkan probabilitas historis. Jika di masa lalu setiap kali kondisi A, B, dan C terjadi, pasar naik 60% dari waktu tersebut, maka sistem akan mencetak probabilitas kenaikan 60%. Semua output adalah probabilitas, bukan kepastian.

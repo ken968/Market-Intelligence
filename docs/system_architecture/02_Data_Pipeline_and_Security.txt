@@ -1,0 +1,28 @@
+MARKET INTELLIGENCE SYSTEM - KITAB ARSITEKTUR
+BAGIAN 2: ALUR DATA DAN PENGAMANAN KEBOCORAN (DATA LEAKAGE)
+
+1. ARSITEKTUR DUCKDB & POLARS
+Sistem ini menggunakan DuckDB, sebuah database SQL analitik (Serverless/In-process). Berbeda dengan database tradisional (MySQL/Postgres) yang membutuhkan server berjalan terpisah, DuckDB berada di dalam aplikasi itu sendiri (seperti SQLite) namun diformat sangat optimal untuk membaca jutaan baris data finansial (OLAP).
+Keunggulan:
+- Memori efisien dan kompresi tinggi (ukuran file jauh lebih kecil dari CSV).
+- Terintegrasi langsung dengan Polars (pustaka pemrosesan data mutakhir dengan bahasa Rust) untuk manipulasi data secepat kilat.
+
+2. MEKANISME DUAL-WRITE & FAIL-SAFE
+Sistem tidak pernah bergantung pada satu titik kegagalan (Single Point of Failure).
+- Saat data baru ditarik, sistem menyimpan data tersebut ke file DuckDB (market_intelligence.db).
+- Pada detik yang sama, sistem juga mem-backup data tersebut ke format .csv standar.
+- Jika suatu hari database DuckDB mengalami "Locking" (terkunci karena sedang dibaca oleh user lain di dashboard), skrip prediksi tidak akan crash. Ia akan mengalihkan jalurnya dan membaca dari file .csv cadangan secara otomatis (Auto-Fallback).
+
+3. PENGAMANAN KEBOCORAN DATA (LOOK-AHEAD BIAS PREVENTION)
+Ini adalah masalah paling mematikan dalam pembuatan model Machine Learning di dunia finansial. Kebocoran data terjadi jika sistem tidak sengaja "mengintip" data masa depan saat berlatih di data masa lalu.
+Cara kita menanganinya:
+- Forward Fill (ffill) yang Ketat: Data yang rilis seminggu sekali (seperti Laporan CFTC yang rilis hari Jumat), TIDAK BOLEH diletakkan di hari Senin minggu tersebut (walau data tersebut merangkum posisi hari Senin-Selasa). Data tersebut dikunci dan baru dimasukkan ke baris hari Jumat, lalu diduplikat (forward fill) ke hari Sabtu, Minggu, Senin, dst. Ini memastikan model hanya melihat data "yang sudah rilis ke publik" pada hari yang bersangkutan.
+- Lagging Otomatis: Data makro (seperti Suku Bunga dan Inflasi) secara otomatis digeser (lagged) sejauh beberapa bulan untuk mensimulasikan kapan laporan tersebut benar-benar diterbitkan oleh pemerintah (biasanya telat 1 bulan).
+
+4. SINKRONISASI ALUR (WORKFLOW PENGAMBILAN DATA)
+Setiap malam atau sesuai jadwal, sistem akan menjalankan skrip Fetcher (Pengambil Data):
+- yfinance_fetcher.py: Harga penutupan harian.
+- fred_fetcher.py: Data makroekonomi bulanan/harian dari Bank Sentral AS.
+- cot_fetcher.py: Posisi perdagangan dari regulator AS.
+- onchain_fetcher.py: Arus keluar-masuk bursa Kripto.
+Seluruh skrip ini akan mengirimkan strukturnya ke `MarketDataStore` untuk disatukan dalam database DuckDB.

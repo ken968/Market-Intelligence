@@ -1,0 +1,28 @@
+MARKET INTELLIGENCE SYSTEM - KITAB ARSITEKTUR
+BAGIAN 5: ALUR KERJA (WORKFLOW) DAN MESIN INFERENSI HARIAN
+
+1. SIKLUS HIDUP HARIAN (DAILY PREDICTION CYCLE)
+Setiap kali sistem dijalankan, orkestrator (utils/predictor_engine.py) akan memimpin alur kerja:
+Langkah 1: Menarik data penutupan harga terbaru dan mengkalkulasi indikator teknikal murni.
+Langkah 2: Menarik file DuckDB untuk membaca rilis data makroekonomi dan posisi COT terakhir.
+Langkah 3: Mengkalkulasi indikator turunan harian (seperti Garman-Klass Volatility dari High-Low-Open-Close) secara live.
+Langkah 4: Melakukan sinkronisasi panjang baris (Padding/Truncation) agar format tabel persis dengan apa yang dimengerti oleh StandardScaler (alat penerjemah AI).
+
+2. KALKULASI DUAL-HEAD (MANAGER ANCHOR)
+Skrip utama yang bekerja untuk menghasilkan angka adalah utils/layers/manager_anchor.py.
+Di sini, sinyal dari LSTM dan XGBoost dipertemukan dengan kondisi pasar seketika (seperti indeks ketakutan VIX). Ketiga elemen ini diramu menjadi "Meta-Features".
+Model meta (Stacker) kemudian mengambil alih kemudi dan memberikan keputusan final berupa "Anchor 7 Hari" (Sinyal Probabilitas Arah dan Sinyal Besaran Jarak).
+
+3. PEMBENTUKAN KURVA MASA DEPAN (POWER-LAW MOMENTUM DECAY)
+Setelah mendapatkan satu angka tebakan untuk 7 hari ke depan (misalnya: Harga akan naik 3%), bagaimana cara menggambar kurva yang mulus dari Hari ke-1 hingga Hari ke-90 di grafik?
+- Sistem menggunakan rumus peluruhan inersia (Decay Curve):
+  Persentase_Hari_ke_i = Target_7_Hari * (( i / 7.0 ) ^ 0.65)
+- Fungsi pangkat 0.65 menyebabkan kurva tersebut melengkung perlahan, meniru hukum gravitasi pasar: harga bergerak kuat di awal, namun perlahan kehabisan momentum saat mendekati batas akhir siklus prediksi.
+
+4. RENCANA PELATIHAN ULANG (RETRAINING CYCLE)
+Karena fondasi utama dari kecerdasan sistem ini adalah data Smart Money (COT Report) yang dirilis seminggu sekali (setiap Jumat waktu Amerika), sistem tidak perlu dilatih ulang setiap hari.
+Jadwal ideal:
+Setiap hari Sabtu pagi, skrip train_xgboost_macro.py dan train_lstm_pct.py dijalankan untuk mengukir ulang jalur-jalur saraf otak AI menggunakan data 1 minggu terakhir, menjaga ingatan model tetap segar namun mencegah overfitting.
+
+5. LAYER RISIKO (ROADMAP MASA DEPAN)
+Mesin inferensi ini memiliki fondasi yang kuat untuk dikembangkan menuju Risk Management Layer. Data Probabilitas (Confidence) dari Stacker siap dihubungkan ke rumus Kelly Criterion (untuk menghitung berapa lot optimal yang harus dibeli). Dan data Volatilitas (Magnitude) siap digunakan untuk membangun pita batas toleransi risiko (Dynamic Stop-Loss Bands).

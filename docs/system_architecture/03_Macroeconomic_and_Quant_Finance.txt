@@ -1,0 +1,26 @@
+MARKET INTELLIGENCE SYSTEM - KITAB ARSITEKTUR
+BAGIAN 3: MAKROEKONOMI DAN QUANT FINANCE (INDIKATOR & MATEMATIKA)
+
+1. INDIKATOR MAKROEKONOMI INTI
+Sistem tidak memandang harga aset secara vakum. Ia menggunakan "Kaca Pembesar Makro" dari Bank Sentral dan Pasar Obligasi.
+- DXY (US Dollar Index): Mengukur kekuatan Dolar AS. Dolar kuat biasanya menekan aset berisiko (Kripto) dan komoditas (Emas).
+- Yield_10Y (Suku Bunga Obligasi 10 Tahun): Mengukur ekspektasi suku bunga dan inflasi jangka panjang. Tingginya yield membuat aset yang tidak berbunga (seperti Emas) menjadi kurang menarik.
+- YieldCurve_10Y2Y (Kurva Imbal Hasil): Selisih antara suku bunga 10 tahun dan 2 tahun. Jika minus (Inverted Yield Curve), itu adalah sinyal historis yang sangat kuat bahwa resesi ekonomi akan datang.
+- Breakeven_5Y5Y: Mengukur ekspektasi inflasi pasar dalam jangka waktu 5 hingga 10 tahun ke depan.
+- M2_YoY & M2_MoM: Mengukur kecepatan pencetakan uang (Uang Beredar). Semakin banyak uang beredar, semakin tinggi harga aset karena inflasi nilai tukar.
+
+2. SENTIMEN INSTITUSIONAL & SMART MONEY (COT REPORT)
+Commitment of Traders (COT) adalah laporan dari pemerintah AS (CFTC) yang mewajibkan bank besar, hedge fund, dan institusi untuk melaporkan seberapa besar taruhan mereka (Futures/Derivatif).
+- Net_Commercial: Adalah agregat uang institusi besar. Apakah mereka bertaruh harga naik (Long) atau turun (Short)?
+- COT Index (Rolling Min-Max Scaler): Kita tidak menggunakan rasio mentah. Kita menghitung apakah posisi hari ini adalah yang tertinggi/terendah dalam 3 tahun terakhir (756 Hari Perdagangan).
+  Rumus: COT_Index = (Posisi_Hari_Ini - Min_3_Tahun) / (Max_3_Tahun - Min_3_Tahun) * 100
+  Skala ini menghasilkan nilai 0 hingga 100, memudahkan kita membandingkannya dengan indeks lain.
+
+3. INDIKATOR DIVERGENSI ASIMETRIS (SYNTHETIC FEATURES)
+Ini adalah "Rahasia Dapur" dari sistem Quant tingkat tinggi. Kita mencari ketidaksamaan (divergensi) antara pasar ritel (masyarakat umum) dan pasar institusi.
+- Smart_Money_Sentiment_Gap: Diukur dengan mengurangi (Retail Fear/Greed) - (COT Index Institusi).
+  Logika: Jika Fear/Greed tinggi (Ritel sedang Serakah/Euforia di angka 90) tetapi Institusi banyak menekan tombol Short (COT Index di angka 10), maka ada "Gap" sebesar +80. Gap positif yang besar adalah sinyal bahaya (Bearish) bahwa Smart Money sedang bersiap mengambil keuntungan dari kepolosan ritel.
+
+4. INDIKATOR ON-CHAIN & VOLATILITAS
+- Sentiment (Spot / On-Chain): Ekstraksi pergerakan dana di blockchain kripto. Berapa banyak koin yang dipindahkan Paus (Whales) dari dompet dingin ke bursa? Jika tinggi, berarti mereka bersiap untuk menjual (Bearish).
+- GK_Vol_21d (Garman-Klass Volatility): Rumus volatilitas yang jauh lebih presisi dari standar deviasi biasa karena memperhitungkan harga Tertinggi (High), Terendah (Low), Pembukaan (Open), dan Penutupan (Close) dalam satu hari untuk mengukur seberapa brutal ketidakpastian pasar.
