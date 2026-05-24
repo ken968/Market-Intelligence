@@ -1,0 +1,63 @@
+# MARKET INTELLIGENCE SYSTEM: COMPREHENSIVE ARCHITECTURE & RESEARCH WHITEPAPER
+
+## PART 10: ALTERNATIVE DATA INGESTION PIPELINES & API BINDINGS
+
+## 1. OVERVIEW OF ALTERNATIVE DATA INGESTION
+
+Quantitative models that rely only on price action and macroeconomic numbers are blind to retail sentiment spikes, options hedging activity, and changing policy expectations. The **Market Intelligence Terminal** implements four alternative data pipelines that fetch, clean, and normalize non-traditional sentiment and policy indicators. These indicators are ingested daily and stored directly in the `DuckDB` database to serve as features for the `XGBoost` and `meta-stacker` models.
+
+## 2. SENTIMENT AND FEAR/GREED INDEX (ALTERNATIVE.ME BINDINGS)
+
+The system processes market emotion through the **Crypto Fear & Greed Index API** provided by `Alternative.me`.
+
+-   **Data Collection**: The scheduler queries the endpoint daily, retrieving a raw sentiment value scaled from 0 (Extreme Fear) to 100 (Extreme Greed). The index is computed by `Alternative.me` from five primary sources: volatility (25%), market momentum/volume (25%), social media sentiment (15%), survey data (15%), and dominance (10%).
+-   **Contrarian Interpretation**: In equity markets, extreme greed is bearish, and extreme fear is bullish. The signal generator processes this contrarian stance: values below 20 represent oversold capital capitulation (bullish trigger), while values above 80 indicate retail bubble expansion (bearish trigger).
+-   **Storage**: Sourced values are stored in the `Fear_Greed` column of the asset's global database table.
+
+## 3. GOOGLE TRENDS SEARCH INTEREST NORMALIZATION
+
+The `GoogleTrendsFetcher` class tracks public search momentum, which serves as a proxy for retail volume expansion and trend exhaustion:
+
+-   **API Scraping**: Sourced via the `pytrends` library or direct RSS feeds, the fetcher queries search interest index values (0 to 100) for target keywords (e.g., "buy bitcoin", "gold price", "inflation").
+-   **Normalization**: Raw search interest is highly seasonal and noisy. The fetcher calculates a rolling Z-score over a 14-day window:
+
+    $$ \text{Slope} = \frac{ \text{Current\_Interest} - \text{Mean}(\text{Interest}_{t-14:t}) }{ \text{Std}(\text{Interest}_{t-14:t}) } $$
+
+-   **Sentiment Acceleration**: A positive slope $> 2.0$ indicates retail interest acceleration, signaling that the asset is drawing public attention. In late-stage bull markets, extreme trends spikes correlate with market tops, while in bear markets, interest collapse signals retail capitulation.
+
+## 4. CME FEDWATCH RATES PROBABILITY SCRAPER
+
+The `FedWatchFetcher` scrapes pricing data for **30-Day Federal Funds Futures (ZQC)** traded on the `Chicago Mercantile Exchange (CME)`.
+
+-   **Probability Calculation**: The implied probability of a target Fed Funds Rate decision at upcoming FOMC meetings is derived using the CME's target rate pricing model. The interest rate probability distribution is parsed:
+
+    $$ \text{Implied\_Rate} = 100 - \text{Futures\_Price} $$
+
+    The fetcher maps these futures prices across upcoming FOMC dates to establish the probability for each potential rate bucket (e.g., cut 25bps, cut 50bps, hold, hike 25bps).
+-   **Policy Stance Mapping**: The probabilities are aggregated to calculate a **Dovish Score** (sum of cut/hold probabilities) and a **Hawkish Score** (hike probabilities).
+-   **Stance Translation**: If the Dovish Score is $> 60\%$, the stance is classified as "Dovish". The stance is then converted to directional signals for Gold (**BULLISH**), Bitcoin (**BULLISH**), and Stocks (**BULLISH**, unless under recessionary regimes where a cut signals economic damage).
+
+## 5. GOOGLE NEWS API AND FINBERT SENTIMENT ANALYSIS
+
+The system runs a daily news collection and sentiment calculation pipeline:
+
+-   **Headline Ingestion**: Sourced from Google News RSS feeds and `NewsAPI` endpoints, the fetcher extracts financial headlines matching asset keywords from the past 24 hours.
+-   **Deduplication and Staleness**: Headlines undergo cosine similarity check (threshold 0.85) to remove duplicates, and are sorted chronologically.
+-   **FinBERT Sentiment Scoring**: Ingested headlines are passed to `FinBERT` (a specialized `BERT` language model trained on financial text). `FinBERT` evaluates each headline, outputting probability scores for three classes: positive, negative, and neutral.
+-   **Daily Score Aggregation**: The daily sentiment mean is computed:
+
+    $$ \text{Sentiment\_Mean} = \frac{ \sum ( P_{\text{positive}} - P_{\text{negative}} ) }{ N } $$
+
+    Additionally, the system computes the standard deviation of sentiment:
+
+    $$ \text{Sentiment\_Std} = \text{Std}( P_{\text{positive}} - P_{\text{negative}} ) $$
+
+    A high `Sentiment_Std` indicates that the news on that day contained conflicting positive and negative narratives, signaling high narrative uncertainty (`VIX`-like sentiment signal).
+
+## 6. DATA MERGING AND ALIGNMENT
+
+Because alternative data sources update on varying frequencies (daily, weekly, or monthly), they are synchronized before database storage:
+
+-   **Daily indicators** (Fear & Greed, `DXY`, `VIX`) are aligned directly to the date index.
+-   **Weekly reports** (`COT`) are realigned from their Tuesday As-Of date to their Friday release date, and then forward-filled (`ffill()`) daily.
+-   All aligned alternative features are written to the asset's `DuckDB` table (e.g., `gold_global_insights`, `btc_global_insights`) and simultaneously backed up to CSV files.
