@@ -99,7 +99,9 @@ class MarketDataStore:
                 if pl is not None and isinstance(df, pl.DataFrame):
                     df.write_csv(csv_backup_path)
                 elif isinstance(df, pd.DataFrame):
-                    df.to_csv(csv_backup_path, index=False if 'index' not in df.columns else True)
+                    # Save index if it is meaningful (not a default RangeIndex) or explicitly named
+                    save_index = not isinstance(df.index, pd.RangeIndex) or df.index.name is not None
+                    df.to_csv(csv_backup_path, index=save_index)
             except Exception as e:
                 if db_write_failed:
                     raise ValueError(f"Failed to write table '{table_name}': both DuckDB and CSV backup failed. CSV Error: {e}")
