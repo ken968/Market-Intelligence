@@ -84,69 +84,69 @@ run_app.bat
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '24px'}}}%%
 mindmap
-  root((Market Intelligence System Terminal))
-    System Ontology & Taxonomy
-      Multi-Asset Class Support
-      Expected Percentage Return Objective
-      Structural Market Cycle Modeling
-      Non-Stationarity Resolution
-    Three-Layer Causal Hierarchy
-      Worker Layer Base Learners
-        LSTM with Multi-Head Self-Attention
-        XGBoost Macro-Regime Model
-      Manager Layer Meta-Learner Stacker
-        Directional Head Logistic Regression
-        Magnitude Head Huber Regressor
-        Volatility-Adjusted Synthesis
-      CEO Layer LLM Override
-        Qualitative Bias Injection Gemini
-        Causal Chain Reasoning
-        Drift Multiplier & Bias Vector
-    Data Engineering Pipeline
-      DuckDB OLAP Warehouse
-        Columnar Storage Layout
-        Vectorized Query Execution
-      Polars Rust Engine
-        Zero-Copy Memory Mapping
-        Multi-Threaded Parallelism
-      Operational Integrity
-        Dual-Write CSV Fallback
-        Look-Ahead Bias Prevention
-        COT Release Realignment
-    Macro & Quantitative Features
-      Global Liquidity Yield Curve & OAS
-      M2 Money Supply Derivatives
-      3-Year Rolling COT Index
-      Smart Money Sentiment Gap
-      Garman-Klass Volatility
-    Machine Learning Architecture
-      Direct Multi-Step Forecasting 1D-90D
-      Feature vs Target Scaler Isolation
-      Trajectory Smoothing Interpolation
-      Power-Law Momentum Decay
-    Risk & Signal Management
-      Consolidated BUY SELL HOLD Signals
-      Kelly Criterion Position Sizing
-      Garman-Klass Dynamic Stop-Loss
-      OOD Anomaly Gate
-        3-Sigma Statistical Circuit Breaker
-        Signal Override & Suspension
-        Volatility Flagging VIX DVOL
-    Explainability & Validation
-      Explainable AI XAI
-        Frequency-Aware Z-Score Attribution
-        Dynamic Directional Impact Mapping
-        LLM Narrative Synthesis
-      Counterfactual Logging
-        Baseline vs Contextual Forecasts
-        Automatic Outcome Resolution
-        Hit Ratio Delta Evaluation
-      Model Health Monitoring
-    Alternative Data Ingestion
-      Crypto Fear & Greed Index
-      Google Trends Search Momentum
-      CME FedWatch Policy Parser
-      FinBERT Sentiment Analysis
+  root((Market Intelligence<br/>System Terminal))
+    ("System Ontology<br/>& Taxonomy")
+      ("Multi-Asset<br/>Class Support")
+      ("Expected Percentage<br/>Return Objective")
+      ("Structural Market<br/>Cycle Modeling")
+      ("Non-Stationarity Resolution")
+    ("Three-Layer<br/>Causal Hierarchy")
+      ("Worker Layer<br/>Base Learners")
+        ("LSTM with<br/>Multi-Head Self-Attention")
+        ("XGBoost<br/>Macro-Regime Model")
+      ("Manager Layer<br/>Meta-Learner Stacker")
+        ("Directional Head<br/>Logistic Regression")
+        ("Magnitude Head<br/>Huber Regressor")
+        ("Volatility-Adjusted Synthesis")
+      ("CEO Layer<br/>LLM Override")
+        ("Qualitative Bias<br/>Injection Gemini")
+        ("Causal<br/>Chain Reasoning")
+        ("Drift Multiplier<br/>& Bias Vector")
+    ("Data<br/>Engineering Pipeline")
+      ("DuckDB<br/>OLAP Warehouse")
+        ("Columnar<br/>Storage Layout")
+        ("Vectorized<br/>Query Execution")
+      ("Polars<br/>Rust Engine")
+        ("Zero-Copy<br/>Memory Mapping")
+        ("Multi-Threaded Parallelism")
+      ("Operational Integrity")
+        ("Dual-Write<br/>CSV Fallback")
+        ("Look-Ahead<br/>Bias Prevention")
+        ("COT<br/>Release Realignment")
+    ("Macro &<br/>Quantitative Features")
+      ("Global Liquidity Yield<br/>Curve & OAS")
+      ("M2 Money<br/>Supply Derivatives")
+      ("3-Year Rolling<br/>COT Index")
+      ("Smart Money<br/>Sentiment Gap")
+      ("Garman-Klass Volatility")
+    ("Machine<br/>Learning Architecture")
+      ("Direct Multi-Step<br/>Forecasting 1D-90D")
+      ("Feature vs<br/>Target Scaler Isolation")
+      ("Trajectory<br/>Smoothing Interpolation")
+      ("Power-Law<br/>Momentum Decay")
+    ("Risk &<br/>Signal Management")
+      ("Consolidated BUY<br/>SELL HOLD Signals")
+      ("Kelly Criterion<br/>Position Sizing")
+      ("Garman-Klass<br/>Dynamic Stop-Loss")
+      ("OOD<br/>Anomaly Gate")
+        ("3-Sigma Statistical<br/>Circuit Breaker")
+        ("Signal Override<br/>& Suspension")
+        ("Volatility Flagging<br/>VIX DVOL")
+    ("Explainability<br/>& Validation")
+      ("Explainable<br/>AI XAI")
+        ("Frequency-Aware<br/>Z-Score Attribution")
+        ("Dynamic Directional<br/>Impact Mapping")
+        ("LLM<br/>Narrative Synthesis")
+      ("Counterfactual Logging")
+        ("Baseline vs<br/>Contextual Forecasts")
+        ("Automatic<br/>Outcome Resolution")
+        ("Hit Ratio<br/>Delta Evaluation")
+      ("Model<br/>Health Monitoring")
+    ("Alternative<br/>Data Ingestion")
+      ("Crypto Fear<br/>& Greed Index")
+      ("Google Trends<br/>Search Momentum")
+      ("CME FedWatch<br/>Policy Parser")
+      ("FinBERT<br/>Sentiment Analysis")
 ```
 
 The system uses a strict **3-Layer Causal Hierarchy** to separate model concerns:
