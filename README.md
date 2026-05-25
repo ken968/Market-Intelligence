@@ -83,35 +83,69 @@ run_app.bat
 
 ```mermaid
 mindmap
-  root((Market Intelligence))
-    Data Ingestion
-      FRED API
-        Inflation & Yield
-        Liquidity & M2
-      YFinance
-        OHLCV Price Action
-        DXY & Oil
-      Alternative Data
-        Fear & Greed Index
-        COT Smart Money
-    Data Pipeline
-      DuckDB SQL Engine
-      Polars Feature Eng
-      CSV Dual-Write Fallback
-    ML Architecture
-      Worker Layer
-        LSTM Micro Momentum
-        XGBoost Macro Regime
-      Manager Layer
-        LogisticReg Direction
-        HuberReg Magnitude
-      CEO Layer
-        Gemini Contextual Bias
-        ZCA Whitening
-    Risk Management Layer
-      Kelly Criterion Sizing
-      Garman-Klass StopLoss
-      OOD Circuit Breaker
+  root((Market Intelligence System Terminal))
+    System Ontology & Taxonomy
+      Multi-Asset Class Support
+      Expected Percentage Return Objective
+      Structural Market Cycle Modeling
+      Non-Stationarity Resolution
+    Three-Layer Causal Hierarchy
+      Worker Layer Base Learners
+        LSTM with Multi-Head Self-Attention
+        XGBoost Macro-Regime Model
+      Manager Layer Meta-Learner Stacker
+        Directional Head Logistic Regression
+        Magnitude Head Huber Regressor
+        Volatility-Adjusted Synthesis
+      CEO Layer LLM Override
+        Qualitative Bias Injection Gemini
+        Causal Chain Reasoning
+        Drift Multiplier & Bias Vector
+    Data Engineering Pipeline
+      DuckDB OLAP Warehouse
+        Columnar Storage Layout
+        Vectorized Query Execution
+      Polars Rust Engine
+        Zero-Copy Memory Mapping
+        Multi-Threaded Parallelism
+      Operational Integrity
+        Dual-Write CSV Fallback
+        Look-Ahead Bias Prevention
+        COT Release Realignment
+    Macro & Quantitative Features
+      Global Liquidity Yield Curve & OAS
+      M2 Money Supply Derivatives
+      3-Year Rolling COT Index
+      Smart Money Sentiment Gap
+      Garman-Klass Volatility
+    Machine Learning Architecture
+      Direct Multi-Step Forecasting 1D-90D
+      Feature vs Target Scaler Isolation
+      Trajectory Smoothing Interpolation
+      Power-Law Momentum Decay
+    Risk & Signal Management
+      Consolidated BUY SELL HOLD Signals
+      Kelly Criterion Position Sizing
+      Garman-Klass Dynamic Stop-Loss
+      OOD Anomaly Gate
+        3-Sigma Statistical Circuit Breaker
+        Signal Override & Suspension
+        Volatility Flagging VIX DVOL
+    Explainability & Validation
+      Explainable AI XAI
+        Frequency-Aware Z-Score Attribution
+        Dynamic Directional Impact Mapping
+        LLM Narrative Synthesis
+      Counterfactual Logging
+        Baseline vs Contextual Forecasts
+        Automatic Outcome Resolution
+        Hit Ratio Delta Evaluation
+      Model Health Monitoring
+    Alternative Data Ingestion
+      Crypto Fear & Greed Index
+      Google Trends Search Momentum
+      CME FedWatch Policy Parser
+      FinBERT Sentiment Analysis
 ```
 
 The system uses a strict **3-Layer Causal Hierarchy** to separate model concerns:
