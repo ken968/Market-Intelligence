@@ -82,92 +82,70 @@ run_app.bat
 ### System Mind Map
 
 ```mermaid
-flowchart LR
-    Root[Market Intelligence System Terminal]
-
-    %% 1. Ontology
-    Root --> Ontology[System Ontology & Taxonomy]
-    Ontology --> O1(Multi-Asset Class Support)
-    Ontology --> O2(Expected Percentage Return Objective)
-    Ontology --> O3(Structural Market Cycle Modeling)
-    Ontology --> O4(Non-Stationarity Resolution)
-
-    %% 2. Hierarchy
-    Root --> Hierarchy[Three-Layer Causal Hierarchy]
-    Hierarchy --> Worker[Worker Layer Base Learners]
-    Worker --> W1(LSTM with Multi-Head Self-Attention)
-    Worker --> W2(XGBoost Macro-Regime Model)
-    
-    Hierarchy --> Manager[Manager Layer Meta-Learner Stacker]
-    Manager --> M1(Directional Head Logistic Regression)
-    Manager --> M2(Magnitude Head Huber Regressor)
-    Manager --> M3(Volatility-Adjusted Synthesis)
-    
-    Hierarchy --> CEO[CEO Layer LLM Override]
-    CEO --> C1(Qualitative Bias Injection Gemini)
-    CEO --> C2(Causal Chain Reasoning)
-    CEO --> C3(Drift Multiplier & Bias Vector)
-
-    %% 3. Data Engineering
-    Root --> DataEng[Data Engineering Pipeline]
-    DataEng --> DuckDB[DuckDB OLAP Warehouse]
-    DuckDB --> D1(Columnar Storage Layout)
-    DuckDB --> D2(Vectorized Query Execution)
-    
-    DataEng --> Polars[Polars Rust Engine]
-    Polars --> P1(Zero-Copy Memory Mapping)
-    Polars --> P2(Multi-Threaded Parallelism)
-    
-    DataEng --> OpInt[Operational Integrity]
-    OpInt --> OI1(Dual-Write CSV Fallback)
-    OpInt --> OI2(Look-Ahead Bias Prevention)
-    OpInt --> OI3(COT Release Realignment)
-
-    %% 4. Macro & Quant
-    Root --> Macro[Macro & Quantitative Features]
-    Macro --> MQ1(Global Liquidity Yield Curve & OAS)
-    Macro --> MQ2(M2 Money Supply Derivatives)
-    Macro --> MQ3(3-Year Rolling COT Index)
-    Macro --> MQ4(Smart Money Sentiment Gap)
-    Macro --> MQ5(Garman-Klass Volatility)
-
-    %% 5. ML Architecture
-    Root --> ML[Machine Learning Architecture]
-    ML --> ML1(Direct Multi-Step Forecasting 1D-90D)
-    ML --> ML2(Feature vs Target Scaler Isolation)
-    ML --> ML3(Trajectory Smoothing Interpolation)
-    ML --> ML4(Power-Law Momentum Decay)
-
-    %% 6. Risk & Signal
-    Root --> Risk[Risk & Signal Management]
-    Risk --> R1(Consolidated BUY SELL HOLD Signals)
-    Risk --> R2(Kelly Criterion Position Sizing)
-    Risk --> R3(Garman-Klass Dynamic Stop-Loss)
-    Risk --> OOD[OOD Anomaly Gate]
-    OOD --> OOD1(3-Sigma Statistical Circuit Breaker)
-    OOD --> OOD2(Signal Override & Suspension)
-    OOD --> OOD3(Volatility Flagging VIX DVOL)
-
-    %% 7. Explainability & Validation
-    Root --> Explain[Explainability & Validation]
-    Explain --> XAI[Explainable AI XAI]
-    XAI --> X1(Frequency-Aware Z-Score Attribution)
-    XAI --> X2(Dynamic Directional Impact Mapping)
-    XAI --> X3(LLM Narrative Synthesis)
-    
-    Explain --> Log[Counterfactual Logging]
-    Log --> L1(Baseline vs Contextual Forecasts)
-    Log --> L2(Automatic Outcome Resolution)
-    Log --> L3(Hit Ratio Delta Evaluation)
-    
-    Explain --> MH(Model Health Monitoring)
-
-    %% 8. Alternative Data
-    Root --> Alt[Alternative Data Ingestion]
-    Alt --> A1(Crypto Fear & Greed Index)
-    Alt --> A2(Google Trends Search Momentum)
-    Alt --> A3(CME FedWatch Policy Parser)
-    Alt --> A4(FinBERT Sentiment Analysis)
+mindmap
+  root((Market Intelligence System Terminal))
+    System Ontology & Taxonomy
+      Multi-Asset Class Support
+      Expected Percentage Return Objective
+      Structural Market Cycle Modeling
+      Non-Stationarity Resolution
+    Three-Layer Causal Hierarchy
+      Worker Layer Base Learners
+        LSTM with Multi-Head Self-Attention
+        XGBoost Macro-Regime Model
+      Manager Layer Meta-Learner Stacker
+        Directional Head Logistic Regression
+        Magnitude Head Huber Regressor
+        Volatility-Adjusted Synthesis
+      CEO Layer LLM Override
+        Qualitative Bias Injection Gemini
+        Causal Chain Reasoning
+        Drift Multiplier & Bias Vector
+    Data Engineering Pipeline
+      DuckDB OLAP Warehouse
+        Columnar Storage Layout
+        Vectorized Query Execution
+      Polars Rust Engine
+        Zero-Copy Memory Mapping
+        Multi-Threaded Parallelism
+      Operational Integrity
+        Dual-Write CSV Fallback
+        Look-Ahead Bias Prevention
+        COT Release Realignment
+    Macro & Quantitative Features
+      Global Liquidity Yield Curve & OAS
+      M2 Money Supply Derivatives
+      3-Year Rolling COT Index
+      Smart Money Sentiment Gap
+      Garman-Klass Volatility
+    Machine Learning Architecture
+      Direct Multi-Step Forecasting 1D-90D
+      Feature vs Target Scaler Isolation
+      Trajectory Smoothing Interpolation
+      Power-Law Momentum Decay
+    Risk & Signal Management
+      Consolidated BUY SELL HOLD Signals
+      Kelly Criterion Position Sizing
+      Garman-Klass Dynamic Stop-Loss
+      OOD Anomaly Gate
+        3-Sigma Statistical Circuit Breaker
+        Signal Override & Suspension
+        Volatility Flagging VIX DVOL
+    Explainability & Validation
+      Explainable AI XAI
+        Frequency-Aware Z-Score Attribution
+        Dynamic Directional Impact Mapping
+        LLM Narrative Synthesis
+      Counterfactual Logging
+        Baseline vs Contextual Forecasts
+        Automatic Outcome Resolution
+        Hit Ratio Delta Evaluation
+      Model Health Monitoring
+    Alternative Data Ingestion
+      Crypto Fear & Greed Index
+      Google Trends Search Momentum
+      CME FedWatch Policy Parser
+      FinBERT Sentiment Analysis
 ```
 
 The system uses a strict **3-Layer Causal Hierarchy** to separate model concerns:
