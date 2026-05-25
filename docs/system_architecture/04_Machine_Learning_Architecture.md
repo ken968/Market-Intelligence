@@ -48,7 +48,7 @@ Traditional ensembles use simple weighted averages to combine model predictions.
 
 ### A. Meta-Feature Matrix
 The input to the Stacker is a meta-feature vector containing:
-$$ X_{\text{meta}} = [ \text{lstm\_pred}, \text{xgb\_pred}, \text{VIX}, \text{GK\_Vol\_21d}, \text{Sentiment}, \text{Sentiment\_Std}, \text{YieldCurve\_10Y2Y}, \text{DXY} ] $$
+$$ X_{\text{meta}} = [ \text{lstm pred}, \text{xgb pred}, \text{VIX}, \text{GK Vol 21d}, \text{Sentiment}, \text{Sentiment Std}, \text{YieldCurve 10Y2Y}, \text{DXY} ] $$
 This matrix is normalized using a `Meta StandardScaler` before entering the heads.
 
 ### B. Head 1: Direction Head (LogisticRegressionCV)
@@ -63,5 +63,5 @@ This penalizes outliers linearly rather than quadratically, rendering the magnit
 
 ### D. Combined Output Synthesis
 The predictions of the two heads are combined to generate the final expected return signal:
-$$ \text{Final\_Return} = (2 \cdot P(\text{Up}) - 1) \cdot |\text{Expected\_Magnitude}| $$
+$$ \text{Final Return} = (2 \cdot P(\text{Up}) - 1) \cdot |\text{Expected Magnitude}| $$
 Where `P(Up)` is the probability output of the Direction Head, and `Expected_Magnitude` is the output of the Huber Regressor. This design resolves "Hesitation Bias" (where conflicting base models cause the ensemble to output a timid near-zero prediction) by forcing a directional choice scaled by historical volatility expectations.

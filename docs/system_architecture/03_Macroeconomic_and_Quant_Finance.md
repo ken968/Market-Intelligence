@@ -7,9 +7,9 @@ The Market Intelligence Terminal views asset price movements through the lens of
 ### A. The 10Y-2Y Treasury Yield Curve Spread
 Computed daily as:
 $$
-\text{YieldCurve\_10Y2Y} = \text{Yield}_{10Y} - \text{Yield}_{2Y}
+\text{YieldCurve 10Y2Y} = \text{Yield}_{10Y} - \text{Yield}_{2Y}
 $$
-A flattening curve indicates tightening monetary policy and slowing growth expectations. A negative spread ($\text{YieldCurve\_10Y2Y} < 0$) represents a **yield curve inversion**, which has historically preceded every US recession of the past fifty years by six to eighteen months. During inversions, banks face squeezed net interest margins (since they borrow short and lend long), causing a contraction in credit creation. Conversely, post-inversion steepening often marks the onset of the actual economic contraction.
+A flattening curve indicates tightening monetary policy and slowing growth expectations. A negative spread ($\text{YieldCurve 10Y2Y} < 0$) represents a **yield curve inversion**, which has historically preceded every US recession of the past fifty years by six to eighteen months. During inversions, banks face squeezed net interest margins (since they borrow short and lend long), causing a contraction in credit creation. Conversely, post-inversion steepening often marks the onset of the actual economic contraction.
 
 ### B. 5-Year, 5-Year Forward Breakeven Inflation Rate (T5YIFR)
 This measures market-implied long-run inflation expectations, reflecting where inflation is expected to be for the five-year period starting five years from today. It acts as a proxy for the Federal Reserve's long-term credibility. Sustained shifts above $2.5\%$ signal that market participants are pricing in structural currency depreciation, which drives capital into hard assets such as Gold and Bitcoin.
@@ -20,7 +20,7 @@ Sourced via FRED series BAMLH0A0HYM2EY, this **credit spread** measures the yiel
 ### D. M2 Money Supply Derivatives
 The system evaluates the first and second derivatives of the **M2 Money Supply** (M2SL), representing the rate of global currency debasement. Asset prices are modeled as:
 $$
-\text{Nominal\_Price} = \text{Real\_Value} \times \text{Global\_M2\_Liquidity}
+\text{Nominal Price} = \text{Real Value} \times \text{Global M2 Liquidity}
 $$
 M2 YoY growth rate determines three structural regimes:
 *   **Expansionary** ($M2 \text{ YoY} > 5\%$): High global liquidity, fueling risk-on conditions where high-beta assets (Bitcoin, Tech Equities) and inflation hedges (Gold) outperform.
@@ -32,18 +32,18 @@ Raw **Commitment of Traders (COT)** net positioning (Commercial Long minus Comme
 
 To extract a stationary signal, the system calculates a Rolling Min-Max Scaled **COT Index** over a 756-trading-day window (equivalent to approximately three calendar years of trading data):
 $$
-\text{COT\_Index\_t} = \frac{\text{Net\_Commercial\_t} - \min(\text{Net\_Commercial}_{t-756:t})}{\max(\text{Net\_Commercial}_{t-756:t}) - \min(\text{Net\_Commercial}_{t-756:t}) + \epsilon} \times 100
+\text{COT Index t} = \frac{\text{Net Commercial t} - \min(\text{Net Commercial}_{t-756:t})}{\max(\text{Net Commercial}_{t-756:t}) - \min(\text{Net Commercial}_{t-756:t}) + \epsilon} \times 100
 $$
-Where $\text{Net\_Commercial\_t}$ is defined as:
+Where $\text{Net Commercial t}$ is defined as:
 $$
-\text{Net\_Commercial\_t} = \text{Commercial\_Long\_t} - \text{Commercial\_Short\_t}
+\text{Net Commercial t} = \text{Commercial Long t} - \text{Commercial Short t}
 $$
 Commercial traders (hedgers, producers, swap dealers) represent the "Smart Money" in commodities and futures markets. The COT Index normalizes their current positioning relative to their historical behavior over a three-year cycle, bounding the final metric between $0$ and $100$. A COT Index near $100$ indicates extreme institutional accumulation, whereas an index near $0$ represents extreme institutional distribution.
 
 ## 3. SYNTHETIC DIVERGENCE: SMART MONEY SENTIMENT GAP
 One of the most predictive features in the XGBoost model is the synthetic divergence metric, the `Smart_Money_Sentiment_Gap`. It is mathematically defined as:
 $$
-\text{Smart\_Money\_Sentiment\_Gap\_t} = \text{Fear\_Greed\_Index\_t} - \text{COT\_Index\_t}
+\text{Smart Money Sentiment Gap t} = \text{Fear Greed Index t} - \text{COT Index t}
 $$
 Where:
 *   **Fear_Greed_Index_t**: A daily retail-dominated sentiment score scaled from $0$ (extreme fear) to $100$ (extreme greed).

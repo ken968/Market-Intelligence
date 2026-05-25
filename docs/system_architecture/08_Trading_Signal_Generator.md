@@ -22,7 +22,7 @@ The signal generator scores and aggregates four categories of market data:
 
 The primary driver of the signal is the 1-week expected return from the Dual-Head Stacker. The raw percent change is normalized to a 0-1 scale:
 
-$$ \text{Score} = \frac{\text{Abs}(\text{Pct\_Change\_7D})}{10} $$
+$$ \text{Score} = \frac{\text{Abs}(\text{Pct Change 7D})}{10} $$
 
 If the predicted return is positive, it contributes to a BUY score; if negative, to a SELL score. The confidence of this factor is scaled by the dynamic hit ratio retrieved from backtest reports.
 
@@ -80,16 +80,16 @@ When a BUY or SELL signal is triggered, the engine calculates risk thresholds:
 *   **Entry Price**: Set to the latest actual closing price ($t=0$).
 *   **Target Price**: Derived from the 7-day expected return from the Dual-Head Stacker:
 
-    $$ \text{Target\_Price} = \text{Entry\_Price} \times (1 + \text{Stacker\_Return\_7D}) $$
+    $$ \text{Target Price} = \text{Entry Price} \times (1 + \text{Stacker Return 7D}) $$
 
 *   **Stop-Loss**: Computed dynamically based on Garman-Klass volatility ($\sigma_{\text{GK}}$). The stop-loss is placed at a distance proportional to two standard deviations of 7-day price movement:
 
-    $$ \text{Stop\_Loss\_Distance} = \text{Entry\_Price} \times (2 \times \sigma_{\text{GK}} \times \sqrt{7/252}) $$
+    $$ \text{Stop Loss Distance} = \text{Entry Price} \times (2 \times \sigma_{\text{GK}} \times \sqrt{7/252}) $$
 
     For BUY signals:
-    $$ \text{Stop\_Loss} = \text{Entry\_Price} - \text{Stop\_Loss\_Distance} $$
+    $$ \text{Stop Loss} = \text{Entry Price} - \text{Stop Loss Distance} $$
 
     For SELL signals:
-    $$ \text{Stop\_Loss} = \text{Entry\_Price} + \text{Stop\_Loss\_Distance} $$
+    $$ \text{Stop Loss} = \text{Entry Price} + \text{Stop Loss Distance} $$
 
 This ensures that stop-loss boundaries expand during volatile regimes and tighten during quiet regimes, protecting capital from noise.

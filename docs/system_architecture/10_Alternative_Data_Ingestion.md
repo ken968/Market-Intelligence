@@ -21,7 +21,7 @@ The `GoogleTrendsFetcher` class tracks public search momentum, which serves as a
 -   **API Scraping**: Sourced via the `pytrends` library or direct RSS feeds, the fetcher queries search interest index values (0 to 100) for target keywords (e.g., "buy bitcoin", "gold price", "inflation").
 -   **Normalization**: Raw search interest is highly seasonal and noisy. The fetcher calculates a rolling Z-score over a 14-day window:
 
-    $$ \text{Slope} = \frac{ \text{Current\_Interest} - \text{Mean}(\text{Interest}_{t-14:t}) }{ \text{Std}(\text{Interest}_{t-14:t}) } $$
+    $$ \text{Slope} = \frac{ \text{Current Interest} - \text{Mean}(\text{Interest}_{t-14:t}) }{ \text{Std}(\text{Interest}_{t-14:t}) } $$
 
 -   **Sentiment Acceleration**: A positive slope $> 2.0$ indicates retail interest acceleration, signaling that the asset is drawing public attention. In late-stage bull markets, extreme trends spikes correlate with market tops, while in bear markets, interest collapse signals retail capitulation.
 
@@ -31,7 +31,7 @@ The `FedWatchFetcher` scrapes pricing data for **30-Day Federal Funds Futures (Z
 
 -   **Probability Calculation**: The implied probability of a target Fed Funds Rate decision at upcoming FOMC meetings is derived using the CME's target rate pricing model. The interest rate probability distribution is parsed:
 
-    $$ \text{Implied\_Rate} = 100 - \text{Futures\_Price} $$
+    $$ \text{Implied Rate} = 100 - \text{Futures Price} $$
 
     The fetcher maps these futures prices across upcoming FOMC dates to establish the probability for each potential rate bucket (e.g., cut 25bps, cut 50bps, hold, hike 25bps).
 -   **Policy Stance Mapping**: The probabilities are aggregated to calculate a **Dovish Score** (sum of cut/hold probabilities) and a **Hawkish Score** (hike probabilities).
@@ -46,11 +46,11 @@ The system runs a daily news collection and sentiment calculation pipeline:
 -   **FinBERT Sentiment Scoring**: Ingested headlines are passed to `FinBERT` (a specialized `BERT` language model trained on financial text). `FinBERT` evaluates each headline, outputting probability scores for three classes: positive, negative, and neutral.
 -   **Daily Score Aggregation**: The daily sentiment mean is computed:
 
-    $$ \text{Sentiment\_Mean} = \frac{ \sum ( P_{\text{positive}} - P_{\text{negative}} ) }{ N } $$
+    $$ \text{Sentiment Mean} = \frac{ \sum ( P_{\text{positive}} - P_{\text{negative}} ) }{ N } $$
 
     Additionally, the system computes the standard deviation of sentiment:
 
-    $$ \text{Sentiment\_Std} = \text{Std}( P_{\text{positive}} - P_{\text{negative}} ) $$
+    $$ \text{Sentiment Std} = \text{Std}( P_{\text{positive}} - P_{\text{negative}} ) $$
 
     A high `Sentiment_Std` indicates that the news on that day contained conflicting positive and negative narratives, signaling high narrative uncertainty (`VIX`-like sentiment signal).
 

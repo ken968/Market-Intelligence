@@ -102,18 +102,18 @@ To prevent any single score category from dominating the LSTM drift calculation 
 The processed LLM scores are mapped into a single drift multiplier, $\delta$, which directly scales the forecast returns. The formula utilizes asset-specific sensitivities:
 
 *   **Gold (Geopolitical and inflation hedge)**:
-    $\text{raw\_bias} = 0.40 \cdot \text{Geopolitics} + 0.30 \cdot \text{Supply} + 0.20 \cdot (1 - \text{Monetary}) + 0.10 \cdot \text{Risk}$
+    $\text{raw bias} = 0.40 \cdot \text{Geopolitics} + 0.30 \cdot \text{Supply} + 0.20 \cdot (1 - \text{Monetary}) + 0.10 \cdot \text{Risk}$
 *   **Bitcoin (Risk-on and high-beta alternative asset)**:
-    $\text{raw\_bias} = 0.40 \cdot \text{Risk} + 0.30 \cdot \text{Sentiment} + 0.20 \cdot (1 - \text{Monetary}) + 0.10 \cdot (1 - \text{Geopolitics})$
+    $\text{raw bias} = 0.40 \cdot \text{Risk} + 0.30 \cdot \text{Sentiment} + 0.20 \cdot (1 - \text{Monetary}) + 0.10 \cdot (1 - \text{Geopolitics})$
 *   **Oil**:
-    $\text{raw\_bias} = 0.50 \cdot \text{Supply} + 0.30 \cdot \text{Geopolitics} + 0.20 \cdot \text{Risk}$
+    $\text{raw bias} = 0.50 \cdot \text{Supply} + 0.30 \cdot \text{Geopolitics} + 0.20 \cdot \text{Risk}$
 *   **Equities / General Stocks**:
-    $\text{raw\_bias} = 0.35 \cdot \text{Risk} + 0.30 \cdot (1 - \text{Monetary}) + 0.20 \cdot \text{Sentiment} + 0.15 \cdot (1 - \text{Geopolitics})$
+    $\text{raw bias} = 0.35 \cdot \text{Risk} + 0.30 \cdot (1 - \text{Monetary}) + 0.20 \cdot \text{Sentiment} + 0.15 \cdot (1 - \text{Geopolitics})$
 
 The raw bias is mapped linearly into a drift multiplier:
 
 $$
-\delta = 0.90 + \text{raw\_bias} \cdot 0.20
+\delta = 0.90 + \text{raw bias} \cdot 0.20
 $$
 
 This locks the drift multiplier strictly within $[0.90, 1.10]$, allowing the CEO Layer to bias the expected return up or down by a maximum of 10% based on qualitative macroeconomic developments. If the Gemini API call fails, the engine triggers a Zero-Vector Fallback, setting the bias vector to a neutral 0.5 and $\delta$ to 1.0, reverting to pure quantitative inference.

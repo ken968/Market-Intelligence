@@ -43,7 +43,7 @@ Macroeconomic indicators (such as `CPI`, `PPI`, `PCE`, and `Non-Farm Payrolls`) 
 ### B. Commitment of Traders (COT) Release Date Realignment
 The `CFTC` gathers `Commitment of Traders` futures positioning data as of Tuesday close. However, this report is not released to the public until Friday evening (typically 15:30 `EST`). Merging Tuesday's positioning data directly into Tuesday's daily price record would leak three days of future information. The `COTFetcher` pipeline shifts the raw data date:
 $$
-\text{Date}_{\text{aligned}} = \text{Date}_{\text{CFTC\_Tuesday}} + 3 \text{ days}
+\text{Date}_{\text{aligned}} = \text{Date}_{\text{CFTC Tuesday}} + 3 \text{ days}
 $$
 This re-indexes the `COT` report to Friday, aligning the data release with the actual public market availability.
 

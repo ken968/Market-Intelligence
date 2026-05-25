@@ -32,20 +32,20 @@ A logged record contains the following schema:
 During the daily data synchronization process, the system automatically executes `auto_resolve_all_outcomes()`.
 - The function scans the log file to identify any unresolved records (where `actual_price` is `null`).
 - It calculates the target date:
-  $$ \text{Target\_Date} = \text{Forecast\_Date} + \text{Steps} $$
+  $$ \text{Target Date} = \text{Forecast Date} + \text{Steps} $$
 - It checks if the target date is present in the updated historical database. If the target date has occurred, the engine retrieves the realized close price from the database:
-  $$ P_{\text{actual}} = \text{Close\_price\_at\_Target\_Date} $$
+  $$ P_{\text{actual}} = \text{Close price at Target Date} $$
 - The starting price ($P_0$) is extracted from the first element of the logged baseline series. The directional changes are evaluated:
-  $$ \text{Actual\_Direction} = P_{\text{actual}} > P_0 $$
-  $$ \text{Baseline\_Direction} = P_{\text{baseline\_final}} > P_0 $$
-  $$ \text{Contextual\_Direction} = P_{\text{contextual\_final}} > P_0 $$
+  $$ \text{Actual Direction} = P_{\text{actual}} > P_0 $$
+  $$ \text{Baseline Direction} = P_{\text{baseline final}} > P_0 $$
+  $$ \text{Contextual Direction} = P_{\text{contextual final}} > P_0 $$
 - The hit results are resolved:
-  $$ \text{Baseline\_Hit} = ( \text{Baseline\_Direction} == \text{Actual\_Direction} ) $$
-  $$ \text{Contextual\_Hit} = ( \text{Contextual\_Direction} == \text{Actual\_Direction} ) $$
+  $$ \text{Baseline Hit} = ( \text{Baseline Direction} == \text{Actual Direction} ) $$
+  $$ \text{Contextual Hit} = ( \text{Contextual Direction} == \text{Actual Direction} ) $$
 The record is updated, and the results are written back to `counterfactual_log.jsonl`.
 
 Once resolved records accumulate, the dashboard displays the comparative **Hit Ratio**:
-$$ \text{Hit\_Ratio} = \frac{\text{Hits}}{\text{Total\_Resolved}} \times 100 $$
+$$ \text{Hit Ratio} = \frac{\text{Hits}}{\text{Total Resolved}} \times 100 $$
 The delta (Contextual Hit Ratio minus Baseline Hit Ratio) confirms the value-add of the **CEO Layer**.
 
 ## 4. WALK-FORWARD BACKTEST ENGINE FRAMEWORK
