@@ -79,9 +79,44 @@ run_app.bat
 
 ## Architecture Overview
 
+### System Mind Map
+
+```mermaid
+mindmap
+  root((Market Intelligence))
+    Data Ingestion
+      FRED API
+        Inflation & Yield
+        Liquidity & M2
+      YFinance
+        OHLCV Price Action
+        DXY & Oil
+      Alternative Data
+        Fear & Greed Index
+        COT Smart Money
+    Data Pipeline
+      DuckDB SQL Engine
+      Polars Feature Eng
+      CSV Dual-Write Fallback
+    ML Architecture
+      Worker Layer
+        LSTM Micro Momentum
+        XGBoost Macro Regime
+      Manager Layer
+        LogisticReg Direction
+        HuberReg Magnitude
+      CEO Layer
+        Gemini Contextual Bias
+        ZCA Whitening
+    Risk Management Layer
+      Kelly Criterion Sizing
+      Garman-Klass StopLoss
+      OOD Circuit Breaker
+```
+
 The system uses a strict **3-Layer Causal Hierarchy** to separate model concerns:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  LAYER 3 — CEO Layer (Gemini LLM Contextual Bias)           │
 │  Purpose: Inject macro narrative & regime context           │
