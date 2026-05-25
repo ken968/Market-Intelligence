@@ -82,6 +82,7 @@ run_app.bat
 ### System Mind Map
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '24px'}}}%%
 mindmap
   root((Market Intelligence System Terminal))
     System Ontology & Taxonomy
