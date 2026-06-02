@@ -41,6 +41,7 @@ env/
 # ============================================================
 data/*.csv
 data/*.json
+data/*.db
 data/alternative/
 
 # Jupyter Notebooks

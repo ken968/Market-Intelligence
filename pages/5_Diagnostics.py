@@ -85,7 +85,7 @@ stacker_results = load_stacker_results()
 legacy_results  = load_all_backtest_results()
 
 # ==================== TABS ====================
-tab1, tab2 = st.tabs(["🩺 Health & Operations", "📊 Validation Scorecard"])
+tab1, tab2 = st.tabs(["Health & Operations", "Validation Scorecard"])
 
 with tab1:
     st.markdown("### Model Health & Alerts")

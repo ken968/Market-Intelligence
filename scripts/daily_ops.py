@@ -56,7 +56,7 @@ def main():
         ('google_trends_fetcher.py', 'Google Trends Data'),
         ('sentiment_fetcher_v2.py', 'News Sentiment Analysis'),
         ('data_fetcher_v2.py', 'YFinance & Final Data Merge'),
-        ('model_monitor.py', 'AI Model Health Diagnostics')
+        ('model_monitor.py', 'Model Health Diagnostics')
     ]
     
     success_count = 0
