@@ -1,4 +1,4 @@
-﻿import streamlit as st
+import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
@@ -206,4 +206,4 @@ with col_viz:
             
     else:
         st.info(" Adjust the vectors on the left and click **Run Multi-Asset Simulation** to see how the 3 Pillars react.")
-        st.image("https://images.unsplash.com/photo-1611974717482-58-000000000000?auto=format&fit=crop&q=80&w=1200", caption="Intelligence Simulation Environment")
+        st.image("https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200", caption="Intelligence Simulation Environment")

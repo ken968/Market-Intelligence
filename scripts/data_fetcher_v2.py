@@ -108,6 +108,27 @@ class MultiAssetFetcher:
         """Calculate Exponential Moving Average"""
         return data.ewm(span=window, adjust=False).mean()
 
+    def _robust_fill_nas(self, df, columns):
+        """Multi-tier NaN filling: ffill -> bfill -> fillna(median/0)."""
+        for col in columns:
+            if col in df.columns:
+                # 1. Forward fill (carry last known value)
+                df[col] = df[col].ffill()
+                # 2. Backward fill (for early dates where no prior data exists)
+                df[col] = df[col].bfill()
+                
+                # 3. If still NaN (meaning the column was completely empty)
+                if df[col].isna().any():
+                    median_val = df[col].median()
+                    fill_val = 0 if pd.isna(median_val) else median_val
+                    df[col] = df[col].fillna(fill_val)
+                    print(f"    Warning: Column '{col}' had missing values. Filled with {fill_val}.")
+            else:
+                # Column entirely missing from merged data
+                df[col] = 0.0
+                print(f"    Warning: Column '{col}' completely missing! Filled with 0.0.")
+        return df
+
     def _extract_ohlcv(self, data: 'pd.DataFrame', price_col: str) -> 'pd.DataFrame':
         """
         Extract full OHLCV from yfinance download result.
@@ -181,10 +202,7 @@ class MultiAssetFetcher:
             
             if macro is not None:
                 df = df.join(macro, how='left')
-                df['DXY'] = df['DXY'].ffill().bfill()
-                df['VIX'] = df['VIX'].ffill().bfill()
-                df['Yield_10Y'] = df['Yield_10Y'].ffill().bfill()
-                df['Oil_Price'] = df['Oil_Price'].ffill().bfill()
+                df = self._robust_fill_nas(df, ['DXY', 'VIX', 'Yield_10Y', 'Oil_Price'])
             
             # Merge FRED indicators (CPI, PPI, PCE, NFP)
             fred = None
@@ -199,9 +217,8 @@ class MultiAssetFetcher:
             
             if fred is not None:
                 df = df.join(fred, how='left')
-                for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'Credit_Spread', 'Credit_Stress_Flag']:
-                    if col in df.columns:
-                        df[col] = df[col].ffill().fillna(0)
+                fred_cols = ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'Credit_Spread', 'Credit_Stress_Flag']
+                df = self._robust_fill_nas(df, fred_cols)
             
             # Lagged macro features & Sentiment_Std
             try:
@@ -280,10 +297,7 @@ class MultiAssetFetcher:
             
             if macro is not None:
                 df = df.join(macro, how='left')
-                df['DXY'] = df['DXY'].ffill().bfill()
-                df['VIX'] = df['VIX'].ffill().bfill()
-                df['Yield_10Y'] = df['Yield_10Y'].ffill().bfill()
-                df['Oil_Price'] = df['Oil_Price'].ffill().bfill()
+                df = self._robust_fill_nas(df, ['DXY', 'VIX', 'Yield_10Y', 'Oil_Price'])
             
             # Merge FRED indicators (CPI, PPI, PCE, NFP)
             fred = None
@@ -298,9 +312,8 @@ class MultiAssetFetcher:
             
             if fred is not None:
                 df = df.join(fred, how='left')
-                for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']:
-                    if col in df.columns:
-                        df[col] = df[col].ffill().fillna(0)
+                fred_cols = ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']
+                df = self._robust_fill_nas(df, fred_cols)
             
             # Lagged macro features & Sentiment_Std
             try:
@@ -383,10 +396,7 @@ class MultiAssetFetcher:
                 
                 if macro is not None:
                     df = df.join(macro, how='left')
-                    df['DXY'] = df['DXY'].ffill().bfill()
-                    df['VIX'] = df['VIX'].ffill().bfill()
-                    df['Yield_10Y'] = df['Yield_10Y'].ffill().bfill()
-                    df['Oil_Price'] = df['Oil_Price'].ffill().bfill()
+                    df = self._robust_fill_nas(df, ['DXY', 'VIX', 'Yield_10Y', 'Oil_Price'])
                 
                 # Merge FRED indicators (CPI, PPI, PCE, NFP)
                 fred = None
@@ -401,9 +411,8 @@ class MultiAssetFetcher:
                 
                 if fred is not None:
                     df = df.join(fred, how='left')
-                    for col in ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']:
-                        if col in df.columns:
-                            df[col] = df[col].ffill().fillna(0)
+                    fred_cols = ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'MacroEvent_Flag', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'M2_Liquidity_Spike']
+                    df = self._robust_fill_nas(df, fred_cols)
 
                 # Lagged macro features & Sentiment_Std
                 try:

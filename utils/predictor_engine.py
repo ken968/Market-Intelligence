@@ -429,9 +429,48 @@ class ForecastEngine:
             else:
                 context_pcts[h] = self.predict_horizon(h) * ceo_drift_multiplier
 
+        # ── Volatility-Aware Minimum Scale ───────────────────────────────────
+        # When models are trained on a different price regime (e.g., gold at $2k but
+        # now at $4.5k), their predicted magnitudes shrink to near-zero while the
+        # direction signal remains valid. We apply a volatility floor: predicted
+        # magnitude must be at least 25% of recent realized weekly volatility,
+        # scaled by sqrt(h/7) for longer horizons. Direction (sign) is preserved.
+        try:
+            df_recent = pd.read_csv(self.config['data_file'])
+            price_col = self.config['features'][0]  # e.g. 'Gold', 'BTC', 'SPY'
+            if price_col in df_recent.columns and len(df_recent) >= 20:
+                recent_prices = df_recent[price_col].dropna().values[-30:]
+                recent_rets = np.diff(recent_prices) / recent_prices[:-1]
+                recent_weekly_vol = float(np.std(recent_rets) * np.sqrt(7))  # 7-day vol from daily std
+            else:
+                recent_weekly_vol = 0.012  # fallback 1.2%/week
+        except Exception:
+            recent_weekly_vol = 0.012
+
+        # Minimum = 25% of recent weekly vol, scaled for each horizon
+        vol_floor_fraction = 0.25
+        for h in horizons:
+            min_magnitude = recent_weekly_vol * vol_floor_fraction * ((h / 7.0) ** 0.5)
+            pct = context_pcts[h]
+            if abs(pct) < min_magnitude and recent_weekly_vol > 0.003:
+                # Scale up to meet floor, preserving direction
+                direction = 1 if pct >= 0 else -1
+                # Blend: 40% floor + 60% model direction (so model direction dominates)
+                context_pcts[h] = direction * (0.6 * min_magnitude + 0.4 * abs(pct)) if abs(pct) > 1e-6 \
+                    else direction * min_magnitude * 0.5
+
+        # Apply same floor to baseline
+        for h in horizons:
+            min_magnitude = recent_weekly_vol * vol_floor_fraction * ((h / 7.0) ** 0.5)
+            pct = base_pcts[h]
+            if abs(pct) < min_magnitude and recent_weekly_vol > 0.003:
+                direction = 1 if pct >= 0 else -1
+                base_pcts[h] = direction * (0.6 * min_magnitude + 0.4 * abs(pct)) if abs(pct) > 1e-6 \
+                    else direction * min_magnitude * 0.5
+
         # 3. Construct price points (x: time steps [0, 1, 7, 14, 30, 90])
         x_points = [0, 1, 7, 14, 30, 90]
-        
+
         y_base = [current_price] + [current_price * (1.0 + base_pcts[h]) for h in horizons]
         y_context = [current_price] + [current_price * (1.0 + context_pcts[h]) for h in horizons]
         

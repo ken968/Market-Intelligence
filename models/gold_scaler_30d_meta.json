@@ -25,9 +25,9 @@
     "horizon_days": 30,
     "sequence_length": 60,
     "target_type": "pct_change_30d",
-    "hit_ratio_test": 56.03603603603604,
-    "rmse_test": 0.07902138857217397,
-    "n_train": 2217,
-    "n_test": 555,
+    "hit_ratio_test": 57.9136690647482,
+    "rmse_test": 0.07594459953419487,
+    "n_train": 2221,
+    "n_test": 556,
     "target_scaler_path": "models/gold_scaler_30d_target.pkl"
 }

@@ -21,8 +21,8 @@ ASSETS = {
                      'Credit_Spread',
                      'Sentiment', 'EMA_90'],
         'sequence_length': 60,
-        # Per-asset LSTM architecture: Gold is stable → smaller, less dropout
-        'model_arch': {'units': [64, 32], 'dropout': 0.2, 'attention': False},
+        # Upgraded architecture: Gold now in extreme new-regime ($4000+), needs deeper model with attention
+        'model_arch': {'units': [128, 64, 32], 'dropout': 0.25, 'attention': True},
         'description': 'Precious Metal & Safe Haven Asset'
     },
     'btc': {

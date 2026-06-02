@@ -173,18 +173,25 @@ class LSTMTrainer:
         model = self.build_model(self.seq_len, X_train.shape[2])
 
         callbacks = [
-            EarlyStopping(monitor='val_loss', patience=15,
+            EarlyStopping(monitor='val_loss', patience=20,
                           restore_best_weights=True, verbose=0),
             ReduceLROnPlateau(monitor='val_loss', factor=0.5,
-                              patience=7, min_lr=1e-6, verbose=0),
+                              patience=8, min_lr=1e-6, verbose=0),
         ]
+
+        # Recency-weighted sample weights: recent samples get up to 3x more weight
+        # This forces the model to focus on the new price regime ($3500-$4500+)
+        n_train = len(X_train)
+        linear_weights = np.linspace(1.0, 3.0, n_train)
+        sample_weights = linear_weights / linear_weights.mean()  # normalize so total weight stays same
 
         model.fit(
             X_train, y_train,
-            epochs=100,
+            epochs=150,
             batch_size=32,
             validation_split=0.1,
             callbacks=callbacks,
+            sample_weight=sample_weights,
             verbose=0,
         )
 
