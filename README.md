@@ -56,7 +56,7 @@ pip install -r requirements.txt
 # FINNHUB_API_KEY=your_finnhub_key_here
 
 # 4. Sync data & Fetch Alternatives (first run)
-python scripts/run_daily_ops.py
+python scripts/daily_ops.py
 
 # 5. Train models
 python scripts/train_lstm_pct.py gold
@@ -254,7 +254,7 @@ Market-Intelligence/
 │   └── 7_Settings.py                   # Data sync controls
 │
 ├── scripts/                            # Data pipeline & training
-│   ├── run_daily_ops.py                # Main orchestrator for all daily fetches
+│   ├── daily_ops.py                # Main orchestrator for all daily fetches
 │   ├── data_fetcher_v2.py              # OHLCV + macro merge → DuckDB
 │   ├── fred_fetcher.py                 # FRED macro series
 │   ├── sentiment_fetcher_v2.py         # News + FearGreed
@@ -288,7 +288,7 @@ Market-Intelligence/
 ### Full Re-training Sequence
 ```powershell
 # 1. Sync all data sources
-python scripts/run_daily_ops.py
+python scripts/daily_ops.py
 
 # 2. Train base LSTM models (pct-change architecture)
 python scripts/train_lstm_pct.py gold
