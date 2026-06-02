@@ -17,7 +17,7 @@ def run_script(script_name, description):
     script_path = os.path.join(PROJECT_ROOT, 'scripts', script_name)
     
     if not os.path.exists(script_path):
-        print(f"❌ Error: Script not found at {script_path}")
+        print(f"...Error: Script not found at {script_path}")
         return False
         
     start_time = time.time()
@@ -30,18 +30,18 @@ def run_script(script_name, description):
         elapsed = time.time() - start_time
         
         if result.returncode == 0:
-            print(f"\n✅ SUCCESS: {description} (Took {elapsed:.1f}s)")
+            print(f"\n...SUCCESS: {description} (Took {elapsed:.1f}s)")
             return True
         else:
-            print(f"\n❌ FAILED: {description} (Exit Code: {result.returncode})")
+            print(f"\n...FAILED: {description} (Exit Code: {result.returncode})")
             return False
             
     except Exception as e:
-        print(f"\n❌ EXCEPTION running {script_name}: {e}")
+        print(f"\n...EXCEPTION running {script_name}: {e}")
         return False
 
 def main():
-    print("🚀 STARTING DAILY OPERATIONS PIPELINE")
+    print("STARTING DAILY OPERATIONS PIPELINE")
     print(f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("="*60)
     
@@ -67,18 +67,18 @@ def main():
             success_count += 1
         else:
             failed_steps.append(desc)
-            print(f"\n⚠️ WARNING: Step '{desc}' failed. Pipeline will continue, but data may be incomplete.")
+            print(f"\n...WARNING: Step '{desc}' failed. Pipeline will continue, but data may be incomplete.")
             
             # If data_fetcher_v2 fails, the whole downstream is compromised
             if script == 'data_fetcher_v2.py':
-                print("🛑 CRITICAL FAILURE in final merge. Aborting remaining steps.")
+                print("...CRITICAL FAILURE in final merge. Aborting remaining steps.")
                 break
     
     print("\n" + "="*60)
-    print(f"🏁 PIPELINE COMPLETED")
-    print(f"✅ Successful: {success_count}/{len(steps)}")
+    print(f"...PIPELINE COMPLETED")
+    print(f"...Successful: {success_count}/{len(steps)}")
     if failed_steps:
-        print(f"❌ Failed: {', '.join(failed_steps)}")
+        print(f"...Failed: {', '.join(failed_steps)}")
     print("="*60)
 
 if __name__ == "__main__":
