@@ -68,11 +68,47 @@ ALL_ASSETS = ['gold', 'btc'] + [t.lower() for t in STOCK_TICKERS.keys()]
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# HELPER: directional hit ratio
+# HELPERS: Evaluation Metrics (Opsi B — robust terhadap directional dominance)
 # ─────────────────────────────────────────────────────────────────────────────
 def hit_ratio(y_pred: np.ndarray, y_true: np.ndarray) -> float:
-    """% of predictions with correct sign (direction)."""
+    """% of predictions with correct sign (direction). Raw metric."""
     return float((np.sign(y_pred) == np.sign(y_true)).mean()) * 100.0
+
+
+def naive_hit_ratio(y_true: np.ndarray) -> float:
+    """Baseline: selalu prediksi arah dominan (max(p_up, p_down)).
+    Jika pasar naik 97% dari waktu, naive = 97% → bukan keahlian model."""
+    p_positive = float((y_true > 0).mean())
+    return max(p_positive, 1.0 - p_positive) * 100.0
+
+
+def skill_score(hr: float, naive_hr: float) -> float:
+    """Adjusted Hit Ratio (Skill Score) — menghapus keuntungan dari dominasi arah.
+    Interpretasi:
+        > 0%  : Model lebih baik dari tebak arah dominan
+        = 0%  : Model setara dengan tebak buta
+        < 0%  : Model lebih buruk dari tebak buta (perlu investigasi)
+    Formula: (HR_model - HR_naive) / (100 - HR_naive) * 100
+    """
+    if naive_hr >= 100.0:
+        return 0.0
+    return (hr - naive_hr) / (100.0 - naive_hr) * 100.0
+
+
+def information_coefficient(y_pred: np.ndarray, y_true: np.ndarray) -> float:
+    """Information Coefficient: Spearman rank correlation antara prediksi dan aktual.
+    Mengukur apakah urutan prediksi model cocok dengan urutan aktual.
+    Tidak terpengaruh oleh dominasi arah — nilai positif = genuinely predictive.
+    Interpretasi institusional:
+        IC > 0.05  : Meaningful predictive skill
+        IC > 0.10  : Strong skill
+        IC <= 0    : No genuine skill (walaupun HR bisa tinggi karena dominance)
+    """
+    from scipy import stats
+    if len(y_pred) < 3:
+        return 0.0
+    corr, _ = stats.spearmanr(y_pred, y_true)
+    return float(corr) if not np.isnan(corr) else 0.0
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -164,11 +200,24 @@ class LSTMTrainer:
         X_all = np.array(X_all)
         y_all = np.array(y_all)
 
+        # ── Train/Test split dengan gap buffer ────────────────────────────────────
+        # PENTING: Tanpa buffer ini, target pada akhir train set (price[t+horizon])
+        # mengacu pada harga yang sudah ada di test set → temporal leakage!
+        # Contoh: Gold 90-hari tanpa buffer → 89 dari 90 hari target tumpang tindih
+        #         → Hit Ratio spurious ~98% padahal model sebenarnya tidak akurat.
+        # Solusi: sisipkan gap = horizon_days antara akhir train dan awal test.
         split_idx  = int(len(X_all) * 0.80)
-        X_train, X_test = X_all[:split_idx], X_all[split_idx:]
-        y_train, y_test = y_all[:split_idx], y_all[split_idx:]
+        gap        = horizon_days  # buffer mencegah target overlap antar split
+        test_start = split_idx + gap
+        if test_start >= len(X_all):
+            # Fallback jika data terlalu sedikit untuk gap (misalnya data < 200 baris)
+            test_start = split_idx
+            print(f"  [Warning] Data terlalu kecil untuk gap buffer ({horizon_days}d). Menggunakan split langsung.")
+        X_train, X_test = X_all[:split_idx], X_all[test_start:]
+        y_train, y_test = y_all[:split_idx], y_all[test_start:]
 
-        print(f"  Train: {len(X_train)} | Test: {len(X_test)}")
+        print(f"  Train: {len(X_train)} | Gap: {gap}d | Test: {len(X_test)}")
+
 
         model = self.build_model(self.seq_len, X_train.shape[2])
 
@@ -200,11 +249,25 @@ class LSTMTrainer:
         y_pred_pct = target_scaler.inverse_transform(y_pred_scaled.reshape(-1, 1)).flatten()
         y_true_pct = target_scaler.inverse_transform(y_test.reshape(-1, 1)).flatten()
 
-        hr     = hit_ratio(y_pred_pct, y_true_pct)
-        rmse   = np.sqrt(mean_squared_error(y_true_pct, y_pred_pct))
+        hr      = hit_ratio(y_pred_pct, y_true_pct)
+        naive   = naive_hit_ratio(y_true_pct)
+        skill   = skill_score(hr, naive)
+        ic      = information_coefficient(y_pred_pct, y_true_pct)
+        rmse    = np.sqrt(mean_squared_error(y_true_pct, y_pred_pct))
 
-        print(f"  Test Hit Ratio : {hr:.1f}%")
+        # ── Directional Dominance Flag ────────────────────────────────────────────
+        # Jika naive baseline > 80%, test set tidak representatif.
+        # Skill Score menjadi metrik utama yang andal.
+        dominance_flag = naive > 80.0
+        flag_str       = " [!] DOMINANCE" if dominance_flag else ""  # ASCII: avoids Windows charmap crash
+
+        print(f"  Test Hit Ratio : {hr:.1f}%  (Naive baseline: {naive:.1f}%{flag_str})")
+        print(f"  Skill Score    : {skill:+.1f}%  (HR vs naive -- genuine predictive skill)")
+        print(f"  Info Coeff (IC): {ic:+.4f}  (Spearman; >0.05 meaningful, >0.10 strong)")
         print(f"  Test RMSE      : {rmse:.6f}  (in % change units)")
+        if dominance_flag:
+            print(f"  [!] Catatan: Test period satu arah ({naive:.0f}% positif).")
+            print(f"      Skill Score & IC lebih representatif daripada raw Hit Ratio.")
 
         os.makedirs('models', exist_ok=True)
 
@@ -228,6 +291,10 @@ class LSTMTrainer:
             'sequence_length': self.seq_len,
             'target_type': f'pct_change_{horizon_days}d',
             'hit_ratio_test': hr,
+            'naive_hit_ratio': naive,
+            'skill_score': skill,
+            'information_coefficient': ic,
+            'dominance_flagged': dominance_flag,
             'rmse_test': rmse,
             'n_train': len(X_train),
             'n_test': len(X_test),
