@@ -1,4 +1,4 @@
-﻿"""
+"""
 Correlation Enforcer - Post-Processing System for Multi-Asset Predictions
 
 Enforces historical correlation relationships between assets to prevent
@@ -102,19 +102,64 @@ class CorrelationEnforcer:
         
         print(f"\nCalculated relationships for {len(self.betas)} assets vs {self.reference_ticker}")
     
-    def enforce_predictions(self, predictions_dict: Dict[str, List[float]], 
-                          adjustment_strength: float = 0.7) -> Dict[str, List[float]]:
+    def _compute_dynamic_strength(self, roll_corr_90d: float) -> float:
         """
-        Enforce correlations across multi-asset predictions
-        
+        Compute dynamic adjustment_strength based on the current rolling
+        90-day cross-asset correlation (Phase 3 upgrade).
+
+        Rationale:
+          High correlation (coupling)   → enforce tightly (AI should follow SPY closely).
+          Low / negative (decoupling)   → release the grip (AI predicts each asset independently).
+
+        Mapping:
+          roll_corr >= 0.80  →  strength = 0.85  (strong coupling — tight enforcement)
+          roll_corr  0.50-0.79 → strength = 0.60  (moderate coupling — normal enforcement)
+          roll_corr  0.30-0.49 → strength = 0.35  (weak coupling — light enforcement)
+          roll_corr < 0.30   →  strength = 0.20  (decoupling — minimum enforcement)
+
         Args:
-            predictions_dict (dict): {ticker: [p1, p2, p3, ...]} raw predictions
-            adjustment_strength (float): How much to enforce (0=none, 1=full). 
-                                        Default 0.7 allows some divergence.
-        
+            roll_corr_90d : Latest rolling correlation value (-1.0 to +1.0).
+
         Returns:
-            dict: Adjusted predictions maintaining historical relationships
+            float: adjustment_strength in [0.20, 0.85].
         """
+        if roll_corr_90d >= 0.80:
+            return 0.85
+        elif roll_corr_90d >= 0.50:
+            return 0.60
+        elif roll_corr_90d >= 0.30:
+            return 0.35
+        else:
+            return 0.20
+
+    def enforce_predictions(self, predictions_dict: Dict[str, List[float]], 
+                          adjustment_strength: float = None,
+                          roll_corr_90d: float = None) -> Dict[str, List[float]]:
+        """
+        Enforce correlations across multi-asset predictions.
+
+        Phase 3 Upgrade: adjustment_strength is now DYNAMIC.
+        If roll_corr_90d is provided, the enforcement tightness is automatically
+        scaled to match the current market coupling regime:
+          - Decoupling (ρ < 0.3)  → loose enforcement (assets predict independently)
+          - Strong coupling (ρ ≥ 0.8) → tight enforcement (assets must follow SPY)
+
+        Args:
+            predictions_dict (dict)  : {ticker: [p1, p2, ...]} raw predictions.
+            adjustment_strength (float): Overrides dynamic calc if provided (legacy support).
+            roll_corr_90d (float)    : Latest 90-day rolling correlation. If provided,
+                                       overrides adjustment_strength with dynamic value.
+
+        Returns:
+            dict: Adjusted predictions maintaining historical relationships.
+        """
+        # Dynamic strength — Phase 3 feature
+        if roll_corr_90d is not None:
+            adjustment_strength = self._compute_dynamic_strength(roll_corr_90d)
+            print(f"  [CorrelationEnforcer] Dynamic strength: {adjustment_strength:.2f} "
+                  f"(roll_corr_90d={roll_corr_90d:+.3f})")
+        elif adjustment_strength is None:
+            adjustment_strength = 0.70   # safe legacy default
         
         # Validate input
         if self.reference_ticker not in predictions_dict:
@@ -179,7 +224,82 @@ class CorrelationEnforcer:
             print(f"  {ticker}: {original_change_pct:+.1f}% → {adjusted_change_pct:+.1f}% (β={beta:.2f})")
         
         return adjusted_predictions
-    
+
+    def monotonicity_check(self,
+                           predictions_dict: Dict[str, List[float]],
+                           roll_corr_90d: float = None,
+                           divergence_threshold: float = 0.05) -> Dict[str, str]:
+        """
+        Anti-Divergence filter (Phase 3 — Monotonicity Check).
+
+        Detects predictions that contradict the current macro correlation regime.
+        Specifically: flags as 'HIGH_UNCERTAINTY' when a model predicts strong
+        upward movement for an asset while its rolling correlation with the
+        reference is deeply negative (e.g., AI predicts BTC +8% while
+        roll_corr_btc_spy = -0.40 with no macro justification).
+
+        This does NOT block or change the prediction — it attaches a confidence
+        label so downstream consumers (CEO Layer, UI) can display uncertainty.
+
+        Args:
+            predictions_dict    : Output from enforce_predictions().
+            roll_corr_90d       : Current 90-day rolling correlation of the focal
+                                  asset against the reference (SPY / DXY).
+                                  If None, check is skipped (returns NORMAL for all).
+            divergence_threshold: Minimum predicted move (as fraction) to trigger
+                                  the check. Default 0.05 = predictions > 5% move.
+
+        Returns:
+            dict: {ticker: 'NORMAL' | 'HIGH_UNCERTAINTY' | 'DIVERGENCE_WARNING'}
+        """
+        labels = {}
+
+        if roll_corr_90d is None:
+            for ticker in predictions_dict:
+                labels[ticker] = 'NORMAL'
+            return labels
+
+        ref_prices = np.array(predictions_dict.get(self.reference_ticker, []))
+        ref_direction = 0
+        if len(ref_prices) >= 2:
+            ref_change = (ref_prices[-1] - ref_prices[0]) / ref_prices[0]
+            ref_direction = 1 if ref_change > 0 else (-1 if ref_change < 0 else 0)
+
+        for ticker, prices in predictions_dict.items():
+            prices = np.array(prices)
+            if len(prices) < 2:
+                labels[ticker] = 'NORMAL'
+                continue
+
+            predicted_change = (prices[-1] - prices[0]) / prices[0]
+            asset_direction = 1 if predicted_change > 0 else (-1 if predicted_change < 0 else 0)
+
+            # Check 1: Is the predicted move large enough to care?
+            is_significant_move = abs(predicted_change) >= divergence_threshold
+
+            # Check 2: Is there extreme directional divergence from macro?
+            # (model predicts UP while corr is strongly negative = suspicious)
+            is_anti_corr_prediction = (
+                roll_corr_90d < -0.3 and                    # Deep decoupling / inverse regime
+                asset_direction != ref_direction and          # Opposing directions
+                is_significant_move                           # Move is non-trivial
+            )
+
+            if is_anti_corr_prediction and abs(predicted_change) >= 0.10:
+                # Very large move against macro regime — strong uncertainty
+                labels[ticker] = 'DIVERGENCE_WARNING'
+                print(f"  [Monotonicity] ⚠ {ticker}: DIVERGENCE_WARNING "
+                      f"(predicted {predicted_change:+.1%}, roll_corr={roll_corr_90d:+.3f})")
+            elif is_anti_corr_prediction:
+                labels[ticker] = 'HIGH_UNCERTAINTY'
+                print(f"  [Monotonicity] ⚡ {ticker}: HIGH_UNCERTAINTY "
+                      f"(predicted {predicted_change:+.1%}, roll_corr={roll_corr_90d:+.3f})")
+            else:
+                labels[ticker] = 'NORMAL'
+
+        return labels
+
+
     def validate_enforcement(self, adjusted_predictions: Dict[str, List[float]]) -> Dict:
         """
         Validate that enforcement worked correctly

@@ -232,6 +232,14 @@ class MultiAssetFetcher:
             if 'Sentiment' in df.columns:
                 df['Sentiment_Std'] = df['Sentiment'].rolling(5, min_periods=1).std().fillna(0)
             
+            # ── PHASE 3: Dynamic Regime Features ──────────────────────────────
+            try:
+                from utils.feature_utils import add_dynamic_regime_features
+                df = add_dynamic_regime_features(df, price_col='Gold', asset_key='gold')
+            except Exception as feat_err:
+                print(f"Warning: Dynamic regime features skipped for Gold: {feat_err}")
+            # ──────────────────────────────────────────────────────────────────
+
             df_to_save = df.reset_index()
             self.store.write_table('gold_global_insights', df_to_save, self.gold_config['filename'])
             try:
@@ -327,6 +335,14 @@ class MultiAssetFetcher:
             if 'Sentiment' in df.columns:
                 df['Sentiment_Std'] = df['Sentiment'].rolling(5, min_periods=1).std().fillna(0)
             
+            # ── PHASE 3: Dynamic Regime Features ──────────────────────────────
+            try:
+                from utils.feature_utils import add_dynamic_regime_features
+                df = add_dynamic_regime_features(df, price_col='BTC', asset_key='btc')
+            except Exception as feat_err:
+                print(f"Warning: Dynamic regime features skipped for BTC: {feat_err}")
+            # ──────────────────────────────────────────────────────────────────
+
             df_to_save = df.reset_index()
             self.store.write_table('btc_global_insights', df_to_save, self.btc_config['filename'])
             try:
@@ -427,7 +443,15 @@ class MultiAssetFetcher:
                 
                 # Preserve or Initialize Sentiment Column
                 df = self._preserve_sentiment(df, filename)
-                
+
+                # ── PHASE 3: Dynamic Regime Features ──────────────────────────
+                try:
+                    from utils.feature_utils import add_dynamic_regime_features
+                    df = add_dynamic_regime_features(df, price_col=tick, asset_key=tick)
+                except Exception as feat_err:
+                    print(f"  Warning: Dynamic regime features skipped for {tick}: {feat_err}")
+                # ──────────────────────────────────────────────────────────────
+
                 df_to_save = df.reset_index()
                 table_name = f"{tick.lower()}_global_insights"
                 self.store.write_table(table_name, df_to_save, filename)
