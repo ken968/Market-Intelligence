@@ -268,8 +268,12 @@ def train_dual_head_stacker(asset_key: str) -> dict:
 
     # ── Build meta-feature matrix ────────────────────────────────────────────
     # Context features: regime indicators that help stacker decide WHEN to trust each model
+    # Phase 3 features included so stacker learns regime-awareness (VIX fear, coupling, anomaly)
     ctx_features = ['VIX', 'GK_Vol_21d', 'Sentiment', 'Sentiment_Std',
-                    'YieldCurve_10Y2Y', 'DXY']
+                    'YieldCurve_10Y2Y', 'DXY',
+                    # Phase 3 dynamic regime features
+                    'vix_percentile_252d', 'return_zscore_90d',
+                    'roll_corr_spy_90d', 'roll_corr_dxy_90d', 'roll_corr_qqq_90d']
     ctx_avail = [f for f in ctx_features if f in df_test.columns]
 
     meta_df = pd.DataFrame({
