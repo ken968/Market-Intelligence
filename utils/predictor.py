@@ -42,14 +42,26 @@ class AssetPredictor:
     @property
     def scaler(self):
         return self.engine.scaler
+
+    @scaler.setter
+    def scaler(self, value):
+        self.engine.scaler = value
         
     @property
     def model(self):
         return self.engine.model
+
+    @model.setter
+    def model(self, value):
+        self.engine.model = value
         
     @property
     def is_loaded(self):
         return self.engine.is_loaded
+
+    @is_loaded.setter
+    def is_loaded(self, value):
+        self.engine.is_loaded = value
 
     # ── Method Delegation ──
     def load_model(self) -> bool:

@@ -1,0 +1,861 @@
+output 2026-06-03
+
+daily ops:
+(.venv) PS D:\Market-Intelligence> py .\scripts\daily_ops.py
+STARTING DAILY OPERATIONS PIPELINE
+Time: 2026-06-03 20:35:27
+============================================================
+
+==================================================
+[20:35:27] RUNNING: FRED Macro Indicators
+Script: fred_fetcher.py
+==================================================
+2026-06-03 20:35:28.357239: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-03 20:35:29.908252: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+=======================================================
+ FRED MACRO DATA SYNC
+=======================================================
+System: Fetching from FRED REST API (no fredapi package needed)...
+  [CPI] CPIAUCSL: 207 obs (2009-01-01 to 2026-04-01)
+  [PPI] PPIACO: 208 obs (2009-01-01 to 2026-04-01)
+  [PCE] PCEPI: 208 obs (2009-01-01 to 2026-04-01)
+  [NFP] PAYEMS: 208 obs (2009-01-01 to 2026-04-01)
+  [GDP] GDP: 69 obs (2009-01-01 to 2026-01-01)
+  [YieldCurve] T10Y2Y: 4356 obs (2009-01-02 to 2026-06-02)
+  [Yield_10Y] DGS10: 4355 obs (2009-01-02 to 2026-06-01)
+  [M2] M2SL: 208 obs (2009-01-01 to 2026-04-01)
+  [Breakeven5Y5Y] T5YIFR: 4356 obs (2009-01-02 to 2026-06-02)
+  [CreditSpread] BAMLH0A0HYM2EY: 785 obs (2023-06-05 to 2026-06-01)
+Warning: Failed to write table 'fred_indicators' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+
+System: fred_indicators saved to DuckDB & CSV - 6363 daily rows.
+  Columns: ['CPI_MoM', 'PPI_MoM', 'PCE_MoM', 'NFP_Change', 'M2_MoM', 'M2_YoY', 'YieldCurve_10Y2Y', 'Yield_10Y_Rate', 'Breakeven_5Y5Y', 'Credit_Spread', 'Credit_Stress_Flag', 'M2_Liquidity_Spike', 'MacroEvent_Flag']
+Warning: Failed to write table 'gdp_series' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+System: gdp_series saved to DuckDB & CSV - 6363 daily rows.
+Warning: Failed to write table 'macro_calendar' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+System: macro_calendar saved to DuckDB & CSV - 96 events.
+
+System: FRED sync complete.
+
+...SUCCESS: FRED Macro Indicators (Took 10.7s)
+
+==================================================
+[20:35:38] RUNNING: COT Smart Money Data
+Script: cot_fetcher.py
+==================================================
+2026-06-03 20:35:39.030205: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-03 20:35:40.484414: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+Downloading COT Data from https://www.cftc.gov/files/dea/history/deacot2026.zip...
+Successfully loaded 7465 records from CFTC.
+D:\Market-Intelligence\scripts\cot_fetcher.py:96: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  final_df['Date'] = final_df['Date'].dt.strftime('%Y-%m-%d')
+Warning: Failed to write table 'cot_gold' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+Saved COT data for GOLD (Records: 21)
+No COT data found for btc (Code: 133097)
+D:\Market-Intelligence\scripts\cot_fetcher.py:96: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  final_df['Date'] = final_df['Date'].dt.strftime('%Y-%m-%d')
+Warning: Failed to write table 'cot_spy' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+Saved COT data for SPY (Records: 21)
+
+...SUCCESS: COT Smart Money Data (Took 4.5s)
+
+==================================================
+[20:35:42] RUNNING: Google Trends Data
+Script: google_trends_fetcher.py
+==================================================
+Testing Google Trends Fetcher...
+
+--- GOLD ---
+D:\Market-Intelligence\.venv\Lib\site-packages\pytrends\request.py:260: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  df = df.fillna(False)
+Current Interest: 16/100
+Average Interest: 30.8/100
+Trend: falling
+Signal Strength: 0.59
+D:\Market-Intelligence\.venv\Lib\site-packages\pytrends\request.py:260: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  df = df.fillna(False)
+Saved Google Trends data for gold to data/alternative\google_trends_gold.csv
+
+--- BTC ---
+Error fetching trends for ['Bitcoin']: The request failed: Google returned a response with code 429
+Current Interest: 0/100
+Average Interest: 0.0/100
+Trend: unknown
+Signal Strength: 0.00
+Error fetching trends for ['Bitcoin']: The request failed: Google returned a response with code 429
+
+--- MSFT ---
+Error fetching trends for ['Microsoft stock']: The request failed: Google returned a response with code 429
+Current Interest: 0/100
+Average Interest: 0.0/100
+Trend: unknown
+Signal Strength: 0.00
+Error fetching trends for ['Microsoft stock']: The request failed: Google returned a response with code 429
+
+Done!
+
+...SUCCESS: Google Trends Data (Took 4.0s)
+
+==================================================
+[20:35:47] RUNNING: News Sentiment Analysis
+Script: sentiment_fetcher_v2.py
+==================================================
+2026-06-03 20:35:48.838719: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-03 20:35:50.168807: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+Usage: python sentiment_fetcher_v2.py [gold|btc|stocks|AAPL|...|all]
+
+Running default: Gold sentiment analysis...
+Warning: Could not read 'gold_global_insights' from DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520). Falling back to CSV.
+System: Analyzing GOLD sentiment from multiple sources...
+Sentiment Aggregator initialized with 8 source(s)
+
+Fetching sentiment for GOLD...
+  Yahoo RSS: Fetched 20 articles for gold
+  Finnhub: Error fetching gold - HTTPSConnectionPool(host='finnhub.io', port=443): Read timed out. (read timeout=10)
+  Alpha Vantage: No data for gold
+System: Fetched 30 days of Fear & Greed Index.
+System: Fetching X/Twitter data for 'Gold -is:retweet lang:en'...
+Error fetching X/Twitter sentiment: 402 Payment Required
+Your enrolled account [2037486849669636096] does not have any credits to fulfill this request.
+System: Fetched and scored 0 tweets.
+System: Fetched and scored 0 geopolitical/regulatory events.
+  Pre-deduplication article count: 50
+  Post-deduplication article count: 38
+  Aggregated: 18 days with weighted sentiment data
+  Non-zero sentiment: 17 days
+  Mean sentiment: -0.2489
+  Yahoo RSS: Fetched 20 articles for gold
+  Finnhub: Error fetching gold - HTTPSConnectionPool(host='finnhub.io', port=443): Read timed out. (read timeout=10)
+  Alpha Vantage: No data for gold
+System: Fetched 30 days of Fear & Greed Index.
+System: Fetching X/Twitter data for 'Gold -is:retweet lang:en'...
+Error fetching X/Twitter sentiment: 402 Payment Required
+Your enrolled account [2037486849669636096] does not have any credits to fulfill this request.
+System: Fetched and scored 0 tweets.
+System: Fetched and scored 0 geopolitical/regulatory events.
+System: Saved 20 real articles to 'data/latest_news_gold.json'
+System: Days with data: 18, Non-zero: 17
+Warning: Could not read 'fred_indicators' from DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520). Falling back to CSV.
+System: FRED indicators merged into 'gold_global_insights'.
+Warning: Failed to write table 'gold_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+System: 'gold_global_insights' table and CSV backup updated successfully.
+        Total records: 2870, With sentiment: 20 (0%)
+
+...SUCCESS: News Sentiment Analysis (Took 37.5s)
+
+==================================================
+[20:36:24] RUNNING: YFinance & Final Data Merge
+Script: data_fetcher_v2.py
+==================================================
+2026-06-03 20:36:25.296973: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-03 20:36:26.741452: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+==================================================
+MULTI-ASSET DATA SYNC INITIATED
+==================================================
+System: Fetching macro indicators (DXY, VIX, US10Y)...
+Warning: Failed to write table 'macro_indicators' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+System: 2518 macro records saved.
+
+=== GOLD DATA ===
+System: Fetching Gold futures (GC=F) - 10 years...
+  [feature_utils] Computing dynamic regime features for: GOLD
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Added 'roll_corr_dxy_90d'. Latest value: -0.335 | Range: -0.746 – 0.354
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'gold_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+System: Success. 2870 Gold records saved to 'data/gold_global_insights.csv'.
+
+=== BITCOIN DATA ===
+System: Fetching Bitcoin (BTC-USD) from 2009...
+  [feature_utils] Computing dynamic regime features for: BTC
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Added 'roll_corr_spy_90d'. Latest value: +0.374 | Range: -0.267 – 0.621
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'btc_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+System: Success. 4278 BTC records saved (from 2014-09-17 to 2026-06-03).
+
+=== US STOCKS DATA ===
+System: Fetching SPY...
+  [feature_utils] Computing dynamic regime features for: SPY
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Warning: Reference 'QQQ' unavailable. 'roll_corr_qqq_90d' filled with 0.0.
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'spy_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+  -> 2871 records saved to 'data/SPY_global_insights.csv'
+System: Fetching QQQ...
+  [feature_utils] Computing dynamic regime features for: QQQ
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Warning: Reference 'DIA' unavailable. 'roll_corr_dia_90d' filled with 0.0.
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'qqq_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+  -> 2871 records saved to 'data/QQQ_global_insights.csv'
+System: Fetching DIA...
+  [feature_utils] Computing dynamic regime features for: DIA
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Added 'roll_corr_spy_90d'. Latest value: +0.876 | Range: 0.682 – 0.995
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'dia_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+  -> 2871 records saved to 'data/DIA_global_insights.csv'
+System: Fetching AAPL...
+  [feature_utils] Computing dynamic regime features for: AAPL
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Added 'roll_corr_spy_90d'. Latest value: +0.516 | Range: 0.294 – 0.948
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'aapl_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+  -> 2871 records saved to 'data/AAPL_global_insights.csv'
+System: Fetching MSFT...
+  [feature_utils] Computing dynamic regime features for: MSFT
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Added 'roll_corr_spy_90d'. Latest value: +0.385 | Range: 0.347 – 0.949
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'msft_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+  -> 2871 records saved to 'data/MSFT_global_insights.csv'
+System: Fetching GOOGL...
+  [feature_utils] Computing dynamic regime features for: GOOGL
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Added 'roll_corr_spy_90d'. Latest value: +0.586 | Range: 0.332 – 0.934
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'googl_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+  -> 2871 records saved to 'data/GOOGL_global_insights.csv'
+System: Fetching AMZN...
+  [feature_utils] Computing dynamic regime features for: AMZN
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Added 'roll_corr_spy_90d'. Latest value: +0.556 | Range: 0.172 – 0.883
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'amzn_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+  -> 2871 records saved to 'data/AMZN_global_insights.csv'
+System: Fetching NVDA...
+  [feature_utils] Computing dynamic regime features for: NVDA
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Added 'roll_corr_spy_90d'. Latest value: +0.639 | Range: -0.002 – 0.895
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'nvda_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+  -> 2871 records saved to 'data/NVDA_global_insights.csv'
+System: Fetching META...
+  [feature_utils] Computing dynamic regime features for: META
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Added 'roll_corr_spy_90d'. Latest value: +0.509 | Range: 0.301 – 0.886
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'meta_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+  -> 2871 records saved to 'data/META_global_insights.csv'
+System: Fetching TSLA...
+  [feature_utils] Computing dynamic regime features for: TSLA
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Added 'roll_corr_spy_90d'. Latest value: +0.594 | Range: 0.085 – 0.792
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'tsla_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+  -> 2871 records saved to 'data/TSLA_global_insights.csv'
+System: Fetching TSM...
+  [feature_utils] Computing dynamic regime features for: TSM
+  [feature_utils] Added 'vix_percentile_252d'. Range: 0.004 – 1.000
+  [feature_utils] Added 'roll_corr_spy_90d'. Latest value: +0.704 | Range: 0.248 – 0.873
+  [feature_utils] Added 'return_zscore_90d'.
+Warning: Failed to write table 'tsm_global_insights' to DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)
+  -> 2871 records saved to 'data/TSM_global_insights.csv'
+System: 11/11 stocks fetched successfully.
+
+==================================================
+SYNC SUMMARY
+==================================================
+Gold: Success
+Bitcoin: Success
+Stocks: Success
+==================================================
+
+...SUCCESS: YFinance & Final Data Merge (Took 17.3s)
+
+==================================================
+[20:36:41] RUNNING: Model Health Diagnostics
+Script: model_monitor.py
+==================================================
+Running Model Health Monitor...
+Log file not found at data/counterfactual_log.jsonl
+No resolved 7-day forecasts found. Run some forecasts and wait for their target dates.
+
+...SUCCESS: Model Health Diagnostics (Took 0.1s)
+
+============================================================
+...PIPELINE COMPLETED
+...Successful: 6/6
+============================================================
+(.venv) PS D:\Market-Intelligence>
+
+lstm gold:
+(.venv) PS D:\Market-Intelligence> py .\scripts\train_lstm_pct.py gold
+
+============================================================
+ LSTM Multi-Horizon Training — GOLD
+============================================================
+  Warning: Could not read table 'gold_global_insights' from DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520). Falling back to CSV.
+  Dataset: 2870 samples | 22 features
+
+  --- Horizon: 1 Days ---
+  Train: 2247 | Gap: 1d | Test: 561
+  Model arch: units=[128, 64, 32], dropout=0.25, attention=True
+2026-06-03 20:44:58.943165: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-03 20:44:59.278330: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 20:45:15.222781: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 20:57:41.282173: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 50.6%  (Naive baseline: 57.8%)
+  Skill Score    : -16.9%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): -0.0605  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.014103  (in % change units)
+
+  --- Horizon: 7 Days ---
+  Train: 2242 | Gap: 7d | Test: 554
+  Model arch: units=[128, 64, 32], dropout=0.25, attention=True
+2026-06-03 20:57:57.435744: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 21:03:23.275679: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 56.5%  (Naive baseline: 65.5%)
+  Skill Score    : -26.2%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): +0.0031  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.035514  (in % change units)
+
+  --- Horizon: 14 Days ---
+  Train: 2236 | Gap: 14d | Test: 546
+  Model arch: units=[128, 64, 32], dropout=0.25, attention=True
+2026-06-03 21:05:22.948652: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 57.1%  (Naive baseline: 70.7%)
+  Skill Score    : -46.3%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): +0.0948  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.048120  (in % change units)
+
+  --- Horizon: 30 Days ---
+  Train: 2224 | Gap: 30d | Test: 526
+  Model arch: units=[128, 64, 32], dropout=0.25, attention=True
+2026-06-03 21:05:34.991350: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 21:08:40.960208: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 64.1%  (Naive baseline: 77.0%)
+  Skill Score    : -56.2%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): +0.2026  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.072778  (in % change units)
+
+  --- Horizon: 90 Days ---
+  Train: 2176 | Gap: 90d | Test: 454
+  Model arch: units=[128, 64, 32], dropout=0.25, attention=True
+2026-06-03 21:08:52.259790: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 21:15:13.404200: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 97.8%  (Naive baseline: 97.8% [!] DOMINANCE)
+  Skill Score    : +0.0%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): +0.0822  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.132921  (in % change units)
+  [!] Catatan: Test period satu arah (98% positif).
+      Skill Score & IC lebih representatif daripada raw Hit Ratio.
+(.venv) PS D:\Market-Intelligence>
+
+lstm btc:
+(.venv) PS D:\Market-Intelligence> py .\scripts\train_lstm_pct.py btc
+
+============================================================
+ LSTM Multi-Horizon Training — BTC
+============================================================
+  Warning: Could not read table 'btc_global_insights' from DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520). Falling back to CSV.
+  Dataset: 4278 samples | 23 features
+
+  --- Horizon: 1 Days ---
+  Train: 3349 | Gap: 1d | Test: 837
+  Model arch: units=[128, 64, 32], dropout=0.3, attention=True
+2026-06-03 20:45:04.581037: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-03 20:45:04.714448: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 20:45:15.130776: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 21:06:54.392805: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+D:\Market-Intelligence\scripts\train_lstm_pct.py:110: ConstantInputWarning: An input array is constant; the correlation coefficient is not defined.
+  corr, _ = stats.spearmanr(y_pred, y_true)
+  Test Hit Ratio : 50.2%  (Naive baseline: 50.2%)
+  Skill Score    : +0.0%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): +0.0000  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.025468  (in % change units)
+
+  --- Horizon: 7 Days ---
+  Train: 3344 | Gap: 7d | Test: 830
+  Model arch: units=[128, 64, 32], dropout=0.3, attention=True
+2026-06-03 21:07:12.023278: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 21:13:03.281308: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 54.6%  (Naive baseline: 52.3%)
+  Skill Score    : +4.8%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): +0.0934  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.065712  (in % change units)
+
+  --- Horizon: 14 Days ---
+  Train: 3339 | Gap: 14d | Test: 821
+  Model arch: units=[128, 64, 32], dropout=0.3, attention=True
+2026-06-03 21:13:23.078978: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 21:17:42.761117: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 45.7%  (Naive baseline: 51.9%)
+  Skill Score    : -12.9%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): -0.1080  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.095876  (in % change units)
+
+  --- Horizon: 30 Days ---
+  Train: 3326 | Gap: 30d | Test: 802
+  Model arch: units=[128, 64, 32], dropout=0.3, attention=True
+2026-06-03 21:17:58.571570: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 21:21:32.775466: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 51.4%  (Naive baseline: 52.6%)
+  Skill Score    : -2.6%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): +0.0523  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.129349  (in % change units)
+
+  --- Horizon: 90 Days ---
+  Train: 3278 | Gap: 90d | Test: 730
+  Model arch: units=[128, 64, 32], dropout=0.3, attention=True
+2026-06-03 21:21:47.398203: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 21:26:54.211778: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 52.9%  (Naive baseline: 50.0%)
+  Skill Score    : +5.8%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): +0.2258  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.274366  (in % change units)
+(.venv) PS D:\Market-Intelligence>
+
+lstm spy:
+(.venv) PS D:\Market-Intelligence> py .\scripts\train_lstm_pct.py spy
+
+============================================================
+ LSTM Multi-Horizon Training — SPY
+============================================================
+  Warning: Could not read table 'spy_global_insights' from DuckDB: IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520). Falling back to CSV.
+  Dataset: 2871 samples | 22 features
+
+  --- Horizon: 1 Days ---
+  Train: 2248 | Gap: 1d | Test: 561
+  Model arch: units=[64, 32], dropout=0.2, attention=False
+2026-06-03 20:45:16.764909: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-03 20:45:16.885382: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 20:47:03.076709: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 57.4%  (Naive baseline: 57.4%)
+  Skill Score    : +0.0%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): +0.0506  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.010187  (in % change units)
+
+  --- Horizon: 7 Days ---
+  Train: 2243 | Gap: 7d | Test: 554
+  Model arch: units=[64, 32], dropout=0.2, attention=False
+2026-06-03 20:47:09.903374: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_16}}
+2026-06-03 20:47:54.340370: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 44.2%  (Naive baseline: 62.5%)
+  Skill Score    : -48.6%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): +0.0784  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.025183  (in % change units)
+
+  --- Horizon: 14 Days ---
+  Train: 2237 | Gap: 14d | Test: 546
+  Model arch: units=[64, 32], dropout=0.2, attention=False
+2026-06-03 20:48:40.878032: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 33.2%  (Naive baseline: 69.2%)
+  Skill Score    : -117.3%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): -0.1216  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.083435  (in % change units)
+
+  --- Horizon: 30 Days ---
+  Train: 2224 | Gap: 30d | Test: 527
+  Model arch: units=[64, 32], dropout=0.2, attention=False
+2026-06-03 20:49:23.190168: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 46.9%  (Naive baseline: 72.3%)
+  Skill Score    : -91.8%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): -0.1735  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.058011  (in % change units)
+
+  --- Horizon: 90 Days ---
+  Train: 2176 | Gap: 90d | Test: 455
+  Model arch: units=[64, 32], dropout=0.2, attention=False
+2026-06-03 20:49:59.442912: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+  Test Hit Ratio : 47.9%  (Naive baseline: 81.3% [!] DOMINANCE)
+  Skill Score    : -178.8%  (HR vs naive -- genuine predictive skill)
+  Info Coeff (IC): +0.3484  (Spearman; >0.05 meaningful, >0.10 strong)
+  Test RMSE      : 0.090611  (in % change units)
+  [!] Catatan: Test period satu arah (81% positif).
+      Skill Score & IC lebih representatif daripada raw Hit Ratio.
+(.venv) PS D:\Market-Intelligence>
+
+xgboost:
+(.venv) PS D:\Market-Intelligence> py .\scripts\train_xgboost_macro.py
+No asset specified. Training Gold, BTC, and SPY...
+
+============================================================
+ XGBoost Macro Model — GOLD
+============================================================
+Loading data from DuckDB table: gold_global_insights
+  [XGB] DuckDB read failed for 'gold_global_insights' (IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)). Falling back to CSV: data/gold_global_insights.csv
+  [XGB] COT data merged for gold.
+  Warning: Missing features (will skip): ['Fear_Greed', 'Smart_Money_Sentiment_Gap']
+  Dataset: 2854 samples | 25 macro features
+  Target: 7-day forward % change
+  Date range: 2015-01-15 to 2026-05-22
+
+Train: 2283 samples | Test: 571 samples
+
+============================================================
+ RESULTS — XGBoost Macro (GOLD, 7D target)
+============================================================
+  Train Hit Ratio: 64.7% | RMSE: 0.022021
+  Test  Hit Ratio: 65.1%  | RMSE: 0.034776
+  Best iteration:  39
+
+  Top 10 Most Important Macro Features:
+    VIX                       0.0967 |||||||||||||||||||
+    CPI_MoM_lag6              0.0655 |||||||||||||
+    YieldCurve_10Y2Y          0.0653 |||||||||||||
+    NFP_Change_lag3           0.0646 ||||||||||||
+    PPI_MoM                   0.0634 ||||||||||||
+    DXY                       0.0627 ||||||||||||
+    NFP_Change                0.0625 ||||||||||||
+    CPI_MoM                   0.0617 ||||||||||||
+    Yield_10Y                 0.0600 |||||||||||
+    Breakeven_5Y5Y            0.0573 |||||||||||
+
+  Model saved: models/gold_xgb_macro.json
+  Metrics saved: reports/xgb_gold_backtest.json
+
+============================================================
+ XGBoost Macro Model — BTC
+============================================================
+Loading data from DuckDB table: btc_global_insights
+  [XGB] DuckDB read failed for 'btc_global_insights' (IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)). Falling back to CSV: data/btc_global_insights.csv
+  [XGB] COT data merged for btc.
+  Warning: Missing features (will skip): ['Fear_Greed', 'Smart_Money_Sentiment_Gap']
+  Dataset: 4262 samples | 25 macro features
+  Target: 7-day forward % change
+  Date range: 2014-09-26 to 2026-05-27
+
+Train: 3409 samples | Test: 853 samples
+
+============================================================
+ RESULTS — XGBoost Macro (BTC, 7D target)
+============================================================
+  Train Hit Ratio: 59.2% | RMSE: 0.093767
+  Test  Hit Ratio: 56.3%  | RMSE: 0.063351
+  Best iteration:  19
+
+  Top 10 Most Important Macro Features:
+    Net_Commercial            0.0791 |||||||||||||||
+    Yield_10Y                 0.0681 |||||||||||||
+    VIX                       0.0607 ||||||||||||
+    Breakeven_5Y5Y            0.0598 |||||||||||
+    PPI_MoM                   0.0518 ||||||||||
+    DXY                       0.0515 ||||||||||
+    M2_MoM                    0.0513 ||||||||||
+    CPI_MoM_lag3              0.0487 |||||||||
+    NFP_Change_lag3           0.0465 |||||||||
+    M2_YoY                    0.0464 |||||||||
+
+  Model saved: models/btc_xgb_macro.json
+  Metrics saved: reports/xgb_btc_backtest.json
+
+============================================================
+ XGBoost Macro Model — SPY
+============================================================
+Loading data from DuckDB table: spy_global_insights
+  [XGB] DuckDB read failed for 'spy_global_insights' (IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)). Falling back to CSV: data/SPY_global_insights.csv
+  [XGB] COT data merged for spy.
+  Warning: Missing features (will skip): ['Sentiment_Std', 'Fear_Greed', 'Smart_Money_Sentiment_Gap']
+  Dataset: 2855 samples | 24 macro features
+  Target: 7-day forward % change
+  Date range: 2015-01-15 to 2026-05-22
+
+Train: 2284 samples | Test: 571 samples
+
+============================================================
+ RESULTS — XGBoost Macro (SPY, 7D target)
+============================================================
+  Train Hit Ratio: 68.3% | RMSE: 0.022999
+  Test  Hit Ratio: 63.2%  | RMSE: 0.023373
+  Best iteration:  20
+
+  Top 10 Most Important Macro Features:
+    DXY                       0.1051 |||||||||||||||||||||
+    NFP_Change                0.0889 |||||||||||||||||
+    Oil_Price                 0.0825 ||||||||||||||||
+    CPI_MoM_lag3              0.0660 |||||||||||||
+    CPI_MoM                   0.0647 ||||||||||||
+    PPI_MoM                   0.0635 ||||||||||||
+    Yield_10Y                 0.0600 |||||||||||
+    GK_Vol_21d                0.0597 |||||||||||
+    YieldCurve_10Y2Y          0.0590 |||||||||||
+    VIX                       0.0535 ||||||||||
+
+  Model saved: models/spy_xgb_macro.json
+  Metrics saved: reports/xgb_spy_backtest.json
+(.venv) PS D:\Market-Intelligence>
+
+ridge stacker:
+(.venv) PS D:\Market-Intelligence> py .\scripts\train_ridge_stacker.py
+Training Dual-Head Stacker for Gold, BTC, and SPY...
+
+============================================================
+ Dual-Head Stacker — GOLD
+============================================================
+  [Data] DuckDB read failed for 'gold_global_insights' (IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)). Falling back to CSV.
+Stacker data: 573 samples (20% unseen test period)
+  2024-02-13 to 2026-05-22
+
+Generating LSTM predictions...
+2026-06-03 21:29:57.625139: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+  [Data] DuckDB read failed for 'gold_global_insights' (IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)). Falling back to CSV.
+2026-06-03 21:29:57.995881: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:30:02.997934: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:30:08.010456: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:30:13.051247: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:30:18.086912: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:30:23.114524: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+Generating XGBoost predictions...
+  [XGB] Feature 'Net_Commercial' not in data — filling with 0
+  [XGB] Feature 'Net_NonCommercial' not in data — filling with 0
+  [XGB] Feature 'Net_Commercial_Long' not in data — filling with 0
+  [XGB] Feature 'Inst_Sentiment_Ratio' not in data — filling with 0
+D:\Market-Intelligence\.venv\Lib\site-packages\sklearn\linear_model\_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+D:\Market-Intelligence\.venv\Lib\site-packages\sklearn\linear_model\_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+
+============================================================
+  DUAL-HEAD ENSEMBLE — GOLD (7D horizon)
+============================================================
+  LSTM only           Hit Ratio: 52.9%
+  XGBoost only        Hit Ratio: 54.7%
+  Direction Head      Hit Ratio: 48.8%  (optimized for direction)
+  Magnitude Head      RMSE:      0.048850  (optimized for magnitude)
+  Combined (D×M)      Hit Ratio: 48.8%  | RMSE: 0.048928
+
+  Direction Head best_C: 1.0000
+
+  Direction Head coefficients (what drives UP/DOWN call):
+    lstm_pred              +0.1114  +
+    xgb_pred               -0.0829
+    VIX                    +0.5103  +++++
+    GK_Vol_21d             -0.2140  --
+    Sentiment              +0.0000
+    Sentiment_Std          +0.0000
+    YieldCurve_10Y2Y       +0.2582  ++
+    DXY                    +0.3953  +++
+    vix_percentile_252d    -0.3635  ---
+    return_zscore_90d      -0.1340  -
+    roll_corr_dxy_90d      -0.1556  -
+
+  Direction model: models/gold_stacker_direction.pkl
+  Magnitude model: models/gold_stacker_magnitude.pkl
+  Meta scaler:     models/gold_stacker_meta_scaler.pkl
+
+============================================================
+ Dual-Head Stacker — BTC
+============================================================
+  [Data] DuckDB read failed for 'btc_global_insights' (IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)). Falling back to CSV.
+Stacker data: 855 samples (20% unseen test period)
+  2024-01-24 to 2026-05-27
+
+Generating LSTM predictions...
+  [Data] DuckDB read failed for 'btc_global_insights' (IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)). Falling back to CSV.
+2026-06-03 21:30:28.563152: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:30:33.599747: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:30:38.646530: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:30:43.664685: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:30:48.706018: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:30:53.712305: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:30:58.725842: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:31:03.765316: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:31:08.801923: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:31:13.831589: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:31:18.864425: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+Generating XGBoost predictions...
+  [XGB] Feature 'Net_Commercial' not in data — filling with 0
+  [XGB] Feature 'Net_NonCommercial' not in data — filling with 0
+  [XGB] Feature 'Net_Commercial_Long' not in data — filling with 0
+  [XGB] Feature 'Inst_Sentiment_Ratio' not in data — filling with 0
+D:\Market-Intelligence\.venv\Lib\site-packages\sklearn\linear_model\_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+D:\Market-Intelligence\.venv\Lib\site-packages\sklearn\linear_model\_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+
+============================================================
+  DUAL-HEAD ENSEMBLE — BTC (7D horizon)
+============================================================
+  LSTM only           Hit Ratio: 62.6%
+  XGBoost only        Hit Ratio: 43.2%
+  Direction Head      Hit Ratio: 46.3%  (optimized for direction)
+  Magnitude Head      RMSE:      0.061034  (optimized for magnitude)
+  Combined (D×M)      Hit Ratio: 46.3%  | RMSE: 0.057893
+
+  Direction Head best_C: 0.0100
+
+  Direction Head coefficients (what drives UP/DOWN call):
+    lstm_pred              +0.0785
+    xgb_pred               +0.1016  +
+    VIX                    +0.1253  +
+    GK_Vol_21d             -0.0855
+    Sentiment              +0.0000
+    Sentiment_Std          +0.0000
+    YieldCurve_10Y2Y       -0.0159
+    DXY                    -0.0794
+    vix_percentile_252d    +0.0422
+    return_zscore_90d      +0.0157
+    roll_corr_spy_90d      +0.0703
+
+  Direction model: models/btc_stacker_direction.pkl
+  Magnitude model: models/btc_stacker_magnitude.pkl
+  Meta scaler:     models/btc_stacker_meta_scaler.pkl
+
+============================================================
+ Dual-Head Stacker — SPY
+============================================================
+  [Data] DuckDB read failed for 'spy_global_insights' (IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)). Falling back to CSV.
+Stacker data: 573 samples (20% unseen test period)
+  2024-02-09 to 2026-05-22
+
+Generating LSTM predictions...
+  [Data] DuckDB read failed for 'spy_global_insights' (IO Error: Cannot open file "D:\Market-Intelligence\data\market_intelligence.db": The process cannot access the file because it is being used by another process.
+
+File is already open in
+C:\Users\LENOVO\AppData\Local\Programs\Antigravity\Antigravity IDE.exe (PID 27520)). Falling back to CSV.
+2026-06-03 21:31:23.914751: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:31:28.916195: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:31:33.947519: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:31:38.990670: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-06-03 21:31:44.034473: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+Generating XGBoost predictions...
+  [XGB] Feature 'Net_Commercial' not in data — filling with 0
+  [XGB] Feature 'Net_NonCommercial' not in data — filling with 0
+  [XGB] Feature 'Net_Commercial_Long' not in data — filling with 0
+  [XGB] Feature 'Inst_Sentiment_Ratio' not in data — filling with 0
+D:\Market-Intelligence\.venv\Lib\site-packages\sklearn\linear_model\_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+D:\Market-Intelligence\.venv\Lib\site-packages\sklearn\linear_model\_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+
+============================================================
+  DUAL-HEAD ENSEMBLE — SPY (7D horizon)
+============================================================
+  LSTM only           Hit Ratio: 48.3%
+  XGBoost only        Hit Ratio: 61.6%
+  Direction Head      Hit Ratio: 60.5%  (optimized for direction)
+  Magnitude Head      RMSE:      0.021304  (optimized for magnitude)
+  Combined (D×M)      Hit Ratio: 60.5%  | RMSE: 0.021034
+
+  Direction Head best_C: 0.1000
+
+  Direction Head coefficients (what drives UP/DOWN call):
+    lstm_pred              +0.1604  +
+    xgb_pred               +0.1156  +
+    VIX                    +0.5770  +++++
+    GK_Vol_21d             +0.0422
+    Sentiment              +0.0000
+    YieldCurve_10Y2Y       -0.2308  --
+    DXY                    -0.4767  ----
+    vix_percentile_252d    -0.2962  --
+    return_zscore_90d      -0.0755
+    roll_corr_qqq_90d      +0.0000
+
+  Direction model: models/spy_stacker_direction.pkl
+  Magnitude model: models/spy_stacker_magnitude.pkl
+  Meta scaler:     models/spy_stacker_meta_scaler.pkl
+(.venv) PS D:\Market-Intelligence>
+

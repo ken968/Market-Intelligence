@@ -96,7 +96,10 @@ class MultiAssetFetcher:
             df = df[['DXY', 'VIX', 'Yield_10Y', 'Oil_Price']]
             df = df.dropna()
             
-            self.store.write_table('macro_indicators', df, 'data/macro_indicators.csv')
+            # Ensure we have date as column before saving to DuckDB
+            df_reset = df.reset_index()
+            
+            self.store.write_table('macro_indicators', df_reset, 'data/macro_indicators.csv')
             print(f"System: {len(df)} macro records saved.")
             return df
             
@@ -152,6 +155,9 @@ class MultiAssetFetcher:
         if 'Close' in df.columns:
             df = df.rename(columns={'Close': price_col})
 
+        if isinstance(df.index, pd.DatetimeIndex) and df.index.tz is not None:
+            df.index = df.index.tz_localize(None)
+
         return df.ffill().dropna(subset=[price_col])
 
     def fetch_gold_data(self):
@@ -195,10 +201,11 @@ class MultiAssetFetcher:
                 macro = self.store.read_table('macro_indicators', format='pandas')
                 if 'Date' in macro.columns:
                     macro = macro.set_index('Date')
-                    macro.index = pd.to_datetime(macro.index)
+                    macro.index = pd.to_datetime(macro.index).tz_localize(None)
             except Exception:
                 if os.path.exists('data/macro_indicators.csv'):
                     macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
+                    macro.index = macro.index.tz_localize(None)
             
             if macro is not None:
                 df = df.join(macro, how='left')
@@ -210,10 +217,11 @@ class MultiAssetFetcher:
                 fred = self.store.read_table('fred_indicators', format='pandas')
                 if 'Date' in fred.columns:
                     fred = fred.set_index('Date')
-                    fred.index = pd.to_datetime(fred.index)
+                    fred.index = pd.to_datetime(fred.index).tz_localize(None)
             except Exception:
                 if os.path.exists('data/fred_indicators.csv'):
                     fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+                    fred.index = fred.index.tz_localize(None)
             
             if fred is not None:
                 df = df.join(fred, how='left')
@@ -298,10 +306,11 @@ class MultiAssetFetcher:
                 macro = self.store.read_table('macro_indicators', format='pandas')
                 if 'Date' in macro.columns:
                     macro = macro.set_index('Date')
-                    macro.index = pd.to_datetime(macro.index)
+                    macro.index = pd.to_datetime(macro.index).tz_localize(None)
             except Exception:
                 if os.path.exists('data/macro_indicators.csv'):
                     macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
+                    macro.index = macro.index.tz_localize(None)
             
             if macro is not None:
                 df = df.join(macro, how='left')
@@ -313,10 +322,11 @@ class MultiAssetFetcher:
                 fred = self.store.read_table('fred_indicators', format='pandas')
                 if 'Date' in fred.columns:
                     fred = fred.set_index('Date')
-                    fred.index = pd.to_datetime(fred.index)
+                    fred.index = pd.to_datetime(fred.index).tz_localize(None)
             except Exception:
                 if os.path.exists('data/fred_indicators.csv'):
                     fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+                    fred.index = fred.index.tz_localize(None)
             
             if fred is not None:
                 df = df.join(fred, how='left')
@@ -405,10 +415,11 @@ class MultiAssetFetcher:
                     macro = self.store.read_table('macro_indicators', format='pandas')
                     if 'Date' in macro.columns:
                         macro = macro.set_index('Date')
-                        macro.index = pd.to_datetime(macro.index)
+                        macro.index = pd.to_datetime(macro.index).tz_localize(None)
                 except Exception:
                     if os.path.exists('data/macro_indicators.csv'):
                         macro = pd.read_csv('data/macro_indicators.csv', index_col=0, parse_dates=True)
+                        macro.index = macro.index.tz_localize(None)
                 
                 if macro is not None:
                     df = df.join(macro, how='left')
@@ -420,10 +431,11 @@ class MultiAssetFetcher:
                     fred = self.store.read_table('fred_indicators', format='pandas')
                     if 'Date' in fred.columns:
                         fred = fred.set_index('Date')
-                        fred.index = pd.to_datetime(fred.index)
+                        fred.index = pd.to_datetime(fred.index).tz_localize(None)
                 except Exception:
                     if os.path.exists('data/fred_indicators.csv'):
                         fred = pd.read_csv('data/fred_indicators.csv', index_col=0, parse_dates=True)
+                        fred.index = fred.index.tz_localize(None)
                 
                 if fred is not None:
                     df = df.join(fred, how='left')

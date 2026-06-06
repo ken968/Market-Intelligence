@@ -2,52 +2,52 @@
     "asset": "btc",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 56.928948913681744,
-    "hit_ratio_test": 55.39906103286385,
-    "rmse_train": 0.09659252683864929,
-    "rmse_test": 0.06312369382941257,
-    "n_features": 24,
-    "best_iteration": 9,
+    "hit_ratio_train": 59.22557934878263,
+    "hit_ratio_test": 56.27198124267292,
+    "rmse_train": 0.09376713231103877,
+    "rmse_test": 0.06335148210904205,
+    "n_features": 25,
+    "best_iteration": 19,
     "top_features": [
         {
             "feature": "Net_Commercial",
-            "importance": 0.07633206248283386
+            "importance": 0.0791269987821579
         },
         {
             "feature": "Yield_10Y",
-            "importance": 0.0732000395655632
-        },
-        {
-            "feature": "Breakeven_5Y5Y",
-            "importance": 0.07124779373407364
-        },
-        {
-            "feature": "DXY",
-            "importance": 0.06365735083818436
+            "importance": 0.06814266741275787
         },
         {
             "feature": "VIX",
-            "importance": 0.058372143656015396
+            "importance": 0.060689978301525116
         },
         {
-            "feature": "Yield_10Y_Rate",
-            "importance": 0.05668514594435692
-        },
-        {
-            "feature": "Inst_Sentiment_Ratio",
-            "importance": 0.05421793460845947
-        },
-        {
-            "feature": "M2_YoY",
-            "importance": 0.05395617336034775
+            "feature": "Breakeven_5Y5Y",
+            "importance": 0.05979636684060097
         },
         {
             "feature": "PPI_MoM",
-            "importance": 0.05275653675198555
+            "importance": 0.05181939899921417
         },
         {
-            "feature": "YieldCurve_10Y2Y",
-            "importance": 0.052564848214387894
+            "feature": "DXY",
+            "importance": 0.05154348164796829
+        },
+        {
+            "feature": "M2_MoM",
+            "importance": 0.051348548382520676
+        },
+        {
+            "feature": "CPI_MoM_lag3",
+            "importance": 0.04868882894515991
+        },
+        {
+            "feature": "NFP_Change_lag3",
+            "importance": 0.04646782949566841
+        },
+        {
+            "feature": "M2_YoY",
+            "importance": 0.04636445641517639
         }
     ]
 }

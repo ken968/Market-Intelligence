@@ -288,11 +288,11 @@ class CorrelationEnforcer:
             if is_anti_corr_prediction and abs(predicted_change) >= 0.10:
                 # Very large move against macro regime — strong uncertainty
                 labels[ticker] = 'DIVERGENCE_WARNING'
-                print(f"  [Monotonicity] ⚠ {ticker}: DIVERGENCE_WARNING "
+                print(f"  [Monotonicity] WARN {ticker}: DIVERGENCE_WARNING "
                       f"(predicted {predicted_change:+.1%}, roll_corr={roll_corr_90d:+.3f})")
             elif is_anti_corr_prediction:
                 labels[ticker] = 'HIGH_UNCERTAINTY'
-                print(f"  [Monotonicity] ⚡ {ticker}: HIGH_UNCERTAINTY "
+                print(f"  [Monotonicity] INFO {ticker}: HIGH_UNCERTAINTY "
                       f"(predicted {predicted_change:+.1%}, roll_corr={roll_corr_90d:+.3f})")
             else:
                 labels[ticker] = 'NORMAL'

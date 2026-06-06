@@ -306,6 +306,82 @@ if cols_count > 0:
 
 st.markdown("---")
 
+# ==================== MARKET TEMPERATURE & ANOMALIES ====================
+
+st.markdown("### Market Temperature & Anomalies")
+st.caption("Safety Net: Dynamic Risk Management based on VIX Regime and Z-Score Anomalies")
+
+cols_count = min(len(selected_assets), 3)
+if cols_count > 0:
+    temp_cols = st.columns(cols_count)
+    for i, asset_key in enumerate(selected_assets):
+        col_idx = i % cols_count
+        with temp_cols[col_idx]:
+            try:
+                config = ASSETS[asset_key]
+                df = pd.read_csv(config['data_file'])
+                latest = df.iloc[-1]
+                
+                with st.container(border=True):
+                    st.markdown(f"**{config['name']}**")
+                    
+                    # 1. VIX Percentile
+                    vix_pct = latest.get('vix_percentile_252d', None)
+                    if pd.notna(vix_pct):
+                        vix_pct = float(vix_pct)
+                        if vix_pct >= 0.90:
+                            vix_regime, vix_color = "EXTREME", "red"
+                        elif vix_pct >= 0.70:
+                            vix_regime, vix_color = "ELEVATED", "orange"
+                        else:
+                            vix_regime, vix_color = "CALM", "green"
+                            
+                        st.markdown(f"**VIX Regime:** :{vix_color}[**{vix_regime}**] ({vix_pct*100:.1f}th pct)")
+                        st.progress(min(max(vix_pct, 0.0), 1.0))
+                    
+                    # 2. Z-Score Anomaly
+                    z_live = latest.get('return_zscore_90d', None)
+                    if pd.notna(z_live):
+                        z_live = float(z_live)
+                        if abs(z_live) > 3.0:
+                            st.error(f"🚨 **ANOMALY DETECTED** (Z-Score: {z_live:+.2f})\\nMicro Circuit Breaker Active")
+                        elif abs(z_live) > 2.0:
+                            st.warning(f"CAUTION: Z-Score = {z_live:+.2f}")
+                        else:
+                            st.success(f"NORMAL PRICE ACTION (Z-Score: {z_live:+.2f})")
+                        
+                    # 3. Dynamic Correlation
+                    corr_keys = [k for k in latest.keys() if k.startswith('roll_corr_')]
+                    if corr_keys:
+                        st.markdown("**Dynamic Correlations (90d):**")
+                        for ck in corr_keys:
+                            corr_val = latest[ck]
+                            if pd.isna(corr_val):
+                                continue
+                            
+                            target = ck.replace('roll_corr_', '').replace('_90d', '').upper()
+                            if corr_val >= 0.7:
+                                strength = "Very Strong"
+                            elif corr_val >= 0.4:
+                                strength = "Strong"
+                            elif corr_val <= -0.7:
+                                strength = "Inverse (Very Strong)"
+                            elif corr_val <= -0.4:
+                                strength = "Inverse (Strong)"
+                            elif abs(corr_val) < 0.2:
+                                strength = "Decoupled"
+                            else:
+                                strength = "Moderate"
+                                
+                            st.caption(f"- vs {target}: {corr_val:+.2f} ({strength})")
+                    else:
+                        st.caption("No dynamic correlation data.")
+                        
+            except Exception as e:
+                st.warning(f"Error loading details for {asset_key}: {e}")
+
+st.markdown("---")
+
 
 # ==================== AI PREDICTIONS ====================
 

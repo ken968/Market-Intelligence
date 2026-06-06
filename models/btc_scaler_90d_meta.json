@@ -21,14 +21,21 @@
         "Credit_Spread",
         "Sentiment",
         "Halving_Cycle",
-        "EMA_90"
+        "EMA_90",
+        "vix_percentile_252d",
+        "roll_corr_spy_90d",
+        "return_zscore_90d"
     ],
     "horizon_days": 90,
     "sequence_length": 90,
     "target_type": "pct_change_90d",
-    "hit_ratio_test": 55.93635250917993,
-    "rmse_test": 0.2707406359214782,
-    "n_train": 3268,
-    "n_test": 817,
+    "hit_ratio_test": 52.87671232876713,
+    "naive_hit_ratio": 50.0,
+    "skill_score": 5.753424657534254,
+    "information_coefficient": 0.22575770931123265,
+    "dominance_flagged": false,
+    "rmse_test": 0.2743655986046833,
+    "n_train": 3278,
+    "n_test": 730,
     "target_scaler_path": "models/btc_scaler_90d_target.pkl"
 }
