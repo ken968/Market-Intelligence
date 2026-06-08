@@ -20,14 +20,21 @@
         "MacroEvent_Flag",
         "Credit_Spread",
         "Sentiment",
-        "EMA_90"
+        "EMA_90",
+        "vix_percentile_252d",
+        "roll_corr_spy_90d",
+        "return_zscore_90d"
     ],
     "horizon_days": 90,
     "sequence_length": 60,
     "target_type": "pct_change_90d",
-    "hit_ratio_test": 58.93186003683242,
-    "rmse_test": 0.3375246642913542,
-    "n_train": 2169,
-    "n_test": 543,
+    "hit_ratio_test": 43.07692307692308,
+    "naive_hit_ratio": 63.95604395604395,
+    "skill_score": -57.92682926829264,
+    "information_coefficient": 0.469134841509059,
+    "dominance_flagged": false,
+    "rmse_test": 0.46106576179057124,
+    "n_train": 2178,
+    "n_test": 455,
     "target_scaler_path": "models/tsla_scaler_90d_target.pkl"
 }

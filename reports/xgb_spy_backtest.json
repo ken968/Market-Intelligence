@@ -2,52 +2,52 @@
     "asset": "spy",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 68.30122591943957,
-    "hit_ratio_test": 63.22241681260946,
-    "rmse_train": 0.022999045278944988,
-    "rmse_test": 0.02337279966352134,
+    "hit_ratio_train": 67.6148796498906,
+    "hit_ratio_test": 63.11188811188811,
+    "rmse_train": 0.023180250581634386,
+    "rmse_test": 0.023348858546432694,
     "n_features": 24,
-    "best_iteration": 20,
+    "best_iteration": 19,
     "top_features": [
         {
             "feature": "DXY",
-            "importance": 0.10508572310209274
+            "importance": 0.10576571524143219
         },
         {
             "feature": "NFP_Change",
-            "importance": 0.08889370411634445
-        },
-        {
-            "feature": "Oil_Price",
-            "importance": 0.082520991563797
-        },
-        {
-            "feature": "CPI_MoM_lag3",
-            "importance": 0.06603721529245377
-        },
-        {
-            "feature": "CPI_MoM",
-            "importance": 0.06470055878162384
+            "importance": 0.08434484153985977
         },
         {
             "feature": "PPI_MoM",
-            "importance": 0.06350187957286835
+            "importance": 0.07602836191654205
+        },
+        {
+            "feature": "Oil_Price",
+            "importance": 0.07338302582502365
+        },
+        {
+            "feature": "CPI_MoM",
+            "importance": 0.07190697640180588
         },
         {
             "feature": "Yield_10Y",
-            "importance": 0.05996172875165939
+            "importance": 0.06916402280330658
         },
         {
-            "feature": "GK_Vol_21d",
-            "importance": 0.059652626514434814
+            "feature": "CPI_MoM_lag3",
+            "importance": 0.06879206001758575
         },
         {
             "feature": "YieldCurve_10Y2Y",
-            "importance": 0.0590226985514164
+            "importance": 0.060145482420921326
         },
         {
-            "feature": "VIX",
-            "importance": 0.05348330736160278
+            "feature": "Yield_10Y_Rate",
+            "importance": 0.05934681370854378
+        },
+        {
+            "feature": "GK_Vol_21d",
+            "importance": 0.057751622051000595
         }
     ]
 }

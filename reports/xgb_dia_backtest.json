@@ -1,0 +1,53 @@
+{
+    "asset": "dia",
+    "model_type": "xgboost_macro",
+    "horizon_days": 7,
+    "hit_ratio_train": 66.3457330415755,
+    "hit_ratio_test": 59.96503496503497,
+    "rmse_train": 0.022195311421595906,
+    "rmse_test": 0.021938720037002576,
+    "n_features": 20,
+    "best_iteration": 81,
+    "top_features": [
+        {
+            "feature": "Yield_10Y",
+            "importance": 0.11784794926643372
+        },
+        {
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.10729373246431351
+        },
+        {
+            "feature": "NFP_Change",
+            "importance": 0.10576947033405304
+        },
+        {
+            "feature": "DXY",
+            "importance": 0.10509286820888519
+        },
+        {
+            "feature": "Oil_Price",
+            "importance": 0.06893570721149445
+        },
+        {
+            "feature": "CPI_MoM_lag3",
+            "importance": 0.061818111687898636
+        },
+        {
+            "feature": "GK_Vol_21d",
+            "importance": 0.05984954535961151
+        },
+        {
+            "feature": "VIX",
+            "importance": 0.05944383516907692
+        },
+        {
+            "feature": "CPI_MoM_lag6",
+            "importance": 0.05452860891819
+        },
+        {
+            "feature": "Breakeven_5Y5Y",
+            "importance": 0.052156247198581696
+        }
+    ]
+}

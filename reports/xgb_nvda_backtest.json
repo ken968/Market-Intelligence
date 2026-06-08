@@ -1,0 +1,53 @@
+{
+    "asset": "nvda",
+    "model_type": "xgboost_macro",
+    "horizon_days": 7,
+    "hit_ratio_train": 60.48140043763676,
+    "hit_ratio_test": 59.61538461538461,
+    "rmse_train": 0.07671518038202678,
+    "rmse_test": 0.07366603743250619,
+    "n_features": 20,
+    "best_iteration": 0,
+    "top_features": [
+        {
+            "feature": "CPI_MoM_lag3",
+            "importance": 0.10412096977233887
+        },
+        {
+            "feature": "Yield_10Y_Rate",
+            "importance": 0.08036046475172043
+        },
+        {
+            "feature": "PCE_MoM",
+            "importance": 0.0788106620311737
+        },
+        {
+            "feature": "M2_YoY",
+            "importance": 0.07775706797838211
+        },
+        {
+            "feature": "CPI_MoM_lag6",
+            "importance": 0.06504770368337631
+        },
+        {
+            "feature": "M2_MoM",
+            "importance": 0.05741429701447487
+        },
+        {
+            "feature": "NFP_Change",
+            "importance": 0.05637999251484871
+        },
+        {
+            "feature": "GK_Vol_21d",
+            "importance": 0.05530170351266861
+        },
+        {
+            "feature": "CPI_MoM",
+            "importance": 0.053449761122465134
+        },
+        {
+            "feature": "PPI_MoM",
+            "importance": 0.050851237028837204
+        }
+    ]
+}

@@ -209,9 +209,9 @@ def build_driver_dataframe(drivers: list[dict]) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 
 def _call_gemini_text(prompt: str) -> str | None:
-    """Minimal Gemini call returning raw text."""
+    """Minimal Gemini call returning raw text using the new google-genai SDK."""
     try:
-        import google.generativeai as genai
+        from google import genai
     except ImportError:
         return None
 
@@ -221,16 +221,34 @@ def _call_gemini_text(prompt: str) -> str | None:
         os.getenv('GEMINI_API_KEY_1'),
         os.getenv('GEMINI_API_KEY_2'),
         os.getenv('GEMINI_API_KEY_3'),
+        os.getenv('GEMINI_API_KEY_4'),
+        os.getenv('GEMINI_API_KEY_5'),
     ] if k]
 
-    for key in keys:
-        try:
-            genai.configure(api_key=key)
-            model = genai.GenerativeModel('gemini-2.5-flash')
-            resp = model.generate_content(prompt)
-            return resp.text.strip()
-        except Exception:
-            continue
+    MODELS_TO_TRY = ['gemini-pro-latest', 'gemini-flash-latest']
+
+    for idx, key in enumerate(keys, start=1):
+        for model_name in MODELS_TO_TRY:
+            try:
+                client = genai.Client(
+                    api_key=key,
+                    http_options={'retry_options': {'attempts': 1}}
+                )
+                resp = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt
+                )
+                print(f"  -> Gemini API {idx} ({model_name}) berhasil XAI Explainer.")
+                return resp.text.strip()
+            except Exception as e:
+                err_msg = str(e)
+                if '429' in err_msg or 'RESOURCE_EXHAUSTED' in err_msg:
+                    print(f"Warning: Gemini API {idx} ({model_name}) Limit token")
+                elif '503' in err_msg or 'UNAVAILABLE' in err_msg:
+                    print(f"Warning: Gemini API {idx} ({model_name}) Server sibuk")
+                else:
+                    print(f"Warning: Gemini API {idx} ({model_name}) error: {type(e).__name__}")
+                continue
     return None
 
 

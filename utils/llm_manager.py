@@ -29,6 +29,8 @@ GEMINI_KEYS = [
         os.getenv('GEMINI_API_KEY_1'),
         os.getenv('GEMINI_API_KEY_2'),
         os.getenv('GEMINI_API_KEY_3'),
+        os.getenv('GEMINI_API_KEY_4'),
+        os.getenv('GEMINI_API_KEY_5'),
     ] if k
 ]
 
@@ -257,45 +259,65 @@ def scores_to_bias_vector(raw_scores: dict) -> np.ndarray:
 
 def _call_gemini(prompt: str, max_retries: int = 2) -> dict | None:
     """
-    Call Gemini API with automatic key rotation.
+    Call Gemini API with automatic key rotation using the new google-genai SDK.
     Returns parsed JSON dict or None on full failure.
     """
     try:
-        import google.generativeai as genai
+        from google import genai
     except ImportError:
-        print("Warning: google-generativeai not installed. Run: pip install google-generativeai")
+        print("Warning: google-genai not installed. Run: pip install google-genai")
         return None
 
-    for key in GEMINI_KEYS:
-        for attempt in range(max_retries):
-            try:
-                genai.configure(api_key=key)
-                model = genai.GenerativeModel('gemini-2.5-flash')
-                response = model.generate_content(prompt)
-                text = response.text.strip()
-                
-                # Extract JSON block using robust string matching
-                if '```json' in text:
-                    text = text.split('```json')[1].split('```')[0].strip()
-                elif '```' in text:
-                    text = text.split('```')[1].split('```')[0].strip()
-                elif text.startswith('{') and text.endswith('}'):
-                    pass # already clean JSON
-                else:
-                    # Try to find first { and last }
-                    start = text.find('{')
-                    end = text.rfind('}')
-                    if start != -1 and end != -1:
-                        text = text[start:end+1]
-                
-                return json.loads(text)
-            except json.JSONDecodeError as jde:
-                print(f"Warning: Gemini returned non-JSON response (key ...{key[-4:]}, attempt {attempt+1})")
-                print(f"--- RAW RESPONSE START ---\n{text}\n--- RAW RESPONSE END ---")
-                print(f"Error details: {jde}")
-            except Exception as e:
-                print(f"Warning: Gemini API error (key ...{key[-4:]}, attempt {attempt+1}): {e}")
-                time.sleep(1)
+    MODELS_TO_TRY = ['gemini-pro-latest', 'gemini-flash-latest']
+
+    for idx, key in enumerate(GEMINI_KEYS, start=1):
+        for model_name in MODELS_TO_TRY:
+            for attempt in range(max_retries):
+                try:
+                    # Disable SDK's internal blocking retries so our custom rotation/fallback works
+                    client = genai.Client(
+                        api_key=key, 
+                        http_options={'retry_options': {'attempts': 1}}
+                    )
+                    response = client.models.generate_content(
+                        model=model_name,
+                        contents=prompt
+                    )
+                    text = response.text.strip()
+                    print(f"  -> Gemini API {idx} ({model_name}) berhasil memproses data.")
+                    
+                    # Extract JSON block using robust string matching
+                    if '```json' in text:
+                        text = text.split('```json')[1].split('```')[0].strip()
+                    elif '```' in text:
+                        text = text.split('```')[1].split('```')[0].strip()
+                    elif text.startswith('{') and text.endswith('}'):
+                        pass # already clean JSON
+                    else:
+                        # Try to find first { and last }
+                        start = text.find('{')
+                        end = text.rfind('}')
+                        if start != -1 and end != -1:
+                            text = text[start:end+1]
+                    
+                    return json.loads(text)
+                except json.JSONDecodeError as jde:
+                    print(f"Warning: Gemini API {idx} ({model_name}) returned non-JSON response (attempt {attempt+1})")
+                    print(f"--- RAW RESPONSE START ---\n{text}\n--- RAW RESPONSE END ---")
+                    print(f"Error details: {jde}")
+                except Exception as e:
+                    err_msg = str(e)
+                    if '429' in err_msg or 'RESOURCE_EXHAUSTED' in err_msg:
+                        print(f"Warning: Gemini API {idx} ({model_name}) Limit token (attempt {attempt+1})")
+                    elif '503' in err_msg or 'UNAVAILABLE' in err_msg:
+                        print(f"Warning: Gemini API {idx} ({model_name}) Server sibuk (attempt {attempt+1})")
+                    else:
+                        print(f"Warning: Gemini API {idx} ({model_name}) error: {type(e).__name__} (attempt {attempt+1})")
+                    
+                    # If it's a model-level error or token limit on Pro, break out of attempts for this model 
+                    # and let the loop naturally fall back to Flash. 
+                    # But if it's rate limit on the key itself, Flash might fail too, which is fine (it will try).
+                    time.sleep(1)
 
     print("Warning: All Gemini API keys failed. Falling back to Zero-Vector Injection.")
     return None

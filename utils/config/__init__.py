@@ -2,6 +2,15 @@
 Centralized Configuration Package for Market Intelligence
 """
 
+import os
+import logging
+# Suppress TensorFlow C++ Info/Warning messages and oneDNN warnings globally
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+# Suppress Python-level TensorFlow warnings (like tf.function retracing)
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
+logging.getLogger("absl").setLevel(logging.ERROR)
+
 from .theme import THEME
 from .assets import (
     ASSETS, 

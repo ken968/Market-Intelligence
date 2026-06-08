@@ -186,11 +186,19 @@ class LSTMTrainer:
         raw_features = df[features].ffill().fillna(0).values   # (N, n_features)
         raw_target   = df['_pct_target'].values                  # (N,)
 
+        # PREVENT DATA LEAKAGE: We must determine the split index BEFORE scaling.
+        split_idx  = int((len(raw_features) - self.seq_len) * 0.80) + self.seq_len
+        gap        = horizon_days  # buffer mencegah target overlap antar split
+
         feature_scaler = MinMaxScaler(feature_range=(0, 1))
-        scaled_features = feature_scaler.fit_transform(raw_features)
+        # Fit ONLY on training portion of the raw data!
+        feature_scaler.fit(raw_features[:split_idx])
+        scaled_features = feature_scaler.transform(raw_features)
 
         target_scaler = StandardScaler()
-        scaled_target = target_scaler.fit_transform(raw_target.reshape(-1, 1)).flatten()
+        # Fit ONLY on training portion of the target!
+        target_scaler.fit(raw_target[:split_idx].reshape(-1, 1))
+        scaled_target = target_scaler.transform(raw_target.reshape(-1, 1)).flatten()
 
         X_all, y_all = [], []
         for t in range(self.seq_len, len(scaled_features)):
@@ -206,15 +214,14 @@ class LSTMTrainer:
         # Contoh: Gold 90-hari tanpa buffer → 89 dari 90 hari target tumpang tindih
         #         → Hit Ratio spurious ~98% padahal model sebenarnya tidak akurat.
         # Solusi: sisipkan gap = horizon_days antara akhir train dan awal test.
-        split_idx  = int(len(X_all) * 0.80)
-        gap        = horizon_days  # buffer mencegah target overlap antar split
-        test_start = split_idx + gap
+        seq_split_idx = split_idx - self.seq_len
+        test_start = seq_split_idx + gap
         if test_start >= len(X_all):
             # Fallback jika data terlalu sedikit untuk gap (misalnya data < 200 baris)
-            test_start = split_idx
+            test_start = seq_split_idx
             print(f"  [Warning] Data terlalu kecil untuk gap buffer ({horizon_days}d). Menggunakan split langsung.")
-        X_train, X_test = X_all[:split_idx], X_all[test_start:]
-        y_train, y_test = y_all[:split_idx], y_all[test_start:]
+        X_train, X_test = X_all[:seq_split_idx], X_all[test_start:]
+        y_train, y_test = y_all[:seq_split_idx], y_all[test_start:]
 
         print(f"  Train: {len(X_train)} | Gap: {gap}d | Test: {len(X_test)}")
 

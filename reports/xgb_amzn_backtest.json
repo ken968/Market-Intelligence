@@ -1,0 +1,53 @@
+{
+    "asset": "amzn",
+    "model_type": "xgboost_macro",
+    "horizon_days": 7,
+    "hit_ratio_train": 59.73741794310722,
+    "hit_ratio_test": 55.94405594405595,
+    "rmse_train": 0.05221575180371687,
+    "rmse_test": 0.051787263264767666,
+    "n_features": 20,
+    "best_iteration": 2,
+    "top_features": [
+        {
+            "feature": "PPI_MoM",
+            "importance": 0.11161898821592331
+        },
+        {
+            "feature": "M2_MoM",
+            "importance": 0.08315765857696533
+        },
+        {
+            "feature": "NFP_Change",
+            "importance": 0.07419417798519135
+        },
+        {
+            "feature": "CPI_MoM_lag6",
+            "importance": 0.06820191442966461
+        },
+        {
+            "feature": "NFP_Change_lag3",
+            "importance": 0.06506915390491486
+        },
+        {
+            "feature": "CPI_MoM",
+            "importance": 0.05978689342737198
+        },
+        {
+            "feature": "CPI_MoM_lag3",
+            "importance": 0.05976433306932449
+        },
+        {
+            "feature": "Breakeven_5Y5Y",
+            "importance": 0.058801908046007156
+        },
+        {
+            "feature": "GK_Vol_21d",
+            "importance": 0.05492495372891426
+        },
+        {
+            "feature": "Yield_10Y",
+            "importance": 0.052437882870435715
+        }
+    ]
+}

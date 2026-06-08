@@ -91,6 +91,15 @@ for ticker, info in STOCK_TICKERS.items():
     else:
         arch = {'units': [100, 50], 'dropout': 0.25, 'attention': False}  # default Mag7
 
+    if ticker.lower() == 'spy':
+        roll_corr_feat = 'roll_corr_qqq_90d'
+    elif ticker.lower() == 'qqq':
+        roll_corr_feat = 'roll_corr_dia_90d'
+    elif ticker.lower() == 'dia':
+        roll_corr_feat = 'roll_corr_spy_90d'
+    else:
+        roll_corr_feat = 'roll_corr_spy_90d'
+
     ASSETS[ticker.lower()] = {
         'name': info['name'],
         'ticker': ticker,
@@ -108,7 +117,7 @@ for ticker, info in STOCK_TICKERS.items():
                      'Sentiment', 'EMA_90',
                      # Phase 3: Dynamic Regime Features
                      'vix_percentile_252d',   # VIX rolling 252d eCDF (0.0-1.0)
-                     'roll_corr_qqq_90d',     # Stock vs QQQ rolling 90d corr (SPY uses QQQ as cross-ref)
+                     roll_corr_feat,          # Dynamic correlation feature
                      'return_zscore_90d'],    # Micro circuit-breaker Z-Score
         'sequence_length': 60,
         'model_arch': arch,

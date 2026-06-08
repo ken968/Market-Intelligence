@@ -1,0 +1,53 @@
+{
+    "asset": "tsm",
+    "model_type": "xgboost_macro",
+    "horizon_days": 7,
+    "hit_ratio_train": 59.38730853391685,
+    "hit_ratio_test": 62.23776223776224,
+    "rmse_train": 0.046016914806673845,
+    "rmse_test": 0.05689580064094808,
+    "n_features": 20,
+    "best_iteration": 5,
+    "top_features": [
+        {
+            "feature": "CPI_MoM_lag3",
+            "importance": 0.10600981116294861
+        },
+        {
+            "feature": "M2_MoM",
+            "importance": 0.09310933202505112
+        },
+        {
+            "feature": "M2_YoY",
+            "importance": 0.0817185714840889
+        },
+        {
+            "feature": "NFP_Change_lag3",
+            "importance": 0.07272465527057648
+        },
+        {
+            "feature": "NFP_Change",
+            "importance": 0.06445230543613434
+        },
+        {
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.06314929574728012
+        },
+        {
+            "feature": "CPI_MoM_lag6",
+            "importance": 0.06262290477752686
+        },
+        {
+            "feature": "PPI_MoM",
+            "importance": 0.05491933599114418
+        },
+        {
+            "feature": "Yield_10Y",
+            "importance": 0.052995093166828156
+        },
+        {
+            "feature": "DXY",
+            "importance": 0.05174963176250458
+        }
+    ]
+}

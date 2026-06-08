@@ -2,52 +2,52 @@
     "asset": "btc",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 59.22557934878263,
-    "hit_ratio_test": 56.27198124267292,
-    "rmse_train": 0.09376713231103877,
-    "rmse_test": 0.06335148210904205,
+    "hit_ratio_train": 61.01992966002344,
+    "hit_ratio_test": 57.259953161592506,
+    "rmse_train": 0.09327656593203942,
+    "rmse_test": 0.06400647760357883,
     "n_features": 25,
-    "best_iteration": 19,
+    "best_iteration": 20,
     "top_features": [
         {
             "feature": "Net_Commercial",
-            "importance": 0.0791269987821579
+            "importance": 0.08069786429405212
         },
         {
             "feature": "Yield_10Y",
-            "importance": 0.06814266741275787
-        },
-        {
-            "feature": "VIX",
-            "importance": 0.060689978301525116
+            "importance": 0.06285669654607773
         },
         {
             "feature": "Breakeven_5Y5Y",
-            "importance": 0.05979636684060097
+            "importance": 0.0601835660636425
         },
         {
-            "feature": "PPI_MoM",
-            "importance": 0.05181939899921417
+            "feature": "VIX",
+            "importance": 0.056682318449020386
         },
         {
-            "feature": "DXY",
-            "importance": 0.05154348164796829
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.054247982800006866
         },
         {
             "feature": "M2_MoM",
-            "importance": 0.051348548382520676
+            "importance": 0.05246857553720474
+        },
+        {
+            "feature": "DXY",
+            "importance": 0.05030559375882149
         },
         {
             "feature": "CPI_MoM_lag3",
-            "importance": 0.04868882894515991
-        },
-        {
-            "feature": "NFP_Change_lag3",
-            "importance": 0.04646782949566841
+            "importance": 0.04849773272871971
         },
         {
             "feature": "M2_YoY",
-            "importance": 0.04636445641517639
+            "importance": 0.04765807092189789
+        },
+        {
+            "feature": "NFP_Change_lag3",
+            "importance": 0.045825958251953125
         }
     ]
 }

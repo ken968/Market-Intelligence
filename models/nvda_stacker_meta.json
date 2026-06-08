@@ -1,0 +1,34 @@
+{
+    "asset": "nvda",
+    "horizon_days": 7,
+    "feature_names": [
+        "lstm_pred",
+        "xgb_pred",
+        "VIX",
+        "GK_Vol_21d",
+        "Sentiment",
+        "YieldCurve_10Y2Y",
+        "DXY",
+        "vix_percentile_252d",
+        "return_zscore_90d",
+        "roll_corr_spy_90d"
+    ],
+    "hit_ratio_lstm": 49.13294797687861,
+    "hit_ratio_xgb": 49.71098265895954,
+    "hit_ratio_direction_head": 52.02312138728323,
+    "rmse_magnitude_head": 0.059562578224035725,
+    "hit_ratio_combined": 52.02312138728323,
+    "rmse_combined": 0.05480184802329496,
+    "direction_feature_importance": {
+        "lstm_pred": 0.17630254253580716,
+        "xgb_pred": 0.002040148787413255,
+        "VIX": 0.1257393008623108,
+        "GK_Vol_21d": 0.12022768175915684,
+        "Sentiment": 0.0,
+        "YieldCurve_10Y2Y": 0.10431629877929416,
+        "DXY": 0.16287391601608028,
+        "vix_percentile_252d": 0.10433962313918368,
+        "return_zscore_90d": 0.04831252068320028,
+        "roll_corr_spy_90d": 0.15584796743755355
+    }
+}

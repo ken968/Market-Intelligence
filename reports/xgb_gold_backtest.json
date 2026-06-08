@@ -2,52 +2,52 @@
     "asset": "gold",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 64.69557599649583,
-    "hit_ratio_test": 65.14886164623468,
-    "rmse_train": 0.02202100903537948,
-    "rmse_test": 0.03477604968030445,
+    "hit_ratio_train": 65.33916849015317,
+    "hit_ratio_test": 64.86013986013987,
+    "rmse_train": 0.021985556926959755,
+    "rmse_test": 0.034735017335920104,
     "n_features": 25,
     "best_iteration": 39,
     "top_features": [
         {
             "feature": "VIX",
-            "importance": 0.0967135950922966
-        },
-        {
-            "feature": "CPI_MoM_lag6",
-            "importance": 0.06549994647502899
+            "importance": 0.09782290458679199
         },
         {
             "feature": "YieldCurve_10Y2Y",
-            "importance": 0.0652613714337349
+            "importance": 0.08194229006767273
         },
         {
             "feature": "NFP_Change_lag3",
-            "importance": 0.06460592150688171
+            "importance": 0.06837854534387589
+        },
+        {
+            "feature": "CPI_MoM_lag6",
+            "importance": 0.0659787505865097
         },
         {
             "feature": "PPI_MoM",
-            "importance": 0.06339794397354126
-        },
-        {
-            "feature": "DXY",
-            "importance": 0.06273175776004791
-        },
-        {
-            "feature": "NFP_Change",
-            "importance": 0.06251370161771774
+            "importance": 0.06266194581985474
         },
         {
             "feature": "CPI_MoM",
-            "importance": 0.06173915043473244
+            "importance": 0.061162009835243225
         },
         {
-            "feature": "Yield_10Y",
-            "importance": 0.05998476222157478
+            "feature": "NFP_Change",
+            "importance": 0.061129674315452576
+        },
+        {
+            "feature": "CPI_MoM_lag3",
+            "importance": 0.05843927711248398
+        },
+        {
+            "feature": "DXY",
+            "importance": 0.05811043083667755
         },
         {
             "feature": "Breakeven_5Y5Y",
-            "importance": 0.05729246884584427
+            "importance": 0.05769173800945282
         }
     ]
 }

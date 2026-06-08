@@ -1,0 +1,34 @@
+{
+    "asset": "tsla",
+    "horizon_days": 7,
+    "feature_names": [
+        "lstm_pred",
+        "xgb_pred",
+        "VIX",
+        "GK_Vol_21d",
+        "Sentiment",
+        "YieldCurve_10Y2Y",
+        "DXY",
+        "vix_percentile_252d",
+        "return_zscore_90d",
+        "roll_corr_spy_90d"
+    ],
+    "hit_ratio_lstm": 58.38150289017341,
+    "hit_ratio_xgb": 45.664739884393065,
+    "hit_ratio_direction_head": 45.08670520231214,
+    "rmse_magnitude_head": 0.06771726742009372,
+    "hit_ratio_combined": 45.08670520231214,
+    "rmse_combined": 0.06165661985721136,
+    "direction_feature_importance": {
+        "lstm_pred": 0.16791176629875823,
+        "xgb_pred": 0.04319048428151677,
+        "VIX": 0.08661105176167681,
+        "GK_Vol_21d": 0.1802331800471507,
+        "Sentiment": 0.0,
+        "YieldCurve_10Y2Y": 0.10641109513448321,
+        "DXY": 0.14503527553500828,
+        "vix_percentile_252d": 0.07225080772877224,
+        "return_zscore_90d": 0.06798298713641418,
+        "roll_corr_spy_90d": 0.13037335207621975
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "asset": "msft",
+    "horizon_days": 7,
+    "feature_names": [
+        "lstm_pred",
+        "xgb_pred",
+        "VIX",
+        "GK_Vol_21d",
+        "Sentiment",
+        "YieldCurve_10Y2Y",
+        "DXY",
+        "vix_percentile_252d",
+        "return_zscore_90d",
+        "roll_corr_spy_90d"
+    ],
+    "hit_ratio_lstm": 47.97687861271676,
+    "hit_ratio_xgb": 47.398843930635834,
+    "hit_ratio_direction_head": 56.64739884393064,
+    "rmse_magnitude_head": 0.0471033703825838,
+    "hit_ratio_combined": 56.64739884393064,
+    "rmse_combined": 0.046737064413308695,
+    "direction_feature_importance": {
+        "lstm_pred": 0.08134137239473643,
+        "xgb_pred": 0.07091532050265754,
+        "VIX": 0.12113906152082582,
+        "GK_Vol_21d": 0.09474698289809308,
+        "Sentiment": 0.0,
+        "YieldCurve_10Y2Y": 0.10732810012409567,
+        "DXY": 0.16508663227898024,
+        "vix_percentile_252d": 0.07512869044328084,
+        "return_zscore_90d": 0.044290054438009596,
+        "roll_corr_spy_90d": 0.24002378539932084
+    }
+}

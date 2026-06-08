@@ -1,0 +1,53 @@
+{
+    "asset": "msft",
+    "model_type": "xgboost_macro",
+    "horizon_days": 7,
+    "hit_ratio_train": 68.8840262582057,
+    "hit_ratio_test": 52.44755244755245,
+    "rmse_train": 0.033414803538472725,
+    "rmse_test": 0.04025872310050114,
+    "n_features": 20,
+    "best_iteration": 29,
+    "top_features": [
+        {
+            "feature": "PCE_MoM",
+            "importance": 0.07809671759605408
+        },
+        {
+            "feature": "CPI_MoM_lag6",
+            "importance": 0.07699739187955856
+        },
+        {
+            "feature": "CPI_MoM",
+            "importance": 0.07051043957471848
+        },
+        {
+            "feature": "CPI_MoM_lag3",
+            "importance": 0.06772338598966599
+        },
+        {
+            "feature": "Yield_10Y_Rate",
+            "importance": 0.06245710328221321
+        },
+        {
+            "feature": "GK_Vol_21d",
+            "importance": 0.06213727220892906
+        },
+        {
+            "feature": "PPI_MoM",
+            "importance": 0.0604889914393425
+        },
+        {
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.05674760416150093
+        },
+        {
+            "feature": "M2_MoM",
+            "importance": 0.055194731801748276
+        },
+        {
+            "feature": "Yield_10Y",
+            "importance": 0.054666705429553986
+        }
+    ]
+}

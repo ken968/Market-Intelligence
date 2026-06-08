@@ -1,0 +1,53 @@
+{
+    "asset": "googl",
+    "model_type": "xgboost_macro",
+    "horizon_days": 7,
+    "hit_ratio_train": 72.12253829321664,
+    "hit_ratio_test": 64.6853146853147,
+    "rmse_train": 0.03350875402204061,
+    "rmse_test": 0.049940113201560554,
+    "n_features": 20,
+    "best_iteration": 60,
+    "top_features": [
+        {
+            "feature": "CPI_MoM_lag6",
+            "importance": 0.08995925635099411
+        },
+        {
+            "feature": "NFP_Change",
+            "importance": 0.07506511360406876
+        },
+        {
+            "feature": "CPI_MoM_lag3",
+            "importance": 0.07194032520055771
+        },
+        {
+            "feature": "CPI_MoM",
+            "importance": 0.06923911720514297
+        },
+        {
+            "feature": "GK_Vol_21d",
+            "importance": 0.0649786964058876
+        },
+        {
+            "feature": "M2_MoM",
+            "importance": 0.06335429847240448
+        },
+        {
+            "feature": "DXY",
+            "importance": 0.05725565925240517
+        },
+        {
+            "feature": "PCE_MoM",
+            "importance": 0.05712911859154701
+        },
+        {
+            "feature": "VIX",
+            "importance": 0.0560983270406723
+        },
+        {
+            "feature": "PPI_MoM",
+            "importance": 0.055679768323898315
+        }
+    ]
+}

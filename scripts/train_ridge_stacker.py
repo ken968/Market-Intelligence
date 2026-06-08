@@ -55,9 +55,11 @@ _random.seed(42)
 import numpy as np
 np.random.seed(42)
 
-from sklearn.linear_model import LogisticRegressionCV, HuberRegressor
+from sklearn.linear_model import LogisticRegressionCV, HuberRegressor, Ridge
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, accuracy_score
+from sklearn.model_selection import GridSearchCV
 import xgboost as xgb
 from utils.config import ASSETS
 
@@ -94,9 +96,9 @@ def get_lstm_pct_predictions(asset_key: str, df_test: pd.DataFrame) -> np.ndarra
     Returns zeros if model not found (falls back gracefully).
     """
     config = ASSETS[asset_key]
-    feat_scaler_path   = config['scaler_file']
-    target_scaler_path = config['scaler_file'].replace('.pkl', '_target.pkl')
-    model_path         = config['model_file']
+    feat_scaler_path   = f'models/{asset_key}_scaler_{HORIZON_DAYS}d.pkl'
+    target_scaler_path = f'models/{asset_key}_scaler_{HORIZON_DAYS}d_target.pkl'
+    model_path         = f'models/{asset_key}_model_{HORIZON_DAYS}d.keras'
 
     files_needed = [model_path, feat_scaler_path, target_scaler_path]
     if not all(os.path.exists(p) for p in files_needed):
@@ -300,17 +302,17 @@ def train_dual_head_stacker(asset_key: str) -> dict:
     X_ev_sc = meta_scaler.transform(X_ev)
 
     # ════════════════════════════════════════════════════════════════════════
-    #  HEAD 1: Direction Head — LogisticRegressionCV
-    #  Optimizes for directional accuracy (hit ratio)
-    #  class_weight='balanced': compensates if UP/DOWN class is imbalanced
+    #  HEAD 1: Direction Head — XGBClassifier (Non-Linear)
+    #  Upgraded from LogisticRegression to capture non-linear regime shifts
     # ════════════════════════════════════════════════════════════════════════
-    dir_head = LogisticRegressionCV(
-        Cs=[0.01, 0.1, 1.0, 10.0, 100.0],
-        cv=5,
-        max_iter=500,
-        class_weight='balanced',   # key: handles UP/DOWN imbalance
-        scoring='accuracy',
+    # We use a robust Random Forest or XGBoost to handle non-linear meta-patterns
+    dir_head = RandomForestClassifier(
+        n_estimators=200,
+        max_depth=5,
+        min_samples_leaf=3,
+        class_weight='balanced',
         random_state=42,
+        n_jobs=-1
     )
     dir_head.fit(X_tr_sc, y_dir_tr)
 
@@ -330,9 +332,9 @@ def train_dual_head_stacker(asset_key: str) -> dict:
     #  epsilon=1.35: outliers > 1.35 std get linear (not quadratic) penalty
     # ════════════════════════════════════════════════════════════════════════
     mag_head = HuberRegressor(
-        epsilon=1.35,   # Standard Huber threshold
-        alpha=0.001,    # L2 regularization
-        max_iter=500,
+        epsilon=1.35,
+        alpha=0.1,    # Increased L2 regularization to prevent overfitting magnitude
+        max_iter=1000,
     )
     mag_head.fit(X_tr_sc, y_pct_tr)
 
@@ -374,12 +376,14 @@ def train_dual_head_stacker(asset_key: str) -> dict:
     print(f"  Direction Head      Hit Ratio: {hr_dir_eval:.1f}%  (optimized for direction)")
     print(f"  Magnitude Head      RMSE:      {rmse_mag_eval:.6f}  (optimized for magnitude)")
     print(f"  Combined (D×M)      Hit Ratio: {hr_combined_eval:.1f}%  | RMSE: {rmse_combined:.6f}")
-    print(f"\n  Direction Head best_C: {dir_head.C_[0]:.4f}")
-    print(f"\n  Direction Head coefficients (what drives UP/DOWN call):")
-    for name, coef in zip(feature_names, dir_head.coef_[0]):
-        bar_len = min(int(abs(coef) * 10), 30)
-        bar = ('+' if coef > 0 else '-') * bar_len
-        print(f"    {name:<22} {coef:+.4f}  {bar}")
+
+    print(f"\n  Direction Head Feature Importances (Non-Linear):")
+    # RandomForest feature importances instead of linear coefs
+    importances = dir_head.feature_importances_
+    for name, imp in zip(feature_names, importances):
+        bar_len = min(int(imp * 100), 30)
+        bar = '|' * bar_len
+        print(f"    {name:<22} {imp:.4f}  {bar}")
 
     # ── Save ─────────────────────────────────────────────────────────────────
     os.makedirs('models', exist_ok=True)
@@ -405,8 +409,7 @@ def train_dual_head_stacker(asset_key: str) -> dict:
         'rmse_magnitude_head': rmse_mag_eval,
         'hit_ratio_combined': hr_combined_eval,
         'rmse_combined': rmse_combined,
-        'best_C_direction': float(dir_head.C_[0]),
-        'direction_coefs': dict(zip(feature_names, dir_head.coef_[0].tolist())),
+        'direction_feature_importance': dict(zip(feature_names, importances.tolist())),
     }
 
     with open(meta_path, 'w') as f: json.dump(result, f, indent=4)

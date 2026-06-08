@@ -28,13 +28,13 @@
     "horizon_days": 90,
     "sequence_length": 60,
     "target_type": "pct_change_90d",
-    "hit_ratio_test": 47.91208791208791,
+    "hit_ratio_test": 52.96703296703297,
     "naive_hit_ratio": 81.31868131868131,
-    "skill_score": -178.82352941176464,
-    "information_coefficient": 0.3484089756753796,
+    "skill_score": -151.76470588235287,
+    "information_coefficient": 0.35297197585627915,
     "dominance_flagged": true,
-    "rmse_test": 0.090611285520292,
-    "n_train": 2176,
+    "rmse_test": 0.1047454688573371,
+    "n_train": 2178,
     "n_test": 455,
     "target_scaler_path": "models/spy_scaler_90d_target.pkl"
 }

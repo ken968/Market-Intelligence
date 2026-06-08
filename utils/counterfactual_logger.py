@@ -44,6 +44,12 @@ def log_forecast(
     """
     os.makedirs('data', exist_ok=True)
 
+    # Convert forecast_date to string if it's a pandas Timestamp
+    if hasattr(forecast_date, 'strftime'):
+        forecast_date = forecast_date.strftime('%Y-%m-%d')
+    else:
+        forecast_date = str(forecast_date)[:10]
+
     record = {
         'logged_at':          datetime.now(timezone.utc).isoformat(),
         'forecast_date':      forecast_date,
