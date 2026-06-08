@@ -423,12 +423,21 @@ def train_dual_head_stacker(asset_key: str) -> dict:
 # ─────────────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        train_dual_head_stacker(sys.argv[1])
+        target = sys.argv[1].lower()
+        if target == 'all':
+            print("Training Dual-Head Stacker for all available assets...")
+            for asset in ASSETS.keys():
+                try:
+                    train_dual_head_stacker(asset)
+                except Exception as e:
+                    print(f"Error training stacker for {asset}: {e}")
+        else:
+            train_dual_head_stacker(target)
     else:
-        print("Training Dual-Head Stacker for Gold, BTC, and SPY...")
+        print("No asset specified. Training Gold, BTC, and SPY...")
         for asset in ['gold', 'btc', 'spy']:
             try:
                 train_dual_head_stacker(asset)
             except Exception as e:
-                print(f"Error on {asset}: {e}")
+                print(f"Error training {asset}: {e}")
                 import traceback; traceback.print_exc()

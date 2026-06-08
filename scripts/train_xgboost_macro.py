@@ -306,8 +306,18 @@ class XGBoostTrainer:
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        trainer = XGBoostTrainer(sys.argv[1])
-        result = trainer.train()
+        target = sys.argv[1].lower()
+        if target == 'all':
+            print("Training all available assets...")
+            for asset in ASSETS.keys():
+                try:
+                    trainer = XGBoostTrainer(asset)
+                    trainer.train()
+                except Exception as e:
+                    print(f"Error training {asset}: {e}")
+        else:
+            trainer = XGBoostTrainer(target)
+            result = trainer.train()
     else:
         print("No asset specified. Training Gold, BTC, and SPY...")
         for asset in ['gold', 'btc', 'spy']:
