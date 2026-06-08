@@ -4,50 +4,50 @@
     "horizon_days": 7,
     "hit_ratio_train": 66.3457330415755,
     "hit_ratio_test": 59.96503496503497,
-    "rmse_train": 0.022195311421595906,
-    "rmse_test": 0.021938720037002576,
+    "rmse_train": 0.022195308035048635,
+    "rmse_test": 0.021938726457419237,
     "n_features": 20,
     "best_iteration": 81,
     "top_features": [
         {
             "feature": "Yield_10Y",
-            "importance": 0.11784794926643372
+            "importance": 0.11784780770540237
         },
         {
             "feature": "YieldCurve_10Y2Y",
-            "importance": 0.10729373246431351
+            "importance": 0.10729390382766724
         },
         {
             "feature": "NFP_Change",
-            "importance": 0.10576947033405304
+            "importance": 0.10576929897069931
         },
         {
             "feature": "DXY",
-            "importance": 0.10509286820888519
+            "importance": 0.1050931066274643
         },
         {
             "feature": "Oil_Price",
-            "importance": 0.06893570721149445
+            "importance": 0.06893564760684967
         },
         {
             "feature": "CPI_MoM_lag3",
-            "importance": 0.061818111687898636
+            "importance": 0.06181808561086655
         },
         {
             "feature": "GK_Vol_21d",
-            "importance": 0.05984954535961151
+            "importance": 0.05984944850206375
         },
         {
             "feature": "VIX",
-            "importance": 0.05944383516907692
+            "importance": 0.05944383144378662
         },
         {
             "feature": "CPI_MoM_lag6",
-            "importance": 0.05452860891819
+            "importance": 0.05452870577573776
         },
         {
             "feature": "Breakeven_5Y5Y",
-            "importance": 0.052156247198581696
+            "importance": 0.05215641111135483
         }
     ]
 }

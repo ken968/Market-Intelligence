@@ -31,9 +31,9 @@
     "hit_ratio_test": 53.20284697508897,
     "naive_hit_ratio": 53.20284697508897,
     "skill_score": 0.0,
-    "information_coefficient": -0.019508307220929614,
+    "information_coefficient": 0.06943333247363326,
     "dominance_flagged": false,
-    "rmse_test": 0.019815085022807242,
+    "rmse_test": 0.019800135191369514,
     "n_train": 2249,
     "n_test": 562,
     "target_scaler_path": "models/amzn_scaler_1d_target.pkl"

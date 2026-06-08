@@ -32,11 +32,11 @@ class TwitterSentimentFetcher(BaseSentimentFetcher):
         if not self.bearer_token:
             print("Warning: X_BEARER_TOKEN missing. Twitter fetcher disabled.")
         if not self.xai_api_key:
-            print("Warning: XAI_API_KEY missing. Sentiment classification will fallback to TextBlob.")
+            print("Warning: XAI_API_KEY missing. Sentiment classification will fallback to FinBERT.")
             
-        # Optional fallback to TextBlob if xAI is missing
+        # Optional fallback to FinBERT if xAI is missing
         if not self.xai_api_key:
-            from textblob import TextBlob
+            # We will use FinBERT in the sentiment classification method if xAI fails
             self._textblob_fallback = True
         else:
             self._textblob_fallback = False
@@ -110,8 +110,8 @@ class TwitterSentimentFetcher(BaseSentimentFetcher):
         Uses xAI API if available.
         """
         if self._textblob_fallback:
-            from textblob import TextBlob
-            return TextBlob(text).sentiment.polarity
+            from utils.finbert_analyzer import get_finbert_sentiment
+            return get_finbert_sentiment(text)
             
         try:
             # Call Grok
@@ -138,8 +138,8 @@ class TwitterSentimentFetcher(BaseSentimentFetcher):
             
         except Exception as e:
             # Silently fallback to TextBlob if API fails for one tweet
-            from textblob import TextBlob
-            return TextBlob(text).sentiment.polarity
+            from utils.finbert_analyzer import get_finbert_sentiment
+            return get_finbert_sentiment(text)
 
 if __name__ == "__main__":
     fetcher = TwitterSentimentFetcher()

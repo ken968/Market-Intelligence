@@ -5,7 +5,7 @@
     "hit_ratio_train": 65.33916849015317,
     "hit_ratio_test": 64.86013986013987,
     "rmse_train": 0.021985556926959755,
-    "rmse_test": 0.034735017335920104,
+    "rmse_test": 0.034746568480775585,
     "n_features": 25,
     "best_iteration": 39,
     "top_features": [

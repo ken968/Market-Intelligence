@@ -5,7 +5,7 @@ Free tier: 60 calls/minute, company news
 
 import requests
 from datetime import datetime, timedelta
-from textblob import TextBlob
+from utils.finbert_analyzer import get_finbert_sentiment
 from typing import List, Dict
 from .base_fetcher import BaseSentimentFetcher
 
@@ -68,9 +68,9 @@ class FinnhubFetcher(BaseSentimentFetcher):
             results = []
             for article in articles[:30]:  # Limit to 30
                 try:
-                    # Analyze sentiment
-                    text = f"{article.get('headline', '')} {article.get('summary', '')}"
-                    sentiment = TextBlob(text).sentiment.polarity
+                    # Analyze sentiment using FinBERT (Headline + Summary for deeper context)
+                    text = f"{article.get('headline', '')}. {article.get('summary', '')}"
+                    sentiment = get_finbert_sentiment(text)
                     
                     pub_date = datetime.fromtimestamp(article.get('datetime', 0))
                     

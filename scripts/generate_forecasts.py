@@ -90,6 +90,9 @@ def main():
 
     # Get target assets
     if args.asset.lower() == 'all':
+        # Default changed to essential macro assets to save API tokens & time
+        assets_to_run = ['btc', 'gold', 'spy']
+    elif args.asset.lower() == 'everything':
         assets_to_run = ['gold', 'btc'] + [t.lower() for t in STOCK_TICKERS.keys()]
     else:
         assets_to_run = [a.strip() for a in args.asset.lower().split(',')]

@@ -29,13 +29,13 @@
     "horizon_days": 1,
     "sequence_length": 90,
     "target_type": "pct_change_1d",
-    "hit_ratio_test": 49.88066825775656,
-    "naive_hit_ratio": 50.11933174224343,
-    "skill_score": -0.4784688995215259,
+    "hit_ratio_test": 50.0,
+    "naive_hit_ratio": 50.0,
+    "skill_score": 0.0,
     "information_coefficient": 0.0,
     "dominance_flagged": false,
-    "rmse_test": 0.025568761789590732,
-    "n_train": 3352,
+    "rmse_test": 0.025570621991954572,
+    "n_train": 3353,
     "n_test": 838,
     "target_scaler_path": "models/btc_scaler_1d_target.pkl"
 }

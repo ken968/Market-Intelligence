@@ -95,9 +95,11 @@ mindmap
         ("Magnitude Head Huber Regressor")
         ("Volatility-Adjusted Synthesis")
       ("CEO Layer LLM Override")
-        ("Qualitative Bias Injection Gemini")
+      ("CEO Layer LLM Override")
+        ("Multi-LLM Failsafe Pipeline")
         ("Causal Chain Reasoning")
         ("Drift Multiplier & Bias Vector")
+        ("Zero-Vector Injection Fallback")
     ("Data Engineering Pipeline")
       ("DuckDB OLAP Warehouse")
         ("Columnar Storage Layout")
@@ -117,6 +119,7 @@ mindmap
       ("Garman-Klass Volatility")
     ("Machine Learning Architecture")
       ("Direct Multi-Step Forecasting 1D-90D")
+      ("Walk-Forward Cross Validation")
       ("Feature vs Target Scaler Isolation")
       ("Trajectory Smoothing Interpolation")
       ("Power-Law Momentum Decay")
@@ -142,17 +145,18 @@ mindmap
       ("Crypto Fear & Greed Index")
       ("Google Trends Search Momentum")
       ("CME FedWatch Policy Parser")
-      ("FinBERT Sentiment Analysis")
+      ("FinBERT Deep Learning Sentiment")
 ```
 
 The system uses a strict **3-Layer Causal Hierarchy** to separate model concerns:
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│  LAYER 3 — CEO Layer (Gemini LLM Contextual Bias)           │
+│  LAYER 3 — CEO Layer (Multi-LLM Contextual Bias)            │
 │  Purpose: Inject macro narrative & regime context           │
 │  Input:   News headlines + macro_summary                    │
 │  Output:  drift_multiplier ∈ [0.85, 1.15] + bias_vector    │
+│  Failsafe: Zero-Vector Injection (Offline Quant Mode)       │
 │  File:    utils/llm_manager.py                              │
 ├─────────────────────────────────────────────────────────────┤
 │  LAYER 2 — Manager Layer (Dual-Head Ensemble Stacker)       │

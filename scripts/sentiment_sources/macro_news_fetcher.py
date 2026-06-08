@@ -21,8 +21,8 @@ try:
     from utils.finbert_analyzer import get_finbert_sentiment
 except ImportError:
     def get_finbert_sentiment(text):
-        from textblob import TextBlob
-        return TextBlob(text).sentiment.polarity
+        # Fallback to simple zero if neither is available
+        return 0.0
 
 from dotenv import load_dotenv
 load_dotenv()

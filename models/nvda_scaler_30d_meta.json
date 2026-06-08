@@ -31,9 +31,9 @@
     "hit_ratio_test": 58.44402277039848,
     "naive_hit_ratio": 58.44402277039848,
     "skill_score": 0.0,
-    "information_coefficient": -0.032347267598095523,
+    "information_coefficient": -0.12202957016576689,
     "dominance_flagged": false,
-    "rmse_test": 0.15758628510008083,
+    "rmse_test": 0.17260834823020335,
     "n_train": 2226,
     "n_test": 527,
     "target_scaler_path": "models/nvda_scaler_30d_target.pkl"

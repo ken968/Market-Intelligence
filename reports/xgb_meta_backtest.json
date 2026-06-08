@@ -4,14 +4,14 @@
     "horizon_days": 7,
     "hit_ratio_train": 59.69365426695843,
     "hit_ratio_test": 54.54545454545454,
-    "rmse_train": 0.05780203641617607,
-    "rmse_test": 0.05805052016267906,
+    "rmse_train": 0.057802031591439804,
+    "rmse_test": 0.05805051970655165,
     "n_features": 20,
     "best_iteration": 1,
     "top_features": [
         {
             "feature": "CPI_MoM_lag3",
-            "importance": 0.12579408288002014
+            "importance": 0.12579411268234253
         },
         {
             "feature": "M2_YoY",
@@ -19,31 +19,31 @@
         },
         {
             "feature": "PCE_MoM",
-            "importance": 0.09254935383796692
+            "importance": 0.09254932403564453
         },
         {
             "feature": "Yield_10Y",
-            "importance": 0.08075979351997375
+            "importance": 0.08075976371765137
         },
         {
             "feature": "PPI_MoM",
-            "importance": 0.05931242182850838
+            "importance": 0.05931244045495987
         },
         {
             "feature": "DXY",
-            "importance": 0.05862758308649063
+            "importance": 0.05862759053707123
         },
         {
             "feature": "NFP_Change",
-            "importance": 0.05850590392947197
+            "importance": 0.05850590765476227
         },
         {
             "feature": "GK_Vol_21d",
-            "importance": 0.05435190722346306
+            "importance": 0.05435189604759216
         },
         {
             "feature": "Yield_10Y_Rate",
-            "importance": 0.050684910267591476
+            "importance": 0.05068492889404297
         },
         {
             "feature": "CPI_MoM_lag6",

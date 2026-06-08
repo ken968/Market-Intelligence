@@ -65,3 +65,14 @@ This penalizes outliers linearly rather than quadratically, rendering the magnit
 The predictions of the two heads are combined to generate the final expected return signal:
 $$ \text{Final Return} = (2 \cdot P(\text{Up}) - 1) \cdot |\text{Expected Magnitude}| $$
 Where `P(Up)` is the probability output of the Direction Head, and `Expected_Magnitude` is the output of the Huber Regressor. This design resolves "Hesitation Bias" (where conflicting base models cause the ensemble to output a timid near-zero prediction) by forcing a directional choice scaled by historical volatility expectations.
+
+## 5. Walk-Forward Cross Validation (Temporal Leakage Prevention)
+Standard Machine Learning practices use a static 80/20 train/test split. In financial markets, this is a critical flaw. A static test set (e.g., testing on the 2024-2026 bull market) will artificially inflate the model's accuracy simply because the market trend was dominant ("Dominance Effect").
+
+To capture true predictive skill (measured by the Information Coefficient and Skill Score), the system utilizes **Walk-Forward Cross Validation**:
+1. The historical data is split into multiple sequential, non-overlapping evaluation windows.
+2. The model trains on `Window 1` and tests on `Window 2`.
+3. The train window slides forward to include `Window 2`, and tests on `Window 3`.
+4. This repeats across different market regimes (Bull, Bear, Sideways, High Volatility).
+
+This ensures the reported Hit Ratio represents the model's genuine edge across all macroeconomic climates, purging look-ahead bias and regime-specific overfitting.

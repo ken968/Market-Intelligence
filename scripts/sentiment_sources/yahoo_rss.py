@@ -4,7 +4,7 @@ Unlimited free access, no API key required
 """
 
 import feedparser
-from textblob import TextBlob
+from utils.finbert_analyzer import get_finbert_sentiment
 from datetime import datetime, timedelta
 from typing import List, Dict
 from .base_fetcher import BaseSentimentFetcher
@@ -56,9 +56,9 @@ class YahooRSSFetcher(BaseSentimentFetcher):
                     if pub_date < cutoff_date:
                         continue
                     
-                    # Analyze sentiment using TextBlob
-                    text = f"{entry.title} {entry.get('summary', '')}"
-                    sentiment = TextBlob(text).sentiment.polarity
+                    # Analyze sentiment using FinBERT (Headline + Summary for context)
+                    text = f"{entry.title}. {entry.get('summary', '')}"
+                    sentiment = get_finbert_sentiment(text)
                     
                     results.append({
                         'title': entry.title,

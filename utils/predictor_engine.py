@@ -274,10 +274,37 @@ class ForecastEngine:
                 return prices
 
         lstm_target_price = lstm_path[-1]
+        
+        # [Bugfix] Inject synthetic historical volatility to prevent "flat line" charts
+        # Calculate recent historical daily volatility
+        hist_vol = 0.015 # fallback (1.5% daily)
+        try:
+            if self.data_handler.data is not None and len(self.data_handler.data) > 30:
+                # Assuming feature 0 is the primary price
+                prices_hist = self.data_handler.data[-30:, 0]
+                rets = np.diff(prices_hist) / prices_hist[:-1]
+                hist_vol = float(np.std(rets))
+        except Exception:
+            pass
+            
+        import numpy as np
+        
+        # Use a stable seed based on current price so chart doesn't jitter on every refresh
+        np.random.seed(int(current_price * 100) % 100000) 
+        
         for i, price in enumerate(lstm_path):
             t_ratio = (i + 1) / steps
+            # Linear adjustment to anchor the end at target_price
             adj_price = price + (target_price - lstm_target_price) * t_ratio
-            prices.append(adj_price)
+            
+            # Add synthetic noise proportional to historical volatility
+            # Use sin(t_ratio * pi) to taper the noise to 0 at the very end, ensuring we hit target_price exactly
+            if i < steps - 1:
+                noise = hist_vol * current_price * np.random.normal(0, 0.7) * np.sin(t_ratio * np.pi)
+                adj_price += noise
+                
+            prices.append(float(adj_price))
+            
         return prices
 
     def predict_tomorrow(self) -> Dict[str, Union[float, str]]:

@@ -4,7 +4,7 @@ Free tier: 25 calls/day, market news and sentiment
 """
 
 import requests
-from textblob import TextBlob
+
 from datetime import datetime
 from typing import List, Dict
 from .base_fetcher import BaseSentimentFetcher
@@ -60,9 +60,11 @@ class AlphaVantageFetcher(BaseSentimentFetcher):
             results = []
             for article in data['feed'][:30]:
                 try:
-                    # Alpha Vantage provides sentiment score, but we'll use TextBlob for consistency
-                    text = f"{article.get('title', '')} {article.get('summary', '')}"
-                    sentiment = TextBlob(text).sentiment.polarity
+                    # Use Alpha Vantage's native AI sentiment score for financial context
+                    try:
+                        sentiment = float(article.get('overall_sentiment_score', 0.0))
+                    except (ValueError, TypeError):
+                        sentiment = 0.0
                     
                     # Parse date
                     pub_date = article.get('time_published', '')[:10]

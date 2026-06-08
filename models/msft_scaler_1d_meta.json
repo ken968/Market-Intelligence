@@ -31,9 +31,9 @@
     "hit_ratio_test": 52.49110320284698,
     "naive_hit_ratio": 52.49110320284698,
     "skill_score": 0.0,
-    "information_coefficient": 0.059746056317475545,
+    "information_coefficient": 0.12880854595501934,
     "dominance_flagged": false,
-    "rmse_test": 0.01568977130743406,
+    "rmse_test": 0.015703483462113532,
     "n_train": 2249,
     "n_test": 562,
     "target_scaler_path": "models/msft_scaler_1d_target.pkl"
