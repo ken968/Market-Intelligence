@@ -1,0 +1,104 @@
+# MARKET INTELLIGENCE TERMINAL — SYSTEM UPGRADES & ARCHITECTURE LOG (PHASE 1 - 7)
+Status: FINAL TECHNICAL SPECIFICATION
+Date: 2026-06-08
+
+Dokumen ini berisi log teknis dan spesifikasi arsitektur tingkat rendah dari semua *upgrade* yang diterapkan pada Market Intelligence Terminal selama 2 minggu terakhir. Dokumen ini dirancang sebagai konteks teknis untuk LLM/NotebookLM, tanpa simplifikasi.
+
+================================================================================
+PHASE 1: QUICK WINS & FEATURE ENGINEERING PIPELINE
+================================================================================
+1. Frequency-Aware Z-Score Normalization
+   - **Problem**: Indikator rilis bulanan FRED (CPI, NFP) menghasilkan vektor statis selama 20-30 baris (karena fetcher berjalan harian). Kalkulasi Z-Score 14-hari standar menghasilkan Standar Deviasi (σ) = 0.
+   - **Technical Upgrade**: Algoritma `xai_explainer.py` diubah untuk mendeteksi varians. Jika `np.std(window[-14:]) < 1e-6`, sistem secara otomatis menggeser *lookback window* menjadi `n=30` atau `n=60` untuk menangkap rilis periode sebelumnya.
+
+2. Macroeconomic Transmission Lags
+   - **Problem**: Transmisi moneter ke ekonomi riil memakan waktu. Memasukkan `CPI_MoM(t)` murni mengabaikan efek kausalitas tertunda.
+   - **Technical Upgrade**: Penambahan operator `.shift(n)` pada pipeline Polars: `CPI_MoM_lag3`, `CPI_MoM_lag6`, `CPI_MoM_lag12`, `NFP_lag3`. Fitur lagged ini ditambahkan ke input tensor LSTM.
+
+3. Dynamic Recession Risk Score
+   - **Problem**: Threshold hard-coded (e.g., T10Y2Y < -0.5 = Resesi) tidak valid lintas dekade karena pergeseran rezim suku bunga netral (R-star).
+   - **Technical Upgrade**: Konversi threshold absolut menjadi *Rolling Percentile*. `Risk Score = 1.0 - (T10Y2Y_current / T10Y2Y_max_rolling_3Y)`. Memungkinkan model mendeteksi kompresi *yield curve* meskipun nilainya positif absolut.
+
+================================================================================
+PHASE 2: LSTM ARCHITECTURE & MODULARIZATION
+================================================================================
+1. Multi-Head Self-Attention Integration
+   - **Architecture**: `Input(Timesteps, Features) -> LSTM(128, return_seq=True) -> MultiHeadAttention(num_heads=4, key_dim=128) -> LSTM(64) -> Dense(1)`.
+   - **Rationale**: MHA memungkinkan komputasi bobot perhatian dinamis ($Softmax(QK^T/\sqrt{d})V$). Model tidak lagi mengandalkan gerbang lupa (*forget gate*) murni LSTM untuk mengingat korelasi CPI 12 bulan lalu dengan NFP hari ini.
+
+2. Feature vs Target Scaler Isolation
+   - **Problem**: Penggunaan `MinMaxScaler` tunggal untuk array 2D menyebabkan Look-Ahead Bias saat `inverse_transform` (karena *scaler* fitur terkontaminasi min/max harga masa depan dalam batch).
+   - **Technical Upgrade**: Pemisahan objek `feature_scaler` dan `target_scaler`. Prediksi direkonstruksi menggunakan `target_scaler.inverse_transform()`.
+
+================================================================================
+PHASE 3: META-LEARNER ENSEMBLE (DUAL-HEAD STACKER)
+================================================================================
+Arsitektur berevolusi dari Base Learner tunggal menjadi Level-2 Stacking Ensemble.
+
+1. XGBoost Macro-Regime Model (Base Learner 2)
+   - **Input**: *Tabular data* (FRED Macro, Sentiment, COT). *Lagged timeseries* diratakan (*flattened*).
+   - **Objective Function**: `reg:squarederror`. Menangkap korelasi non-linear antar rilis ekonomi (misal: "Jika DXY naik DAN Yield 10Y > 4%, maka Equities = Bearish").
+
+2. Dual-Head Ridge Meta-Learner (The Manager)
+   - Menggabungkan probabilitas output LSTM dan XGBoost.
+   - **Head 1 (Directional Head)**: `LogisticRegressionCV`. Mengoptimalkan Binary Cross-Entropy Loss untuk output `P(Up)`.
+   - **Head 2 (Magnitude Head)**: `HuberRegressor(epsilon=1.35)`. Menggunakan Huber Loss untuk menebak absolut magnitudo perubahan % agar *robust* terhadap *outlier* (Black Monday).
+   - **Synthesis Equation**: $E(R) = (2 \cdot P(\text{Up}) - 1) \cdot |\text{Huber Magnitude}|$
+
+================================================================================
+PHASE 4: OLAP DATABASE (DUCKDB + POLARS)
+================================================================================
+1. DuckDB Migration
+   - Eksekusi analitik dipindahkan dari `pd.read_csv` ke memori DuckDB (Columnar Format).
+   - Memungkinkan operasi JOIN vektorisasi antara `ohlcv`, `fred_macro`, dan `sentiment_news` pada tingkat *microseconds*.
+
+2. Polars Rust Engine
+   - *Feature engineering pipeline* (Z-Score, EWMA, shift) diganti menggunakan pustaka `Polars` berbasis Rust dengan *zero-copy memory mapping* dan *multi-threaded parallelization*.
+   - **Fail-Safe**: Dual-write commit; setiap eksekusi ke DuckDB juga akan me-*write* ke `data/backups/{file}.csv`.
+
+================================================================================
+PHASE 5: ALTERNATIVE DATA (SMART MONEY & NLP)
+================================================================================
+1. COT (Commitment of Traders) Parser
+   - Integrasi langsung ke file CFTC CSV. Menghitung `Net_Commercial = Commercial_Long - Commercial_Short` (Posisi Hedger).
+   - Menjadi variabel prediktor dengan *Feature Importance* tertinggi (SHAP value) untuk model XAUUSD (Gold).
+
+2. Sentiment_Std Extraction
+   - Ekstraksi momen kedua (Varians) dari sentimen berita harian, bukan sekadar nilai rata-rata (Mean). Varians sentimen harian yang tinggi ditangkap oleh model sebagai rezim divergensi (ketidakpastian).
+
+================================================================================
+PHASE 6: INSTITUTIONAL RISK MANAGEMENT
+================================================================================
+1. OOD (Out-of-Distribution) Circuit Breaker
+   - **Trigger**: $\sum [|Z_{macro}| > 3.0] \ge 3$ ATAU $VIX > 35$.
+   - **Execution**: Signal layer dipaksa (Hard Override) menjadi HOLD / 0% Allocation. Menghentikan perdagangan algoritmik saat terjadi *Black Swan event*.
+
+2. Garman-Klass Volatility Stop-Loss
+   - Formula: $\sigma_{GK}^2 = \frac{1}{2}\left[\ln\left(\frac{H}{L}\right)\right]^2 - (2\ln2 - 1)\left[\ln\left(\frac{C}{O}\right)\right]^2$
+   - Menggantikan *trailing stop-loss* statis (e.g., 2%). Stop-loss kini melebar secara dinamis jika volatilitas GK meningkat.
+
+3. Kelly Criterion Optimization
+   - Alokasi modal direkomendasikan via *Half-Kelly*: $f^* = 0.5 \times (P - \frac{1-P}{R})$, di mana P = Probabilitas Directional Head, dan R = Rasio Risk/Reward.
+
+================================================================================
+PHASE 7 (IN PROGRESS): WALK-FORWARD CV & MULTI-LLM RESILIENCE
+================================================================================
+Fokus pada kelemahan matematis dan reliabilitas API.
+
+1. Walk-Forward Cross Validation
+   - **Problem**: K-Fold statis menyebabkan *Look-Ahead Bias*. Uji coba statis (80% train 2015-2023, 20% test 2024-2026) mendistorsi *Hit Ratio* karena *Dominance Effect* dari *Bull Market*.
+   - **Solution**: Evaluasi *Sliding Window* kronologis murni untuk mendapatkan *Skill Score* dan *Information Coefficient* sebenarnya.
+
+2. Directional Loss Function untuk LSTM
+   - **Problem**: MSE Loss pada LSTM terobsesi meminimalkan rentang absolut, namun tidak membedakan "salah tebak arah" dengan "salah tebak rentang". Hal ini menyebabkan *Hit Ratio* lebih rendah dari *Naive Baseline*.
+   - **Solution**: Injeksi parameter *Directional Penalty* (*Custom Loss Function*).
+
+3. FinBERT Deep Learning Sentiment
+   - Mengganti pencarian *keyword* manual (Naive Lexicon) dengan `ProsusAI/finbert` (Model klasifikasi NLP keuangan berbasis arsitektur BERT). Ini mengatasi masalah polaritas sarkasme keuangan (contoh: "Inflasi tinggi" = kata negatif, namun berdampak positif bagi Emas).
+
+4. Multi-LLM Failsafe Pipeline (CEO Layer)
+   - Hierarki Rantai Panggilan API: `Gemini 2.0 Flash` -> Jika gagal (Rate Limit/Offline) -> `Deepseek R1` (via Groq/OpenRouter) -> `Meta Llama 3.3 70B` -> `Zero-Vector Injection` (Offline Quant Mode murni, *Drift Multiplier* = 1.0).
+
+5. Direct Multi-Step Anchor Forecast
+   - Menggantikan prediksi "Recursive/Autoregressive" 90 langkah LSTM yang konvergen eksponensial ke arah 0 (*Mean Reversion/Flat Line*).
+   - Membangun model terpisah untuk target variabel $Y_{t+1}, Y_{t+7}, Y_{t+14}, Y_{t+30}$. Chart kemudian dirender dengan spline interpolation antar titik jangkar ini.

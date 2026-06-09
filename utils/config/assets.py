@@ -19,12 +19,12 @@ ASSETS = {
                      'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate',
                      'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'MacroEvent_Flag',
                      'Credit_Spread',
-                     'Sentiment', 'EMA_90',
+                     'Sentiment', 'EMA_90', 'COT_Net_Commercial', 'Fear_Greed_Index',
                      # Phase 3: Dynamic Regime Features
                      'vix_percentile_252d',   # VIX rolling 252d eCDF (0.0-1.0)
                      'roll_corr_dxy_90d',     # Gold vs DXY rolling 90d corr
                      'return_zscore_90d'],    # Micro circuit-breaker Z-Score
-        'sequence_length': 60,
+        'sequence_length': 90,
         # Upgraded architecture: Gold now in extreme new-regime ($4000+), needs deeper model with attention
         'model_arch': {'units': [128, 64, 32], 'dropout': 0.25, 'attention': True},
         'description': 'Precious Metal & Safe Haven Asset'
@@ -43,7 +43,7 @@ ASSETS = {
                      'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate',
                      'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'MacroEvent_Flag',
                      'Credit_Spread',
-                     'Sentiment', 'Halving_Cycle', 'EMA_90',
+                     'Sentiment', 'Halving_Cycle', 'EMA_90', 'COT_Net_Commercial', 'Fear_Greed_Index',
                      # Phase 3: Dynamic Regime Features
                      'vix_percentile_252d',   # VIX rolling 252d eCDF (0.0-1.0)
                      'roll_corr_spy_90d',     # BTC vs SPY rolling 90d corr (decoupling detector)
@@ -114,12 +114,12 @@ for ticker, info in STOCK_TICKERS.items():
                      'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate',
                      'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'MacroEvent_Flag',
                      'Credit_Spread',
-                     'Sentiment', 'EMA_90',
+                     'Sentiment', 'EMA_90', 'COT_Net_Commercial', 'Fear_Greed_Index',
                      # Phase 3: Dynamic Regime Features
                      'vix_percentile_252d',   # VIX rolling 252d eCDF (0.0-1.0)
                      roll_corr_feat,          # Dynamic correlation feature
                      'return_zscore_90d'],    # Micro circuit-breaker Z-Score
-        'sequence_length': 60,
+        'sequence_length': 90,
         'model_arch': arch,
         'description': f"{info['sector']} - {info['name']}"
     }

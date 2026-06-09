@@ -319,7 +319,57 @@ def _call_gemini(prompt: str, max_retries: int = 2) -> dict | None:
                     # But if it's rate limit on the key itself, Flash might fail too, which is fine (it will try).
                     time.sleep(1)
 
-    print("Warning: All Gemini API keys failed. Falling back to Zero-Vector Injection.")
+    print("Warning: All Gemini API keys failed. Attempting Multi-LLM Fallback (Groq/OpenRouter)...")
+    fallback_res = _call_fallback_llm(prompt)
+    if fallback_res:
+        return fallback_res
+
+    print("Warning: All API keys and Multi-LLM fallbacks failed. Falling back to Zero-Vector Injection.")
+    return None
+
+def _call_fallback_llm(prompt: str) -> dict | None:
+    import requests
+    # Groq Fallback (Llama 3.3 70B)
+    groq_key = os.getenv('GROQ_API_KEY')
+    if groq_key:
+        try:
+            print("  -> Mencoba Groq (Llama-3.3-70B)...")
+            headers = {"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"}
+            payload = {
+                "model": "llama-3.3-70b-versatile",
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": 0.1,
+                "response_format": {"type": "json_object"}
+            }
+            resp = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload, timeout=20)
+            if resp.status_code == 200:
+                text = resp.json()['choices'][0]['message']['content']
+                return json.loads(text)
+        except Exception as e:
+            print(f"Groq Fallback failed: {e}")
+
+    # OpenRouter Fallback (Deepseek R1)
+    or_key = os.getenv('OPENROUTER_API_KEY')
+    if or_key:
+        try:
+            print("  -> Mencoba OpenRouter (Deepseek R1)...")
+            headers = {"Authorization": f"Bearer {or_key}", "Content-Type": "application/json"}
+            payload = {
+                "model": "deepseek/deepseek-r1",
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": 0.1
+            }
+            resp = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload, timeout=20)
+            if resp.status_code == 200:
+                text = resp.json()['choices'][0]['message']['content']
+                if '```json' in text:
+                    text = text.split('```json')[1].split('```')[0].strip()
+                elif '```' in text:
+                    text = text.split('```')[1].split('```')[0].strip()
+                return json.loads(text)
+        except Exception as e:
+            print(f"OpenRouter Fallback failed: {e}")
+            
     return None
 
 

@@ -13,9 +13,13 @@ pytrends
 textblob
 requests-html
 fredapi
+scipy
 tensorflow
 python-dotenv
 google-generativeai
+google-genai
+transformers
+torch
 duckdb
 polars
 pyarrow

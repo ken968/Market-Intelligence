@@ -148,27 +148,6 @@ class ForecastEngine:
         pct_H = pct_7 * ((horizon_days / 7.0) ** power_exponent)
         return float(pct_H)
 
-    def recursive_forecast(self, steps: int, ceo_drift_multiplier: float = 1.0) -> List[float]:
-        if not TF_AVAILABLE:
-             return []
-
-        if not self.is_loaded:
-            if not self.load_model():
-                return []
-        
-        if self.data_handler.data is None:
-            self.data_handler.load_data()
-
-        return worker_layer.recursive_forecast(
-            model=self.model,
-            scaler=self.scaler,
-            data=self.data_handler.data,
-            config=self.config,
-            steps=steps,
-            asset_key=self.asset_key,
-            ceo_drift_multiplier=ceo_drift_multiplier
-        )
-
     def ensemble_forecast(self) -> Dict[str, Any]:
         current_price = self.data_handler.get_latest_price()
 
@@ -274,37 +253,10 @@ class ForecastEngine:
                 return prices
 
         lstm_target_price = lstm_path[-1]
-        
-        # [Bugfix] Inject synthetic historical volatility to prevent "flat line" charts
-        # Calculate recent historical daily volatility
-        hist_vol = 0.015 # fallback (1.5% daily)
-        try:
-            if self.data_handler.data is not None and len(self.data_handler.data) > 30:
-                # Assuming feature 0 is the primary price
-                prices_hist = self.data_handler.data[-30:, 0]
-                rets = np.diff(prices_hist) / prices_hist[:-1]
-                hist_vol = float(np.std(rets))
-        except Exception:
-            pass
-            
-        import numpy as np
-        
-        # Use a stable seed based on current price so chart doesn't jitter on every refresh
-        np.random.seed(int(current_price * 100) % 100000) 
-        
         for i, price in enumerate(lstm_path):
             t_ratio = (i + 1) / steps
-            # Linear adjustment to anchor the end at target_price
             adj_price = price + (target_price - lstm_target_price) * t_ratio
-            
-            # Add synthetic noise proportional to historical volatility
-            # Use sin(t_ratio * pi) to taper the noise to 0 at the very end, ensuring we hit target_price exactly
-            if i < steps - 1:
-                noise = hist_vol * current_price * np.random.normal(0, 0.7) * np.sin(t_ratio * np.pi)
-                adj_price += noise
-                
-            prices.append(float(adj_price))
-            
+            prices.append(adj_price)
         return prices
 
     def predict_tomorrow(self) -> Dict[str, Union[float, str]]:

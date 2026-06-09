@@ -624,6 +624,103 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
+# ==================== M2M TRACKER ====================
+
+st.markdown("---")
+st.markdown("### Month-to-Month (M2M) Growth 2026")
+
+try:
+    m2m_year = pd.Timestamp.now().year
+    
+    m2m_assets = ['btc', 'spy', 'gold']
+    m2m_monthly = pd.DataFrame()
+    
+    # Process assets
+    for asset_key in m2m_assets:
+        if asset_key in ASSETS:
+            config = ASSETS[asset_key]
+            if os.path.exists(config['data_file']):
+                df = pd.read_csv(config['data_file'], parse_dates=['Date'])
+                df.set_index('Date', inplace=True)
+                df.sort_index(inplace=True)
+                price_col = config['features'][0]
+                m2m_monthly[config['name']] = df[price_col].resample('ME').last()
+                
+    # Process macros
+    if os.path.exists('data/macro_indicators.csv'):
+        macro_df = pd.read_csv('data/macro_indicators.csv', parse_dates=['Date'])
+        macro_df.set_index('Date', inplace=True)
+        macro_df.sort_index(inplace=True)
+        if 'DXY' in macro_df.columns:
+            m2m_monthly['DXY'] = macro_df['DXY'].resample('ME').last()
+        if 'Yield_10Y' in macro_df.columns:
+            m2m_monthly['10Y Yield'] = macro_df['Yield_10Y'].resample('ME').last()
+            
+    # Calculate returns
+    m2m_returns = m2m_monthly.pct_change() * 100
+    m2m_year_returns = m2m_returns[m2m_returns.index.year == m2m_year]
+    
+    # Calculate YTD
+    ytd_returns = {}
+    last_year_end = f"{m2m_year-1}-12-31"
+    
+    for col in m2m_monthly.columns:
+        series = m2m_monthly[col].dropna()
+        try:
+            base_prices = series[series.index <= pd.to_datetime(last_year_end)]
+            if not base_prices.empty:
+                base_price = base_prices.iloc[-1]
+                current_prices = series[series.index.year == m2m_year]
+                if not current_prices.empty:
+                    current_price = current_prices.iloc[-1]
+                    ytd_returns[col] = ((current_price - base_price) / base_price) * 100
+        except Exception:
+            pass
+            
+    # Format table
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    formatted_data = []
+    
+    for i in range(1, 13):
+        month_data = m2m_year_returns[m2m_year_returns.index.month == i]
+        row = {'Month': months[i-1]}
+        if not month_data.empty:
+            for col in m2m_year_returns.columns:
+                val = month_data[col].iloc[-1]
+                if pd.isna(val):
+                    row[col] = ""
+                else:
+                    row[col] = f"({abs(val):.1f}%)" if val < 0 else f"{val:.1f}%"
+        else:
+            for col in m2m_year_returns.columns:
+                row[col] = ""
+        formatted_data.append(row)
+        
+    ytd_row = {'Month': '**YTD Cumulative**'}
+    for col in m2m_year_returns.columns:
+        if col in ytd_returns:
+            val = ytd_returns[col]
+            ytd_row[col] = f"**({abs(val):.1f}%)**" if val < 0 else f"**{val:.1f}%**"
+        else:
+            ytd_row[col] = ""
+    formatted_data.append(ytd_row)
+    
+    # Color formatting
+    def color_returns(val):
+        if not isinstance(val, str) or val == "": return ""
+        if "Month" in val: return "" # Skip Month column logic if accidentally applied
+        if "(" in val:
+            return "color: #ff4b4b" # Red for negative
+        else:
+            return "color: #00cc96" # Green for positive
+            
+    df_m2m = pd.DataFrame(formatted_data)
+    st.dataframe(df_m2m.style.map(color_returns, subset=df_m2m.columns[1:]), use_container_width=True, hide_index=True)
+    st.caption("DXY and 10Y Yield serve as macro constraints. A green DXY typically pressures Bitcoin and S&P 500.")
+
+except Exception as e:
+    st.warning(f"Could not generate M2M Tracker: {e}")
+
 # ==================== RETURNS SUMMARY ====================
 
 st.markdown("---")

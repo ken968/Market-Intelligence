@@ -1,127 +1,46 @@
 """
-Unified LSTM Training Engine — Pct Change Target
-==================================================
-Menggantikan train_ultimate.py, train_btc.py, dan train_stocks.py.
-
-PERUBAHAN FUNDAMENTAL dari versi sebelumnya:
-    SEBELUM: y_train = scaled_price[t]         (harga absolut ternormalisasi)
-    SEKARANG: y_train = pct_change_7d[t]        (% change 7 hari ke depan)
-
-Mengapa penting:
-    1. Satuan output seragam dengan XGBoost → Ridge Stacker bisa bekerja
-    2. % change adalah nilai stationary (tidak drift seperti harga absolut)
-    3. LSTM belajar ARAH pergerakan, bukan level harga → hit ratio meningkat
-    4. Direct prediction (bukan recursive) → menghindari error compounding
-
-Target definition:
-    y[t] = (price[t + HORIZON] - price[t]) / price[t]
-    Ini adalah % change dari hari t ke t+7.
-
-Dua scaler yang disimpan:
-    - feature_scaler   : normalisasi input features (MinMaxScaler, semua kolom)
-    - target_scaler    : normalisasi target % change (StandardScaler, 1 nilai)
-    Memisahkan keduanya agar inverse transform bisa dilakukan secara benar.
-
-Usage:
-    python scripts/train_lstm_pct.py gold
-    python scripts/train_lstm_pct.py btc
-    python scripts/train_lstm_pct.py spy
-    python scripts/train_lstm_pct.py all     <- train semua sekaligus
+XAUUSD Multi-Asset Terminal
+Phase 7: The Hybrid High-Alpha Path (Independent Models A & B)
 """
-
 import os
-import sys
-import pickle
+import gc
 import json
 import numpy as np
 import pandas as pd
+import warnings
+import joblib
 
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-os.environ['PYTHONHASHSEED'] = '42'
-os.environ['TF_DETERMINISTIC_OPS'] = '1'   # Force fully deterministic TF CPU ops
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+warnings.filterwarnings('ignore', category=pd.errors.PerformanceWarning)
 
-# ── Reproducibility: fix all random seeds ──────────────────────────────────
-import random
-random.seed(42)
-import numpy as np
-np.random.seed(42)
 import tensorflow as tf
 tf.random.set_seed(42)
-
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
-from sklearn.metrics import mean_squared_error
-
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input as KInput, LSTM, Dense, Dropout, MultiHeadAttention, LayerNormalization, Flatten
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
-from tensorflow.keras.regularizers import l2
+from tensorflow.keras.regularizers import l2 as keras_l2
 
 from utils.config import ASSETS, STOCK_TICKERS
 
-# ─────────────────────────────────────────────────────────────────────────────
-# CONSTANTS
-# ─────────────────────────────────────────────────────────────────────────────
-HORIZON_DAYS = 7      # Predict 7-day forward % change
-ALL_ASSETS = ['gold', 'btc'] + [t.lower() for t in STOCK_TICKERS.keys()]
+CORE_ASSETS = ['gold', 'btc', 'spy', 'qqq', 'dia']
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# HELPERS: Evaluation Metrics (Opsi B — robust terhadap directional dominance)
-# ─────────────────────────────────────────────────────────────────────────────
-def hit_ratio(y_pred: np.ndarray, y_true: np.ndarray) -> float:
-    """% of predictions with correct sign (direction). Raw metric."""
-    return float((np.sign(y_pred) == np.sign(y_true)).mean()) * 100.0
-
-
-def naive_hit_ratio(y_true: np.ndarray) -> float:
-    """Baseline: selalu prediksi arah dominan (max(p_up, p_down)).
-    Jika pasar naik 97% dari waktu, naive = 97% → bukan keahlian model."""
-    p_positive = float((y_true > 0).mean())
-    return max(p_positive, 1.0 - p_positive) * 100.0
-
-
-def skill_score(hr: float, naive_hr: float) -> float:
-    """Adjusted Hit Ratio (Skill Score) — menghapus keuntungan dari dominasi arah.
-    Interpretasi:
-        > 0%  : Model lebih baik dari tebak arah dominan
-        = 0%  : Model setara dengan tebak buta
-        < 0%  : Model lebih buruk dari tebak buta (perlu investigasi)
-    Formula: (HR_model - HR_naive) / (100 - HR_naive) * 100
+def directional_mse(y_true, y_pred):
     """
-    if naive_hr >= 100.0:
-        return 0.0
-    return (hr - naive_hr) / (100.0 - naive_hr) * 100.0
-
-
-def information_coefficient(y_pred: np.ndarray, y_true: np.ndarray) -> float:
-    """Information Coefficient: Spearman rank correlation antara prediksi dan aktual.
-    Mengukur apakah urutan prediksi model cocok dengan urutan aktual.
-    Tidak terpengaruh oleh dominasi arah — nilai positif = genuinely predictive.
-    Interpretasi institusional:
-        IC > 0.05  : Meaningful predictive skill
-        IC > 0.10  : Strong skill
-        IC <= 0    : No genuine skill (walaupun HR bisa tinggi karena dominance)
+    Directional Penalty Loss Function.
+    Penalizes predictions with wrong direction by a factor of 2.
     """
-    from scipy import stats
-    if len(y_pred) < 3:
-        return 0.0
-    corr, _ = stats.spearmanr(y_pred, y_true)
-    return float(corr) if not np.isnan(corr) else 0.0
+    mse = tf.square(y_true - y_pred)
+    penalty = tf.where(tf.sign(y_true) * tf.sign(y_pred) < 0, 2.0, 1.0)
+    return tf.reduce_mean(mse * penalty)
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# MODEL ARCHITECTURE (per asset type)
-# ─────────────────────────────────────────────────────────────────────────────
 class LSTMTrainer:
     def __init__(self, asset_key: str):
         self.asset_key = asset_key.lower()
         if self.asset_key not in ASSETS:
-            raise ValueError(f"Unknown asset '{self.asset_key}'. Available: {list(ASSETS.keys())}")
+            raise ValueError(f"Unknown asset {self.asset_key}")
         self.config = ASSETS[self.asset_key]
         self.data_file = self.config['data_file']
-        self.seq_len = self.config.get('sequence_length', 60)
+        self.seq_len = self.config.get('sequence_length', 90)
 
     def _get_price_col(self) -> str:
         for candidate in self.config['features']:
@@ -129,33 +48,19 @@ class LSTMTrainer:
                 return candidate
         return self.config['features'][0]
 
-    def build_model(self, seq_len: int, n_features: int) -> tf.keras.Model:
-        """
-        Build LSTM model from config['model_arch']
-        """
-        from tensorflow.keras.models import Model
-        from tensorflow.keras.layers import (
-            Input as KInput, LSTM, Dense, Dropout,
-            MultiHeadAttention, LayerNormalization, Flatten
-        )
-        from tensorflow.keras.regularizers import l2 as keras_l2
-
+    def build_model(self, seq_len: int, n_features: int, out_dim: int) -> tf.keras.Model:
         arch      = self.config.get('model_arch', {'units': [100, 50], 'dropout': 0.3, 'attention': False})
-        units     = arch.get('units',    [100, 50])
-        dropout   = arch.get('dropout',  0.3)
+        units     = arch.get('units', [100, 50])
+        dropout   = arch.get('dropout', 0.3)
         use_attn  = arch.get('attention', False)
 
-        print(f"  Model arch: units={units}, dropout={dropout}, attention={use_attn}")
-
         inp = KInput(shape=(seq_len, n_features))
-        x   = inp
-
+        x = inp
         for i, u in enumerate(units):
-            is_last    = (i == len(units) - 1)
+            is_last = (i == len(units) - 1)
             return_seq = (not is_last) or use_attn
             x = LSTM(u, return_sequences=return_seq, kernel_regularizer=keras_l2(0.001))(x)
             x = Dropout(dropout)(x)
-
             if use_attn and i == 0:
                 attn_out = MultiHeadAttention(num_heads=4, key_dim=max(1, u // 4))(x, x)
                 attn_out = LayerNormalization()(attn_out + x)
@@ -163,273 +68,141 @@ class LSTMTrainer:
             elif is_last and use_attn:
                 x = Flatten()(x)
 
-        x   = Dense(max(16, units[-1] // 2), kernel_regularizer=keras_l2(0.001))(x)
-        out = Dense(1)(x)
+        x = Dense(max(16, units[-1] // 2), kernel_regularizer=keras_l2(0.001), activation='relu')(x)
+        out = Dense(out_dim)(x)
 
         model = Model(inputs=inp, outputs=out)
-        model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
+        model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001), 
+                      loss=directional_mse, metrics=['mae'])
         return model
 
-    def train_horizon(self, df_base: pd.DataFrame, horizon_days: int) -> dict:
-        print(f"\n  --- Horizon: {horizon_days} Days ---")
+    def train_walk_forward(self, df_base: pd.DataFrame, horizons: list, model_name: str) -> dict:
+        print(f"\n  --- Training {model_name} (Horizons: {horizons}) Walk-Forward CV ---")
         price_col = self._get_price_col()
         features = self.config['features']
-
+        
         df = df_base.copy()
-        # Compute target: horizon_days forward % change
-        df['_pct_target'] = (
-            df[price_col].shift(-horizon_days) - df[price_col]
-        ) / df[price_col]
-
-        df = df.dropna(subset=['_pct_target'])
-
-        raw_features = df[features].ffill().fillna(0).values   # (N, n_features)
-        raw_target   = df['_pct_target'].values                  # (N,)
-
-        # PREVENT DATA LEAKAGE: We must determine the split index BEFORE scaling.
-        split_idx  = int((len(raw_features) - self.seq_len) * 0.80) + self.seq_len
-        gap        = horizon_days  # buffer mencegah target overlap antar split
-
-        feature_scaler = MinMaxScaler(feature_range=(0, 1))
-        # Fit ONLY on training portion of the raw data!
-        feature_scaler.fit(raw_features[:split_idx])
-        scaled_features = feature_scaler.transform(raw_features)
-
-        target_scaler = StandardScaler()
-        # Fit ONLY on training portion of the target!
-        target_scaler.fit(raw_target[:split_idx].reshape(-1, 1))
-        scaled_target = target_scaler.transform(raw_target.reshape(-1, 1)).flatten()
-
-        X_all, y_all = [], []
-        for t in range(self.seq_len, len(scaled_features)):
-            X_all.append(scaled_features[t - self.seq_len: t, :])
-            y_all.append(scaled_target[t])
-
-        X_all = np.array(X_all)
-        y_all = np.array(y_all)
-
-        # ── Train/Test split dengan gap buffer ────────────────────────────────────
-        # PENTING: Tanpa buffer ini, target pada akhir train set (price[t+horizon])
-        # mengacu pada harga yang sudah ada di test set → temporal leakage!
-        # Contoh: Gold 90-hari tanpa buffer → 89 dari 90 hari target tumpang tindih
-        #         → Hit Ratio spurious ~98% padahal model sebenarnya tidak akurat.
-        # Solusi: sisipkan gap = horizon_days antara akhir train dan awal test.
-        seq_split_idx = split_idx - self.seq_len
-        test_start = seq_split_idx + gap
-        if test_start >= len(X_all):
-            # Fallback jika data terlalu sedikit untuk gap (misalnya data < 200 baris)
-            test_start = seq_split_idx
-            print(f"  [Warning] Data terlalu kecil untuk gap buffer ({horizon_days}d). Menggunakan split langsung.")
-        X_train, X_test = X_all[:seq_split_idx], X_all[test_start:]
-        y_train, y_test = y_all[:seq_split_idx], y_all[test_start:]
-
-        print(f"  Train: {len(X_train)} | Gap: {gap}d | Test: {len(X_test)}")
-
-
-        model = self.build_model(self.seq_len, X_train.shape[2])
-
-        callbacks = [
-            EarlyStopping(monitor='val_loss', patience=20,
-                          restore_best_weights=True, verbose=0),
-            ReduceLROnPlateau(monitor='val_loss', factor=0.5,
-                              patience=8, min_lr=1e-6, verbose=0),
-        ]
-
-        # Recency-weighted sample weights: recent samples get up to 3x more weight
-        # This forces the model to focus on the new price regime ($3500-$4500+)
-        n_train = len(X_train)
-        linear_weights = np.linspace(1.0, 3.0, n_train)
-        sample_weights = linear_weights / linear_weights.mean()  # normalize so total weight stays same
-
-        model.fit(
-            X_train, y_train,
-            epochs=150,
-            batch_size=32,
-            validation_split=0.1,
-            callbacks=callbacks,
-            sample_weight=sample_weights,
-            verbose=0,
-        )
-
-        y_pred_scaled = model.predict(X_test, verbose=0).flatten()
-
-        y_pred_pct = target_scaler.inverse_transform(y_pred_scaled.reshape(-1, 1)).flatten()
-        y_true_pct = target_scaler.inverse_transform(y_test.reshape(-1, 1)).flatten()
-
-        hr      = hit_ratio(y_pred_pct, y_true_pct)
-        naive   = naive_hit_ratio(y_true_pct)
-        skill   = skill_score(hr, naive)
-        ic      = information_coefficient(y_pred_pct, y_true_pct)
-        rmse    = np.sqrt(mean_squared_error(y_true_pct, y_pred_pct))
-
-        # ── Directional Dominance Flag ────────────────────────────────────────────
-        # Jika naive baseline > 80%, test set tidak representatif.
-        # Skill Score menjadi metrik utama yang andal.
-        dominance_flag = naive > 80.0
-        flag_str       = " [!] DOMINANCE" if dominance_flag else ""  # ASCII: avoids Windows charmap crash
-
-        print(f"  Test Hit Ratio : {hr:.1f}%  (Naive baseline: {naive:.1f}%{flag_str})")
-        print(f"  Skill Score    : {skill:+.1f}%  (HR vs naive -- genuine predictive skill)")
-        print(f"  Info Coeff (IC): {ic:+.4f}  (Spearman; >0.05 meaningful, >0.10 strong)")
-        print(f"  Test RMSE      : {rmse:.6f}  (in % change units)")
-        if dominance_flag:
-            print(f"  [!] Catatan: Test period satu arah ({naive:.0f}% positif).")
-            print(f"      Skill Score & IC lebih representatif daripada raw Hit Ratio.")
-
-        os.makedirs('models', exist_ok=True)
-
-        # ── Save files for this specific horizon ─────────────────────────────────
-        model_path = f"models/{self.asset_key}_model_{horizon_days}d.keras"
-        model.save(model_path)
-
-        feat_scaler_path = f"models/{self.asset_key}_scaler_{horizon_days}d.pkl"
-        with open(feat_scaler_path, 'wb') as f:
-            pickle.dump(feature_scaler, f)
-
-        target_scaler_path = f"models/{self.asset_key}_scaler_{horizon_days}d_target.pkl"
-        with open(target_scaler_path, 'wb') as f:
-            pickle.dump(target_scaler, f)
-
-        meta = {
-            'asset': self.asset_key,
-            'price_col': price_col,
-            'features': features,
-            'horizon_days': horizon_days,
-            'sequence_length': self.seq_len,
-            'target_type': f'pct_change_{horizon_days}d',
-            'hit_ratio_test': hr,
-            'naive_hit_ratio': naive,
-            'skill_score': skill,
-            'information_coefficient': ic,
-            'dominance_flagged': dominance_flag,
-            'rmse_test': rmse,
-            'n_train': len(X_train),
-            'n_test': len(X_test),
-            'target_scaler_path': target_scaler_path,
-        }
-        meta_path = f"models/{self.asset_key}_scaler_{horizon_days}d_meta.json"
-        with open(meta_path, 'w') as f:
-            json.dump(meta, f, indent=4)
-
-        # ── Save legacy files if this is the 7-day model ─────────────────────────
-        if horizon_days == 7:
-            legacy_model_path = self.config['model_file']
-            model.save(legacy_model_path)
-            
-            legacy_feat_scaler_path = self.config['scaler_file']
-            with open(legacy_feat_scaler_path, 'wb') as f:
-                pickle.dump(feature_scaler, f)
-                
-            legacy_target_scaler_path = self.config['scaler_file'].replace('.pkl', '_target.pkl')
-            with open(legacy_target_scaler_path, 'wb') as f:
-                pickle.dump(target_scaler, f)
-                
-            legacy_meta_path = self.config['scaler_file'].replace('.pkl', '_meta.json')
-            with open(legacy_meta_path, 'w') as f:
-                json.dump(meta, f, indent=4)
-
-        return meta
-
-    def train(self) -> dict:
-        print(f"\n{'='*60}")
-        print(f" LSTM Multi-Horizon Training — {self.asset_key.upper()}")
-        print(f"{'='*60}")
-
-        # ── Load data using MarketDataStore with CSV fallback ────────────────────
-        from utils.data_store import MarketDataStore
-        store = MarketDataStore()
-        data_path = self.config['data_file']
-        table_name = os.path.splitext(os.path.basename(data_path))[0].lower()
-        
-        df = None
-        try:
-            df = store.read_table(table_name, format='pandas')
-            if 'Date' in df.columns:
-                df['Date'] = pd.to_datetime(df['Date'])
-                df.set_index('Date', inplace=True)
-            df = df.sort_index()
-            print(f"  Loaded data from DuckDB table '{table_name}'")
-        except Exception as e:
-            print(f"  Warning: Could not read table '{table_name}' from DuckDB: {e}. Falling back to CSV.")
-            if not os.path.exists(data_path):
-                print(f"Error: Data file not found: {data_path}")
-                return {}
-            df = pd.read_csv(data_path, index_col=0, parse_dates=True)
-            df = df.sort_index()
-
-        for feat in self.config['features']:
-            if feat not in df.columns:
-                print(f"  Warning: '{feat}' missing, filling with 0")
-                df[feat] = 0
-
-        features = self.config['features']
-        print(f"  Dataset: {len(df)} samples | {len(features)} features")
-        
-        horizons = [1, 7, 14, 30, 90]
-        results = {}
+        target_cols = []
         for h in horizons:
-            try:
-                meta = self.train_horizon(df, h)
-                results[h] = meta
-            except Exception as e:
-                print(f"  [ERROR] Horizon {h}d failed: {e}")
+            col = f'_pct_target_{h}'
+            df[col] = (df[price_col].shift(-h) - df[price_col]) / df[price_col]
+            target_cols.append(col)
+            
+        df = df.dropna(subset=target_cols)
+        if len(df) < self.seq_len + 100:
+            print("Not enough data")
+            return {}
+
+        raw_features = df[features].ffill().fillna(0).values
+        raw_targets = df[target_cols].values
+        
+        X_raw, y_raw = [], []
+        for t in range(self.seq_len, len(raw_features)):
+            X_raw.append(raw_features[t - self.seq_len: t, :])
+            y_raw.append(raw_targets[t])
+        X_raw = np.array(X_raw)
+        y_raw = np.array(y_raw)
+        
+        # 5 Windows Walk-Forward
+        n_windows = 5
+        window_size = len(X_all) // (n_windows + 1)
+        
+        best_model = None
+        best_val_loss = float('inf')
+        
+        for w in range(n_windows):
+            train_end = (w + 1) * window_size
+            test_end = (w + 2) * window_size if w < n_windows - 1 else len(X_all)
+            
+            # Gap buffer = max(horizons)
+            gap = max(horizons)
+            split_idx = train_end - gap
+            if split_idx <= 0: continue
+            
+            X_train_raw, y_train_raw = X_raw[:split_idx], y_raw[:split_idx]
+            X_val_raw, y_val_raw = X_raw[train_end:test_end], y_raw[train_end:test_end]
+            
+            # PREVENT DATA LEAKAGE: Fit scaler strictly on training window
+            feature_scaler = MinMaxScaler(feature_range=(0, 1))
+            # Reshape for scaling (N*seq_len, n_features)
+            n_features = X_train_raw.shape[2]
+            X_train_flat = X_train_raw.reshape(-1, n_features)
+            feature_scaler.fit(X_train_flat)
+            
+            X_train = feature_scaler.transform(X_train_flat).reshape(X_train_raw.shape)
+            if len(X_val_raw) > 0:
+                X_val = feature_scaler.transform(X_val_raw.reshape(-1, n_features)).reshape(X_val_raw.shape)
+            else:
+                X_val = np.empty_like(X_val_raw)
+            
+            target_scaler = StandardScaler()
+            y_train = target_scaler.fit_transform(y_train_raw)
+            if len(y_val_raw) > 0:
+                y_val = target_scaler.transform(y_val_raw)
+            else:
+                y_val = np.empty_like(y_val_raw)
+            
+            model = self.build_model(self.seq_len, X_train.shape[2], len(horizons))
+            cb = [EarlyStopping(monitor='val_loss', patience=15, restore_best_weights=True, verbose=0),
+                  ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=5, min_lr=1e-6, verbose=0)]
+                  
+            model.fit(X_train, y_train, epochs=100, batch_size=32, validation_data=(X_val, y_val),
+                      callbacks=cb, verbose=0)
+                      
+            val_loss = model.evaluate(X_val, y_val, verbose=0)
+            # Evaluate returns a list [loss, mae]. We take index 0
+            if isinstance(val_loss, list): val_loss = val_loss[0]
+            print(f"    Window {w+1}/5 - Val Loss: {val_loss:.4f}")
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                best_model = model
                 
-        return results.get(7, {})
+        # Save Model and Scalers
+        base_model_file = self.config['model_file']
+        out_model_file = base_model_file.replace('.keras', f'_{model_name.lower()}.keras')
+        best_model.save(out_model_file)
+        
+        base_scaler_file = self.config['scaler_file']
+        out_scaler_file = base_scaler_file.replace('.pkl', f'_{model_name.lower()}.pkl')
+        joblib.dump({'feature_scaler': feature_scaler, 'target_scaler': target_scaler}, out_scaler_file)
+        
+        # Eval HR on the final validation set
+        if len(X_val_raw) > 0:
+            preds = best_model.predict(X_val, verbose=0)
+            unscaled_preds = target_scaler.inverse_transform(preds)
+            unscaled_y = y_val_raw
+        else:
+            # If no validation set left, use train set for final HR logging
+            preds = best_model.predict(X_train, verbose=0)
+            unscaled_preds = target_scaler.inverse_transform(preds)
+            unscaled_y = y_train_raw
+        
+        metrics = {}
+        for i, h in enumerate(horizons):
+            hr = float((np.sign(unscaled_preds[:, i]) == np.sign(unscaled_y[:, i])).mean()) * 100.0
+            metrics[f'hr_{h}'] = hr
+            print(f"    [Final] Horizon {h}D Hit Ratio: {hr:.1f}%")
+            
+        return metrics
 
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# ENTRY POINT
-# ─────────────────────────────────────────────────────────────────────────────
+def run_training():
+    for asset in CORE_ASSETS:
+        print(f"\n{'='*50}\nTraining Core Asset: {asset.upper()}\n{'='*50}")
+        try:
+            trainer = LSTMTrainer(asset)
+            if not os.path.exists(trainer.data_file):
+                print(f"Data not found for {asset}. Skipping.")
+                continue
+                
+            df = pd.read_csv(trainer.data_file, index_col=0, parse_dates=True).sort_index()
+            
+            # Model A: Short Term
+            m_a = trainer.train_walk_forward(df, [1, 7, 14], 'Model_A')
+            # Model B: Macro Term
+            m_b = trainer.train_walk_forward(df, [30, 90], 'Model_B')
+            
+        except Exception as e:
+            print(f"Error training {asset}: {e}")
+            
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print("Usage: python scripts/train_lstm_pct.py [asset | all | stocks]")
-        print("       asset: gold, btc, spy, qqq, aapl, msft, ...")
-        print("       all  : train all assets sequentially")
-        print("       stocks: train all stock assets sequentially")
-        sys.exit(1)
-
-    arg = sys.argv[1].lower()
-
-    if arg == 'all':
-        print(f"Training {len(ALL_ASSETS)} assets: {ALL_ASSETS}")
-        results = {}
-        for a in ALL_ASSETS:
-            try:
-                trainer = LSTMTrainer(a)
-                r = trainer.train()
-                results[a] = r.get('hit_ratio_test', 0)
-            except Exception as e:
-                print(f"Error on {a}: {e}")
-                results[a] = None
-
-        print(f"\n{'='*60}")
-        print(" SUMMARY")
-        print(f"{'='*60}")
-        for a, hr_val in results.items():
-            status = f"{hr_val:.1f}%" if hr_val is not None else "FAILED"
-            print(f"  {a:<12} Hit Ratio: {status}")
-
-    elif arg == 'stocks':
-        stock_assets = [t.lower() for t in STOCK_TICKERS.keys()]
-        print(f"Training {len(stock_assets)} stock assets: {stock_assets}")
-        results = {}
-        for a in stock_assets:
-            try:
-                trainer = LSTMTrainer(a)
-                r = trainer.train()
-                results[a] = r.get('hit_ratio_test', 0)
-            except Exception as e:
-                print(f"Error on {a}: {e}")
-                results[a] = None
-
-        print(f"\n{'='*60}")
-        print(" STOCK SUMMARY")
-        print(f"{'='*60}")
-        for a, hr_val in results.items():
-            status = f"{hr_val:.1f}%" if hr_val is not None else "FAILED"
-            print(f"  {a:<12} Hit Ratio: {status}")
-
-    else:
-        trainer = LSTMTrainer(arg)
-        trainer.train()
+    run_training()
