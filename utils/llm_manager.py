@@ -268,7 +268,9 @@ def _call_gemini(prompt: str, max_retries: int = 2) -> dict | None:
         print("Warning: google-genai not installed. Run: pip install google-genai")
         return None
 
-    MODELS_TO_TRY = ['gemini-pro-latest', 'gemini-flash-latest']
+    # Di tahun 2026, model 1.5 sudah dihapus. Kita gunakan arsitektur Flash 3.5 & 2.5 terbaru 
+    # yang memiliki limit jauh lebih besar dan keakuratan setara Pro generasi lama.
+    MODELS_TO_TRY = ['gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-2.5-pro']
 
     for idx, key in enumerate(GEMINI_KEYS, start=1):
         for model_name in MODELS_TO_TRY:
@@ -303,21 +305,19 @@ def _call_gemini(prompt: str, max_retries: int = 2) -> dict | None:
                     return json.loads(text)
                 except json.JSONDecodeError as jde:
                     print(f"Warning: Gemini API {idx} ({model_name}) returned non-JSON response (attempt {attempt+1})")
-                    print(f"--- RAW RESPONSE START ---\n{text}\n--- RAW RESPONSE END ---")
                     print(f"Error details: {jde}")
+                    time.sleep(1)
                 except Exception as e:
-                    err_msg = str(e)
-                    if '429' in err_msg or 'RESOURCE_EXHAUSTED' in err_msg:
-                        print(f"Warning: Gemini API {idx} ({model_name}) Limit token (attempt {attempt+1})")
-                    elif '503' in err_msg or 'UNAVAILABLE' in err_msg:
-                        print(f"Warning: Gemini API {idx} ({model_name}) Server sibuk (attempt {attempt+1})")
+                    err_msg = str(e).lower()
+                    if '429' in err_msg or 'resource_exhausted' in err_msg or 'quota' in err_msg:
+                        print(f"Warning: Gemini API {idx} ({model_name}) Limit token (attempt {attempt+1}). Menunggu 60 detik agar kuota reset...")
+                        time.sleep(60)
+                    elif '503' in err_msg or 'unavailable' in err_msg:
+                        print(f"Warning: Gemini API {idx} ({model_name}) Server sibuk (attempt {attempt+1}). Menunggu 5 detik...")
+                        time.sleep(5)
                     else:
                         print(f"Warning: Gemini API {idx} ({model_name}) error: {type(e).__name__} (attempt {attempt+1})")
-                    
-                    # If it's a model-level error or token limit on Pro, break out of attempts for this model 
-                    # and let the loop naturally fall back to Flash. 
-                    # But if it's rate limit on the key itself, Flash might fail too, which is fine (it will try).
-                    time.sleep(1)
+                        time.sleep(1)
 
     print("Warning: All Gemini API keys failed. Attempting Multi-LLM Fallback (Groq/OpenRouter)...")
     fallback_res = _call_fallback_llm(prompt)

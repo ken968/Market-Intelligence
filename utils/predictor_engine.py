@@ -406,6 +406,29 @@ class ForecastEngine:
         pct_H = pct_7 * ((horizon_days / 7.0) ** power_exponent)
         return float(pct_H)
 
+    def recursive_forecast(self, steps: int, ceo_drift_multiplier: float = 1.0) -> List[float]:
+        """
+        Recursive forecast wrapper used by Streamlit UI to draw 30-day projection charts.
+        Delegates to worker_lstm layer.
+        """
+        if not self.load_horizon_model(1):
+            current_price = self.data_handler.get_latest_price()
+            return [current_price] * steps
+            
+        model = self.models[1]
+        feat_scaler, _ = self.scalers[1]
+        
+        from utils.layers.worker_lstm import recursive_forecast as worker_recursive
+        return worker_recursive(
+            model=model,
+            scaler=feat_scaler,
+            data=self.data_handler.data,
+            config=self.config,
+            steps=steps,
+            asset_key=self.asset_key,
+            ceo_drift_multiplier=ceo_drift_multiplier
+        )
+
     def ensemble_forecast(self) -> Dict[str, Any]:
         current_price = self.data_handler.get_latest_price()
 

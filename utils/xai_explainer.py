@@ -225,7 +225,7 @@ def _call_gemini_text(prompt: str) -> str | None:
         os.getenv('GEMINI_API_KEY_5'),
     ] if k]
 
-    MODELS_TO_TRY = ['gemini-pro-latest', 'gemini-flash-latest']
+    MODELS_TO_TRY = ['gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-2.5-pro']
 
     for idx, key in enumerate(keys, start=1):
         for model_name in MODELS_TO_TRY:
