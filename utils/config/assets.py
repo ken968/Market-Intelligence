@@ -11,7 +11,7 @@ ASSETS = {
         'icon': '',
         'color': '#FFD700',
         'model_file': 'models/gold_ultimate_model.keras',
-        'scaler_file': 'models/scaler.pkl',
+        'scaler_file': 'models/gold_scaler.pkl',
         'data_file': 'data/gold_global_insights.csv',
         'news_file': 'data/latest_news_gold.json',
         'features': ['Gold', 'DXY', 'VIX', 'Yield_10Y', 'Oil_Price',
@@ -19,14 +19,16 @@ ASSETS = {
                      'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate',
                      'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'MacroEvent_Flag',
                      'Credit_Spread',
-                     'Sentiment', 'EMA_90', 'COT_Net_Commercial', 'Fear_Greed_Index',
+                     'Sentiment', 'EMA_90', 
                      # Phase 3: Dynamic Regime Features
                      'vix_percentile_252d',   # VIX rolling 252d eCDF (0.0-1.0)
                      'roll_corr_dxy_90d',     # Gold vs DXY rolling 90d corr
                      'return_zscore_90d'],    # Micro circuit-breaker Z-Score
         'sequence_length': 90,
-        # Upgraded architecture: Gold now in extreme new-regime ($4000+), needs deeper model with attention
-        'model_arch': {'units': [128, 64, 32], 'dropout': 0.25, 'attention': True},
+        # Phase 7: Reduced from [128,64,32]+attention to [64,32] — model was overparameterized
+        # ~155k params with ~449 samples/window = ratio 0.003 (too complex)
+        # ~18k params with ~449 samples/window = ratio 0.025 (acceptable)
+        'model_arch': {'units': [64, 32], 'dropout': 0.2, 'attention': False},
         'description': 'Precious Metal & Safe Haven Asset'
     },
     'btc': {
@@ -43,14 +45,15 @@ ASSETS = {
                      'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate',
                      'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'MacroEvent_Flag',
                      'Credit_Spread',
-                     'Sentiment', 'Halving_Cycle', 'EMA_90', 'COT_Net_Commercial', 'Fear_Greed_Index',
+                     'Sentiment', 'Halving_Cycle', 'EMA_90', 
                      # Phase 3: Dynamic Regime Features
                      'vix_percentile_252d',   # VIX rolling 252d eCDF (0.0-1.0)
                      'roll_corr_spy_90d',     # BTC vs SPY rolling 90d corr (decoupling detector)
                      'return_zscore_90d'],    # Micro circuit-breaker Z-Score
         'sequence_length': 90,
-        # Per-asset LSTM architecture: BTC is highly volatile → deeper + more dropout
-        'model_arch': {'units': [128, 64, 32], 'dropout': 0.3, 'attention': True},
+        # Phase 7: Reduced from [128,64,32]+attention to [64,32] — same reason as gold
+        # BTC has more data (4283 rows) so slightly more dropout to prevent overfitting
+        'model_arch': {'units': [64, 32], 'dropout': 0.25, 'attention': False},
         'description': 'Digital Gold & Cryptocurrency Leader'
     }
 }
@@ -114,7 +117,7 @@ for ticker, info in STOCK_TICKERS.items():
                      'YieldCurve_10Y2Y', 'M2_MoM', 'M2_YoY', 'Yield_10Y_Rate',
                      'Breakeven_5Y5Y', 'M2_Liquidity_Spike', 'MacroEvent_Flag',
                      'Credit_Spread',
-                     'Sentiment', 'EMA_90', 'COT_Net_Commercial', 'Fear_Greed_Index',
+                     'Sentiment', 'EMA_90', 
                      # Phase 3: Dynamic Regime Features
                      'vix_percentile_252d',   # VIX rolling 252d eCDF (0.0-1.0)
                      roll_corr_feat,          # Dynamic correlation feature

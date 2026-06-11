@@ -290,3 +290,99 @@ def predict_direct_horizon(
     return pred_pct
 
 
+def predict_phase7_multi_output(
+    model,
+    feature_scaler,
+    target_scaler,
+    data: np.ndarray,
+    config: dict,
+    horizons: list,
+    n_mc_samples: int = 50,
+) -> dict:
+    """
+    Phase 7 multi-output inference with MC Dropout epistemic uncertainty.
+
+    Model outputs ALL horizons simultaneously (e.g. [1D,7D,14D] or [30D,90D]).
+    MC Dropout: run n_mc_samples forward passes with training=True so Dropout
+    stays active → distribution of predictions → epistemic std.
+
+    Args:
+        model          : Loaded Keras Phase 7 model
+        feature_scaler : MinMaxScaler fitted on training window
+        target_scaler  : StandardScaler fitted on target returns
+        data           : (N, n_features) numpy array — full history
+        config         : Asset config dict
+        horizons       : List of horizon days (e.g. [1, 7, 14])
+        n_mc_samples   : Number of MC Dropout forward passes (default 50)
+
+    Returns:
+        dict[horizon_day] -> {'mean': float, 'std': float}
+        'std' is epistemic uncertainty (model uncertainty via MC Dropout).
+        Use 'std' for Kelly shrinkage weighting; use GBM/VIX for position sizing.
+    """
+    fallback = {h: {'mean': 0.0, 'std': 0.0} for h in horizons}
+    if model is None or feature_scaler is None:
+        return fallback
+
+    seq_len = config['sequence_length']
+
+    # Feature alignment
+    if hasattr(feature_scaler, 'n_features_in_'):
+        expected_n = feature_scaler.n_features_in_
+        if data.shape[1] != expected_n:
+            data = data[:, :expected_n]
+
+    # Build input window
+    window = data[-seq_len:]
+    if len(window) < seq_len:
+        pad = np.repeat(window[[0]], seq_len - len(window), axis=0)
+        window = np.vstack([pad, window])
+
+    scaled_window = feature_scaler.transform(window)
+    inp = scaled_window.reshape(1, seq_len, -1)
+
+    # MC Dropout inference
+    all_preds = []
+    try:
+        if TF_AVAILABLE:
+            import tensorflow as tf
+            inp_tensor = tf.constant(inp, dtype=tf.float32)
+            for _ in range(n_mc_samples):
+                # training=True keeps Dropout layers active -> stochastic output
+                out = model(inp_tensor, training=True).numpy()  # (1, n_horizons)
+                all_preds.append(out[0])
+    except Exception as e:
+        print(f"[worker_lstm] MC Dropout error: {e}. Falling back to single pass.")
+
+    # If MC failed, do single deterministic pass
+    if not all_preds:
+        try:
+            pred = model.predict(inp, verbose=0)
+            all_preds = [pred[0]]
+        except Exception:
+            return fallback
+
+    all_preds = np.array(all_preds)     # (n_mc_samples, n_horizons)
+    mean_sc   = np.mean(all_preds, axis=0)  # (n_horizons,)
+    std_sc    = np.std(all_preds,  axis=0)  # (n_horizons,) — epistemic uncertainty
+
+    # Inverse transform to original return scale
+    if target_scaler is not None:
+        try:
+            mean_u = target_scaler.inverse_transform(mean_sc.reshape(1, -1))[0]
+            # Propagate std through the linear inverse transform (scale only, no shift)
+            if hasattr(target_scaler, 'scale_'):
+                std_u = std_sc * target_scaler.scale_
+            else:
+                std_u = std_sc
+        except Exception:
+            mean_u = mean_sc * 0.05
+            std_u  = std_sc  * 0.05
+    else:
+        mean_u = mean_sc * 0.05
+        std_u  = std_sc  * 0.05
+
+    return {
+        h: {'mean': float(mean_u[i]), 'std': float(std_u[i])}
+        for i, h in enumerate(horizons)
+    }

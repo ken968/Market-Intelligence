@@ -92,67 +92,52 @@ def load_asset_data(asset_key: str, config: dict) -> pd.DataFrame:
 # ─────────────────────────────────────────────────────────────────────────────
 def get_lstm_pct_predictions(asset_key: str, df_test: pd.DataFrame) -> np.ndarray:
     """
-    Load LSTM pct-change model and predict 7D % change for each row in df_test.
-    Returns zeros if model not found (falls back gracefully).
+    Load Phase 7 Out-Of-Sample (OOS) bundles to ensure zero data leakage for Stacker.
+    Extracts 7D predictions for dates matching df_test.
     """
-    config = ASSETS[asset_key]
-    feat_scaler_path   = f'models/{asset_key}_scaler_{HORIZON_DAYS}d.pkl'
-    target_scaler_path = f'models/{asset_key}_scaler_{HORIZON_DAYS}d_target.pkl'
-    model_path         = f'models/{asset_key}_model_{HORIZON_DAYS}d.keras'
-
-    files_needed = [model_path, feat_scaler_path, target_scaler_path]
-    if not all(os.path.exists(p) for p in files_needed):
-        missing = [p for p in files_needed if not os.path.exists(p)]
-        print(f"  [LSTM] Files missing: {missing}")
-        print(f"  [LSTM] Run: python scripts/train_lstm_pct.py {asset_key}")
-        print(f"  [LSTM] Using zeros as fallback.")
+    import glob
+    import joblib
+    
+    asset = asset_key.lower()
+    files = glob.glob(f'models/{asset}_*model_a_w*_oos.pkl')
+    
+    if not files:
+        print(f"  [LSTM] No OOS bundles found for {asset_key}. Run Phase 7 train_lstm_pct first.")
         return np.zeros(len(df_test))
-
-    try:
-        from tensorflow.keras.models import load_model as keras_load
-        lstm_model = keras_load(model_path)
-        with open(feat_scaler_path, 'rb') as f:
-            feature_scaler = pickle.load(f)
-        with open(target_scaler_path, 'rb') as f:
-            target_scaler = pickle.load(f)
-    except Exception as e:
-        print(f"  [LSTM] Load failed: {e}. Using zeros.")
+        
+    all_preds = []
+    all_dates = []
+    
+    for f in files:
+        try:
+            d = joblib.load(f)
+            if d.get('collapsed', False):
+                continue
+            if HORIZON_DAYS in d.get('horizons', []):
+                idx = d['horizons'].index(HORIZON_DAYS)
+                preds_7d = d['predictions'][:, idx]
+                all_preds.extend(preds_7d)
+                all_dates.extend(d['dates'])
+        except Exception as e:
+            print(f"  [LSTM] Warning: Failed to load {f}: {e}")
+            
+    if not all_dates:
+        print(f"  [LSTM] No valid 7D predictions found in bundles.")
         return np.zeros(len(df_test))
-
-    seq_len  = config.get('sequence_length', 60)
-    features = [f for f in config['features'] if f in df_test.columns]
-
-    # Load full dataset for building lookback windows
-    df_full = load_asset_data(asset_key, config)
-    df_full = df_full[[f for f in features if f in df_full.columns]].ffill().fillna(0)
-
-    preds = []
+        
+    # Create series indexed by date. Average any overlapping dates.
+    s = pd.Series(all_preds, index=pd.to_datetime(all_dates))
+    s = s.groupby(s.index).mean()
+    
+    # Align with df_test
+    aligned_preds = []
     for date in df_test.index:
-        try:
-            pos = df_full.index.get_loc(date)
-        except KeyError:
-            preds.append(0.0)
-            continue
-
-        if pos < seq_len:
-            preds.append(0.0)
-            continue
-
-        window = df_full.iloc[pos - seq_len: pos].values
-        if window.shape[0] < seq_len:
-            preds.append(0.0)
-            continue
-
-        try:
-            w_scaled = feature_scaler.transform(window)
-            X = w_scaled.reshape(1, seq_len, -1)
-            p_scaled = lstm_model.predict(X, verbose=0)[0, 0]
-            pct = target_scaler.inverse_transform([[p_scaled]])[0, 0]
-            preds.append(float(pct))
-        except Exception:
-            preds.append(0.0)
-
-    return np.array(preds)
+        if date in s.index:
+            aligned_preds.append(float(s.loc[date]))
+        else:
+            aligned_preds.append(0.0)
+            
+    return np.array(aligned_preds)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
