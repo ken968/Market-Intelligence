@@ -494,7 +494,7 @@ def show_success_message(message):
 
 def show_error_message(message):
     """Show error message with icon"""
-    st.error(f"❌ {message}")
+    st.error(f"{message}")
 
 
 def show_warning_message(message):
@@ -542,9 +542,9 @@ def render_quorum_inference_panel(forecasts: dict, asset_name: str = "Asset") ->
         return
 
     kelly = metrics_7d.get('kelly_fraction', 0.0) * 100
-    epistemic = metrics_7d.get('epistemic_std', 0.0) * 100
-    aleatoric = metrics_7d.get('aleatoric_std', 0.0) * 100
-    cross_window = metrics_7d.get('cross_window_std', 0.0) * 100
+    epistemic = metrics_7d.get('mc_std', 0.0) * 100
+    aleatoric = metrics_7d.get('total', 0.0) * 100
+    cross_window = metrics_7d.get('cross_std', 0.0) * 100
     
     # Try to grab the 7-day predicted direction and confidence
     conf = week_data.get('confidence', {})
@@ -602,9 +602,9 @@ def render_quorum_inference_panel(forecasts: dict, asset_name: str = "Asset") ->
             f"""<div style='background:{THEME.get("bg_surface","#1a1a2e")};border:1px solid {THEME.get("border","#333")};
                 border-radius:8px;padding:14px;text-align:center;'>
                 <div style='font-size:0.75rem;color:{THEME.get("text_secondary","#888")};margin-bottom:4px;'>
-                Aleatoric Risk</div>
+                Total Uncertainty</div>
                 <div style='font-size:0.8rem;color:{THEME.get("text_secondary","#888")};margin-bottom:6px;'>
-                Market Volatility (VIX)</div>
+                Combined Risk Profile</div>
                 <div style='font-size:1.5rem;font-weight:700;color:#FFFFFF;'>
                 {aleatoric:.2f}%</div>
             </div>""",

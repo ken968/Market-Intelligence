@@ -103,15 +103,15 @@ with tab1:
         for asset, info in health_data['assets'].items():
             status = info['status']
             if status == 'HEALTHY':
-                st.success(f"**{asset.upper()}**: HEALTHY 🟢 - {info['message']}")
+                st.success(f"**{asset.upper()}**: HEALTHY - {info['message']}")
             elif status == 'WARNING':
-                st.warning(f"**{asset.upper()}**: WARNING 🟠 - {info['message']}")
+                st.warning(f"**{asset.upper()}**: WARNING - {info['message']}")
                 st.info(f"To retrain, run: `.venv\\Scripts\\python scripts/train_lstm_pct.py {asset}`")
             elif status == 'DEGRADED':
-                st.error(f"**{asset.upper()}**: DEGRADED 🔴 - {info['message']}")
-                st.error(f"⚠️ Immediate retraining recommended!\n\nRun:\n`.venv\\Scripts\\python scripts/train_lstm_pct.py {asset}`\n`.venv\\Scripts\\python scripts/train_ridge_stacker.py {asset}`")
+                st.error(f"**{asset.upper()}**: DEGRADED - {info['message']}")
+                st.error(f"Immediate retraining recommended!\n\nRun:\n`.venv\\Scripts\\python scripts/train_lstm_pct.py {asset}`\n`.venv\\Scripts\\python scripts/train_ridge_stacker.py {asset}`")
             else:
-                st.info(f"**{asset.upper()}**: {status} ⚪ - {info['message']}")
+                st.info(f"**{asset.upper()}**: {status} - {info['message']}")
     else:
         st.info("Model Health Monitor has not collected enough data yet. Requires resolved 7-day forecasts.")
 

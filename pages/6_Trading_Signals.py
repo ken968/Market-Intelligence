@@ -53,7 +53,7 @@ if st.button("Generate Trading Signals", use_container_width=True, type="primary
             summary_data = []
             for asset, signal in signals.items():
                 if 'error' not in signal:
-                    display_signal = 'HOLD (OOD) 🔴' if signal.get('ood_active') else signal['signal']
+                    display_signal = 'HOLD (OOD)' if signal.get('ood_active') else signal['signal']
                     summary_data.append({
                         'Asset': asset.upper(),
                         'Signal': display_signal,
@@ -97,7 +97,7 @@ if st.button("Generate Trading Signals", use_container_width=True, type="primary
                             
                             with col1:
                                 if signal.get('ood_active'):
-                                    st.error("⚠️ **OUT-OF-DISTRIBUTION (OOD) CIRCUIT BREAKER ACTIVE**  \nMacro indicators are in an extreme tail regime or market implied volatility is too high. Quantitative model predictions are suspended and trading recommendations are forced to HOLD to preserve capital.")
+                                    st.error("**OUT-OF-DISTRIBUTION (OOD) CIRCUIT BREAKER ACTIVE**  \nMacro indicators are in an extreme tail regime or market implied volatility is too high. Quantitative model predictions are suspended and trading recommendations are forced to HOLD to preserve capital.")
                                 
                                 st.markdown("#### Signal Details")
                                 
@@ -105,9 +105,8 @@ if st.button("Generate Trading Signals", use_container_width=True, type="primary
                                 metric_cols = st.columns(4)
                                 
                                 with metric_cols[0]:
-                                    signal_color = "🔴" if signal.get('ood_active') else ("🟢" if signal['signal'] == 'BUY' else "🔴" if signal['signal'] == 'SELL' else "🟡")
                                     display_sig = "HOLD (OOD)" if signal.get('ood_active') else signal['signal']
-                                    st.metric("Signal", f"{signal_color} {display_sig}")
+                                    st.metric("Signal", f"{display_sig}")
                                 
                                 with metric_cols[1]:
                                     st.metric("Confidence", f"{signal['confidence']:.0%}")
@@ -147,7 +146,7 @@ if st.button("Generate Trading Signals", use_container_width=True, type="primary
                                     st.metric("Recommended Size (Half-Kelly)", f"{signal.get('recommended_allocation', 0.0):.1%}")
                                 
                                 with kelly_cols[2]:
-                                    st.metric("OOD Circuit Breaker", "ACTIVE 🔴" if signal.get('ood_active') else "INACTIVE 🟢")
+                                    st.metric("OOD Circuit Breaker", "ACTIVE" if signal.get('ood_active') else "INACTIVE")
                                 
                                 # Reasons
                                 st.markdown("#### Analysis Factors")

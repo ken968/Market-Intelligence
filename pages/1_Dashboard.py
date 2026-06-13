@@ -344,7 +344,7 @@ if cols_count > 0:
                     if pd.notna(z_live):
                         z_live = float(z_live)
                         if abs(z_live) > 3.0:
-                            st.error(f"🚨 **ANOMALY DETECTED** (Z-Score: {z_live:+.2f})\\nMicro Circuit Breaker Active")
+                            st.error(f"**ANOMALY DETECTED** (Z-Score: {z_live:+.2f})\\nMicro Circuit Breaker Active")
                         elif abs(z_live) > 2.0:
                             st.warning(f"CAUTION: Z-Score = {z_live:+.2f}")
                         else:
@@ -828,9 +828,9 @@ if len(selected_assets) >= 2:
         end_date_str = common_dates.max().strftime('%d %b %Y')
         st.info(f"""
         **Interpretasi Korelasi (Pearson):**
-        - 🟢 **1.0**: Korelasi positif sempurna (bergerak searah)
-        - 🟡 **0.0**: Tidak ada korelasi (bergerak independen)
-        - 🔴 **-1.0**: Korelasi negatif sempurna (bergerak berlawanan)
+        - **1.0**: Korelasi positif sempurna (bergerak searah)
+        - **0.0**: Tidak ada korelasi (bergerak independen)
+        - **-1.0**: Korelasi negatif sempurna (bergerak berlawanan)
         
         💡 *Catatan Metodologi & Karakteristik:*
         - Perhitungan di atas didasarkan pada harga **Close (Penutupan) Harian** dari periode **{start_date_str}** hingga **{end_date_str}**.
