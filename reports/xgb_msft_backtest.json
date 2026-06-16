@@ -2,52 +2,52 @@
     "asset": "msft",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 68.8840262582057,
-    "hit_ratio_test": 52.44755244755245,
-    "rmse_train": 0.03341479815093128,
-    "rmse_test": 0.040258728017136966,
+    "hit_ratio_train": 69.86899563318777,
+    "hit_ratio_test": 52.5305410122164,
+    "rmse_train": 0.03207129935193658,
+    "rmse_test": 0.04099683566597537,
     "n_features": 20,
-    "best_iteration": 29,
+    "best_iteration": 81,
     "top_features": [
         {
-            "feature": "PCE_MoM",
-            "importance": 0.07809673994779587
-        },
-        {
             "feature": "CPI_MoM_lag6",
-            "importance": 0.07699741423130035
+            "importance": 0.07254546880722046
         },
         {
             "feature": "CPI_MoM",
-            "importance": 0.07051049172878265
+            "importance": 0.0686478465795517
+        },
+        {
+            "feature": "PCE_MoM",
+            "importance": 0.06783422827720642
         },
         {
             "feature": "CPI_MoM_lag3",
-            "importance": 0.06772337108850479
-        },
-        {
-            "feature": "Yield_10Y_Rate",
-            "importance": 0.0624571368098259
-        },
-        {
-            "feature": "GK_Vol_21d",
-            "importance": 0.06213722750544548
+            "importance": 0.06575127691030502
         },
         {
             "feature": "PPI_MoM",
-            "importance": 0.060488950461149216
+            "importance": 0.06474874913692474
         },
         {
-            "feature": "YieldCurve_10Y2Y",
-            "importance": 0.056747544556856155
+            "feature": "GK_Vol_21d",
+            "importance": 0.06458017230033875
+        },
+        {
+            "feature": "NFP_Change_lag3",
+            "importance": 0.0580536313354969
         },
         {
             "feature": "M2_MoM",
-            "importance": 0.055194687098264694
+            "importance": 0.055534373968839645
         },
         {
-            "feature": "Yield_10Y",
-            "importance": 0.054666727781295776
+            "feature": "Yield_10Y_Rate",
+            "importance": 0.05524498596787453
+        },
+        {
+            "feature": "NFP_Change",
+            "importance": 0.05512718856334686
         }
     ]
 }

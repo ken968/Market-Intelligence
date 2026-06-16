@@ -444,8 +444,15 @@ def run_training(target_asset: str = 'all'):
         assets_to_train = [target_asset]
 
     # ── Shared registry: accumulates all window metadata across all assets ────
+    registry_path = os.path.join('models', 'model_registry.json')
     registry = {}
-
+    if os.path.exists(registry_path):
+        try:
+            import json
+            with open(registry_path, 'r') as f:
+                registry = json.load(f)
+        except Exception as e:
+            print(f"  [Warning] Could not load existing registry: {e}")
     for asset in assets_to_train:
         sep = '=' * 50
         print(f"\n{sep}\nTraining Asset: {asset.upper()}\n{sep}")
@@ -489,10 +496,14 @@ def run_training(target_asset: str = 'all'):
     # ── Write model_registry.json ─────────────────────────────────────────────
     registry_path = os.path.join('models', 'model_registry.json')
     os.makedirs('models', exist_ok=True)
+    
+    existing_assets = registry.get('_meta', {}).get('assets_trained', [])
+    updated_assets = list(set(existing_assets + assets_to_train))
+    
     registry['_meta'] = {
         'generated_at': datetime.now(timezone.utc).isoformat(),
         'phase': 7,
-        'assets_trained': assets_to_train,
+        'assets_trained': updated_assets,
         'n_windows': 5,
         'description': (
             'Quorum-Based Multi-Window Registry. '

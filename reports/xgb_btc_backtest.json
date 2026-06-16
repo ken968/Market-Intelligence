@@ -2,52 +2,52 @@
     "asset": "btc",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 60.62115440961031,
-    "hit_ratio_test": 57.377049180327866,
-    "rmse_train": 0.09325376189510323,
-    "rmse_test": 0.06397476197697825,
+    "hit_ratio_train": 59.7835624451594,
+    "hit_ratio_test": 57.19298245614035,
+    "rmse_train": 0.09366629940734543,
+    "rmse_test": 0.06398136529065315,
     "n_features": 25,
-    "best_iteration": 20,
+    "best_iteration": 19,
     "top_features": [
         {
             "feature": "Net_Commercial",
-            "importance": 0.07922820746898651
+            "importance": 0.06626112014055252
         },
         {
             "feature": "M2_MoM",
-            "importance": 0.06587955355644226
+            "importance": 0.0652616024017334
         },
         {
             "feature": "Yield_10Y",
-            "importance": 0.0655730813741684
+            "importance": 0.06229891628026962
         },
         {
             "feature": "Breakeven_5Y5Y",
-            "importance": 0.06344572454690933
+            "importance": 0.05820971727371216
         },
         {
             "feature": "VIX",
-            "importance": 0.06295062601566315
-        },
-        {
-            "feature": "YieldCurve_10Y2Y",
-            "importance": 0.052294984459877014
-        },
-        {
-            "feature": "DXY",
-            "importance": 0.05201762542128563
-        },
-        {
-            "feature": "NFP_Change_lag3",
-            "importance": 0.049172673374414444
-        },
-        {
-            "feature": "Yield_10Y_Rate",
-            "importance": 0.04820007458329201
+            "importance": 0.056514590978622437
         },
         {
             "feature": "CPI_MoM_lag3",
-            "importance": 0.04790244624018669
+            "importance": 0.054527927190065384
+        },
+        {
+            "feature": "DXY",
+            "importance": 0.05126987025141716
+        },
+        {
+            "feature": "M2_YoY",
+            "importance": 0.050944846123456955
+        },
+        {
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.05068155750632286
+        },
+        {
+            "feature": "Yield_10Y_Rate",
+            "importance": 0.047740623354911804
         }
     ]
 }

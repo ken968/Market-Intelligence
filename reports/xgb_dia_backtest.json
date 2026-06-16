@@ -2,52 +2,52 @@
     "asset": "dia",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 66.3457330415755,
-    "hit_ratio_test": 59.96503496503497,
-    "rmse_train": 0.022195308035048635,
-    "rmse_test": 0.021938726457419237,
+    "hit_ratio_train": 67.4235807860262,
+    "hit_ratio_test": 59.51134380453752,
+    "rmse_train": 0.022293192735154194,
+    "rmse_test": 0.02197195858955364,
     "n_features": 20,
     "best_iteration": 81,
     "top_features": [
         {
-            "feature": "Yield_10Y",
-            "importance": 0.11784780770540237
+            "feature": "DXY",
+            "importance": 0.10977774113416672
         },
         {
             "feature": "YieldCurve_10Y2Y",
-            "importance": 0.10729390382766724
+            "importance": 0.10671734064817429
+        },
+        {
+            "feature": "Yield_10Y",
+            "importance": 0.10163943469524384
         },
         {
             "feature": "NFP_Change",
-            "importance": 0.10576929897069931
-        },
-        {
-            "feature": "DXY",
-            "importance": 0.1050931066274643
+            "importance": 0.09862937778234482
         },
         {
             "feature": "Oil_Price",
-            "importance": 0.06893564760684967
-        },
-        {
-            "feature": "CPI_MoM_lag3",
-            "importance": 0.06181808561086655
+            "importance": 0.06934455037117004
         },
         {
             "feature": "GK_Vol_21d",
-            "importance": 0.05984944850206375
+            "importance": 0.06573062390089035
+        },
+        {
+            "feature": "CPI_MoM_lag3",
+            "importance": 0.06369813531637192
         },
         {
             "feature": "VIX",
-            "importance": 0.05944383144378662
+            "importance": 0.06045183911919594
         },
         {
-            "feature": "CPI_MoM_lag6",
-            "importance": 0.05452870577573776
+            "feature": "PPI_MoM",
+            "importance": 0.05628389120101929
         },
         {
             "feature": "Breakeven_5Y5Y",
-            "importance": 0.05215641111135483
+            "importance": 0.05557980015873909
         }
     ]
 }

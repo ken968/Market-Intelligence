@@ -8,7 +8,7 @@ import numpy as np
 from utils.predictor import AssetPredictor
 from utils.config import get_asset_config, CONFIDENCE_SCORES
 from scripts.google_trends_fetcher import GoogleTrendsFetcher
-from scripts.fed_watch_fetcher import FedWatchFetcher
+from scripts.macro_sentiment import MacroSentimentFetcher
 
 class SignalGenerator:
     """Generate trading signals based on multi-factor analysis"""
@@ -26,7 +26,7 @@ class SignalGenerator:
         
         # Initialize alternative data fetchers
         self.trends_fetcher = GoogleTrendsFetcher()
-        self.fed_fetcher = FedWatchFetcher()
+        self.fed_fetcher = MacroSentimentFetcher()
     
     def generate_signal(self):
         """

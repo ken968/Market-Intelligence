@@ -94,7 +94,7 @@ class MultiAssetFetcher:
             
             # Ensure they are in the expected order
             df = df[['DXY', 'VIX', 'Yield_10Y', 'Oil_Price']]
-            df = df.dropna()
+            df = df.ffill().bfill().dropna(how='all')
             
             # Ensure we have date as column before saving to DuckDB
             df_reset = df.reset_index()

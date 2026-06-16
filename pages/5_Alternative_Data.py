@@ -13,7 +13,7 @@ import requests
 from utils.config import ASSETS, get_all_stock_tickers
 from utils.ui_components import inject_custom_css, render_page_header, show_error_message
 from scripts.google_trends_fetcher import GoogleTrendsFetcher, batch_fetch_trends
-from scripts.fed_watch_fetcher import FedWatchFetcher
+from scripts.macro_sentiment import MacroSentimentFetcher
 
 # Page config
 st.set_page_config(
@@ -27,7 +27,7 @@ inject_custom_css()
 render_page_header(
     icon="",
     title="Alternative Data Intelligence",
-    subtitle="Google Trends, Fear & Greed Index, and Fed Watch analysis for market insights"
+    subtitle="Google Trends, Fear & Greed Index, and Macro Sentiment for systemic risk insights"
 )
 
 # Asset selector
@@ -45,7 +45,7 @@ if not selected_assets:
 st.markdown("---")
 
 # Tabs for different data sources
-tab1, tab2, tab3 = st.tabs(["Google Trends", "Fear & Greed Index", "Fed Watch"])
+tab1, tab2, tab3 = st.tabs(["Google Trends", "Fear & Greed Index", "Macro Sentiment Tracker"])
 
 # Tab 1: Google Trends
 with tab1:
@@ -174,15 +174,15 @@ with tab2:
             except Exception as e:
                 show_error_message(f"Error fetching Fear & Greed: {e}")
 
-# Tab 3: Fed Watch
+# Tab 3: Macro Sentiment
 with tab3:
-    st.markdown("### Fed Watch Tool")
-    st.info("Federal Reserve rate probabilities. Dovish stance (rate cuts) is bullish for Gold/BTC.")
+    st.markdown("### Systemic Macro Sentiment")
+    st.info("Continuous analysis of DXY, US10Y Yield, and VIX. Risk-On (Dovish) environment is bullish for risk assets.")
     
-    if st.button("Fetch Fed Watch Data", use_container_width=True):
-        with st.spinner("Fetching Fed probabilities..."):
+    if st.button("Calculate Macro Sentiment", use_container_width=True):
+        with st.spinner("Analyzing macro environment..."):
             try:
-                fetcher = FedWatchFetcher()
+                fetcher = MacroSentimentFetcher()
                 signal = fetcher.get_fed_signal()
                 
                 col1, col2, col3 = st.columns(3)
@@ -193,18 +193,18 @@ with tab3:
                 with col3:
                     st.metric("Next Meeting", signal['probabilities']['next_meeting_date'])
                 
-                st.markdown("#### Rate Probabilities")
+                st.markdown("#### Implied Market Regime")
                 probs = signal['probabilities']
                 
                 col_a, col_b, col_c = st.columns(3)
                 with col_a:
-                    st.metric("Rate Cut", f"{probs['prob_cut']:.1%}",
-                             delta="Bullish for Gold/BTC" if probs['prob_cut'] > 0.3 else None)
+                    st.metric("Risk-On Probability", f"{probs['prob_cut']:.1%}",
+                             delta="Bullish" if probs['prob_cut'] > 0.3 else None)
                 with col_b:
-                    st.metric("Hold", f"{probs['prob_hold']:.1%}")
+                    st.metric("Neutral", f"{probs['prob_hold']:.1%}")
                 with col_c:
-                    st.metric("Rate Hike", f"{probs['prob_hike']:.1%}",
-                             delta="Bearish for Gold/BTC" if probs['prob_hike'] > 0.3 else None)
+                    st.metric("Risk-Off Probability", f"{probs['prob_hike']:.1%}",
+                             delta="Bearish" if probs['prob_hike'] > 0.3 else None)
                 
                 st.markdown("#### Impact on Assets")
                 impact_data = []
@@ -212,7 +212,7 @@ with tab3:
                     impact = signal['signal_for_gold'] if asset in ['gold', 'btc'] else signal['signal_for_stocks']
                     impact_data.append({
                         'Asset': asset.upper(),
-                        'Fed Signal': impact.title(),
+                        'Macro Signal': impact.title(),
                         'Confidence': f"{signal['confidence']:.2f}"
                     })
                 st.dataframe(pd.DataFrame(impact_data), use_container_width=True, hide_index=True)
@@ -246,5 +246,5 @@ st.warning("""
 **Data Disclaimer**: Alternative data sources provide supplementary insights but should not be the sole basis for trading decisions. 
 Google Trends reflects retail search interest which may not align with institutional flows. 
 The Fear & Greed Index is a sentiment proxy — use it as a contrarian signal, not a directional indicator.
-Fed Watch probabilities are market-implied and subject to change.
+Macro Sentiment probabilities are algorithmically derived from Treasuries, DXY, and VIX.
 """)

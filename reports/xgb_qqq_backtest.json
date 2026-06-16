@@ -2,52 +2,52 @@
     "asset": "qqq",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 70.15317286652079,
-    "hit_ratio_test": 61.18881118881119,
-    "rmse_train": 0.02919690202358322,
-    "rmse_test": 0.030943606376051883,
+    "hit_ratio_train": 69.78165938864629,
+    "hit_ratio_test": 60.73298429319372,
+    "rmse_train": 0.029192109412892457,
+    "rmse_test": 0.031214670377981417,
     "n_features": 20,
     "best_iteration": 16,
     "top_features": [
         {
             "feature": "CPI_MoM_lag3",
-            "importance": 0.08279074728488922
+            "importance": 0.08230967819690704
         },
         {
             "feature": "NFP_Change",
-            "importance": 0.08002597838640213
+            "importance": 0.08150297403335571
         },
         {
             "feature": "CPI_MoM_lag6",
-            "importance": 0.07853543013334274
+            "importance": 0.07584453374147415
         },
         {
             "feature": "CPI_MoM",
-            "importance": 0.07584334164857864
+            "importance": 0.07435822486877441
         },
         {
             "feature": "GK_Vol_21d",
-            "importance": 0.06832729279994965
+            "importance": 0.06474706530570984
+        },
+        {
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.0643705204129219
         },
         {
             "feature": "DXY",
-            "importance": 0.06271186470985413
-        },
-        {
-            "feature": "VIX",
-            "importance": 0.06180327385663986
+            "importance": 0.06195591762661934
         },
         {
             "feature": "PPI_MoM",
-            "importance": 0.05999170243740082
+            "importance": 0.06133342161774635
+        },
+        {
+            "feature": "VIX",
+            "importance": 0.06055612117052078
         },
         {
             "feature": "Oil_Price",
-            "importance": 0.056293945759534836
-        },
-        {
-            "feature": "Yield_10Y_Rate",
-            "importance": 0.05431990697979927
+            "importance": 0.055956367403268814
         }
     ]
 }

@@ -2,52 +2,52 @@
     "asset": "nvda",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 60.48140043763676,
-    "hit_ratio_test": 59.61538461538461,
-    "rmse_train": 0.07671517937776283,
-    "rmse_test": 0.07366603813896495,
+    "hit_ratio_train": 66.5065502183406,
+    "hit_ratio_test": 58.98778359511344,
+    "rmse_train": 0.07042342388550661,
+    "rmse_test": 0.07213602209977547,
     "n_features": 20,
-    "best_iteration": 0,
+    "best_iteration": 12,
     "top_features": [
         {
             "feature": "CPI_MoM_lag3",
-            "importance": 0.10412093997001648
-        },
-        {
-            "feature": "Yield_10Y_Rate",
-            "importance": 0.08036042004823685
+            "importance": 0.1341143101453781
         },
         {
             "feature": "PCE_MoM",
-            "importance": 0.07881069928407669
-        },
-        {
-            "feature": "M2_YoY",
-            "importance": 0.07775706052780151
+            "importance": 0.10453986376523972
         },
         {
             "feature": "CPI_MoM_lag6",
-            "importance": 0.06504766643047333
+            "importance": 0.0898650661110878
+        },
+        {
+            "feature": "M2_YoY",
+            "importance": 0.08541584759950638
         },
         {
             "feature": "M2_MoM",
-            "importance": 0.05741429701447487
+            "importance": 0.07644373178482056
         },
         {
-            "feature": "NFP_Change",
-            "importance": 0.0563800185918808
+            "feature": "Yield_10Y_Rate",
+            "importance": 0.06842970103025436
+        },
+        {
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.065961554646492
         },
         {
             "feature": "GK_Vol_21d",
-            "importance": 0.05530169606208801
+            "importance": 0.06564173847436905
         },
         {
-            "feature": "CPI_MoM",
-            "importance": 0.053449757397174835
+            "feature": "NFP_Change",
+            "importance": 0.06520280987024307
         },
         {
             "feature": "PPI_MoM",
-            "importance": 0.05085126310586929
+            "importance": 0.06499063968658447
         }
     ]
 }

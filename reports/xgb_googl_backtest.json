@@ -2,52 +2,52 @@
     "asset": "googl",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 72.12253829321664,
-    "hit_ratio_test": 64.6853146853147,
-    "rmse_train": 0.033508755444031924,
-    "rmse_test": 0.04994010836457645,
+    "hit_ratio_train": 71.61572052401746,
+    "hit_ratio_test": 63.17626527050611,
+    "rmse_train": 0.034118434771071585,
+    "rmse_test": 0.05068310073794448,
     "n_features": 20,
-    "best_iteration": 60,
+    "best_iteration": 45,
     "top_features": [
         {
             "feature": "CPI_MoM_lag6",
-            "importance": 0.08995925635099411
+            "importance": 0.09109317511320114
         },
         {
             "feature": "NFP_Change",
-            "importance": 0.07506512105464935
+            "importance": 0.08440834283828735
         },
         {
             "feature": "CPI_MoM_lag3",
-            "importance": 0.0719403326511383
+            "importance": 0.07283711433410645
         },
         {
             "feature": "CPI_MoM",
-            "importance": 0.06923913210630417
+            "importance": 0.07098449021577835
         },
         {
             "feature": "GK_Vol_21d",
-            "importance": 0.06497868150472641
+            "importance": 0.06651215255260468
+        },
+        {
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.06213505193591118
         },
         {
             "feature": "M2_MoM",
-            "importance": 0.06335432082414627
-        },
-        {
-            "feature": "DXY",
-            "importance": 0.05725565925240517
-        },
-        {
-            "feature": "PCE_MoM",
-            "importance": 0.0571291521191597
+            "importance": 0.05983667075634003
         },
         {
             "feature": "VIX",
-            "importance": 0.05609830841422081
+            "importance": 0.05669175460934639
         },
         {
-            "feature": "PPI_MoM",
-            "importance": 0.05567978322505951
+            "feature": "PCE_MoM",
+            "importance": 0.05460077524185181
+        },
+        {
+            "feature": "DXY",
+            "importance": 0.054560255259275436
         }
     ]
 }

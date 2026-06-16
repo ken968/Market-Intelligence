@@ -121,7 +121,7 @@ FORECAST_DISCLAIMER = """
 **Forecast Limitations**: AI predictions are based on historical patterns and current market conditions.
 Actual results may vary significantly due to unforeseen events, policy changes, or market shocks.
 Use forecasts as directional guidance, not precise targets. Always combine with fundamental analysis.
-⚠️ Forecasts beyond 2 weeks are speculative due to compounding model error — treat as scenario analysis only.
+Forecasts beyond 2 weeks are speculative due to compounding model error — treat as scenario analysis only.
 """
 
 CONFIDENCE_SCORES = CONFIDENCE_SCORES_FALLBACK

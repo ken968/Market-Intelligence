@@ -494,7 +494,7 @@ def show_success_message(message):
 
 def show_error_message(message):
     """Show error message with icon"""
-    st.error(f"❌ {message}")
+    st.error(f"{message}")
 
 
 def show_warning_message(message):
@@ -542,22 +542,31 @@ def render_quorum_inference_panel(forecasts: dict, asset_name: str = "Asset") ->
         return
 
     kelly = metrics_7d.get('kelly_fraction', 0.0) * 100
-    epistemic = metrics_7d.get('epistemic_std', 0.0) * 100
-    aleatoric = metrics_7d.get('aleatoric_std', 0.0) * 100
-    cross_window = metrics_7d.get('cross_window_std', 0.0) * 100
+    epistemic = metrics_7d.get('mc_std', 0.0) * 100
+    aleatoric = metrics_7d.get('total', 0.0) * 100
+    cross_window = metrics_7d.get('cross_std', 0.0) * 100
     
     # Try to grab the 7-day predicted direction and confidence
     conf = week_data.get('confidence', {})
     sys_conf = conf.get('label', 'N/A')
     sys_score = conf.get('score', 0.5) * 100
     
-    # Colors based on Kelly
-    if kelly >= 20:
-        kelly_color = THEME.get('success', '#00FF88')
-    elif kelly >= 10:
-        kelly_color = THEME.get('info', '#00B8FF')
+    # Direction check for Kelly display
+    current_price = forecasts.get('Current', 0.0)
+    target_price = week_data.get('price', 0.0) if isinstance(week_data, dict) else 0.0
+    change = target_price - current_price if current_price else 0.0
+    
+    if change >= 0:
+        kelly_direction_text = "LONG / BUY"
+        kelly_color = THEME.get('success', '#00FF88')  # Green for Long
     else:
-        kelly_color = THEME.get('warning', '#FFD700')
+        kelly_direction_text = "SHORT / HEDGE"
+        kelly_color = THEME.get('danger', '#FF4D4D')   # Red for Short
+        
+    # Tone down color if kelly is near 0
+    if kelly < 0.1:
+        kelly_direction_text = "HOLD / WAIT"
+        kelly_color = THEME.get('text_secondary', '#888')
 
     st.markdown("---")
     st.markdown(
@@ -578,7 +587,7 @@ def render_quorum_inference_panel(forecasts: dict, asset_name: str = "Asset") ->
                 <div style='font-size:0.8rem;color:{THEME.get("text_secondary","#888")};margin-bottom:6px;'>
                 Recommended Allocation</div>
                 <div style='font-size:1.6rem;font-weight:700;color:{kelly_color};'>
-                {kelly:.1f}%</div>
+                {kelly:.1f}% <span style='font-size:0.8rem;'>({kelly_direction_text})</span></div>
             </div>""",
             unsafe_allow_html=True,
         )
@@ -602,9 +611,9 @@ def render_quorum_inference_panel(forecasts: dict, asset_name: str = "Asset") ->
             f"""<div style='background:{THEME.get("bg_surface","#1a1a2e")};border:1px solid {THEME.get("border","#333")};
                 border-radius:8px;padding:14px;text-align:center;'>
                 <div style='font-size:0.75rem;color:{THEME.get("text_secondary","#888")};margin-bottom:4px;'>
-                Aleatoric Risk</div>
+                Total Uncertainty</div>
                 <div style='font-size:0.8rem;color:{THEME.get("text_secondary","#888")};margin-bottom:6px;'>
-                Market Volatility (VIX)</div>
+                Combined Risk Profile</div>
                 <div style='font-size:1.5rem;font-weight:700;color:#FFFFFF;'>
                 {aleatoric:.2f}%</div>
             </div>""",

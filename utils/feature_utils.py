@@ -96,23 +96,19 @@ PRICE_COL_ASSET_MAP = {
 
 def _load_reference_series(reference_asset: str) -> Optional[pd.Series]:
     """
-    Load the daily close price for a reference asset (SPY or DXY) from CSV.
+    Load the daily close price for a reference asset (e.g. SPY, DXY, QQQ) from CSV.
 
     Returns a pd.Series with DatetimeIndex, or None if file not available.
     """
-    ref_map = {
-        'SPY': 'data/SPY_global_insights.csv',
-        'DXY': 'data/macro_indicators.csv',
-    }
-    ref_col_map = {
-        'SPY': 'SPY',
-        'DXY': 'DXY',
-    }
+    if reference_asset == 'DXY':
+        path = 'data/macro_indicators.csv'
+        col = 'DXY'
+    else:
+        # e.g., 'SPY' -> 'data/SPY_global_insights.csv'
+        path = f'data/{reference_asset.upper()}_global_insights.csv'
+        col = reference_asset.upper()
 
-    path = ref_map.get(reference_asset)
-    col  = ref_col_map.get(reference_asset)
-
-    if path is None or not os.path.exists(path):
+    if not os.path.exists(path):
         return None
 
     try:

@@ -2,52 +2,52 @@
     "asset": "tsm",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 59.38730853391685,
-    "hit_ratio_test": 62.23776223776224,
-    "rmse_train": 0.0460169138796272,
-    "rmse_test": 0.05689580830378758,
+    "hit_ratio_train": 62.92576419213973,
+    "hit_ratio_test": 62.478184991274,
+    "rmse_train": 0.043267344612451485,
+    "rmse_test": 0.05706468422857047,
     "n_features": 20,
-    "best_iteration": 5,
+    "best_iteration": 14,
     "top_features": [
         {
             "feature": "CPI_MoM_lag3",
-            "importance": 0.10600976645946503
-        },
-        {
-            "feature": "M2_MoM",
-            "importance": 0.09310939162969589
+            "importance": 0.12826701998710632
         },
         {
             "feature": "M2_YoY",
-            "importance": 0.0817185565829277
+            "importance": 0.10419541597366333
         },
         {
             "feature": "NFP_Change_lag3",
-            "importance": 0.0727246031165123
-        },
-        {
-            "feature": "NFP_Change",
-            "importance": 0.06445236504077911
+            "importance": 0.08929096162319183
         },
         {
             "feature": "YieldCurve_10Y2Y",
-            "importance": 0.06314930319786072
+            "importance": 0.08557076007127762
+        },
+        {
+            "feature": "M2_MoM",
+            "importance": 0.08305598795413971
         },
         {
             "feature": "CPI_MoM_lag6",
-            "importance": 0.06262290477752686
+            "importance": 0.07239891588687897
         },
         {
             "feature": "PPI_MoM",
-            "importance": 0.054919302463531494
+            "importance": 0.0695296972990036
         },
         {
-            "feature": "Yield_10Y",
-            "importance": 0.05299505963921547
+            "feature": "NFP_Change",
+            "importance": 0.06915753334760666
         },
         {
-            "feature": "DXY",
-            "importance": 0.051749687641859055
+            "feature": "CPI_MoM",
+            "importance": 0.06566298753023148
+        },
+        {
+            "feature": "GK_Vol_21d",
+            "importance": 0.06487753242254257
         }
     ]
 }

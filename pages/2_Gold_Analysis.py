@@ -333,11 +333,11 @@ else:
                         with xai_col1:
                             st.markdown("**Factors Supporting Forecast**")
                             for tw in rationale['tailwinds']:
-                                st.markdown(f"🟢 {tw}")
+                                st.markdown(f"{tw}")
                         with xai_col2:
                             st.markdown("**Factors Working Against Forecast**")
                             for hw in rationale['headwinds']:
-                                st.markdown(f"🔴 {hw}")
+                                st.markdown(f"{hw}")
 
                         st.info(rationale['summary'])
                         st.caption("PROBABILISTIC FORECAST — Not a trading signal.")
