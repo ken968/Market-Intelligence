@@ -7,7 +7,7 @@ from utils.config import FORECAST_RANGES
 from utils.confidence_engine import get_confidence_score
 
 import utils.layers.worker_lstm as worker_layer
-import utils.layers.manager_anchor as manager_layer
+
 import utils.layers.risk_layer as risk_layer
 
 try:
@@ -429,123 +429,11 @@ class ForecastEngine:
             ceo_drift_multiplier=ceo_drift_multiplier
         )
 
-    def ensemble_forecast(self) -> Dict[str, Any]:
-        current_price = self.data_handler.get_latest_price()
 
-        stacker_models = manager_layer.load_stacker_models(self.asset_key)
-        if not stacker_models:
-            legacy = self.recursive_forecast(7)
-            if not legacy:
-                return {'pct_change_7d': 0.0, 'direction': 'flat',
-                        'direction_prob': 0.5, 'predicted_price': current_price,
-                        'model': 'fallback', 'lstm_signal': 0.0, 'xgb_signal': 0.0}
-            pred_price = legacy[-1]
-            pct = (pred_price - current_price) / current_price
-            return {
-                'pct_change_7d': float(pct),
-                'direction': 'up' if pct > 0 else 'down',
-                'direction_prob': 0.55,
-                'predicted_price': float(pred_price),
-                'model': 'fallback_lstm',
-                'lstm_signal': float(pct),
-                'xgb_signal': 0.0,
-            }
-
-        dir_head, mag_head, meta_scaler, stacker_meta = stacker_models
-
-        # Try to load historical data from DuckDB, fallback to CSV
-        data_path = self.config['data_file']
-        table_name = os.path.splitext(os.path.basename(data_path))[0].lower()
-        from utils.data_store import MarketDataStore
-        store = MarketDataStore()
-        df_full = None
-        try:
-            df_full = store.read_table(table_name, format='pandas')
-            if 'Date' in df_full.columns:
-                df_full['Date'] = pd.to_datetime(df_full['Date'])
-                df_full.set_index('Date', inplace=True)
-            df_full = df_full.sort_index()
-        except Exception as e:
-            print(f"Warning: Could not read table '{table_name}' from DuckDB: {e}. Falling back to CSV.")
-            df_full = pd.read_csv(data_path, index_col=0, parse_dates=True).sort_index()
-
-        df_last = df_full.iloc[[-1]]
-
-        lstm_signal = manager_layer.get_lstm_signal(self.asset_key, self.config, df_full)
-        xgb_signal = manager_layer.get_xgb_signal(self.asset_key, df_last)
-
-        ctx_features = ['VIX', 'GK_Vol_21d', 'Sentiment', 'Sentiment_Std',
-                        'YieldCurve_10Y2Y', 'DXY']
-        ctx_values = {}
-        for f in ctx_features:
-            if f in df_last.columns:
-                ctx_values[f] = float(df_last[f].iloc[0])
-
-        return manager_layer.run_dual_head_inference(
-            dir_head=dir_head,
-            mag_head=mag_head,
-            meta_scaler=meta_scaler,
-            stacker_meta=stacker_meta,
-            lstm_signal=lstm_signal,
-            xgb_signal=xgb_signal,
-            ctx_values=ctx_values,
-            current_price=current_price
-        )
-
-    def pct_chain_forecast(self, steps: int, ceo_drift_multiplier: float = 1.0, ensemble_7d_pct: float = None) -> list:
-        current_price = self.data_handler.get_latest_price()
-
-        if ensemble_7d_pct is None:
-            try:
-                ens = self.ensemble_forecast()
-                ensemble_7d_pct = ens.get('pct_change_7d', 0.0)
-            except Exception:
-                ensemble_7d_pct = 0.0
-
-        if ensemble_7d_pct == 0.0:
-            return self.recursive_forecast(steps, ceo_drift_multiplier=ceo_drift_multiplier)
-
-        dm = max(0.85, min(1.15, ceo_drift_multiplier))
-        adjusted_7d_pct = ensemble_7d_pct * dm
-
-        momentum_scale = min(12.0, steps / 7.0)
-        target_horizon_pct = adjusted_7d_pct * momentum_scale
-        target_price = current_price * (1.0 + target_horizon_pct)
-
-        lstm_path = self.recursive_forecast(steps, ceo_drift_multiplier=ceo_drift_multiplier)
-        if not lstm_path or len(lstm_path) < steps:
-            prices = []
-            for i in range(1, steps + 1):
-                t_ratio = i / 7.0
-                horizon_pct = adjusted_7d_pct * (t_ratio ** 0.75)
-                prices.append(current_price * (1.0 + horizon_pct))
-            return prices
-
-        lstm_horizon_pct = (lstm_path[-1] - current_price) / current_price
-
-        prices = []
-        if abs(lstm_horizon_pct) > 1e-5:
-            scale_factor = target_horizon_pct / lstm_horizon_pct
-            if 0.1 <= abs(scale_factor) <= 10.0:
-                for price in lstm_path:
-                    step_pct = (price - current_price) / current_price
-                    adj_step_pct = step_pct * scale_factor
-                    prices.append(current_price * (1.0 + adj_step_pct))
-                return prices
-
-        lstm_target_price = lstm_path[-1]
-        for i, price in enumerate(lstm_path):
-            t_ratio = (i + 1) / steps
-            adj_price = price + (target_price - lstm_target_price) * t_ratio
-            prices.append(adj_price)
-        return prices
 
     def predict_tomorrow(self) -> Dict[str, Union[float, str]]:
         current_price = self.data_handler.get_latest_price()
-        forecast = self.pct_chain_forecast(1)
-
-        if not forecast:
-            forecast = self.recursive_forecast(1)
+        forecast = self.recursive_forecast(1)
 
         if not forecast:
             return {
@@ -571,30 +459,7 @@ class ForecastEngine:
     
     def predict_week(self) -> Dict[str, Union[float, str, bool]]:
         current_price = self.data_handler.get_latest_price()
-
-        try:
-            ens = self.ensemble_forecast()
-            if ens.get('model') == 'dual_head_ensemble' and ens.get('pct_change_7d') is not None:
-                predicted_price = float(ens['predicted_price'])
-                change = predicted_price - current_price
-                pct_change = (change / current_price) * 100
-                return {
-                    'current':        float(current_price),
-                    'predicted':      predicted_price,
-                    'change':         float(change),
-                    'pct_change':     float(pct_change),
-                    'direction':      ens.get('direction', 'flat'),
-                    'direction_prob': ens.get('direction_prob', 0.5),
-                    'lstm_signal':    ens.get('lstm_signal', 0.0),
-                    'xgb_signal':     ens.get('xgb_signal', 0.0),
-                    'has_ensemble':   True,
-                }
-        except Exception:
-            pass
-
-        forecast = self.pct_chain_forecast(7)
-        if not forecast:
-            forecast = self.recursive_forecast(7)
+        forecast = self.recursive_forecast(7)
 
         if not forecast:
             return {
