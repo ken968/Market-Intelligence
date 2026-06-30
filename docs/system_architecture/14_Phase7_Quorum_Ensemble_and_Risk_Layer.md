@@ -15,7 +15,7 @@ These models are trained across **multiple chronological rolling windows** (W1, 
 
 ## 2. Model Registry & Out-of-Sample Selection
 
-The core of the ensemble is the `model_registry.json`. During the training phase (`train_phase7_models.py`), the system evaluates every model window on an Out-Of-Sample (OOS) validation set.
+The core of the ensemble is the `model_registry.json`. During the training phase (`train_lstm_pct.py`), the system evaluates every model window on an Out-Of-Sample (OOS) validation set.
 The system automatically tags the model window with the best Information Coefficient (IC) as `is_best_window = True`.
 
 During live inference, the Predictor Engine only loads the "best" window for Model A and Model B.

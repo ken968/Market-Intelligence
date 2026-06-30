@@ -65,7 +65,7 @@ python scripts/train_lstm_pct.py spy
 python scripts/train_xgboost_macro.py gold
 python scripts/train_xgboost_macro.py btc
 python scripts/train_xgboost_macro.py spy
-python scripts/train_phase7_models.py        # trains rolling Quorum Ensembles
+python scripts/train_ridge_stacker.py        # [DEPRECATED] Legacy Phase 5 stacker (kept for backward compatibility)
 
 # 6. Launch
 run_app.bat
@@ -166,7 +166,7 @@ The system uses a strict **3-Layer Causal Hierarchy** to separate model concerns
 │    Core 2: Cross-Window Disagreement Penalization           │
 │    Output: Volatility-adjusted Kelly fraction & prediction  │
 │  File:    utils/layers/risk_layer.py                        │
-│           scripts/train_phase7_models.py                    │
+│           (Runs dynamically during real-time inference)     │
 ├─────────────────────────────────────────────────────────────┤
 │  LAYER 1 — Worker Layer (LSTM + XGBoost Base Models)        │
 │  LSTM:  Sequence-based momentum & micro pattern learning    │
