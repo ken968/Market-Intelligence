@@ -1,40 +1,40 @@
 """
 Ridge Dual-Head Meta-Learner (Stacker) — Upgraded Ensemble Layer
 =================================================================
-Perubahan dari versi sebelumnya (Ridge tunggal):
+Changes from previous version (Single Ridge):
 
-    SEBELUM: 1 model Ridge → meminimalkan MSE (RMSE) saja
-    SEKARANG: 2 head secara bersamaan:
+    BEFORE: 1 Ridge model → minimizes MSE (RMSE) only
+    NOW: 2 heads simultaneously:
         Head 1 - Direction Head (LogisticRegressionCV)
-            → Memprediksi ARAH (UP/DOWN), mengoptimasi Hit Ratio
-            → Menggunakan class_weight='balanced' untuk menangani imbalance
+            → Predicts DIRECTION (UP/DOWN), optimizes Hit Ratio
+            → Uses class_weight='balanced' to handle imbalance
         Head 2 - Magnitude Head (HuberRegressor)
-            → Memprediksi BESAR % CHANGE, tahan terhadap outlier
-            → Huber loss: tidak menghukum outlier berlebihan seperti MSE
+            → Predicts % CHANGE MAGNITUDE, robust to outliers
+            → Huber loss: does not penalize outliers excessively like MSE
 
-    Output akhir digabungkan:
+    Final output is combined:
         final_signal = direction_prob * magnitude
-        Positif  → prediksi naik (dengan keyakinan direction_prob)
-        Negatif  → prediksi turun (dengan keyakinan 1-direction_prob)
+        Positive → bullish prediction (with direction_prob confidence)
+        Negative → bearish prediction (with 1-direction_prob confidence)
 
-    Keunggulan Dual-Head vs Ridge tunggal:
-        - Tidak ada trade-off antara Hit Ratio vs RMSE
-        - Direction head murni fokus ke akurasi arah
-        - Magnitude head tidak "takut" LSTM yang sesekali outlier
-        - Lebih robust di berbagai kondisi market
+    Advantages of Dual-Head vs Single Ridge:
+        - No trade-off between Hit Ratio vs RMSE
+        - Direction head purely focuses on directional accuracy
+        - Magnitude head is not "afraid" of occasional LSTM outliers
+        - More robust across various market conditions
 
 Usage:
     python scripts/train_ridge_stacker.py gold
     python scripts/train_ridge_stacker.py btc
     python scripts/train_ridge_stacker.py spy
-    python scripts/train_ridge_stacker.py       ← train semua
+    python scripts/train_ridge_stacker.py       ← train all
 
 Output:
     models/{asset}_stacker_direction.pkl   ← LogisticRegressionCV
     models/{asset}_stacker_magnitude.pkl   ← HuberRegressor
-    models/{asset}_stacker_meta_scaler.pkl ← StandardScaler untuk meta-features
-    models/{asset}_stacker_meta.json       ← koefisien & metrics
-    reports/stacker_{asset}_backtest.json  ← perbandingan LSTM vs XGB vs Ensemble
+    models/{asset}_stacker_meta_scaler.pkl ← StandardScaler for meta-features
+    models/{asset}_stacker_meta.json       ← coefficients & metrics
+    reports/stacker_{asset}_backtest.json  ← comparison of LSTM vs XGB vs Ensemble
 """
 
 import os

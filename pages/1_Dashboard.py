@@ -827,15 +827,15 @@ if len(selected_assets) >= 2:
         start_date_str = common_dates.min().strftime('%d %b %Y')
         end_date_str = common_dates.max().strftime('%d %b %Y')
         st.info(f"""
-        **Interpretasi Korelasi (Pearson):**
-        - **1.0**: Korelasi positif sempurna (bergerak searah)
-        - **0.0**: Tidak ada korelasi (bergerak independen)
-        - **-1.0**: Korelasi negatif sempurna (bergerak berlawanan)
+        **Correlation Interpretation (Pearson):**
+        - **1.0**: Perfect positive correlation (moves in same direction)
+        - **0.0**: No correlation (moves independently)
+        - **-1.0**: Perfect negative correlation (moves in opposite direction)
         
-        💡 *Catatan Metodologi & Karakteristik:*
-        - Perhitungan di atas didasarkan pada harga **Close (Penutupan) Harian** dari periode **{start_date_str}** hingga **{end_date_str}**.
-        - Ini menggambarkan korelasi struktural **jangka panjang (long-term)**. Korelasi jangka panjang sangat bagus untuk alokasi portofolio strategis, namun dapat menyembunyikan fase penceraian sementara (*temporary decoupling*) yang terjadi dalam jangka pendek.
-        - Untuk mesin peramalan (*forecasting models*), sistem menggunakan **Rolling Correlation 90 Hari** secara dinamis untuk menangkap anomali dan perubahan rezim pasar terbaru.
+        💡 *Methodology & Characteristic Notes:*
+        - The above calculation is based on **Daily Close** prices from **{start_date_str}** to **{end_date_str}**.
+        - This represents **long-term structural correlation**. Long-term correlation is excellent for strategic portfolio allocation, but may mask temporary decoupling phases that occur in the short term.
+        - For forecasting models, the system dynamically uses **90-Day Rolling Correlation** to capture anomalies and recent market regime shifts.
         """)
 else:
     st.info("Select at least 2 assets to show correlation matrix.")

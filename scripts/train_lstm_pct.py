@@ -12,10 +12,10 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 XAUUSD Multi-Asset Terminal
 Phase 7: The Hybrid High-Alpha Path (Independent Models A & B)
 
-Langkah 0 (Multi-Window Quorum):
-  - Simpan semua 5 window model (bukan hanya best model)
-  - Simpan OOS predictions per window → bahan Stacker retraining
-  - Generate model_registry.json → direktori terpusat untuk predictor_engine
+Step 0 (Multi-Window Quorum):
+  - Save all 5 window models (not just the best model)
+  - Save OOS predictions per window → Stacker retraining data
+  - Generate model_registry.json → centralized directory for predictor_engine
 """
 import gc
 import json

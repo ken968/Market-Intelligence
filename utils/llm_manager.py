@@ -268,8 +268,8 @@ def _call_gemini(prompt: str, max_retries: int = 2) -> dict | None:
         print("Warning: google-genai not installed. Run: pip install google-genai")
         return None
 
-    # Di tahun 2026, model 1.5 sudah dihapus. Kita gunakan arsitektur Flash 3.5 & 2.5 terbaru 
-    # yang memiliki limit jauh lebih besar dan keakuratan setara Pro generasi lama.
+    # In 2026, the 1.5 model is deprecated. We use the latest Flash 3.5 & 2.5 architecture
+    # which has a much larger limit and equivalent accuracy to the older generation Pro.
     MODELS_TO_TRY = ['gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-2.5-pro']
 
     for idx, key in enumerate(GEMINI_KEYS, start=1):
@@ -286,7 +286,7 @@ def _call_gemini(prompt: str, max_retries: int = 2) -> dict | None:
                         contents=prompt
                     )
                     text = response.text.strip()
-                    print(f"  -> Gemini API {idx} ({model_name}) berhasil memproses data.")
+                    print(f"  -> Gemini API {idx} ({model_name}) successfully processed data.")
                     
                     # Extract JSON block using robust string matching
                     if '```json' in text:
@@ -310,10 +310,10 @@ def _call_gemini(prompt: str, max_retries: int = 2) -> dict | None:
                 except Exception as e:
                     err_msg = str(e).lower()
                     if '429' in err_msg or 'resource_exhausted' in err_msg or 'quota' in err_msg:
-                        print(f"Warning: Gemini API {idx} ({model_name}) Limit token (attempt {attempt+1}). Menunggu 60 detik agar kuota reset...")
+                        print(f"Warning: Gemini API {idx} ({model_name}) Rate limit (attempt {attempt+1}). Waiting 60 seconds for quota reset...")
                         time.sleep(60)
                     elif '503' in err_msg or 'unavailable' in err_msg:
-                        print(f"Warning: Gemini API {idx} ({model_name}) Server sibuk (attempt {attempt+1}). Menunggu 5 detik...")
+                        print(f"Warning: Gemini API {idx} ({model_name}) Server busy (attempt {attempt+1}). Waiting 5 seconds...")
                         time.sleep(5)
                     else:
                         print(f"Warning: Gemini API {idx} ({model_name}) error: {type(e).__name__} (attempt {attempt+1})")

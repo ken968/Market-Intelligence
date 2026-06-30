@@ -238,14 +238,14 @@ def _call_gemini_text(prompt: str) -> str | None:
                     model=model_name,
                     contents=prompt
                 )
-                print(f"  -> Gemini API {idx} ({model_name}) berhasil XAI Explainer.")
+                print(f"  -> Gemini API {idx} ({model_name}) successfully executed XAI Explainer.")
                 return resp.text.strip()
             except Exception as e:
                 err_msg = str(e)
                 if '429' in err_msg or 'RESOURCE_EXHAUSTED' in err_msg:
                     print(f"Warning: Gemini API {idx} ({model_name}) Limit token")
                 elif '503' in err_msg or 'UNAVAILABLE' in err_msg:
-                    print(f"Warning: Gemini API {idx} ({model_name}) Server sibuk")
+                    print(f"Warning: Gemini API {idx} ({model_name}) Server busy")
                 else:
                     print(f"Warning: Gemini API {idx} ({model_name}) error: {type(e).__name__}")
                 continue
