@@ -192,6 +192,11 @@ def render_news_section(asset_key, max_items=20):
     config = get_asset_config(asset_key)
     news_file = config['news_file']
     
+    # Attempt to load CEO-filtered news first
+    ceo_news_file = f"data/ceo_filtered_news_{asset_key}.json"
+    if os.path.exists(ceo_news_file):
+        news_file = ceo_news_file
+        
     if not os.path.exists(news_file):
         st.info(f"No news available for {config['name']}. Run sentiment sync first.")
         return

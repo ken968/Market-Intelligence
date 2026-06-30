@@ -479,6 +479,9 @@ class TestMultiHorizonForecast:
         
         engine = ForecastEngine('gold', {'model_file': 'm', 'scaler_file': 's', 'sequence_length': 60}, self.MockDataHandler())
         
+        # Ensure Phase 7 path is bypassed so we test legacy power-law fallback
+        monkeypatch.setattr(engine, '_predict_phase7', lambda horizon_days: None)
+
         # Mock load_horizon_model to return False for 14D but True for 7D
         def mock_load_horizon(horizon_days):
             if horizon_days == 7:

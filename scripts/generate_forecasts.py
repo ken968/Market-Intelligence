@@ -70,14 +70,15 @@ def generate_forecasts(asset_key: str):
     try:
         results = predictor.get_multi_range_forecast(headlines=news_headlines)
         
-        # Verify if 1 Week prediction exists
-        if '1 Week' in results and 'error' not in results['1 Week']:
-            pred_price = results['1 Week']['price']
-            pct_change = ((pred_price - results['Current']) / results['Current']) * 100
-            print(f"  -> Forecast successful: 7D Target: {pred_price:.2f} ({pct_change:+.2f}%)")
-        else:
-             print(f"  -> Forecast completed but 7D prediction was unavailable.")
-             
+        # Print summary for key horizons
+        for hz in ['1 Week', '1 Month', '3 Months']:
+            if hz in results and 'error' not in results[hz]:
+                pred_price = results[hz]['price']
+                pct_change = ((pred_price - results['Current']) / results['Current']) * 100
+                print(f"  -> Forecast successful: {hz} Target: {pred_price:.2f} ({pct_change:+.2f}%)")
+            else:
+                 print(f"  -> {hz} prediction was unavailable.")
+                 
     except Exception as e:
         print(f"  -> Error generating forecast for {asset_key.upper()}: {e}")
 

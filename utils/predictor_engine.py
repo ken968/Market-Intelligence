@@ -659,6 +659,28 @@ class ForecastEngine:
                     'headlines_used':  analysis['headlines_used'],
                     'macro_summary':   macro_summary,
                 }
+                
+                # Save CEO-filtered news for UI display
+                filtered_news_list = analysis.get('headlines_list', [])
+                if filtered_news_list:
+                    filtered_json_path = f'data/ceo_filtered_news_{self.asset_key}.json'
+                    try:
+                        import json
+                        from datetime import datetime
+                        news_to_save = []
+                        for h in filtered_news_list:
+                            news_to_save.append({
+                                'title': h,
+                                'date': datetime.now().strftime('%Y-%m-%d'),
+                                'url': '#',
+                                'sentiment': float(analysis.get('confidence', 0.5)),
+                                'source': 'CEO Layer Filter'
+                            })
+                        with open(filtered_json_path, 'w', encoding='utf-8') as f:
+                            json.dump(news_to_save, f, indent=2)
+                    except Exception as err:
+                        print(f"Warning: Could not save CEO filtered news: {err}")
+
             except Exception as e:
                 print(f"Warning: CEO Layer error for {self.asset_key}: {e}. Using baseline.")
 

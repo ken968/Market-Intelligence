@@ -583,7 +583,7 @@ else:
                     st.warning(" Detailed AI analysis unavailable due to incomplete forecast data.")
                 
                 # Show forecast chart (Fan Chart)
-                st.markdown("####  30-Day Probability Cloud (Fan Chart)")
+                st.markdown("####  90-Day Probability Cloud (Fan Chart)")
                 df_stock = pd.read_csv(ASSETS[forecast_stock.lower()]['data_file'])
                 df_stock['Date'] = pd.to_datetime(df_stock['Date'])
                 
@@ -595,16 +595,16 @@ else:
                 else:
                     forecasts = {'Current': 0, 'error': 'Invalid data format'}
                 
-                month_data = forecasts.get('1 Month', {})
-                forecast_30d = month_data.get('series', [])
-                fan_p10 = month_data.get('fan_p10')
-                fan_p90 = month_data.get('fan_p90')
+                three_month_data = forecasts.get('3 Months', {})
+                forecast_90d = three_month_data.get('series', [])
+                fan_p10 = three_month_data.get('fan_p10')
+                fan_p90 = three_month_data.get('fan_p90')
                 
-                if not forecast_30d:
-                    forecast_30d = predictor.recursive_forecast(30)
+                if not forecast_90d:
+                    forecast_90d = predictor.recursive_forecast(90)
                     
                 from utils.ui_components import create_forecast_chart
-                fig = create_forecast_chart(df_stock.tail(90), forecast_30d, forecast_stock, len(forecast_30d), fan_p10=fan_p10, fan_p90=fan_p90)
+                fig = create_forecast_chart(df_stock.tail(90), forecast_90d, forecast_stock, len(forecast_90d), fan_p10=fan_p10, fan_p90=fan_p90)
                 st.plotly_chart(fig, use_container_width=True)
                 
             except Exception as e:

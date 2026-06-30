@@ -365,16 +365,16 @@ else:
                         st.error(" **Bearish Signal**: Model predicts downward pressure")
 
                     # Show forecast chart (Fan Chart) with safety check
-                    st.markdown("####  Probability Cloud (Fan Chart)")
-                    month_data = forecasts.get('1 Month', {}) if isinstance(forecasts, dict) else {}
-                    forecast_30d = month_data.get('series', []) if isinstance(month_data, dict) else []
+                    st.markdown("####  90-Day Probability Cloud")
+                    month_data = forecasts.get('3 Months', {}) if isinstance(forecasts, dict) else {}
+                    forecast_90d = month_data.get('series', []) if isinstance(month_data, dict) else []
                     fan_p10 = month_data.get('fan_p10') if isinstance(month_data, dict) else None
                     fan_p90 = month_data.get('fan_p90') if isinstance(month_data, dict) else None
-
-                    if not forecast_30d:
-                        forecast_30d = predictor.recursive_forecast(30)
-
-                    fig = create_forecast_chart(df.tail(90), forecast_30d, 'Gold', len(forecast_30d), fan_p10=fan_p10, fan_p90=fan_p90)
+                    
+                    if not forecast_90d:
+                        forecast_90d = predictor.recursive_forecast(90)
+                        
+                    fig = create_forecast_chart(df.tail(90), forecast_90d, 'Gold', len(forecast_90d), fan_p10=fan_p10, fan_p90=fan_p90)
                     st.plotly_chart(fig, use_container_width=True)
                     
                 except Exception as e:

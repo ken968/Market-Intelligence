@@ -333,7 +333,7 @@ def _call_fallback_llm(prompt: str) -> dict | None:
     groq_key = os.getenv('GROQ_API_KEY')
     if groq_key:
         try:
-            print("  -> Mencoba Groq (Llama-3.3-70B)...")
+            print("  -> Attempting Groq (Llama-3.3-70B)...")
             headers = {"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"}
             payload = {
                 "model": "llama-3.3-70b-versatile",
@@ -352,7 +352,7 @@ def _call_fallback_llm(prompt: str) -> dict | None:
     or_key = os.getenv('OPENROUTER_API_KEY')
     if or_key:
         try:
-            print("  -> Mencoba OpenRouter (Deepseek R1)...")
+            print("  -> Attempting OpenRouter (Deepseek R1)...")
             headers = {"Authorization": f"Bearer {or_key}", "Content-Type": "application/json"}
             payload = {
                 "model": "deepseek/deepseek-r1",
@@ -422,6 +422,7 @@ def analyze_news_context(
         'confidence'     : float
         'is_fallback'    : bool — True if API failed and zero-vector was used
         'headlines_used' : int — number of headlines after dedup/staleness filter
+        'headlines_list' : list — actual list of filtered strings
     """
     # --- 1. Staleness filter ---
     if published_at_list:
@@ -444,6 +445,7 @@ def analyze_news_context(
             'confidence': 0.0,
             'is_fallback': True,
             'headlines_used': 0,
+            'headlines_list': [],
         }
 
     # --- 3. Build prompt with CHRONOLOGICAL ordering label ---
@@ -482,6 +484,7 @@ def analyze_news_context(
         'confidence':      float(raw_scores.get('confidence', 0.0)),
         'is_fallback':     is_fallback,
         'headlines_used':  len(headlines),
+        'headlines_list':  headlines,
     }
 
 
