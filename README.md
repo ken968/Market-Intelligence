@@ -59,13 +59,8 @@ pip install -r requirements.txt
 python scripts/daily_ops.py
 
 # 5. Train models
-python scripts/train_lstm_pct.py gold
-python scripts/train_lstm_pct.py btc
-python scripts/train_lstm_pct.py spy
-python scripts/train_xgboost_macro.py gold
-python scripts/train_xgboost_macro.py btc
-python scripts/train_xgboost_macro.py spy
-python scripts/train_ridge_stacker.py        # [DEPRECATED] Legacy Phase 5 stacker (kept for backward compatibility)
+python scripts/train_lstm_pct.py all
+python scripts/train_xgboost_macro.py all
 
 # 6. Launch
 run_app.bat
@@ -266,7 +261,6 @@ Market-Intelligence/
 │   ├── migrate_to_duckdb.py            # CSV to DuckDB migration tool
 │   ├── train_lstm_pct.py               # LSTM training (pct-change target)
 │   ├── train_xgboost_macro.py          # XGBoost macro model training
-│   └── train_ridge_stacker.py          # Dual-Head Stacker training
 │
 ├── utils/                              # Core library
 │   ├── data_store.py                   # DuckDB + Polars connection manager
@@ -294,18 +288,11 @@ Market-Intelligence/
 # 1. Sync all data sources
 python scripts/daily_ops.py
 
-# 2. Train base LSTM models (pct-change architecture)
-python scripts/train_lstm_pct.py gold
-python scripts/train_lstm_pct.py btc
-python scripts/train_lstm_pct.py spy
+# 2. Train Phase 7 Quorum Ensemble (Dual-LSTM)
+python scripts/train_lstm_pct.py all
 
 # 3. Train XGBoost macro models
-python scripts/train_xgboost_macro.py gold
-python scripts/train_xgboost_macro.py btc
-python scripts/train_xgboost_macro.py spy
-
-# 4. Train Dual-Head Ensemble Stacker
-python scripts/train_ridge_stacker.py
+python scripts/train_xgboost_macro.py all
 ```
 
 ---
