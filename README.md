@@ -65,7 +65,7 @@ python scripts/train_lstm_pct.py spy
 python scripts/train_xgboost_macro.py gold
 python scripts/train_xgboost_macro.py btc
 python scripts/train_xgboost_macro.py spy
-python scripts/train_ridge_stacker.py        # trains Gold + BTC + SPY
+python scripts/train_phase7_models.py        # trains rolling Quorum Ensembles
 
 # 6. Launch
 run_app.bat
@@ -90,9 +90,9 @@ mindmap
       ("Worker Layer Base Learners")
         ("LSTM with Multi-Head Self-Attention")
         ("XGBoost Macro-Regime Model")
-      ("Manager Layer Meta-Learner Stacker")
-        ("Directional Head Logistic Regression")
-        ("Magnitude Head Huber Regressor")
+      ("Manager Layer Risk & Quorum Inference")
+        ("EWMA Information Coefficient Weighting")
+        ("Kelly Shrinkage via Epistemic Variance")
         ("Volatility-Adjusted Synthesis")
       ("CEO Layer LLM Override")
       ("CEO Layer LLM Override")
@@ -159,14 +159,14 @@ The system uses a strict **3-Layer Causal Hierarchy** to separate model concerns
 │  Failsafe: Zero-Vector Injection (Offline Quant Mode)       │
 │  File:    utils/llm_manager.py                              │
 ├─────────────────────────────────────────────────────────────┤
-│  LAYER 2 — Manager Layer (Dual-Head Ensemble Stacker)       │
-│  Purpose: Combine LSTM + XGBoost signals, correct endpoint  │
+│  LAYER 2 — Manager Layer (Quorum Inference Risk Layer)      │
+│  Purpose: Blends dual models via EWMA IC & Kelly Shrinkage  │
 │  Architecture:                                              │
-│    Head 1: LogisticRegressionCV → Direction (UP/DOWN)       │
-│    Head 2: HuberRegressor       → Magnitude (% change)      │
-│    Combined: direction_signal × |magnitude|                 │
-│  File:    utils/layers/manager_anchor.py                    │
-│           scripts/train_ridge_stacker.py                    │
+│    Core 1: Monte Carlo Epistemic Uncertainty Estimation     │
+│    Core 2: Cross-Window Disagreement Penalization           │
+│    Output: Volatility-adjusted Kelly fraction & prediction  │
+│  File:    utils/layers/risk_layer.py                        │
+│           scripts/train_phase7_models.py                    │
 ├─────────────────────────────────────────────────────────────┤
 │  LAYER 1 — Worker Layer (LSTM + XGBoost Base Models)        │
 │  LSTM:  Sequence-based momentum & micro pattern learning    │
