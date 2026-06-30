@@ -2,52 +2,52 @@
     "asset": "tsla",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 57.94759825327511,
-    "hit_ratio_test": 50.78534031413613,
-    "rmse_train": 0.08892552232846077,
-    "rmse_test": 0.09896383664622442,
-    "n_features": 20,
-    "best_iteration": 9,
+    "hit_ratio_train": 62.325783972125436,
+    "hit_ratio_test": 55.65217391304348,
+    "rmse_train": 0.08596973267626383,
+    "rmse_test": 0.09775452837119881,
+    "n_features": 19,
+    "best_iteration": 13,
     "top_features": [
         {
-            "feature": "CPI_MoM_lag6",
-            "importance": 0.09063579142093658
-        },
-        {
             "feature": "Yield_10Y_Rate",
-            "importance": 0.08574061840772629
-        },
-        {
-            "feature": "NFP_Change_lag3",
-            "importance": 0.08090144395828247
-        },
-        {
-            "feature": "NFP_Change",
-            "importance": 0.08079303801059723
-        },
-        {
-            "feature": "PPI_MoM",
-            "importance": 0.07026325166225433
-        },
-        {
-            "feature": "CPI_MoM",
-            "importance": 0.06787748634815216
+            "importance": 0.09680140763521194
         },
         {
             "feature": "M2_YoY",
-            "importance": 0.06473182141780853
+            "importance": 0.08719868212938309
         },
         {
             "feature": "M2_MoM",
-            "importance": 0.06404215097427368
-        },
-        {
-            "feature": "PCE_MoM",
-            "importance": 0.0559767447412014
+            "importance": 0.08041144162416458
         },
         {
             "feature": "YieldCurve_10Y2Y",
-            "importance": 0.048010144382715225
+            "importance": 0.07978813350200653
+        },
+        {
+            "feature": "CPI_MoM",
+            "importance": 0.07744497060775757
+        },
+        {
+            "feature": "PPI_MoM",
+            "importance": 0.07612137496471405
+        },
+        {
+            "feature": "PCE_MoM",
+            "importance": 0.07293432205915451
+        },
+        {
+            "feature": "Yield_10Y",
+            "importance": 0.06777197867631912
+        },
+        {
+            "feature": "GK_Vol_21d",
+            "importance": 0.06294447928667068
+        },
+        {
+            "feature": "NFP_Change",
+            "importance": 0.06101687252521515
         }
     ]
 }

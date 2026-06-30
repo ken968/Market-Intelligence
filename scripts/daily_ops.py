@@ -8,10 +8,17 @@ from datetime import datetime
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PYTHON_EXE = sys.executable
 
-def run_script(script_name, description):
+def run_script(script_cmd, description):
+    if isinstance(script_cmd, str):
+        script_args = [script_cmd]
+    else:
+        script_args = list(script_cmd)
+        
+    script_name = script_args[0]
+    
     print(f"\n{'='*50}")
     print(f"[{datetime.now().strftime('%H:%M:%S')}] RUNNING: {description}")
-    print(f"Script: {script_name}")
+    print(f"Command: {script_name} {' '.join(script_args[1:])}")
     print(f"{'='*50}")
     
     script_path = os.path.join(PROJECT_ROOT, 'scripts', script_name)
@@ -22,11 +29,9 @@ def run_script(script_name, description):
         
     start_time = time.time()
     try:
+        cmd = [PYTHON_EXE, script_path] + script_args[1:]
         # We don't capture output so it streams directly to the terminal
-        result = subprocess.run(
-            [PYTHON_EXE, script_path],
-            cwd=PROJECT_ROOT
-        )
+        result = subprocess.run(cmd, cwd=PROJECT_ROOT)
         elapsed = time.time() - start_time
         
         if result.returncode == 0:
@@ -54,7 +59,7 @@ def main():
         ('fred_fetcher.py', 'FRED Macro Indicators'),
         ('cot_fetcher.py', 'COT Smart Money Data'),
         ('google_trends_fetcher.py', 'Google Trends Data'),
-        ('sentiment_fetcher_v2.py', 'News Sentiment Analysis'),
+        (['sentiment_fetcher_v2.py', 'all'], 'News Sentiment Analysis'),
         ('data_fetcher_v2.py', 'YFinance & Final Data Merge'),
         ('generate_forecasts.py', 'Auto-Generate AI Forecasts & Logs'),
         ('model_monitor.py', 'Model Health Diagnostics')

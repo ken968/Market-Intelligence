@@ -523,7 +523,7 @@ try:
 
     if news_headlines:
         st.caption(f"{len(news_headlines)} headlines loaded from news cache · Ready for CEO analysis")
-        if st.button("Run Gemini CEO Analysis", use_container_width=False, key="ceo_analysis_btn"):
+        if st.button("Compute Causal Narrative Bias", use_container_width=False, key="ceo_analysis_btn"):
             with st.spinner("Gemini reasoning through Causal Hierarchy..."):
                 result = analyze_news_context(
                     headlines=news_headlines,

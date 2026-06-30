@@ -2,52 +2,52 @@
     "asset": "qqq",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 69.78165938864629,
-    "hit_ratio_test": 60.73298429319372,
-    "rmse_train": 0.029192109412892457,
-    "rmse_test": 0.031214670377981417,
+    "hit_ratio_train": 70.77526132404182,
+    "hit_ratio_test": 58.434782608695656,
+    "rmse_train": 0.02845838201816462,
+    "rmse_test": 0.03189218872569321,
     "n_features": 20,
-    "best_iteration": 16,
+    "best_iteration": 21,
     "top_features": [
         {
+            "feature": "PCE_MoM",
+            "importance": 0.10444817692041397
+        },
+        {
             "feature": "CPI_MoM_lag3",
-            "importance": 0.08230967819690704
+            "importance": 0.08235454559326172
         },
         {
             "feature": "NFP_Change",
-            "importance": 0.08150297403335571
+            "importance": 0.08221790194511414
         },
         {
             "feature": "CPI_MoM_lag6",
-            "importance": 0.07584453374147415
-        },
-        {
-            "feature": "CPI_MoM",
-            "importance": 0.07435822486877441
+            "importance": 0.07521900534629822
         },
         {
             "feature": "GK_Vol_21d",
-            "importance": 0.06474706530570984
+            "importance": 0.06467323005199432
         },
         {
-            "feature": "YieldCurve_10Y2Y",
-            "importance": 0.0643705204129219
-        },
-        {
-            "feature": "DXY",
-            "importance": 0.06195591762661934
-        },
-        {
-            "feature": "PPI_MoM",
-            "importance": 0.06133342161774635
-        },
-        {
-            "feature": "VIX",
-            "importance": 0.06055612117052078
+            "feature": "CPI_MoM",
+            "importance": 0.05903247743844986
         },
         {
             "feature": "Oil_Price",
-            "importance": 0.055956367403268814
+            "importance": 0.05600136145949364
+        },
+        {
+            "feature": "DXY",
+            "importance": 0.054996177554130554
+        },
+        {
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.054643504321575165
+        },
+        {
+            "feature": "PPI_MoM",
+            "importance": 0.052241936326026917
         }
     ]
 }

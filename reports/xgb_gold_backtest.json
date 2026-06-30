@@ -2,52 +2,52 @@
     "asset": "gold",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 64.17649628658802,
-    "hit_ratio_test": 63.00174520069808,
-    "rmse_train": 0.02226054066486538,
-    "rmse_test": 0.03512173466827496,
+    "hit_ratio_train": 65.54878048780488,
+    "hit_ratio_test": 64.11149825783971,
+    "rmse_train": 0.022088528979555364,
+    "rmse_test": 0.03460510630055303,
     "n_features": 25,
-    "best_iteration": 14,
+    "best_iteration": 66,
     "top_features": [
         {
             "feature": "YieldCurve_10Y2Y",
-            "importance": 0.0930132120847702
+            "importance": 0.09143301844596863
         },
         {
-            "feature": "NFP_Change_lag3",
-            "importance": 0.07202168554067612
-        },
-        {
-            "feature": "CPI_MoM",
-            "importance": 0.06946419924497604
+            "feature": "Yield_10Y",
+            "importance": 0.06970643997192383
         },
         {
             "feature": "PPI_MoM",
-            "importance": 0.06604831665754318
+            "importance": 0.06772033870220184
         },
         {
-            "feature": "CPI_MoM_lag3",
-            "importance": 0.06505265831947327
+            "feature": "CPI_MoM",
+            "importance": 0.06766266375780106
         },
         {
             "feature": "Breakeven_5Y5Y",
-            "importance": 0.06435323506593704
+            "importance": 0.06520798802375793
         },
         {
-            "feature": "DXY",
-            "importance": 0.0632319301366806
+            "feature": "NFP_Change_lag3",
+            "importance": 0.06447731703519821
         },
         {
-            "feature": "CPI_MoM_lag6",
-            "importance": 0.06243625283241272
+            "feature": "CPI_MoM_lag3",
+            "importance": 0.0633324384689331
+        },
+        {
+            "feature": "Oil_Price",
+            "importance": 0.06067843735218048
+        },
+        {
+            "feature": "Yield_10Y_Rate",
+            "importance": 0.05985216051340103
         },
         {
             "feature": "NFP_Change",
-            "importance": 0.060681384056806564
-        },
-        {
-            "feature": "M2_MoM",
-            "importance": 0.060389094054698944
+            "importance": 0.05966716632246971
         }
     ]
 }

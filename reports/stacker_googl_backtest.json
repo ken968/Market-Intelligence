@@ -7,6 +7,7 @@
         "VIX",
         "GK_Vol_21d",
         "Sentiment",
+        "Sentiment_Std",
         "YieldCurve_10Y2Y",
         "DXY",
         "vix_percentile_252d",
@@ -14,21 +15,22 @@
         "roll_corr_spy_90d"
     ],
     "hit_ratio_lstm": 0.0,
-    "hit_ratio_xgb": 65.89595375722543,
-    "hit_ratio_direction_head": 60.69364161849711,
-    "rmse_magnitude_head": 0.05881265464523057,
-    "hit_ratio_combined": 60.69364161849711,
-    "rmse_combined": 0.05958280069771725,
+    "hit_ratio_xgb": 59.53757225433526,
+    "hit_ratio_direction_head": 53.75722543352601,
+    "rmse_magnitude_head": 0.060826813277731887,
+    "hit_ratio_combined": 53.75722543352601,
+    "rmse_combined": 0.060664606796576315,
     "direction_feature_importance": {
         "lstm_pred": 0.0,
-        "xgb_pred": 0.12310943472315099,
-        "VIX": 0.10896896506561773,
-        "GK_Vol_21d": 0.1242849062108423,
+        "xgb_pred": 0.0,
+        "VIX": 0.1284486448468179,
+        "GK_Vol_21d": 0.1379155445267411,
         "Sentiment": 0.0,
-        "YieldCurve_10Y2Y": 0.12363338431063095,
-        "DXY": 0.1374112512791421,
-        "vix_percentile_252d": 0.12496045236241377,
-        "return_zscore_90d": 0.06677728165156789,
-        "roll_corr_spy_90d": 0.1908543243966344
+        "Sentiment_Std": 0.0,
+        "YieldCurve_10Y2Y": 0.15178751431804052,
+        "DXY": 0.1483369072480455,
+        "vix_percentile_252d": 0.14114720999909464,
+        "return_zscore_90d": 0.08783866141220303,
+        "roll_corr_spy_90d": 0.2045255176490572
     }
 }

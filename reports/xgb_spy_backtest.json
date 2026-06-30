@@ -2,52 +2,52 @@
     "asset": "spy",
     "model_type": "xgboost_macro",
     "horizon_days": 7,
-    "hit_ratio_train": 68.68995633187774,
-    "hit_ratio_test": 62.82722513089005,
-    "rmse_train": 0.023013049666997364,
-    "rmse_test": 0.023334473249754913,
+    "hit_ratio_train": 69.8170731707317,
+    "hit_ratio_test": 62.95652173913043,
+    "rmse_train": 0.022982083344112378,
+    "rmse_test": 0.023522249582180407,
     "n_features": 24,
-    "best_iteration": 20,
+    "best_iteration": 19,
     "top_features": [
         {
             "feature": "DXY",
-            "importance": 0.11200587451457977
+            "importance": 0.11398757994174957
         },
         {
             "feature": "NFP_Change",
-            "importance": 0.08460748195648193
-        },
-        {
-            "feature": "Oil_Price",
-            "importance": 0.07423815876245499
-        },
-        {
-            "feature": "YieldCurve_10Y2Y",
-            "importance": 0.07352416217327118
+            "importance": 0.09361207485198975
         },
         {
             "feature": "CPI_MoM_lag3",
-            "importance": 0.06634006649255753
+            "importance": 0.07191240042448044
+        },
+        {
+            "feature": "Oil_Price",
+            "importance": 0.07087211310863495
+        },
+        {
+            "feature": "YieldCurve_10Y2Y",
+            "importance": 0.06764804571866989
         },
         {
             "feature": "CPI_MoM",
-            "importance": 0.06133492290973663
-        },
-        {
-            "feature": "PPI_MoM",
-            "importance": 0.059542909264564514
-        },
-        {
-            "feature": "GK_Vol_21d",
-            "importance": 0.05781408026814461
+            "importance": 0.06376095861196518
         },
         {
             "feature": "Yield_10Y_Rate",
-            "importance": 0.056832507252693176
+            "importance": 0.05914975330233574
         },
         {
-            "feature": "M2_YoY",
-            "importance": 0.052539512515068054
+            "feature": "GK_Vol_21d",
+            "importance": 0.05852010101079941
+        },
+        {
+            "feature": "VIX",
+            "importance": 0.05611342191696167
+        },
+        {
+            "feature": "PPI_MoM",
+            "importance": 0.052976347506046295
         }
     ]
 }
